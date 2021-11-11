@@ -1,0 +1,8 @@
+jwt==1.2.0
+fastapi==0.66.0
+uvicorn==0.14.0
+pydantic==1.8.2
+psycopg2-binary
+heimdall-client==0.1.7
+cx_Oracle
+redis
