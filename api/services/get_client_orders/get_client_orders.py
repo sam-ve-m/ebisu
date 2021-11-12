@@ -1,25 +1,43 @@
 # standards
-from datetime import datetime
 import logging
-
-# Third part
-import yggdrasil_utils
-
+from fastapi import Request
 # Jormungandr
-from api.routers.validator.get_client_orders import SearchParams
+from api.core.interfaces.interface import IService
+from api.repositories.cache.repository import RedisRepository
+from api.repositories.oracle.repository import OracleRepository
 from api.utils import utils
 
 log = logging.getLogger()
 
 
-class GetOrders:
-    def __init__(self, params: SearchParams, url_path: str):
-        self.params = params.dict()
+class GetOrders(IService):
+
+    def __init__(
+            self,
+            bmf_account: int,
+            symbols: str,
+            order_type: str,
+            order_status: str,
+            trade_sides: str,
+            time_in_forces: str,
+            url_path: str,
+            request: Request
+    ):
+        self.bmf_account = bmf_account
+        self.symbols = symbols
+        self.order_type = order_type
+        self.order_status = order_status
+        self.trade_sides = trade_sides
+        self.time_in_forces = time_in_forces
+        jwt = request.headers.get("x-thebs-answer")
+        if jwt is None:
+            raise Exception('No token giving')
+
         self.url_path = url_path
 
     def open_orders(self):
-        cache = yggdrasil_utils.Cache.instance()
-        yggdrasil_utils.EnumNormalizer.run(params=self.params)
+        cache = RedisRepository()
+        # yggdrasil_utils.EnumNormalizer.run(params=self.params)
         result = cache.get_or_create_cache(
             function_name=self.url_path,
             callback=GetOrders.run,
@@ -64,7 +82,7 @@ class GetOrders:
 
     @staticmethod
     def run(params: dict):
-        open_orders = yggdrasil_utils.OracleRepository.instance()
+        open_orders = OracleRepository()
         query = GetOrders.build_query(params=params)
         user_open_orders = open_orders.get_data(sql=query)
         return [

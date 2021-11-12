@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class IRedisDriver(ABC):
+class ICache(ABC):
 
     @staticmethod
     @abstractmethod

@@ -1,8 +1,10 @@
+--extra-index-url "http://nexus:9d3975cc-95d4-4473-84d9-9e489913d7a5@54.207.180.218/repository/pypi/simple" --trusted-host 54.207.180.218
 jwt==1.2.0
 fastapi==0.66.0
 uvicorn==0.14.0
 pydantic==1.8.2
 psycopg2-binary
+python-decouple
 heimdall-client==0.1.7
 cx_Oracle
 redis

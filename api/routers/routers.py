@@ -1,25 +1,35 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, FastAPI, Request, Depends
 import logging
 
-from api.controller.base_controller import BaseController
-from api.routers.validator.get_client_orders import SearchParams
-from api.services.factories.get_client_orders import GetOrders
+from heimdall_client.bifrost import Heimdall
+
+from api.application_dependencies import GLOBAL_APPLICATION_DEPENDENCIES, API_TITLE, API_DESCRIPTION
+from api.core.interfaces.interface import IService
+from api.domain.responses.get_client_orders import ResponseGetClientOrders
+from api.services.get_client_orders.get_client_orders import GetOrders
 
 log = logging.getLogger()
 
 router = APIRouter()
 
+app = FastAPI(
+    title=API_TITLE,
+    description=API_DESCRIPTION,
+    dependencies=GLOBAL_APPLICATION_DEPENDENCIES
+)
 
-@router.get("get_client_orders_faas")
-def get_client_orders(bmf_account: int, symbols: str, order_type: str, order_status: str, trade_sides: str,
-                      time_in_forces: str, request: Request):
-    validated_query = SearchParams(
-        bmf_account=bmf_account,
-        symbols=symbols,
-        order_type=order_type,
-        order_status=order_status,
-        trade_sides=trade_sides,
-        time_in_forces=time_in_forces
-    )
 
-    return BaseController.run(GetOrders, validated_query.dict(), request)
+@app.get("/get_client_orders_faas", response_model=ResponseGetClientOrders)
+async def get_client_orders(service: IService = Depends(GetOrders)):
+    log = logging.getLogger()
+    jwt = GetOrders
+    heimdall = Heimdall(logger=log)
+    heimdall.validate_jwt_integrity(jwt=jwt)
+    jwt_data = heimdall.decrypt_payload(jwt=jwt)
+    bovespa_account = jwt_data.get("bovespa_account")
+    bmf_account = jwt_data.get("bmf_account")
+    data = {
+        "bovespa_account": bovespa_account,
+        "bmf_account": bmf_account,
+    }
+    return service.get_service_response()
