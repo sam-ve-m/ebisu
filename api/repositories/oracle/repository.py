@@ -1,31 +1,34 @@
-from api.core.interfaces.infrastructures.oracle.interface import IOracle
+
+from decouple import config
+
 from api.infrastructures.oracle.infrastructure import OracleInfrastructure
-from api.utils.env_config import config
 
 
-class OracleRepository(IOracle):
+class OracleRepository(OracleInfrastructure):
 
-    def __init__(self):
-        self.infra = self.get_infrastructure()
-
-    def get_infrastructure(self):
-        infra = OracleInfrastructure()
-        return infra.get_connection(
+    @classmethod
+    def instance(cls):
+        oracle_connection = cls.get_connection(
             user=config("ORACLE_USER"),
             password=config("ORACLE_PASSWORD"),
             dsn=config("ORACLE_BASE_DSN"),
             port=config("ORACLE_PORT"),
             service=config("ORACLE_SERVICE"),
-        )
 
-    def execute(self, sql: str):
-        with self.infra as connection:
+        )
+        return cls(oracle_connection=oracle_connection)
+
+    def __init__(self, oracle_connection):
+        self.oracle_connection = oracle_connection
+
+    def execute(self, sql):
+        with self.oracle_connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(sql)
                 connection.commit()
 
     def get_one_data(self, sql: str):
-        with self.infra as connection:
+        with self.oracle_connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(sql)
                 columns = [col[0] for col in cursor.description]
@@ -35,7 +38,7 @@ class OracleRepository(IOracle):
         return row
 
     def get_data(self, sql: str):
-        with self.infra as connection:
+        with self.oracle_connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(sql)
                 columns = [col[0] for col in cursor.description]

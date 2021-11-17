@@ -1,50 +1,53 @@
 # standards
 import logging
-from fastapi import Request
+from typing import Optional, List, Dict, Type, Union
+
+from fastapi import Request, Query
 # Jormungandr
+from heimdall_client.bifrost import Heimdall
+
 from api.core.interfaces.interface import IService
-from api.repositories.cache.repository import RedisRepository
+from api.domain.enums.order_status import OrderStatus
+from api.domain.enums.order_type import OrderType
+from api.domain.enums.time_in_force import TIF
+from api.domain.enums.trade_side import TradeSide
 from api.repositories.oracle.repository import OracleRepository
 from api.utils import utils
 
 log = logging.getLogger()
 
 
+def pipe_to_list(data: str):
+    data = data.upper()
+    list_data = data.split('|')
+    return list_data
+
+
 class GetOrders(IService):
 
     def __init__(
             self,
-            bmf_account: int,
             symbols: str,
-            order_type: str,
-            order_status: str,
-            trade_sides: str,
-            time_in_forces: str,
-            url_path: str,
-            request: Request
+            order_type: Optional[OrderType],
+            order_status: Optional[OrderStatus],
+            trade_sides: Optional[TradeSide],
+            time_in_forces: Optional[TIF],
+            request: Request,
+
     ):
-        self.bmf_account = bmf_account
-        self.symbols = symbols
+        self.symbols = pipe_to_list(symbols)
         self.order_type = order_type
         self.order_status = order_status
         self.trade_sides = trade_sides
         self.time_in_forces = time_in_forces
-        jwt = request.headers.get("x-thebs-answer")
-        if jwt is None:
+        self.jwt = request.headers.get("x-thebs-answer")
+        if self.jwt is None:
             raise Exception('No token giving')
-
-        self.url_path = url_path
-
-    def open_orders(self):
-        cache = RedisRepository()
-        # yggdrasil_utils.EnumNormalizer.run(params=self.params)
-        result = cache.get_or_create_cache(
-            function_name=self.url_path,
-            callback=GetOrders.run,
-            callback_kwargs={"params": self.params},
-            ttl=1,
-        )
-        return result
+        heimdall = Heimdall(logger=log)
+        jwt_data = heimdall.decrypt_payload(jwt=self.jwt)
+        self.bovespa_account = jwt_data.get("bovespa_account")
+        self.bmf_account = jwt_data.get("bmf_account")
+        self.url_path = str(request.url)
 
     @staticmethod
     def decimal_128_converter(user_trade: dict, field: str) -> float:
@@ -55,7 +58,6 @@ class GetOrders(IService):
 
     @staticmethod
     def normalize_open_order(user_trade: dict) -> dict:
-
         return {
             "account": user_trade.get("ACCOUNT"),
             "id": user_trade.get("CLORDID"),
@@ -80,26 +82,32 @@ class GetOrders(IService):
             "expire_date": user_trade.get("EXPIREDATE"),
         }
 
-    @staticmethod
-    def run(params: dict):
-        open_orders = OracleRepository()
-        query = GetOrders.build_query(params=params)
+    def get_service_response(self) -> List[dict]:
+        open_orders = OracleRepository.instance()
+        query = self.build_query()
         user_open_orders = open_orders.get_data(sql=query)
         return [
             GetOrders.normalize_open_order(user_open_order)
             for user_open_order in user_open_orders
         ]
+
     @staticmethod
     def create_filter(key: str, params: list):
         filter = f""" AND {key} IN {f"('{params[0]}')" if len(params) == 1 else str(tuple(params))}"""
         return filter
 
-    @staticmethod
-    def build_query(params: dict) -> str:
-        query = f"""SELECT * FROM UHYPEDB001.VW_CURRENT_EXECUTION_REPORTS WHERE ACCOUNT IN ('{params['bovespa_account']}','{params['bmf_account']}') """
-        del params['bovespa_account']
-        del params['bmf_account']
-        for key, value in params.items():
+    def _organize_data(self) -> Dict[str, Union[List[str], OrderStatus, None, TradeSide, OrderType, TIF]]:
+        data = {'symbol': self.symbols,
+                'order_type': self.order_type,
+                'order_status': self.order_status,
+                'trade_sides': self.trade_sides,
+                'time_in_forces': self.time_in_forces}
+
+        return data
+
+    def build_query(self) -> str:
+        query = f"""SELECT * FROM UHYPEDB001.VW_CURRENT_EXECUTION_REPORTS WHERE ACCOUNT IN ('{self.bovespa_account}','{self.bmf_account}') """
+        for key, value in self._organize_data.items():
             if value is None:
                 continue
             value = [v.upper() for v in value]
@@ -109,6 +117,3 @@ class GetOrders(IService):
             )
 
         return query
-
-    def __call__(self, *args, **kwargs):
-        return self.open_orders()

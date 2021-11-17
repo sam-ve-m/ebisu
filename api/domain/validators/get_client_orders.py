@@ -2,7 +2,6 @@ from pydantic import BaseModel
 
 
 class CustomerParams(BaseModel):
-    bmf_account: int
     symbols: str
     order_type: str
     order_status: str

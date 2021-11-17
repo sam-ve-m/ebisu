@@ -3,7 +3,7 @@ from hashlib import sha1
 
 from api.core.interfaces.infrastructures.cache.interface import ICache
 from api.infrastructures.cache.infrastructure import RedisInfrastructure
-from api.utils.env_config import config
+from decouple import config
 
 
 class RedisRepository(ICache):
