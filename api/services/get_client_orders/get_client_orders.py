@@ -1,8 +1,9 @@
 # standards
 import logging
-from typing import Optional, List, Dict, Type, Union
+from typing import Optional, List, Dict, Union
 
-from fastapi import Request, Query
+from fastapi import Request
+
 # Jormungandr
 from heimdall_client.bifrost import Heimdall
 
@@ -18,16 +19,14 @@ log = logging.getLogger()
 
 
 class GetOrders(IService):
-
     def __init__(
-            self,
-            symbols: str,
-            order_type: Optional[OrderType],
-            order_status: Optional[OrderStatus],
-            trade_sides: Optional[TradeSide],
-            time_in_forces: Optional[TIF],
-            request: Request,
-
+        self,
+        symbols: str,
+        order_type: Optional[OrderType],
+        order_status: Optional[OrderStatus],
+        trade_sides: Optional[TradeSide],
+        time_in_forces: Optional[TIF],
+        request: Request,
     ):
         self.symbols = symbols
         self.order_type = order_type
@@ -36,7 +35,7 @@ class GetOrders(IService):
         self.time_in_forces = time_in_forces
         self.jwt = request.headers.get("x-thebs-answer")
         if self.jwt is None:
-            raise Exception('No token giving')
+            raise Exception("No token giving")
         heimdall = Heimdall(logger=log)
         jwt_data = heimdall.decrypt_payload(jwt=self.jwt)
         print(jwt_data.get("bovespa_account"))
@@ -67,7 +66,8 @@ class GetOrders(IService):
             "side": user_trade.get("SIDE"),
             "status": user_trade.get("ORDSTATUS"),
             "tif": user_trade.get("TIMEINFORCE"),
-            "total_spent": user_trade.get("CUMQTY") * GetOrders.decimal_128_converter(user_trade, "AVGPX"),
+            "total_spent": user_trade.get("CUMQTY")
+            * GetOrders.decimal_128_converter(user_trade, "AVGPX"),
             "quantity_filled": user_trade.get("CUMQTY"),
             "quantity_leaves": user_trade.get("LEAVESQTY"),
             "quantity_last": user_trade.get("LASTQTY"),
@@ -93,24 +93,27 @@ class GetOrders(IService):
         filter = f""" AND {key} IN {f"('{params[0]}')" if len(params) == 1 else str(tuple(params))}"""
         return filter
 
-    def _organize_data(self) -> Dict[str, Union[List[str], OrderStatus, None, TradeSide, OrderType, TIF]]:
-        data = {'symbols': self.symbols,
-                'order_type': self.order_type.value,
-                'order_status': self.order_status.value,
-                'trade_sides': self.trade_sides.value,
-                'time_in_forces': self.time_in_forces.value}
+    def _organize_data(
+        self,
+    ) -> Dict[str, Union[List[str], OrderStatus, None, TradeSide, OrderType, TIF]]:
+        data = {
+            "symbols": self.symbols,
+            "order_type": self.order_type.value,
+            "order_status": self.order_status.value,
+            "trade_sides": self.trade_sides.value,
+            "time_in_forces": self.time_in_forces.value,
+        }
 
         return data
 
     def build_query(self) -> str:
-        query = f"""SELECT * FROM UHYPEDB001.VW_CURRENT_EXECUTION_REPORTS WHERE ACCOUNT IN ('{self.bovespa_account}','{self.bmf_account}') """
+        query = f"""SELECT * FROM USOLUDB001.VW_CURRENT_EXECUTION_REPORTS WHERE ACCOUNT IN ('{self.bovespa_account}','{self.bmf_account}') """
         for key, value in self._organize_data().items():
             if value is None:
                 continue
             value = [v.upper() for v in value]
             query += GetOrders.create_filter(
-                utils.FROM_SEARCH_PARAMS_TO_ORACLE_KEYS[key],
-                value
+                utils.FROM_SEARCH_PARAMS_TO_ORACLE_KEYS[key], value
             )
 
         return query

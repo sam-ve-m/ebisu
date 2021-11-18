@@ -1,11 +1,9 @@
-
 from decouple import config
 
 from api.infrastructures.oracle.infrastructure import OracleInfrastructure
 
 
 class OracleRepository(OracleInfrastructure):
-
     @classmethod
     def instance(cls):
         oracle_connection = cls.get_connection(
@@ -14,7 +12,6 @@ class OracleRepository(OracleInfrastructure):
             dsn=config("ORACLE_BASE_DSN"),
             port=config("ORACLE_PORT"),
             service=config("ORACLE_SERVICE"),
-
         )
         return cls(oracle_connection=oracle_connection)
 

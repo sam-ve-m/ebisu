@@ -7,7 +7,6 @@ from decouple import config
 
 
 class RedisRepository(ICache):
-
     def __init__(self):
         self.infra = self.get_infrastructure()
 
@@ -21,7 +20,7 @@ class RedisRepository(ICache):
         )
 
     def get_or_create_cache(
-            self, function_name: str, callback: callable, callback_kwargs: dict, ttl: int
+        self, function_name: str, callback: callable, callback_kwargs: dict, ttl: int
     ):
         key = self.get_cache_key(
             function_name=function_name, callback_kwargs=callback_kwargs

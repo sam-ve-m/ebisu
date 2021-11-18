@@ -2,7 +2,6 @@ from redis import Redis
 
 
 class RedisInfrastructure:
-
     @staticmethod
     def get_connection(**kwargs):
         return Redis(
