@@ -1,25 +1,27 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
 class ResponseGetClientOrders(BaseModel):
-    account: str
-    id: int
-    time: str
-    quantity: str
-    basis: str
-    price: float
-    last_price: float
-    stop_price: float
-    currency: str
-    symbol: str
-    side: str
-    status: str
-    tif: str
-    total_spent: float
-    quantity_filled: float
-    quantity_leaves: float
-    quantity_last: float
-    text: str
-    reject_reason: str
-    exec_type: str
-    expire_date: str
+    account: Optional[str]
+    id: Optional[int]
+    time: Optional[str]
+    quantity: Optional[str]
+    basis: Optional[str]
+    price: Optional[float]
+    last_price: Optional[float]
+    stop_price: Optional[float]
+    currency: Optional[str]
+    symbol: Optional[str]
+    side: Optional[str]
+    status: Optional[str]
+    tif: Optional[str]
+    total_spent: Optional[float]
+    quantity_filled: Optional[float]
+    quantity_leaves: Optional[float]
+    quantity_last: Optional[float]
+    text: Optional[str]
+    reject_reason: Optional[str]
+    exec_type: Optional[str]
+    expire_date: Optional[str]

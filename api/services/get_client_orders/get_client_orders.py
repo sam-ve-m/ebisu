@@ -17,12 +17,6 @@ from api.utils import utils
 log = logging.getLogger()
 
 
-def pipe_to_list(data: str):
-    data = data.upper()
-    list_data = data.split('|')
-    return list_data
-
-
 class GetOrders(IService):
 
     def __init__(
@@ -35,7 +29,7 @@ class GetOrders(IService):
             request: Request,
 
     ):
-        self.symbols = pipe_to_list(symbols)
+        self.symbols = symbols
         self.order_type = order_type
         self.order_status = order_status
         self.trade_sides = trade_sides
@@ -45,6 +39,7 @@ class GetOrders(IService):
             raise Exception('No token giving')
         heimdall = Heimdall(logger=log)
         jwt_data = heimdall.decrypt_payload(jwt=self.jwt)
+        print(jwt_data.get("bovespa_account"))
         self.bovespa_account = jwt_data.get("bovespa_account")
         self.bmf_account = jwt_data.get("bmf_account")
         self.url_path = str(request.url)
@@ -58,7 +53,7 @@ class GetOrders(IService):
 
     @staticmethod
     def normalize_open_order(user_trade: dict) -> dict:
-        return {
+        normalized_data = {
             "account": user_trade.get("ACCOUNT"),
             "id": user_trade.get("CLORDID"),
             "time": user_trade.get("TRANSACTTIME"),
@@ -81,6 +76,8 @@ class GetOrders(IService):
             "exec_type": user_trade.get("EXECTYPE"),
             "expire_date": user_trade.get("EXPIREDATE"),
         }
+        log.debug(normalized_data)
+        return normalized_data
 
     def get_service_response(self) -> List[dict]:
         open_orders = OracleRepository.instance()
@@ -97,17 +94,17 @@ class GetOrders(IService):
         return filter
 
     def _organize_data(self) -> Dict[str, Union[List[str], OrderStatus, None, TradeSide, OrderType, TIF]]:
-        data = {'symbol': self.symbols,
-                'order_type': self.order_type,
-                'order_status': self.order_status,
-                'trade_sides': self.trade_sides,
-                'time_in_forces': self.time_in_forces}
+        data = {'symbols': self.symbols,
+                'order_type': self.order_type.value,
+                'order_status': self.order_status.value,
+                'trade_sides': self.trade_sides.value,
+                'time_in_forces': self.time_in_forces.value}
 
         return data
 
     def build_query(self) -> str:
         query = f"""SELECT * FROM UHYPEDB001.VW_CURRENT_EXECUTION_REPORTS WHERE ACCOUNT IN ('{self.bovespa_account}','{self.bmf_account}') """
-        for key, value in self._organize_data.items():
+        for key, value in self._organize_data().items():
             if value is None:
                 continue
             value = [v.upper() for v in value]

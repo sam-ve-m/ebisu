@@ -13,6 +13,7 @@ def get_query_params_rom_url(url: str):
 FROM_SEARCH_PARAMS_TO_ORACLE_KEYS = {
     "symbols": "SYMBOL",
     "order_status": "ORDSTATUS",
+    "order_type": "ORDTYPE",
     "trade_sides": "SIDE",
     "time_in_forces": "TIMEINFORCE",
 }

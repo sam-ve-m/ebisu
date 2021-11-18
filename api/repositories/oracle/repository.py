@@ -33,7 +33,7 @@ class OracleRepository(OracleInfrastructure):
                 cursor.execute(sql)
                 columns = [col[0] for col in cursor.description]
                 cursor.rowfactory = lambda *args: dict(zip(columns, args))
-                row = cursor.fetcone()
+                row = cursor.fetchone()
 
         return row
 
