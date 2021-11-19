@@ -2,7 +2,7 @@
 import logging
 from typing import Optional, List, Dict, Union
 
-from fastapi import Request
+from fastapi import Request, Query
 
 # Jormungandr
 from heimdall_client.bifrost import Heimdall
@@ -21,12 +21,12 @@ log = logging.getLogger()
 class GetOrders(IService):
     def __init__(
         self,
-        symbols: str,
-        order_type: Optional[OrderType],
-        order_status: Optional[OrderStatus],
-        trade_sides: Optional[TradeSide],
-        time_in_forces: Optional[TIF],
         request: Request,
+        symbols: str,
+        order_type: Optional[OrderType] = Query(None),
+        order_status: Optional[OrderStatus] = Query(None),
+        trade_sides: Optional[TradeSide] = Query(None),
+        time_in_forces: Optional[TIF] = Query(None),
     ):
         self.symbols = symbols
         self.order_type = order_type
@@ -38,7 +38,6 @@ class GetOrders(IService):
             raise Exception("No token giving")
         heimdall = Heimdall(logger=log)
         jwt_data = heimdall.decrypt_payload(jwt=self.jwt)
-        print(jwt_data.get("bovespa_account"))
         self.bovespa_account = jwt_data.get("bovespa_account")
         self.bmf_account = jwt_data.get("bmf_account")
         self.url_path = str(request.url)
@@ -98,10 +97,10 @@ class GetOrders(IService):
     ) -> Dict[str, Union[List[str], OrderStatus, None, TradeSide, OrderType, TIF]]:
         data = {
             "symbols": self.symbols,
-            "order_type": self.order_type.value,
-            "order_status": self.order_status.value,
-            "trade_sides": self.trade_sides.value,
-            "time_in_forces": self.time_in_forces.value,
+            "order_type": self.order_type.value if self.order_type else self.order_type,
+            "order_status": self.order_status.value if self.order_status else self.order_status,
+            "trade_sides": self.trade_sides.value if self.trade_sides else self.trade_sides,
+            "time_in_forces": self.time_in_forces.value if self.time_in_forces else self.time_in_forces
         }
 
         return data
