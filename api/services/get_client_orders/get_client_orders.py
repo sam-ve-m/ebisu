@@ -23,10 +23,10 @@ class GetOrders(IService):
         self,
         request: Request,
         symbols: str,
-        order_type: Optional[OrderType] = Query(None),
-        order_status: Optional[OrderStatus] = Query(None),
-        trade_sides: Optional[TradeSide] = Query(None),
-        time_in_forces: Optional[TIF] = Query(None),
+        order_type: Optional[OrderType],
+        order_status: Optional[OrderStatus],
+        trade_sides: Optional[TradeSide],
+        time_in_forces: Optional[TIF],
     ):
         self.symbols = symbols
         self.order_type = order_type
@@ -52,8 +52,8 @@ class GetOrders(IService):
     @staticmethod
     def normalize_open_order(user_trade: dict) -> dict:
         normalized_data = {
-            "account": user_trade.get("ACCOUNT"),
             "id": user_trade.get("CLORDID"),
+            "account": user_trade.get("ACCOUNT"),
             "time": user_trade.get("TRANSACTTIME"),
             "quantity": user_trade.get("ORDERQTY"),
             "basis": GetOrders.decimal_128_converter(user_trade, "AVGPX"),
