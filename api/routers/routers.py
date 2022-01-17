@@ -21,6 +21,6 @@ app = FastAPI(
 )
 
 
-@app.get("/get_client_orders_faas", response_model=ResponseGetClientOrders)
+@app.get("/get_client_orders_faas")
 async def get_client_orders(service: IService = Depends(GetOrders)):
     return service.get_service_response()

@@ -1,6 +1,6 @@
-from decouple import config
 
 from api.infrastructures.oracle.infrastructure import OracleInfrastructure
+from api.utils.env_config import config
 
 
 class OracleRepository(OracleInfrastructure):
@@ -10,7 +10,7 @@ class OracleRepository(OracleInfrastructure):
             user=config("ORACLE_USER"),
             password=config("ORACLE_PASSWORD"),
             dsn=config("ORACLE_BASE_DSN"),
-            port=config("ORACLE_PORT"),
+            port=int(config("ORACLE_PORT")),
             service=config("ORACLE_SERVICE"),
         )
         return cls(oracle_connection=oracle_connection)

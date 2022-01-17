@@ -14,6 +14,7 @@ from api.domain.enums.time_in_force import TIF
 from api.domain.enums.trade_side import TradeSide
 from api.repositories.oracle.repository import OracleRepository
 from api.utils import utils
+from api.utils.pipe_to_list import pipe_to_list
 
 log = logging.getLogger()
 
@@ -28,7 +29,7 @@ class GetOrders(IService):
         trade_sides: Optional[TradeSide],
         time_in_forces: Optional[TIF],
     ):
-        self.symbols = symbols
+        self.symbols = pipe_to_list(symbols)
         self.order_type = order_type
         self.order_status = order_status
         self.trade_sides = trade_sides
@@ -52,7 +53,6 @@ class GetOrders(IService):
     @staticmethod
     def normalize_open_order(user_trade: dict) -> dict:
         normalized_data = {
-            "id": user_trade.get("CLORDID"),
             "account": user_trade.get("ACCOUNT"),
             "time": user_trade.get("TRANSACTTIME"),
             "quantity": user_trade.get("ORDERQTY"),
@@ -108,11 +108,13 @@ class GetOrders(IService):
     def build_query(self) -> str:
         query = f"""SELECT * FROM USOLUDB001.VW_CURRENT_EXECUTION_REPORTS WHERE ACCOUNT IN ('{self.bovespa_account}','{self.bmf_account}') """
         for key, value in self._organize_data().items():
+            print(key, value)
             if value is None:
                 continue
-            value = [v.upper() for v in value]
+            if key != 'symbols':
+                value = [value]
             query += GetOrders.create_filter(
                 utils.FROM_SEARCH_PARAMS_TO_ORACLE_KEYS[key], value
             )
-
+        print(query)
         return query
