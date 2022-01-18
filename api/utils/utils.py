@@ -1,0 +1,19 @@
+from urllib import parse
+
+
+def get_query_params_rom_url(url: str):
+    array_fields = ["entity_types"]
+    query_params = dict(parse.parse_qsl(parse.urlsplit(url).query))
+    for key, value in query_params.items():
+        if key == "entity_types" or key in array_fields:
+            query_params[key] = value.split("|")
+    return query_params
+
+
+FROM_SEARCH_PARAMS_TO_ORACLE_KEYS = {
+    "symbols": "SYMBOL",
+    "order_status": "ORDSTATUS",
+    "order_type": "ORDTYPE",
+    "trade_sides": "SIDE",
+    "time_in_forces": "TIMEINFORCE",
+}
