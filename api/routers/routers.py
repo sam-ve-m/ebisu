@@ -6,9 +6,13 @@ from api.application_dependencies import (
     API_TITLE,
     API_DESCRIPTION,
 )
+from api.application_dependencies.singletons.mongo import MongoSingletonInstance
+from api.application_dependencies.singletons.oracle import OracleSingletonInstance
 from api.core.interfaces.interface import IService
-from api.domain.responses.get_client_orders import ResponseGetClientOrders
 from api.services.get_client_orders.get_client_orders import GetOrders
+from api.services.list_client_orders.list_client_orders import ListOrders
+from api.services.list_client_orders.strategies import GetUsOrders, GetBrOrders
+from api.services.get_client_orders.strategies import GetUsOrdersDetails, GetBrOrdersDetails
 
 log = logging.getLogger()
 
@@ -21,6 +25,17 @@ app = FastAPI(
 )
 
 
-@app.get("/get_client_orders_faas")
+@app.get("/get_client_orders")
 async def get_client_orders(service: IService = Depends(GetOrders)):
+
+    GetUsOrdersDetails.oracle_singleton_instance = OracleSingletonInstance.get_oracle_us_singleton_instance()
+    GetBrOrdersDetails.oracle_singleton_instance = OracleSingletonInstance.get_oracle_br_singleton_instance()
     return service.get_service_response()
+
+
+@app.get("/list_client_orders")
+async def get_client_orders(service: IService = Depends(ListOrders)):
+    GetUsOrders.oracle_singleton_instance = OracleSingletonInstance.get_oracle_us_singleton_instance()
+    GetBrOrders.oracle_singleton_instance = OracleSingletonInstance.get_oracle_br_singleton_instance()
+    ListOrders.mongo_singleton = await MongoSingletonInstance.get_mongo_singleton_instance()
+    return await service.get_service_response()

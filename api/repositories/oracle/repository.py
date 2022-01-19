@@ -1,45 +1,32 @@
 
-from api.infrastructures.oracle.infrastructure import OracleInfrastructure
-from api.utils.env_config import config
-
-
-class OracleRepository(OracleInfrastructure):
-    @classmethod
-    def instance(cls):
-        oracle_connection = cls.get_connection(
-            user=config("ORACLE_USER"),
-            password=config("ORACLE_PASSWORD"),
-            dsn=config("ORACLE_BASE_DSN"),
-            port=int(config("ORACLE_PORT")),
-            service=config("ORACLE_SERVICE"),
-        )
-        return cls(oracle_connection=oracle_connection)
+class OracleRepository:
 
     def __init__(self, oracle_connection):
         self.oracle_connection = oracle_connection
 
     def execute(self, sql):
-        with self.oracle_connection as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(sql)
-                connection.commit()
+        connection = self.oracle_connection.acquire()
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            connection.commit()
+        self.oracle_connection.release(connection)
 
     def get_one_data(self, sql: str):
-        with self.oracle_connection as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(sql)
-                columns = [col[0] for col in cursor.description]
-                cursor.rowfactory = lambda *args: dict(zip(columns, args))
-                row = cursor.fetchone()
-
+        connection = self.oracle_connection.acquire()
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            columns = [col[0] for col in cursor.description]
+            cursor.rowfactory = lambda *args: dict(zip(columns, args))
+            row = cursor.fetchone()
+        self.oracle_connection.release(connection)
         return row
 
     def get_data(self, sql: str):
-        with self.oracle_connection as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(sql)
-                columns = [col[0] for col in cursor.description]
-                cursor.rowfactory = lambda *args: dict(zip(columns, args))
-                rows = cursor.fetchall()
-
+        connection = self.oracle_connection.acquire()
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+            columns = [col[0] for col in cursor.description]
+            cursor.rowfactory = lambda *args: dict(zip(columns, args))
+            rows = cursor.fetchall()
+        self.oracle_connection.release(connection)
         return rows
