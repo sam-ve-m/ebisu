@@ -22,17 +22,9 @@ class ListOrders(IService):
         self,
         request: Request,
         region: Region,
-        symbols: str = Query(None),
-        order_type: OrderType = Query(None),
         order_status: str = Query(None),
-        trade_sides: TradeSide = Query(None),
-        time_in_forces: TIF = Query(None),
     ):
-        self.symbols = pipe_to_list(symbols)
-        self.order_type = order_type
         self.order_status = pipe_to_list(order_status)
-        self.trade_sides = trade_sides
-        self.time_in_forces = time_in_forces
         self.jwt = request.headers.get("x-thebs-answer")
         self.region = region.value
         self.bovespa_account = None

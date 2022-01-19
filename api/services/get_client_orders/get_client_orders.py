@@ -27,9 +27,9 @@ class GetOrders(IService):
         self,
         request: Request,
         region: Region,
-        clorid: str,
+        cl_order_id: str,
     ):
-        self.clorid = clorid
+        self.clorid = cl_order_id
         self.jwt = request.headers.get("x-thebs-answer")
         self.region = region.value
         self.bovespa_account = None
@@ -81,7 +81,6 @@ class GetOrders(IService):
         self.get_account()
         open_orders = order_region[self.region]
         query = open_orders.build_query(self.bovespa_account, self.bmf_account, self.clorid)
-        print(query)
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
         return Response(media_type="application/json", content=orjson.dumps([
             GetOrders.normalize_open_order(user_open_order)
