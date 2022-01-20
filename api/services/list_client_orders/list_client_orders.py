@@ -1,5 +1,7 @@
 # standards
 import logging
+from typing import List
+
 from fastapi import Request, Query, Response
 from heimdall_client.bifrost import Heimdall
 from orjson import orjson
@@ -60,15 +62,15 @@ class ListOrders(IService):
         }
         return normalized_data
 
-    async def get_service_response(self) -> Response:
+    async def get_service_response(self) -> List[dict]:
         self.get_account()
         open_orders = order_region[self.region]
         query = open_orders.build_query(self.bovespa_account, self.bmf_account, self.order_status)
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
-        return Response(media_type="application/json", content=orjson.dumps([
+        return [
             await ListOrders.normalize_open_order(user_open_order)
             for user_open_order in user_open_orders
-        ]))
+        ]
 
     @staticmethod
     async def get_name(symbol):

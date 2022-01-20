@@ -1,22 +1,13 @@
-# standards
 import logging
-from typing import Optional, List, Dict, Union
+from typing import List
 
-from fastapi import Request, Query, Response
-from fastapi.responses import JSONResponse
-# Jormungandr
+from fastapi import Request, Header, Response
 from heimdall_client.bifrost import Heimdall
 from orjson import orjson
 
 from api.core.interfaces.interface import IService
-from api.domain.enums.order_status import OrderStatus
-from api.domain.enums.order_type import OrderType
 from api.domain.enums.region import Region
-from api.domain.enums.time_in_force import TIF
-from api.domain.enums.trade_side import TradeSide
 from api.services.get_client_orders.strategies import order_region
-from api.utils import utils
-from api.utils.pipe_to_list import pipe_to_list
 
 log = logging.getLogger()
 
@@ -28,9 +19,10 @@ class GetOrders(IService):
         request: Request,
         region: Region,
         cl_order_id: str,
+        x_thebs_answer: str = Header(...),
     ):
         self.clorid = cl_order_id
-        self.jwt = request.headers.get("x-thebs-answer")
+        self.jwt = x_thebs_answer
         self.region = region.value
         self.bovespa_account = None
         self.bmf_account = None
@@ -77,13 +69,13 @@ class GetOrders(IService):
         }
         return normalized_data
 
-    def get_service_response(self) -> Response:
+    def get_service_response(self) -> List[dict]:
         self.get_account()
         open_orders = order_region[self.region]
         query = open_orders.build_query(self.bovespa_account, self.bmf_account, self.clorid)
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
-        return Response(media_type="application/json", content=orjson.dumps([
+        return [
             GetOrders.normalize_open_order(user_open_order)
             for user_open_order in user_open_orders
-        ]))
+        ]
 
