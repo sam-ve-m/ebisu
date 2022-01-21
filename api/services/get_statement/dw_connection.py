@@ -4,6 +4,7 @@ import asyncio
 from datetime import datetime
 from typing import List
 from collections.abc import AsyncIterable, Iterable
+import pytz
 import json
 # Third part
 from aiohttp import ClientSession, ClientResponse
@@ -20,15 +21,19 @@ class DWTransport:
         self.expire_at = None
 
     async def get_orders(
-        self, account: str
+        self, account: str, start: str, end: str, limit: int
     ) -> List[dict]:
         if not account:
             return []
         url = config("DW_GET_ALL_TRANSACTIONS_URL")
         query_params = {
-            "from": '2022-01-01T19:46:58.790Z',
-            "to": '2022-01-20T19:46:58.790Z',
+            "from": start,
+            "to": end,
+            "offset": start,
+            "limit": limit
         }
+        if not limit:
+            del query_params["limit"]
         response = await self.execute_get_with_auth(
             url=url, account=account, query_params=query_params
         )

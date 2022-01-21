@@ -24,11 +24,15 @@ class ListOrders(IService):
         self,
         request: Request,
         region: Region,
+        limit: int,
+        offset: int,
         order_status: str = Query(None),
     ):
         self.order_status = pipe_to_list(order_status)
         self.jwt = request.headers.get("x-thebs-answer")
         self.region = region.value
+        self.offset = offset
+        self.limit = limit
         self.bovespa_account = None
         self.bmf_account = None
         self.url_path = str(request.url)
@@ -65,7 +69,8 @@ class ListOrders(IService):
     async def get_service_response(self) -> List[dict]:
         self.get_account()
         open_orders = order_region[self.region]
-        query = open_orders.build_query(self.bovespa_account, self.bmf_account, self.order_status)
+        query = open_orders.build_query(bovespa_account=self.bovespa_account, bmf_account=self.bmf_account,
+                                        offset=self.offset, limit=self.limit, order_status=self.order_status)
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
         return [
             await ListOrders.normalize_open_order(user_open_order)

@@ -7,7 +7,7 @@ class GetUsOrders:
     oracle_singleton_instance = None
 
     @staticmethod
-    def build_query(bovespa_account: str, bmf_account: str, order_status: List[OrderStatus]) -> str:
+    def build_query(bovespa_account: str, bmf_account: str, offset: int, limit: int, order_status: List[OrderStatus]) -> str:
         query = f"""SELECT B.SYMBOL, B.ORDSTATUS, B.CLORDID, B.TRANSACTTIME, B.CUMQTY, B.AVGPX
                     FROM UDRIVDB001.EXECUTION_REPORTS B
                     WHERE B.ACCOUNT in ('{bovespa_account}', '{bmf_account}')
@@ -17,7 +17,11 @@ class GetUsOrders:
                         FROM UDRIVDB001.EXECUTION_REPORTS A
                         WHERE A.ACCOUNT = B.ACCOUNT
                         AND A.CLORDID = B.CLORDID
-                    )  """
+                    )  
+                    ORDER BY B.TRANSACTTIME DESC
+                    offset {offset} rows
+                    fetch first {limit} row only  
+                    """
         return query
 
     @staticmethod

@@ -7,7 +7,7 @@ class S3SingletonInstance:
     s3_singleton_instance = None
 
     @classmethod
-    def get_oracle_us_singleton_instance(cls):
+    def get_s3_singleton_instance(cls):
         if cls.s3_singleton_instance is None:
             infra = S3Infrastructure.get_connection()
             cls.s3_singleton_instance = S3Repository(infra)
