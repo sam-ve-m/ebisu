@@ -25,7 +25,7 @@ class RequestStatement(IService):
         self.jwt = request.headers.get("x-thebs-answer")
         self.bovespa_account = None
         self.bmf_account = None
-        self.cpf = None
+        self.client_id = None
         self.start_date = (datetime.now() - timedelta(days=90)).timestamp() * 1000
         self.end_date = time.time() * 1000
 
@@ -34,7 +34,7 @@ class RequestStatement(IService):
         jwt_data = heimdall.decrypt_payload(jwt=self.jwt)
         self.bovespa_account = jwt_data.get("bovespa_account")
         self.bmf_account = jwt_data.get("bmf_account")
-        self.cpf = jwt_data.get("email")
+        self.client_id = jwt_data.get("email")
 
     async def get_service_response(self) -> dict:
         self.get_account()
@@ -58,8 +58,8 @@ class RequestStatement(IService):
 
         RequestStatement.s3_singleton.upload_file(file_path=self.generate_path(), content=pdf, expire_date=file_duration)
         result = RequestStatement.s3_singleton.generate_file_link(file_path=self.generate_path())
-        return result
+        return {"pdf_link": result}
 
     def generate_path(self):
-        path = f"{self.cpf}/statements/{self.start_date}-{self.end_date}.pdf"
+        path = f"{self.client_id}/statements/{self.start_date}-{self.end_date}.pdf"
         return path

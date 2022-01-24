@@ -4,6 +4,8 @@ from fastapi import Header, Query
 from heimdall_client.bifrost import Heimdall
 import logging
 
+from api.domain.enums.region import Region
+
 log = logging.getLogger()
 
 
@@ -12,6 +14,7 @@ class ListBrokerNote:
     s3_singleton: None
 
     def __init__(self,
+                 region: Region,
                  x_thebs_answer: str = Header(...),
                  year: int = Query(None),
                  month: int = Query(None),
@@ -23,14 +26,15 @@ class ListBrokerNote:
         self.day = day
         self.bovespa_account = None
         self.bmf_account = None
-        self.cpf = None
+        self.client_id = None
+        self.region = region
 
     def get_account(self):
         heimdall = Heimdall(logger=log)
         jwt_data = heimdall.decrypt_payload(jwt=self.jwt)
         self.bovespa_account = jwt_data.get("bovespa_account")
         self.bmf_account = jwt_data.get("bmf_account")
-        self.cpf = jwt_data.get("email")
+        self.client_id = jwt_data.get("email")
 
     def get_service_response(self):
         self.get_account()
@@ -43,7 +47,7 @@ class ListBrokerNote:
             directories = [ListBrokerNote.get_directory_name(directory) for directory in
                            list_directories.get('CommonPrefixes')]
 
-        return directories
+        return {"available": directories}
 
     @staticmethod
     def get_directory_name(directory: dict):
@@ -51,13 +55,13 @@ class ListBrokerNote:
         if directory:
             directory_name = directory.get('Prefix').split('/')[-2]
 
-        return directory_name
+        return int(directory_name)
 
     def generate_path(self):
         path_route = os.path.join(*tuple(str(path_fragment)
-                                         for path_fragment in ('broker_note', self.year, self.month, self.day)
+                                         for path_fragment in ('broker_note', self.year, self.month)
                                          if path_fragment is not None))
-        path = f"{self.cpf}/{path_route}/"
+        path = f"{self.client_id}/{self.region}/{path_route}/"
 
         return path
 

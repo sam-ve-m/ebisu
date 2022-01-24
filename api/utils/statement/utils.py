@@ -3,6 +3,7 @@ from typing import List
 
 import pytz
 from api.services.get_statement.dw_connection import DWTransport
+from api.utils.utils import str_to_timestamp_statement
 
 
 class Statement:
@@ -10,7 +11,7 @@ class Statement:
     @staticmethod
     def normalize_statement(client_statement: dict) -> dict:
         normalized_data = {
-            "date": str(client_statement.get('DT_LANCAMENTO')),
+            "date": str_to_timestamp_statement(client_statement.get('DT_LANCAMENTO')),
             "description": client_statement.get("DS_LANCAMENTO"),
             "value": client_statement.get("VL_LANCAMENTO"),
         }
@@ -21,7 +22,7 @@ class Statement:
         statements = []
         for transaction in client_statement.get('dict_body'):
             statements.append({
-                "date": str(transaction.get('tranWhen')),
+                "date": str_to_timestamp_statement(transaction.get('tranWhen')),
                 "description": transaction.get("comment"),
                 "value": transaction.get("tranAmount"),
             })

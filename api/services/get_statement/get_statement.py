@@ -17,7 +17,6 @@ class GetStatement(IService):
             region: Region,
             limit: int,
             offset: float,
-            start_date: float,
             end_date: float
     ):
         self.region = region.value
@@ -26,7 +25,6 @@ class GetStatement(IService):
         self.bmf_account = None
         self.limit = limit
         self.offset = offset
-        self.start_date = start_date
         self.end_date = end_date
 
     def get_account(self):
@@ -38,7 +36,7 @@ class GetStatement(IService):
     async def get_service_response(self) -> dict:
         self.get_account()
         if self.region == 'US':
-            us_statement = await Statement.get_dw_statement(self.start_date, self.end_date, self.limit)
+            us_statement = await Statement.get_dw_statement(self.offset, self.end_date, self.limit)
             return us_statement
         start_date = Statement.from_timestamp_to_utc_isoformat_br(self.offset)
         end_date = Statement.from_timestamp_to_utc_isoformat_br(self.end_date)

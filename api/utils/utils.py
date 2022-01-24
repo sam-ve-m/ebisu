@@ -1,3 +1,4 @@
+import time
 from urllib import parse
 
 
@@ -8,6 +9,14 @@ def get_query_params_rom_url(url: str):
         if key == "entity_types" or key in array_fields:
             query_params[key] = value.split("|")
     return query_params
+
+
+def str_to_timestamp(date: str) -> float:
+    return time.mktime(time.strptime(str(date), "%Y-%m-%d %H:%M:%S.%f"))
+
+
+def str_to_timestamp_statement(date: str) -> float:
+    return time.mktime(time.strptime(str(date), "%Y-%m-%d %H:%M:%S"))
 
 
 FROM_SEARCH_PARAMS_TO_ORACLE_KEYS = {

@@ -13,6 +13,7 @@ from api.domain.enums.time_in_force import TIF
 from api.domain.enums.trade_side import TradeSide
 from api.services.list_client_orders.strategies import order_region
 from api.utils.pipe_to_list import pipe_to_list
+from api.utils.utils import str_to_timestamp
 
 log = logging.getLogger()
 
@@ -55,8 +56,9 @@ class ListOrders(IService):
         normalized_data = {
             "name": await ListOrders.get_name(user_trade.get('SYMBOL')),
             "cl_order_id": user_trade.get("CLORDID"),
-            "time": user_trade.get("TRANSACTTIME"),
+            "time": str_to_timestamp(user_trade.get("TRANSACTTIME")),
             "quantity": user_trade.get("ORDERQTY"),
+            "order_type": user_trade.get("ORDTYPE"),
             "average_price": ListOrders.decimal_128_converter(user_trade, "AVGPX"),
             "currency": "BRL",
             "symbol": user_trade.get("SYMBOL"),

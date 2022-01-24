@@ -8,7 +8,7 @@ class GetUsOrders:
 
     @staticmethod
     def build_query(bovespa_account: str, bmf_account: str, offset: int, limit: int, order_status: List[OrderStatus]) -> str:
-        query = f"""SELECT B.SYMBOL, B.ORDSTATUS, B.CLORDID, B.TRANSACTTIME, B.CUMQTY, B.AVGPX
+        query = f"""SELECT B.SYMBOL, B.ORDSTATUS, B.CLORDID, B.TRANSACTTIME, B.CUMQTY, B.AVGPX, B.ORDTYPE
                     FROM UDRIVDB001.EXECUTION_REPORTS B
                     WHERE B.ACCOUNT in ('{bovespa_account}', '{bmf_account}')
                     {GetUsOrders.filter(order_status)}

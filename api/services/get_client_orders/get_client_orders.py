@@ -3,11 +3,10 @@ from typing import List
 
 from fastapi import Request, Header, Response
 from heimdall_client.bifrost import Heimdall
-from orjson import orjson
-
 from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
 from api.services.get_client_orders.strategies import order_region
+from api.utils.utils import str_to_timestamp
 
 log = logging.getLogger()
 
@@ -46,9 +45,9 @@ class GetOrders(IService):
         normalized_data = {
             "cl_order_id": user_trade.get("CLORDID"),
             "account": user_trade.get("ACCOUNT"),
-            "time": user_trade.get("TRANSACTTIME"),
+            "time": str_to_timestamp(user_trade.get("TRANSACTTIME")),
             "quantity": user_trade.get("ORDERQTY"),
-            "basis": GetOrders.decimal_128_converter(user_trade, "AVGPX"),
+            "average_price": GetOrders.decimal_128_converter(user_trade, "AVGPX"),
             "price": GetOrders.decimal_128_converter(user_trade, "PRICE"),
             "last_price": GetOrders.decimal_128_converter(user_trade, "LASTPX"),
             "stop_price": GetOrders.decimal_128_converter(user_trade, "STOPPX"),

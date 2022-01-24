@@ -30,7 +30,7 @@ app = FastAPI(
 )
 
 
-@app.get("/get_client_orders")
+@app.get("/get_client_order")
 async def get_client_orders(service: IService = Depends(GetOrders)):
     GetUsOrdersDetails.oracle_singleton_instance = OracleSingletonInstance.get_oracle_us_singleton_instance()
     GetBrOrdersDetails.oracle_singleton_instance = OracleSingletonInstance.get_oracle_br_singleton_instance()
@@ -51,14 +51,14 @@ async def get_bank_statement(service: IService = Depends(GetStatement)):
     return await service.get_service_response()
 
 
-@app.get("/request_bank_statement")
+@app.get("/request_bank_statement_pdf")
 async def request_bank_statement(service: IService = Depends(RequestStatement)):
     RequestStatement.oracle_singleton_instance = OracleSingletonInstance.get_statement_singleton_instance()
     RequestStatement.s3_singleton = S3SingletonInstance.get_s3_singleton_instance()
     return await service.get_service_response()
 
 
-@app.get("/get_broker_note")
+@app.get("/get_broker_note_pdf")
 async def get_broker_note(service: IService = Depends(GetBrokerNote)):
     GetBrokerNote.s3_singleton = S3SingletonInstance.get_s3_singleton_instance()
     return service.get_service_response()
