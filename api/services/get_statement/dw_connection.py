@@ -1,14 +1,10 @@
 # Standards
-import re
-import asyncio
+import json
 from datetime import datetime
 from typing import List
-from collections.abc import AsyncIterable, Iterable
-import pytz
-import json
+
 # Third part
 from aiohttp import ClientSession, ClientResponse
-
 
 from api.utils.env_config import config
 
@@ -21,7 +17,7 @@ class DWTransport:
         self.expire_at = None
 
     async def get_orders(
-        self, account: str, start: str, end: str, limit: int
+            self, account: str, start: str, end: str, limit: int
     ) -> List[dict]:
         if not account:
             return []
@@ -49,14 +45,14 @@ class DWTransport:
         return response
 
     async def execute_get_with_auth(
-        self, url, account: str, query_params: dict
+            self, url, account: str, query_params: dict
     ) -> List[dict]:
-        await self._do_authentication()
+        # await self._do_authentication()
         session = await self._get_session()
         headers = {
             "Accept": "application/json",
             "dw-client-app-key": config("DW_APP_KEY"),
-            "dw-auth-token": self.token,
+            "dw-auth-token": "2f6b13f7-f82c-48e3-a50d-43bb9201b1f2.2022-01-26T16:20:24.870Z",
         }
         url_formatted = url.format(account)
 
@@ -86,7 +82,7 @@ class DWTransport:
             }
             try:
                 async with session.post(
-                    config("DW_AUTHENTICATION_URL"), json=payload, headers=headers
+                        config("DW_AUTHENTICATION_URL"), json=payload, headers=headers
                 ) as response:
                     body = await response.text()
                     dict_body = json.loads(body)
@@ -124,7 +120,7 @@ class DWTransport:
 
     @staticmethod
     async def _response_body_in_json_and_account_id(
-        response: ClientResponse, base_url: str
+            response: ClientResponse, base_url: str
     ) -> List[dict]:
         bodies = list()
         body = await response.text()

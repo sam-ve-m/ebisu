@@ -1,14 +1,16 @@
+import json
+import logging
+import time
 from datetime import datetime, timedelta
 
+import pdfkit
+from fastapi import Request
 from heimdall_client.bifrost import Heimdall
-import logging
+
 from api.core.interfaces.interface import IService
-from fastapi import Request, Response
 from api.domain.enums.region import Region
 from api.utils.statement.utils import Statement
-import pdfkit
-import json
-import time
+
 log = logging.getLogger()
 
 
@@ -40,7 +42,8 @@ class RequestStatement(IService):
         self.get_account()
         if self.region == 'US':
             us_statement = await Statement.get_dw_statement(self.start_date, self.end_date)
-            return us_statement
+            return self.generate_pdf(us_statement)
+
         start_date = Statement.from_timestamp_to_utc_isoformat_br(self.start_date)
         end_date = Statement.from_timestamp_to_utc_isoformat_br(self.end_date)
         query = f"""SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO 
@@ -51,15 +54,21 @@ class RequestStatement(IService):
                    ORDER BY DT_LANCAMENTO
                    """
         statement = RequestStatement.oracle_singleton_instance.get_data(sql=query)
-        pdf = pdfkit.from_string(json.dumps({
-                'Extrato': [Statement.normalize_statement(transc) for transc in statement]
-                }))
+        normalized_statement = {
+            'Extrato': [Statement.normalize_statement(transc) for transc in statement]
+        }
+
+        return self.generate_pdf(normalized_statement)
+
+    def generate_pdf(self, statement: dict) -> dict:
+        pdf = pdfkit.from_string(json.dumps(statement))
         file_duration = (datetime.now() - timedelta(minutes=1)).isoformat()
 
-        RequestStatement.s3_singleton.upload_file(file_path=self.generate_path(), content=pdf, expire_date=file_duration)
-        result = RequestStatement.s3_singleton.generate_file_link(file_path=self.generate_path())
-        return {"pdf_link": result}
+        RequestStatement.s3_singleton.upload_file(file_path=self.generate_path(), content=pdf,
+                                                  expire_date=file_duration)
+        link = RequestStatement.s3_singleton.generate_file_link(file_path=self.generate_path())
+        return {"pdf_link": link}
 
-    def generate_path(self):
+    def generate_path(self) -> str:
         path = f"{self.client_id}/statements/{self.start_date}-{self.end_date}.pdf"
         return path

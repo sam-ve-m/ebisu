@@ -1,6 +1,7 @@
+import logging
+
 from fastapi import Header
 from heimdall_client.bifrost import Heimdall
-import logging
 
 from api.domain.enums.region import Region
 
@@ -8,7 +9,6 @@ log = logging.getLogger()
 
 
 class GetBrokerNote:
-
     s3_singleton: None
 
     def __init__(self,
@@ -22,7 +22,7 @@ class GetBrokerNote:
         self.year = year
         self.month = month
         self.day = day
-        self.region = region
+        self.region = region.value
         self.bovespa_account = None
         self.bmf_account = None
         self.client_id = None

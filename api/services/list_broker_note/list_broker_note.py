@@ -1,8 +1,8 @@
+import logging
 import os
 
 from fastapi import Header, Query
 from heimdall_client.bifrost import Heimdall
-import logging
 
 from api.domain.enums.region import Region
 
@@ -10,7 +10,6 @@ log = logging.getLogger()
 
 
 class ListBrokerNote:
-
     s3_singleton: None
 
     def __init__(self,
@@ -27,7 +26,7 @@ class ListBrokerNote:
         self.bovespa_account = None
         self.bmf_account = None
         self.client_id = None
-        self.region = region
+        self.region = region.value
 
     def get_account(self):
         heimdall = Heimdall(logger=log)
@@ -64,4 +63,3 @@ class ListBrokerNote:
         path = f"{self.client_id}/{self.region}/{path_route}/"
 
         return path
-

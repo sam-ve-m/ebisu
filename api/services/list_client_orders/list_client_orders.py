@@ -2,15 +2,11 @@
 import logging
 from typing import List
 
-from fastapi import Request, Query, Response
+from fastapi import Request, Query, Header
 from heimdall_client.bifrost import Heimdall
-from orjson import orjson
 
 from api.core.interfaces.interface import IService
-from api.domain.enums.order_type import OrderType
 from api.domain.enums.region import Region
-from api.domain.enums.time_in_force import TIF
-from api.domain.enums.trade_side import TradeSide
 from api.services.list_client_orders.strategies import order_region
 from api.utils.pipe_to_list import pipe_to_list
 from api.utils.utils import str_to_timestamp
@@ -22,15 +18,16 @@ class ListOrders(IService):
     mongo_singleton = None
 
     def __init__(
-        self,
-        request: Request,
-        region: Region,
-        limit: int,
-        offset: int,
-        order_status: str = Query(None),
+            self,
+            request: Request,
+            region: Region,
+            limit: int,
+            offset: int,
+            x_thebs_answer: str = Header(...),
+            order_status: str = Query(None),
     ):
         self.order_status = pipe_to_list(order_status)
-        self.jwt = request.headers.get("x-thebs-answer")
+        self.jwt = x_thebs_answer
         self.region = region.value
         self.offset = offset
         self.limit = limit
@@ -64,7 +61,7 @@ class ListOrders(IService):
             "symbol": user_trade.get("SYMBOL"),
             "status": user_trade.get("ORDSTATUS"),
             "total_spent": user_trade.get("CUMQTY")
-            * ListOrders.decimal_128_converter(user_trade, "AVGPX"),
+                           * ListOrders.decimal_128_converter(user_trade, "AVGPX"),
         }
         return normalized_data
 

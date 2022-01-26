@@ -2,8 +2,9 @@ from datetime import datetime
 from typing import List
 
 import pytz
+
 from api.services.get_statement.dw_connection import DWTransport
-from api.utils.utils import str_to_timestamp_statement
+from api.utils.utils import str_to_timestamp_statement, str_to_timestamp_statement_us
 
 
 class Statement:
@@ -21,8 +22,9 @@ class Statement:
     def normalize_statement_us(client_statement: dict) -> List[dict]:
         statements = []
         for transaction in client_statement.get('dict_body'):
+            print()
             statements.append({
-                "date": str_to_timestamp_statement(transaction.get('tranWhen')),
+                "date": str_to_timestamp_statement_us(transaction.get('tranWhen')),
                 "description": transaction.get("comment"),
                 "value": transaction.get("tranAmount"),
             })
@@ -55,6 +57,6 @@ class Statement:
         balance = Statement.normalize_balance_us(*raw_balance)
         statement = Statement.normalize_statement_us(*raw_statement)
         return {
-                'balance': balance,
-                'statement': statement
-                }
+            'balance': balance,
+            'statement': statement
+        }
