@@ -8,6 +8,7 @@ from api.utils.utils import str_to_timestamp_statement, str_to_timestamp_stateme
 
 
 class Statement:
+    dw = DWTransport()
 
     @staticmethod
     def normalize_statement(client_statement: dict) -> dict:
@@ -48,15 +49,21 @@ class Statement:
 
     @staticmethod
     async def get_dw_statement(start_date: float, end_date: float, limit: int = None) -> dict:
-        dw = DWTransport()
         start_date = Statement.from_timestamp_to_utc_isoformat_us(start_date)
         end_date = Statement.from_timestamp_to_utc_isoformat_us(end_date)
-        raw_statement = await dw.get_orders('6bf1ef07-55c9-43ce-802b-f62ad5b56337.1634935585221', start=start_date,
-                                            end=end_date, limit=limit)
-        raw_balance = await dw.get_balances('6bf1ef07-55c9-43ce-802b-f62ad5b56337.1634935585221')
+        raw_statement = await Statement.dw.get_orders('6bf1ef07-55c9-43ce-802b-f62ad5b56337.1634935585221',
+                                                      start=start_date,
+                                                      end=end_date, limit=limit)
+        raw_balance = await Statement.dw.get_balances('6bf1ef07-55c9-43ce-802b-f62ad5b56337.1634935585221')
         balance = Statement.normalize_balance_us(*raw_balance)
         statement = Statement.normalize_statement_us(*raw_statement)
         return {
             'balance': balance,
             'statement': statement
         }
+
+    @staticmethod
+    async def get_dw_balance():
+        raw_balance = await Statement.dw.get_balances('6bf1ef07-55c9-43ce-802b-f62ad5b56337.1634935585221')
+        balance = Statement.normalize_balance_us(*raw_balance)
+        return {"balance": balance}
