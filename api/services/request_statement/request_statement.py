@@ -4,9 +4,10 @@ import time
 from datetime import datetime, timedelta
 
 import pdfkit
-from fastapi import Request
+from fastapi import Request, Depends
 from heimdall_client.bifrost import Heimdall
 
+from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
 from api.utils.statement.utils import Statement
@@ -20,11 +21,11 @@ class RequestStatement(IService):
 
     def __init__(
             self,
-            request: Request,
             region: Region,
+            decompiled_jwt: str = Depends(jwt_validator_and_decompile),
     ):
         self.region = region.value
-        self.jwt = request.headers.get("x-thebs-answer")
+        self.jwt = decompiled_jwt
         self.bovespa_account = None
         self.bmf_account = None
         self.client_id = None
@@ -32,11 +33,9 @@ class RequestStatement(IService):
         self.end_date = time.time() * 1000
 
     def get_account(self):
-        heimdall = Heimdall(logger=log)
-        jwt_data = heimdall.decrypt_payload(jwt=self.jwt)
-        self.bovespa_account = jwt_data.get("bovespa_account")
-        self.bmf_account = jwt_data.get("bmf_account")
-        self.client_id = jwt_data.get("email")
+        self.bovespa_account = self.jwt.get("bovespa_account")
+        self.bmf_account = self.jwt.get("bmf_account")
+        self.client_id = self.jwt.get("email")
 
     async def get_service_response(self) -> dict:
         self.get_account()

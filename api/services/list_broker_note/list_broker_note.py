@@ -1,9 +1,10 @@
 import logging
 import os
 
-from fastapi import Header, Query
+from fastapi import Header, Query, Depends
 from heimdall_client.bifrost import Heimdall
 
+from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.domain.enums.region import Region
 
 log = logging.getLogger()
@@ -14,11 +15,11 @@ class ListBrokerNote:
 
     def __init__(self,
                  region: Region,
-                 x_thebs_answer: str = Header(...),
                  year: int = Query(None),
                  month: int = Query(None),
+                 decompiled_jwt: str = Depends(jwt_validator_and_decompile)
                  ):
-        self.jwt = x_thebs_answer
+        self.jwt = decompiled_jwt
         self.year = year
         self.month = month
         self.bovespa_account = None
@@ -27,11 +28,9 @@ class ListBrokerNote:
         self.region = region.value
 
     def get_account(self):
-        heimdall = Heimdall(logger=log)
-        jwt_data = heimdall.decrypt_payload(jwt=self.jwt)
-        self.bovespa_account = jwt_data.get("bovespa_account")
-        self.bmf_account = jwt_data.get("bmf_account")
-        self.client_id = jwt_data.get("email")
+        self.bovespa_account = self.jwt.get("bovespa_account")
+        self.bmf_account = self.jwt.get("bmf_account")
+        self.client_id = self.jwt.get("email")
 
     def get_service_response(self):
         self.get_account()

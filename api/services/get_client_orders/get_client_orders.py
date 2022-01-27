@@ -1,8 +1,10 @@
 import logging
 from typing import List
 
-from fastapi import Request, Header, Response
+from fastapi import Request, Header, Response, Depends
 from heimdall_client.bifrost import Heimdall
+
+from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
 from api.services.get_client_orders.strategies import order_region
@@ -18,20 +20,18 @@ class GetOrders(IService):
         request: Request,
         region: Region,
         cl_order_id: str,
-        x_thebs_answer: str = Header(...),
+        decompiled_jwt: str = Depends(jwt_validator_and_decompile)
     ):
         self.clorid = cl_order_id
-        self.jwt = x_thebs_answer
+        self.jwt = decompiled_jwt
         self.region = region.value
         self.bovespa_account = None
         self.bmf_account = None
         self.url_path = str(request.url)
 
     def get_account(self):
-        heimdall = Heimdall(logger=log)
-        jwt_data = heimdall.decrypt_payload(jwt=self.jwt)
-        self.bovespa_account = jwt_data.get("bovespa_account")
-        self.bmf_account = jwt_data.get("bmf_account")
+        self.bovespa_account = self.jwt.get("bovespa_account")
+        self.bmf_account = self.jwt.get("bmf_account")
 
     @staticmethod
     def decimal_128_converter(user_trade: dict, field: str) -> float:

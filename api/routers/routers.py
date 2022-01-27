@@ -3,7 +3,6 @@ import logging
 from fastapi import APIRouter, FastAPI, Depends
 
 from api.application_dependencies import (
-    GLOBAL_APPLICATION_DEPENDENCIES,
     API_TITLE,
     API_DESCRIPTION,
 )
@@ -28,7 +27,6 @@ router = APIRouter()
 app = FastAPI(
     title=API_TITLE,
     description=API_DESCRIPTION,
-    dependencies=GLOBAL_APPLICATION_DEPENDENCIES,
 )
 
 

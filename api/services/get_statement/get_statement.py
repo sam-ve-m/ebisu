@@ -1,7 +1,9 @@
 from heimdall_client.bifrost import Heimdall
 import logging
+
+from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService
-from fastapi import Request, Response
+from fastapi import Request, Response, Depends
 from api.domain.enums.region import Region
 from api.utils.statement.utils import Statement
 
@@ -13,14 +15,14 @@ class GetStatement(IService):
 
     def __init__(
             self,
-            request: Request,
             region: Region,
             limit: int,
             offset: float,
-            end_date: float
+            end_date: float,
+            decompiled_jwt: str = Depends(jwt_validator_and_decompile),
     ):
         self.region = region.value
-        self.jwt = request.headers.get("x-thebs-answer")
+        self.jwt = decompiled_jwt
         self.bovespa_account = None
         self.bmf_account = None
         self.limit = limit
@@ -28,10 +30,8 @@ class GetStatement(IService):
         self.end_date = end_date
 
     def get_account(self):
-        heimdall = Heimdall(logger=log)
-        jwt_data = heimdall.decrypt_payload(jwt=self.jwt)
-        self.bovespa_account = jwt_data.get("bovespa_account")
-        self.bmf_account = jwt_data.get("bmf_account")
+        self.bovespa_account = self.jwt.get("bovespa_account")
+        self.bmf_account = self.jwt.get("bmf_account")
 
     async def get_service_response(self) -> dict:
         self.get_account()
