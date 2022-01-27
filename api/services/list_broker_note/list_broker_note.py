@@ -17,12 +17,10 @@ class ListBrokerNote:
                  x_thebs_answer: str = Header(...),
                  year: int = Query(None),
                  month: int = Query(None),
-                 day: int = Query(None),
                  ):
         self.jwt = x_thebs_answer
         self.year = year
         self.month = month
-        self.day = day
         self.bovespa_account = None
         self.bmf_account = None
         self.client_id = None
@@ -41,18 +39,30 @@ class ListBrokerNote:
 
         list_directories = ListBrokerNote.s3_singleton.list_all_directories_in_path(file_path=file_path)
         directories = []
-
+        files = []
         if list_directories.get('CommonPrefixes'):
             directories = [ListBrokerNote.get_directory_name(directory) for directory in
                            list_directories.get('CommonPrefixes')]
 
-        return {"available": directories}
+        if list_directories.get('Contents'):
+            files = [ListBrokerNote.get_file_name(directory) for directory in
+                     list_directories.get('Contents')]
+
+        return {"available": sorted(directories) if directories else sorted(files)}
 
     @staticmethod
     def get_directory_name(directory: dict):
         directory_name = ""
         if directory:
             directory_name = directory.get('Prefix').split('/')[-2]
+
+        return int(directory_name)
+
+    @staticmethod
+    def get_file_name(directory: dict):
+        directory_name = ""
+        if directory:
+            directory_name = directory.get('Key').split('/')[-1].replace('.pdf', '')
 
         return int(directory_name)
 
