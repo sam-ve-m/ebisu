@@ -9,7 +9,7 @@ heimdall = Heimdall(logger=log)
 
 
 def validate_jwt(request: Request) -> Optional[Response]:
-    jwt_is_valid = heimdall.validate_jwt(jwt=request.headers.get("x-thebes-answer"))
+    jwt_is_valid = heimdall.validate_jwt(jwt=request.headers.get("x-thebs-answer"))
     log.info(f"Jwt is valid {jwt_is_valid}")
 
     if not jwt_is_valid:

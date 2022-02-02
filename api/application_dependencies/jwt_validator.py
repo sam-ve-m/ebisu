@@ -10,8 +10,8 @@ log = logging.getLogger()
 
 async def verify_jwt_token_by_string(jwt: str) -> Union[Exception, dict]:
     heimdall = Heimdall(logger=log)
-    jwt_data = heimdall.decrypt_payload(jwt=jwt)
-    return jwt_data
+    jwt_content, heimdall_status = heimdall.decode_payload(jwt=jwt)
+    return jwt_content['decoded_jwt']
 
 
 async def jwt_validator_and_decompile(request: Request) -> Union[Exception, dict]:

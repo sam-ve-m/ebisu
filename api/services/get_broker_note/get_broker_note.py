@@ -39,5 +39,5 @@ class GetBrokerNote:
         return {"pdf_link": broker_note}
 
     def generate_path(self):
-        path = f"{self.client_id}/{self.region}/broker_note/{self.year}/{self.month}/{self.day}.pdf"
+        path = f"{self.bmf_account}/{self.region}/broker_note/{self.year}/{self.month}/{self.day}.pdf"
         return path

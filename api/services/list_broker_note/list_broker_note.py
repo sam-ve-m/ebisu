@@ -69,6 +69,6 @@ class ListBrokerNote:
         path_route = os.path.join(*tuple(str(path_fragment)
                                          for path_fragment in ('broker_note', self.year, self.month)
                                          if path_fragment is not None))
-        path = f"{self.client_id}/{self.region}/{path_route}/"
+        path = f"{self.bmf_account}/{self.region}/{path_route}/"
 
         return path
