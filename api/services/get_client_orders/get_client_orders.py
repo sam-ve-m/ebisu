@@ -1,13 +1,14 @@
 import logging
 from typing import List
-
 from fastapi import Request, Depends
-
 from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
+from api.domain.enums.order_tifs import OrderTifs
 from api.services.get_client_orders.strategies import order_region
 from api.utils.utils import str_to_timestamp
+from collections import Iterable
+
 
 log = logging.getLogger()
 
@@ -40,6 +41,13 @@ class GetOrders(IService):
         return 0
 
     @staticmethod
+    def tiff_response_converter(tif_value: str):
+        tiff_response = OrderTifs.has_member_value(value=tif_value)
+        if tiff_response is not None:
+            return tiff_response.value
+        return OrderTifs.NOT_AVAILABLE.value
+
+    @staticmethod
     def normalize_open_order(user_trade: dict) -> dict:
         normalized_data = {
             "cl_order_id": user_trade.get("CLORDID"),
@@ -52,9 +60,9 @@ class GetOrders(IService):
             "stop_price": GetOrders.decimal_128_converter(user_trade, "STOPPX"),
             "currency": "BRL",
             "symbol": user_trade.get("SYMBOL"),
-            "side": user_trade.get("SIDE"),
+            "side": user_trade.get("SIDE").lower(),
             "status": user_trade.get("ORDSTATUS"),
-            "tif": user_trade.get("TIMEINFORCE"),
+            "tif": GetOrders.tiff_response_converter(user_trade.get("TIMEINFORCE")),
             "total_spent": user_trade.get("CUMQTY") * GetOrders.decimal_128_converter(user_trade, "AVGPX"),
             "quantity_filled": user_trade.get("CUMQTY"),
             "quantity_leaves": user_trade.get("LEAVESQTY"),
