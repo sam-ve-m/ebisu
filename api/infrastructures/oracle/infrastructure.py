@@ -11,4 +11,3 @@ class OracleInfrastructure(IInfrastructure):
             password=password,
             dsn=cx_Oracle.makedsn(base_dns, port, service_name=service),
         )
-
