@@ -30,14 +30,14 @@ app = FastAPI(
 )
 
 
-@app.get("/get_client_order")
+@app.get("/get_client_order", tags=["Client Orders"])
 async def get_client_orders(service: IService = Depends(GetOrders)):
     GetUsOrdersDetails.oracle_singleton_instance = OracleSingletonInstance.get_oracle_us_singleton_instance()
     GetBrOrdersDetails.oracle_singleton_instance = OracleSingletonInstance.get_oracle_br_singleton_instance()
     return service.get_service_response()
 
 
-@app.get("/list_client_orders")
+@app.get("/list_client_orders", tags=["Client Orders"])
 async def get_client_orders(service: IService = Depends(ListOrders)):
     GetUsOrders.oracle_singleton_instance = OracleSingletonInstance.get_oracle_us_singleton_instance()
     GetBrOrders.oracle_singleton_instance = OracleSingletonInstance.get_oracle_br_singleton_instance()
@@ -45,32 +45,32 @@ async def get_client_orders(service: IService = Depends(ListOrders)):
     return await service.get_service_response()
 
 
-@app.get("/get_balance")
+@app.get("/get_balance", tags=["Balance"])
 async def get_balance(service: IService = Depends(GetBalance)):
     GetBalance.oracle_singleton_instance = OracleSingletonInstance.get_statement_singleton_instance()
     return await service.get_service_response()
 
 
-@app.get("/get_bank_statement")
+@app.get("/get_bank_statement", tags=["Bank Statement"])
 async def get_bank_statement(service: IService = Depends(GetStatement)):
     GetStatement.oracle_singleton_instance = OracleSingletonInstance.get_statement_singleton_instance()
     return await service.get_service_response()
 
 
-@app.get("/request_bank_statement_pdf")
+@app.get("/request_bank_statement_pdf", tags=["Bank Statement"])
 async def request_bank_statement(service: IService = Depends(RequestStatement)):
     RequestStatement.oracle_singleton_instance = OracleSingletonInstance.get_statement_singleton_instance()
     RequestStatement.s3_singleton = S3SingletonInstance.get_s3_singleton_instance()
     return await service.get_service_response()
 
 
-@app.get("/get_broker_note_pdf")
+@app.get("/get_broker_note_pdf", tags=["Broker Note"])
 async def get_broker_note(service: IService = Depends(GetBrokerNote)):
     GetBrokerNote.s3_singleton = S3SingletonInstance.get_s3_singleton_instance()
     return service.get_service_response()
 
 
-@app.get("/list_broker_note")
+@app.get("/list_broker_note", tags=["Broker Note"])
 async def list_broker_note(service: IService = Depends(ListBrokerNote)):
     ListBrokerNote.s3_singleton = S3SingletonInstance.get_s3_singleton_instance()
     return service.get_service_response()
