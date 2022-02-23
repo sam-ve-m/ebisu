@@ -7,9 +7,11 @@ class GetBrOrders:
     oracle_singleton_instance = None
 
     @staticmethod
-    def build_query(bovespa_account: str, bmf_account: str, offset: int, limit: int, order_status: List[OrderStatus]) -> str:
-        query = f"""SELECT B.SYMBOL, B.ORDSTATUS, B.CLORDID, B.TRANSACTTIME, B.CUMQTY, B.AVGPX, B.ORDTYPE
-                    FROM USOLUDB001.EXECUTION_REPORTS B
+    def build_query(bovespa_account: str, bmf_account: str, offset: int, limit: int,
+                    order_status: List[OrderStatus]) -> str:
+        query = f"""SELECT B.SYMBOL, ORDSTATUS, B.CLORDID, B.TRANSACTTIME, B.CUMQTY, B.AVGPX, 
+                    B.ORDTYPE, B.ORDERQTY
+                    FROM USOLUDB001.VW_CURRENT_EXECUTION_REPORTS B
                     WHERE B.ACCOUNT in ('{bovespa_account}', '{bmf_account}')
                     {GetBrOrders.filter(order_status)}
                     AND B.TRANSACTTIME = (
