@@ -13,13 +13,8 @@ SYSTEM = platform.system()
 def get_config(base_path: str) -> Config:
     path = os.path.join(base_path, "opt", "envs", "ebisu.lionx.com.br", ".env")
     path = str(path)
-    if os.path.exists(path):
-        return Config(RepositoryEnv(path))
-    else:
+    return Config(RepositoryEnv(path))
 
-        path = os.path.join("/", "app", ".env")
-        path = str(path)
-        return Config(RepositoryEnv(path))
 
 if SYSTEM == "Linux":
     config = get_config("/")
