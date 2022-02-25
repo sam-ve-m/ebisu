@@ -18,7 +18,7 @@ from api.services.list_client_orders.list_client_orders import ListOrders
 from api.services.list_client_orders.strategies import GetUsOrders, GetBrOrders
 from api.services.request_statement.request_statement import RequestStatement
 from api.services.get_earnings.get_client_earnings import EarningsService
-from api.services.get_earnings.br_earnings.strategy import GetBrEarnings
+from api.services.get_earnings.strategies.br_earnings import GetBrEarnings
 
 
 log = logging.getLogger()
@@ -47,7 +47,7 @@ async def get_client_orders(service: IService = Depends(ListOrders)):
 
 
 # ------------ doing this endpoint right now
-@app.get("/get_earnings", tags=["Earnings"])
+@app.get("/earnings", tags=["Earnings"])
 async def get_br_earnings(service: IService = Depends(EarningsService)):
     GetBrEarnings.oracle_earnings_singleton_instance = OracleSingletonInstance.get_earnings_singleton_instance()
     return await service.get_service_response()
