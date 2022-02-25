@@ -1,6 +1,6 @@
 from datetime import datetime
+import datetime
 from typing import List
-
 import pytz
 
 from api.services.get_statement.dw_connection import DWTransport
@@ -23,13 +23,18 @@ class Statement:
     def normalize_statement_us(client_statement: dict) -> List[dict]:
         statements = []
         for transaction in client_statement.get('dict_body'):
-            print()
             statements.append({
                 "date": str_to_timestamp_statement_us(transaction.get('tranWhen')),
                 "description": transaction.get("comment"),
                 "value": transaction.get("tranAmount"),
             })
         return statements
+
+    @staticmethod
+    def normalize_splited_date_to_string(day: int, month: int, year: int):
+        received_date = datetime.datetime(year, month, day)
+        date = received_date.date()
+        return date
 
     @staticmethod
     def normalize_balance_us(client_balance: dict) -> dict:

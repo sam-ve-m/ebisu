@@ -1,7 +1,5 @@
 import logging
-
 from fastapi import APIRouter, FastAPI, Depends
-
 from api.application_dependencies import (
     API_TITLE,
     API_DESCRIPTION,
@@ -19,6 +17,9 @@ from api.services.list_broker_note.list_broker_note import ListBrokerNote
 from api.services.list_client_orders.list_client_orders import ListOrders
 from api.services.list_client_orders.strategies import GetUsOrders, GetBrOrders
 from api.services.request_statement.request_statement import RequestStatement
+from api.services.get_earnings.get_client_earnings import EarningsService
+from api.services.get_earnings.br_earnings.strategy import GetBrEarnings
+
 
 log = logging.getLogger()
 
@@ -42,6 +43,13 @@ async def get_client_orders(service: IService = Depends(ListOrders)):
     GetUsOrders.oracle_singleton_instance = OracleSingletonInstance.get_oracle_us_singleton_instance()
     GetBrOrders.oracle_singleton_instance = OracleSingletonInstance.get_oracle_br_singleton_instance()
     ListOrders.mongo_singleton = await MongoSingletonInstance.get_mongo_singleton_instance()
+    return await service.get_service_response()
+
+
+# ------------ doing this endpoint right now
+@app.get("/get_earnings", tags=["Earnings"])
+async def get_br_earnings(service: IService = Depends(EarningsService)):
+    GetBrEarnings.oracle_earnings_singleton_instance = OracleSingletonInstance.get_earnings_singleton_instance()
     return await service.get_service_response()
 
 
