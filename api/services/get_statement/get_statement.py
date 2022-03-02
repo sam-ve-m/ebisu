@@ -1,9 +1,8 @@
-from heimdall_client.bifrost import Heimdall
 import logging
 
 from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService
-from fastapi import Request, Response, Depends
+from fastapi import Depends
 from api.domain.enums.region import Region
 from api.utils.statement.utils import Statement
 
@@ -56,4 +55,3 @@ class GetStatement(IService):
                 'balance': balance.pop().get("VL_TOTAL"),
                 'statement': [Statement.normalize_statement(transc) for transc in statement]
                 }
-

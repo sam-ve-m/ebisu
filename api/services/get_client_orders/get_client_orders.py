@@ -7,7 +7,6 @@ from api.domain.enums.region import Region
 from api.domain.enums.order_tifs import OrderTifs
 from api.services.get_client_orders.strategies import order_region
 from api.utils.utils import str_to_timestamp
-from collections import Iterable
 
 
 log = logging.getLogger()
