@@ -5,5 +5,7 @@ class Earnings:
 
     @staticmethod
     def from_timestamp_to_utc_isoformat_br(timestamp: float):
-        UTC_datetime_converted = datetime.utcfromtimestamp(timestamp).strftime(format="%Y-%m-%d")
-        return UTC_datetime_converted
+        timestamp_miliseconds = timestamp / 1000
+        raw_date = datetime.fromtimestamp(timestamp_miliseconds)
+        format_date = raw_date.strftime(format="%Y-%m-%d")
+        return format_date

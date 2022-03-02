@@ -6,7 +6,7 @@ class GetBrEarnings:
         query = f"""
                 SELECT SYMBOL, EARNINGS_DATE, PRICE, EARNINGS_TYPE, TO_DATE('{timestamp}', 'yyyy-mm-dd')
                 FROM UDATAEDB001.EARNINGS
-                WHERE SYMBOL = '{symbol}'                               
+                WHERE SYMBOL = UPPER('{symbol}')                               
                 ORDER BY EARNINGS_DATE DESC
                 OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY
                 """

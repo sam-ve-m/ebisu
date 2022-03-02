@@ -46,7 +46,6 @@ async def get_client_orders(service: IService = Depends(ListOrders)):
     return await service.get_service_response()
 
 
-# ------------ doing this endpoint right now
 @app.get("/earnings", tags=["Earnings"])
 async def get_br_earnings(service: IService = Depends(EarningsService)):
     GetBrEarnings.oracle_earnings_singleton_instance = OracleSingletonInstance.get_earnings_singleton_instance()

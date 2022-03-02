@@ -1,11 +1,11 @@
 import logging
 from typing import List
+
 from fastapi import Depends
+
 from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
-from api.utils.utils import str_to_timestamp
-from api.services.get_earnings.strategies.br_earnings import GetBrEarnings
+from api.services.get_earnings.strategies.br_earnings import earnings_regions
 from api.utils.earnings.earnings_utils import Earnings
-from api.services.get_earnings.strategies.br_earnings import earnings_region
 
 log = logging.getLogger()
 
@@ -41,13 +41,13 @@ class EarningsService:
         return normalize_data
 
     async def get_service_response(self) -> List[dict]:
-        callable_x = earnings_region.get("BR")
-        query_earnings = callable_x.build_query_earnings(
+        earnings_region = earnings_regions.get("BR")
+        query_earnings = earnings_region.build_query_earnings(
                             symbol=self.symbol,
                             timestamp=Earnings.from_timestamp_to_utc_isoformat_br(self.timestamp),
                             limit=self.limit,
                             offset=self.offset)
-        open_earnings = callable_x.oracle_earnings_singleton_instance.get_data(sql=query_earnings)
+        open_earnings = earnings_region.oracle_earnings_singleton_instance.get_data(sql=query_earnings)
         return [
             EarningsService.normalize_earnings(open_earning)
             for open_earning in open_earnings
