@@ -1,4 +1,4 @@
-FROM nexus:5000/python_cx:v.0.0.1
+FROM 54.207.180.218:5000/python_cx:v.0.0.1
 
 WORKDIR /app
 
