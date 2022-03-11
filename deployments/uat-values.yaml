@@ -1,0 +1,170 @@
+replicaCount: 1
+name: ebisu
+namespace: homolog
+
+containers:
+  - name: ebisu
+    image: nexus.sigame.com.br/ebisu:0.0.3
+    ports:
+    - containerPort: 8000
+    env:
+    #oracle orders
+    - name: ORACLE_USER_ORDERS
+      value: "uordedb001"
+    - name: ORACLE_PASSWORD_ORDERS
+      value: "uordedb001"
+    - name: ORACLE_BASE_DSN_ORDERS
+      value: "172.30.18.44"
+    - name: ORACLE_PORT_ORDERS
+      value: "1521"
+    - name: ORACLE_SERVICE_US
+      value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
+    - name: ORACLE_SERVICE_BR
+      value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
+      #oracle statement
+    - name: ORACLE_BASE_DSN_STATEMENT
+      value: "172.30.18.44"
+    - name: ORACLE_USER_STATEMENT
+      value: "uordedb001"
+    - name: ORACLE_PASSWORD_STATEMENT
+      value: "uordedb001"
+    - name: ORACLE_SERVICE_STATEMENT
+      value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
+    - name: ORACLE_ENCODING_STATEMENT
+      value: "UTF-8"
+    - name: ORACLE_PORT_STATEMENT
+      value: "1521"
+      #oracle earnings
+    - name: ORACLE_BASE_DNS_EARNINGS
+      value: "172.30.18.44"
+    - name: ORACLE_PORT_EARNINGS
+      value: "1521"
+    - name: ORACLE_SERVICE_EARNINGS
+      value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
+    - name: ORACLE_ENCODING_STATEMENT
+      value: "UTF-8"
+    - name: ORACLE_USER_EARNINGS
+      value: "udataedb001"
+    - name: ORACLE_PASSWORD_EARNINGS
+      value: "1DbCt$4UdAe0"
+    - name: MONGODB_USER
+      value: "bnd"
+    - name: MONGODB_PASSWORD
+      value: "4FZPY5Yj"
+    - name: MONGODB_HOST
+      value: "lnxbrspmongodb01.subpriv.vcnuat.oraclevcn.com"
+    - name: MONGODB_PORT
+      value: "41000"
+    - name: MONGODB_CONNECTION
+      value: "mongodb"
+    - name: MONGO_DATABASE_POSEIDON
+      value: "poseidon"
+    - name: MONGO_COLLECTION_IZANAMI
+      value: "izanami"
+    - name: DW_APP_KEY
+      value: "93d6184b-4692-4058-b32d-82624be89cb1"
+    - name: DW_USER
+      value: "bo.lionx.api"
+    - name: DW_PASSWORD
+      value: "passw0rd"
+    - name: DW_AUTHENTICATION_URL
+      value: "https://bo-api.drivewealth.io/back-office/auth"
+    - name: DW_BALANCE_URL
+      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
+    - name: DW_GET_ALL_TRANSACTIONS_URL
+      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
+    - name: AWS_ACCESS_KEY_ID
+      value: "AKIATZVFXI25USQWCS5O"
+    - name: AWS_SECRET_ACCESS_KEY
+      value: "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"
+    - name: REGION_NAME
+      value: "sa-east-1"
+    - name: AWS_FILE_BUCKET_NAME
+      value: "brokerage-note-and-bank-statement"
+    - name: BUCKET_NAME_KEY
+      value: "auth-gateway"
+    - name: AWS_BUCKET_USERS_FILES
+      value: "dtvm-users-files"
+    - name: AWS_BUCKET_USERS_SELF
+      value: "dtvm-user-self"
+    - name: AWS_BUCKET_TERMS
+      value: "dtvm-terms"
+    - name: FILE_BUCKET_NAME
+      value: "id_rsa"
+    - name: JWT_REQUIRED_FIELDS
+      value: '["email"]'
+    - name: HEIMDALL_FILE_BUCKET_NAME
+      value: "id_rsa"
+    - name: HEIMDALL_AWS_ACCESS_KEY_ID
+      value: "AKIATZVFXI25USQWCS5O"
+    - name: HEIMDALL_AWS_SECRET_ACCESS_KEY
+      value: "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"
+    - name: HEIMDALL_REGION_NAME
+      value: "sa-east-1"
+    - name: HEIMDALL_BUCKET_NAME_KEY
+      value: "auth-gateway"
+    - name: HEIMDALL_AWS_BUCKET_USERS_FILES
+      value: "dtvm-users-files"
+    - name: HEIMDALL_AWS_BUCKET_TERMS
+      value: "dtvm-terms"
+    - name: HEIMDALL_JWT_REQUIRED_FIELDS
+      value: "['email']"
+    - name: HEIMDALL_REDIS_HOST
+      value: "lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com"
+    - name: HEIMDALL_REDIS_PORT
+      value: "6379"
+    - name: HEIMDALL_REDIS_DB
+      value: "1"
+    - name: HEIMDALL_REDIS_USER
+      value: "bnd"
+    - name: HEIMDALL_REDIS_PASSWORD
+      value: "93uOKu5H"
+
+service:
+  name: ebisu-service
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+
+labels:
+  app: ebisu
+  
+imagePullSecrets:
+  - name: nexus-v3
+
+podAnnotations: {}
+
+serviceAnnotations: {}
+
+# securityContext:
+#   capabilities:
+#     drop:
+#     - AUDIT_WRITE
+#     - MKNOD
+#     - SETFCAP
+#     - SETPCAP
+#     - KILL
+#   # runAsNonRoot: true
+#   # runAsUser: 1000
+resources:
+  requests: #Amount of resources kube-scheduler will look into nodes to alocate the given POD
+    cpu: 500m
+    memory: 128Mi
+  limits: #Amount of resources limited by kubelet (will not exceed)
+    cpu: 500m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
