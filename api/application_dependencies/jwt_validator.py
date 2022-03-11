@@ -4,7 +4,7 @@ from heimdall_client.bifrost import Heimdall
 from fastapi import Request, status, HTTPException
 
 
-CLIENT_JWT_NAME = "x-thebs-answer"
+CLIENT_JWT_NAME = "x-thebes-answer"
 log = logging.getLogger()
 
 

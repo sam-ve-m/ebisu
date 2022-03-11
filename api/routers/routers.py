@@ -1,7 +1,5 @@
 import logging
-
 from fastapi import APIRouter, FastAPI, Depends
-
 from api.application_dependencies import (
     API_TITLE,
     API_DESCRIPTION,
@@ -19,6 +17,9 @@ from api.services.list_broker_note.list_broker_note import ListBrokerNote
 from api.services.list_client_orders.list_client_orders import ListOrders
 from api.services.list_client_orders.strategies import GetUsOrders, GetBrOrders
 from api.services.request_statement.request_statement import RequestStatement
+from api.services.get_earnings.get_client_earnings import EarningsService
+from api.services.get_earnings.strategies.br_earnings import GetBrEarnings
+
 
 log = logging.getLogger()
 
@@ -30,7 +31,7 @@ app = FastAPI(
 )
 
 
-@app.get("/get_client_order", tags=["Client Orders"])
+@app.get("/client_orders", tags=["Client Orders"])
 async def get_client_orders(service: IService = Depends(GetOrders)):
     GetUsOrdersDetails.oracle_singleton_instance = OracleSingletonInstance.get_oracle_us_singleton_instance()
     GetBrOrdersDetails.oracle_singleton_instance = OracleSingletonInstance.get_oracle_br_singleton_instance()
@@ -45,13 +46,19 @@ async def get_client_orders(service: IService = Depends(ListOrders)):
     return await service.get_service_response()
 
 
-@app.get("/get_balance", tags=["Balance"])
+@app.get("/earnings", tags=["Earnings"])
+async def get_br_earnings(service: IService = Depends(EarningsService)):
+    GetBrEarnings.oracle_earnings_singleton_instance = OracleSingletonInstance.get_earnings_singleton_instance()
+    return await service.get_service_response()
+
+
+@app.get("/balance", tags=["Balance"])
 async def get_balance(service: IService = Depends(GetBalance)):
     GetBalance.oracle_singleton_instance = OracleSingletonInstance.get_statement_singleton_instance()
     return await service.get_service_response()
 
 
-@app.get("/get_bank_statement", tags=["Bank Statement"])
+@app.get("/bank_statement", tags=["Bank Statement"])
 async def get_bank_statement(service: IService = Depends(GetStatement)):
     GetStatement.oracle_singleton_instance = OracleSingletonInstance.get_statement_singleton_instance()
     return await service.get_service_response()
@@ -64,7 +71,7 @@ async def request_bank_statement(service: IService = Depends(RequestStatement)):
     return await service.get_service_response()
 
 
-@app.get("/get_broker_note_pdf", tags=["Broker Note"])
+@app.get("/broker_note_pdf", tags=["Broker Note"])
 async def get_broker_note(service: IService = Depends(GetBrokerNote)):
     GetBrokerNote.s3_singleton = S3SingletonInstance.get_s3_singleton_instance()
     return service.get_service_response()

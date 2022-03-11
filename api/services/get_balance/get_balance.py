@@ -1,7 +1,6 @@
 import logging
 
-from fastapi import Request, Depends
-from heimdall_client.bifrost import Heimdall
+from fastapi import Depends
 
 from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService

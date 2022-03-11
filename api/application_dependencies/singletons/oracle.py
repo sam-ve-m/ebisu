@@ -8,6 +8,7 @@ class OracleSingletonInstance:
     oracle_us_singleton_instance = None
     oracle_br_singleton_instance = None
     statement_singleton_instance = None
+    earnings_singleton_instance = None
 
     @classmethod
     def get_oracle_us_singleton_instance(cls):
@@ -49,3 +50,15 @@ class OracleSingletonInstance:
             cls.statement_singleton_instance = OracleRepository(infra)
 
         return cls.statement_singleton_instance
+
+    @classmethod
+    def get_earnings_singleton_instance(cls):
+        if cls.earnings_singleton_instance is None:
+            infra = OracleInfrastructure.get_connection(service=config('ORACLE_SERVICE_EARNINGS'),
+                                                        user=config("ORACLE_USER_EARNINGS"),
+                                                        password=config("ORACLE_PASSWORD_EARNINGS"),
+                                                        base_dns=config("ORACLE_BASE_DNS_EARNINGS"),
+                                                        port=config("ORACLE_PORT_EARNINGS")
+                                                        )
+            cls.earnings_singleton_instance = OracleRepository(infra)
+        return cls.earnings_singleton_instance
