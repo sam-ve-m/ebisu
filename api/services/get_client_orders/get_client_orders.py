@@ -7,6 +7,7 @@ from api.domain.enums.region import Region
 from api.domain.enums.order_tifs import OrderTifs
 from api.services.get_client_orders.strategies import order_region
 from api.utils.utils import str_to_timestamp
+from api.exceptions.exceptions import NotFoundError
 
 
 log = logging.getLogger()
@@ -79,7 +80,10 @@ class GetOrders(IService):
         open_orders = order_region[self.region]
         query = open_orders.build_query(self.bovespa_account, self.bmf_account, self.clorid)
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
-        return [
+        data = [
             GetOrders.normalize_open_order(user_open_order)
             for user_open_order in user_open_orders
         ]
+        if not data:
+            raise NotFoundError("Not Found Error: Data Not Found")
+        return data

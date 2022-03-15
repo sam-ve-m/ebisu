@@ -4,15 +4,16 @@ from typing import List
 from fastapi import Depends
 
 from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
+from api.exceptions.exceptions import NotFoundError
 from api.services.get_earnings.strategies.br_earnings import earnings_regions
 from api.utils.earnings.earnings_utils import Earnings
+
 
 log = logging.getLogger()
 
 
 class EarningsService:
     oracle_earnings_singleton_instance = None
-    # schema oracle table - symbol | timestamp | price | type_earnings
 
     def __init__(self,
                  symbol: str,
@@ -48,7 +49,10 @@ class EarningsService:
                             limit=self.limit,
                             offset=self.offset)
         open_earnings = earnings_region.oracle_earnings_singleton_instance.get_data(sql=query_earnings)
-        return [
+        open_earnings_data = [
             EarningsService.normalize_earnings(open_earning)
             for open_earning in open_earnings
         ]
+        if not open_earnings_data:
+            raise NotFoundError({"NotFoundError": "Data Not Found"})
+        return open_earnings_data

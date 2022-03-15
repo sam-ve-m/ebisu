@@ -5,6 +5,7 @@ from api.core.interfaces.interface import IService
 from fastapi import Depends
 from api.domain.enums.region import Region
 from api.utils.statement.utils import Statement
+from api.exceptions.exceptions import NotFoundError
 
 log = logging.getLogger()
 
@@ -51,7 +52,11 @@ class GetStatement(IService):
         query = f"SELECT VL_TOTAL FROM CORRWIN.TCCSALDO WHERE CD_CLIENTE = {self.bmf_account}"
         balance = GetStatement.oracle_singleton_instance.get_data(sql=query)
 
-        return {
-                'balance': balance.pop().get("VL_TOTAL"),
-                'statement': [Statement.normalize_statement(transc) for transc in statement]
-                }
+        data_balance = {
+            'balance': balance.pop().get("VL_TOTAL"),
+            'statement': [Statement.normalize_statement(transc) for transc in statement]
+        }
+        if not data_balance:
+            raise NotFoundError({'balance': 'Not Found',
+                                 'statement': 'Not Found'})
+        return data_balance

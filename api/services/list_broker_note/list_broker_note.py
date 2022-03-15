@@ -1,11 +1,11 @@
 import logging
 import os
 
-from fastapi import Header, Query, Depends
-from heimdall_client.bifrost import Heimdall
-
+from fastapi import Query, Depends
 from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.domain.enums.region import Region
+from api.exceptions.exceptions import NoPath, NotFoundError
+
 
 log = logging.getLogger()
 
@@ -47,7 +47,10 @@ class ListBrokerNote:
             files = [ListBrokerNote.get_file_name(directory) for directory in
                      list_directories.get('Contents')]
 
-        return {"available": sorted(directories) if directories else sorted(files)}
+        files_data = {"available": sorted(directories) if directories else sorted(files)}
+        if not files_data:
+            raise NotFoundError("NotFoundError: The Data was not Found")
+        return files_data
 
     @staticmethod
     def get_directory_name(directory: dict):
@@ -71,4 +74,7 @@ class ListBrokerNote:
                                          if path_fragment is not None))
         path = f"{self.bmf_account}/{self.region}/{path_route}/"
 
-        return path
+        if self.bmf_account and self.region and path_route in path:
+            return path
+        else:
+            raise NoPath("No Path Error: Path Not Found")
