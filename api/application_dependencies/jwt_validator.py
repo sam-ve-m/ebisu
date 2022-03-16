@@ -9,8 +9,9 @@ log = logging.getLogger()
 
 
 async def verify_jwt_token_by_string(jwt: str) -> Union[Exception, dict]:
-    heimdall = Heimdall(logger=log)
-    jwt_content, heimdall_status = await heimdall.async_decode_payload(jwt=jwt)
+    jwt_content, heimdall_status = await Heimdall.decode_payload(jwt=jwt)
+    # TODO: Utilzar Heimdall.validate_jwt_integrity a fim de verificar os campos da chave "user" do jwt (em caso geral ou por endpoint)
+    # TODO: Utilizar heimdall_status para tratamento de erros relacionados ao decode do jwt
     return jwt_content['decoded_jwt']
 
 

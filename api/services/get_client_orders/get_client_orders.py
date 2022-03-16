@@ -30,8 +30,11 @@ class GetOrders(IService):
         self.url_path = str(request.url)
 
     def get_account(self):
-        self.bovespa_account = self.jwt.get("bovespa_account")
-        self.bmf_account = self.jwt.get("bmf_account")
+        user = self.jwt.get("user", {})
+        portfolios = user.get("portfolios", {})
+        br_portfolios = portfolios.get("br", {})
+        self.bovespa_account = br_portfolios.get("bovespa_account")
+        self.bmf_account = br_portfolios.get("bmf_account")
 
     @staticmethod
     def decimal_128_converter(user_trade: dict, field: str) -> float:
@@ -85,5 +88,7 @@ class GetOrders(IService):
             for user_open_order in user_open_orders
         ]
         if not data:
-            raise NotFoundError("Not Found Error: Data Not Found")
+            exception_response = ([{"NotFoundError": "Data Not Found"}])
+            return exception_response
+            # raise NotFoundError("Not Found Error: Data Not Found")
         return data
