@@ -5,11 +5,11 @@ from fastapi import Response, Request, status
 from heimdall_client.bifrost import Heimdall
 
 log = logging.getLogger()
-heimdall = Heimdall(logger=log)
+heimdall = Heimdall()
 
 
 def validate_jwt(request: Request) -> Optional[Response]:
-    jwt_is_valid = heimdall.sync_validate_jwt(jwt=request.headers.get("x-thebs-answer"))
+    jwt_is_valid = heimdall.validate_jwt(jwt=request.headers.get("x-thebs-answer"))
     log.info(f"Jwt is valid {jwt_is_valid}")
 
     if not jwt_is_valid:

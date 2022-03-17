@@ -30,8 +30,11 @@ class GetStatement(IService):
         self.end_date = end_date
 
     def get_account(self):
-        self.bovespa_account = self.jwt.get("bovespa_account")
-        self.bmf_account = self.jwt.get("bmf_account")
+        user = self.jwt.get("user", {})
+        portfolios = user.get("portfolios", {})
+        br_portfolios = portfolios.get("br", {})
+        self.bovespa_account = br_portfolios.get("bovespa_account")
+        self.bmf_account = br_portfolios.get("bmf_account")
 
     async def get_service_response(self) -> dict:
         self.get_account()
