@@ -1,8 +1,10 @@
 import logging
 from typing import Union
 
-from heimdall_client.bifrost import Heimdall, HeimdallStatusResponses
+from heimdall_client.bifrost import Heimdall
 from fastapi import Request, status, HTTPException
+
+from api.domain.exception.model import IntegrityJwtError, AuthenticationJwtError
 
 CLIENT_JWT_NAME = "x-thebes-answer"
 log = logging.getLogger()
@@ -10,31 +12,18 @@ log = logging.getLogger()
 
 async def verify_jwt_token_by_string(jwt: str) -> Union[Exception, dict]:
     jwt_content, heimdall_status = await Heimdall.decode_payload(jwt=jwt)
-
     jwt_heimdall = await Heimdall.validate_jwt_integrity(jwt, fields=["portfolios"])
-
     jwt_check_integrity = jwt_heimdall[0]['jwt_integrity']
 
     if jwt_check_integrity:
         return jwt_content['decoded_jwt']
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail=f"Jwt not allowed"
-    )
+
+    raise IntegrityJwtError(msg=f"Jwt not allowed")
 
 
 async def jwt_validator_and_decompile(request: Request) -> Union[Exception, dict]:
     jwt: str = request.headers.get(CLIENT_JWT_NAME)
     if jwt is None:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Jwt {CLIENT_JWT_NAME} not allowed"
-        )
+        raise AuthenticationJwtError(msg=f"Jwt not allowed")
 
     return await verify_jwt_token_by_string(jwt)
-
-# TODO: Utilizar Heimdall.validate_jwt_integrity a fim de verificar os
-#  campos da chave "user" do jwt (em caso geral ou por endpoint)
-
-# TODO: Utilizar heimdall_status para tratamento de erros relacionados
-#  ao decode do jwt
