@@ -2,8 +2,7 @@
 import logging
 from typing import List
 
-from fastapi import Request, Query, Header, Depends
-from heimdall_client.bifrost import Heimdall
+from fastapi import Request, Query, Depends
 
 from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService
@@ -25,10 +24,10 @@ class ListOrders(IService):
             limit: int,
             offset: int,
             order_status: str = Query(None),
-            decompiled_jwt: str = Depends(jwt_validator_and_decompile),
+            decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
     ):
         self.order_status = pipe_to_list(order_status)
-        self.jwt = decompiled_jwt
+        self.jwt: dict = decompiled_jwt
         self.region = region.value
         self.offset = offset
         self.limit = limit
@@ -37,8 +36,12 @@ class ListOrders(IService):
         self.url_path = str(request.url)
 
     def get_account(self):
-        self.bovespa_account = self.jwt.get("bovespa_account")
-        self.bmf_account = self.jwt.get("bmf_account")
+        user = self.jwt.get("user", {})
+        portfolios = user.get("portfolios", {})
+        br_portfolios = portfolios.get("br", {})
+
+        self.bovespa_account = br_portfolios.get("user")
+        self.bmf_account = br_portfolios.get("bmf_account")
 
     @staticmethod
     def decimal_128_converter(user_trade: dict, field: str) -> float:
