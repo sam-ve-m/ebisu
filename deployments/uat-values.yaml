@@ -4,7 +4,7 @@ namespace: homolog
 
 containers:
   - name: ebisu
-    image: nexus.sigame.com.br/ebisu:0.0.3
+    image: nexus.sigame.com.br/ebisu:0.0.4
     ports:
     - containerPort: 8000
     env:

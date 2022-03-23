@@ -1,7 +1,6 @@
 FROM python:3.8 AS builder
 
 ARG oci_nexus_password
-ARG aws_nexus_password
 
 COPY requirements.txt requirements.txt
 
@@ -12,7 +11,6 @@ RUN echo "[global]" >> ~/.pip/pip.conf
 RUN echo "timeout = 60" >> ~/.pip/pip.conf
 RUN echo "extra-index-url =" >> ~/.pip/pip.conf
 RUN echo "    https://backend:${oci_nexus_password}@nexus.sigame.com.br/repository/pypi/simple" >> ~/.pip/pip.conf
-RUN echo "    http://nexus:${aws_nexus_password}@54.207.180.218:80/repository/pypi/simple/" >> ~/.pip/pip.conf
 
 RUN pip install --user -r requirements.txt --trusted-host 54.207.180.218
 
