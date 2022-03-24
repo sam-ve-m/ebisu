@@ -4,7 +4,8 @@ from fastapi import Depends
 
 from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.domain.enums.region import Region
-from api.exceptions.exceptions import NoPath, NotFoundError
+from api.domain.exception.model import NoPathFoundError, NoPdfFoundError
+
 
 log = logging.getLogger()
 
@@ -42,11 +43,11 @@ class GetBrokerNote:
         broker_note = GetBrokerNote.s3_singleton.generate_file_link(file_path=file_path)
         data = {"pdf_link": broker_note}
         if not data:
-            raise NotFoundError({"pdf_link": "BROKER NOTE NOT FOUND"})
+            raise Exception(NoPdfFoundError)
         return data
 
     def generate_path(self):
         path = f"{self.bmf_account}/{self.region}/broker_note/{self.year}/{self.month}/{self.day}.pdf"
         if self.bmf_account and self.region and self.year and self.month and self.day in path:
             return path
-        raise NoPath("NoPathError: No Path Error")
+        raise Exception(NoPathFoundError)

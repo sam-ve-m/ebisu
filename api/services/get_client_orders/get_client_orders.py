@@ -7,6 +7,7 @@ from api.domain.enums.region import Region
 from api.domain.enums.order_tifs import OrderTifs
 from api.services.get_client_orders.strategies import order_region
 from api.utils.utils import str_to_timestamp
+from api.domain.exception.model import DataNotFoundError
 
 
 log = logging.getLogger()
@@ -87,6 +88,5 @@ class GetOrders(IService):
             for user_open_order in user_open_orders
         ]
         if not data:
-            exception_response = ([{"NotFoundError": "Data Not Found"}])
-            return exception_response
+            raise Exception(DataNotFoundError)
         return data

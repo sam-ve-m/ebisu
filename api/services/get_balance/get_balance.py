@@ -6,7 +6,7 @@ from api.application_dependencies.jwt_validator import jwt_validator_and_decompi
 from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
 from api.utils.statement.utils import Statement
-from api.exceptions.exceptions import NotFoundError
+from api.domain.exception.model import DataNotFoundError
 
 
 log = logging.getLogger()
@@ -42,7 +42,7 @@ class GetBalance(IService):
         balance = GetBalance.oracle_singleton_instance.get_data(sql=query)
 
         if not balance:
-            raise NotFoundError({"NotFoundError": "Data Not Found"})
+            raise Exception(DataNotFoundError)
         return {
             'balance': balance.pop().get("VL_TOTAL"),
         }

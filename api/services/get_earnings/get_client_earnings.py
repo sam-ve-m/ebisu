@@ -4,9 +4,9 @@ from typing import List
 from fastapi import Depends
 
 from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
-from api.exceptions.exceptions import NotFoundError
 from api.services.get_earnings.strategies.br_earnings import earnings_regions
 from api.utils.earnings.earnings_utils import Earnings
+from api.domain.exception.model import DataNotFoundError
 
 
 log = logging.getLogger()
@@ -54,5 +54,5 @@ class EarningsService:
             for open_earning in open_earnings
         ]
         if not open_earnings_data:
-            raise NotFoundError({"NotFoundError": "Data Not Found"})
+            raise Exception(DataNotFoundError)
         return open_earnings_data

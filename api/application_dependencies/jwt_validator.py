@@ -2,7 +2,7 @@ import logging
 from typing import Union
 
 from heimdall_client.bifrost import Heimdall
-from fastapi import Request, status, HTTPException
+from fastapi import Request
 
 from api.domain.exception.model import IntegrityJwtError, AuthenticationJwtError
 
@@ -18,12 +18,12 @@ async def verify_jwt_token_by_string(jwt: str) -> Union[Exception, dict]:
     if jwt_check_integrity:
         return jwt_content['decoded_jwt']
 
-    raise IntegrityJwtError(msg=f"Jwt not allowed")
+    raise IntegrityJwtError(msg=f"The JWT was not allowed due to it's integrity")
 
 
 async def jwt_validator_and_decompile(request: Request) -> Union[Exception, dict]:
     jwt: str = request.headers.get(CLIENT_JWT_NAME)
     if jwt is None:
-        raise AuthenticationJwtError(msg=f"Jwt not allowed")
+        raise AuthenticationJwtError(msg=f"The JWT was not allowed due to Authentication Error")
 
     return await verify_jwt_token_by_string(jwt)
