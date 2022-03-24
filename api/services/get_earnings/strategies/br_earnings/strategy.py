@@ -1,5 +1,8 @@
+from api.application_dependencies.singletons.oracle import OracleSingletonInstance
+
+
 class GetBrEarnings:
-    oracle_earnings_singleton_instance = None
+    oracle_earnings_singleton_instance = OracleSingletonInstance.get_earnings_singleton_instance()
 
     @staticmethod
     def build_query_earnings(symbol: str, timestamp: str, limit: int, offset: int) -> str:

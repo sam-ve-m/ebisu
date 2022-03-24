@@ -10,12 +10,12 @@ from api.domain.enums.region import Region
 from api.services.list_client_orders.strategies import order_region
 from api.utils.pipe_to_list import pipe_to_list
 from api.utils.utils import str_to_timestamp
-
+from api.application_dependencies.singletons.mongo import MongoSingletonInstance
 log = logging.getLogger()
 
 
 class ListOrders(IService):
-    mongo_singleton = None
+    mongo_singleton = MongoSingletonInstance.get_mongo_singleton_instance()
 
     def __init__(
             self,

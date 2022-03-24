@@ -5,12 +5,12 @@ from api.core.interfaces.interface import IService
 from fastapi import Depends
 from api.domain.enums.region import Region
 from api.utils.statement.utils import Statement
-
+from api.application_dependencies.singletons.oracle import OracleSingletonInstance
 log = logging.getLogger()
 
 
 class GetStatement(IService):
-    oracle_singleton_instance = None
+    oracle_singleton_instance = OracleSingletonInstance.get_statement_singleton_instance()
 
     def __init__(
             self,

@@ -5,12 +5,12 @@ from fastapi import Query, Depends
 
 from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.domain.enums.region import Region
-
+from api.application_dependencies.singletons.s3 import S3SingletonInstance
 log = logging.getLogger()
 
 
 class ListBrokerNote:
-    s3_singleton: None
+    s3_singletonv = S3SingletonInstance.get_s3_singleton_instance()
 
     def __init__(self,
                  region: Region,

@@ -1,7 +1,7 @@
 import logging
 
 from fastapi import Depends
-
+from api.application_dependencies.singletons.s3 import S3SingletonInstance
 from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.domain.enums.region import Region
 
@@ -9,7 +9,7 @@ log = logging.getLogger()
 
 
 class GetBrokerNote:
-    s3_singleton: None
+    s3_singleton = S3SingletonInstance.get_s3_singleton_instance()
 
     def __init__(self,
                  region: Region,
