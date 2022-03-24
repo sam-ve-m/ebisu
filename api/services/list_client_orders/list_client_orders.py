@@ -10,6 +10,7 @@ from api.domain.enums.region import Region
 from api.services.list_client_orders.strategies import order_region
 from api.utils.pipe_to_list import pipe_to_list
 from api.utils.utils import str_to_timestamp
+from api.exceptions.exceptions import NotFoundError
 from api.application_dependencies.singletons.mongo import MongoSingletonInstance
 log = logging.getLogger()
 
@@ -39,6 +40,8 @@ class ListOrders(IService):
         user = self.jwt.get("user", {})
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
+        self.bovespa_account = br_portfolios.get("bovespa_account")
+        self.bmf_account = br_portfolios.get("bmf_account")
 
         self.bovespa_account = br_portfolios.get("user")
         self.bmf_account = br_portfolios.get("bmf_account")
@@ -82,5 +85,5 @@ class ListOrders(IService):
     async def get_name(symbol):
         name = await ListOrders.mongo_singleton.find_one({'symbol': symbol}, {'name': 1, '_id': 0})
         if not name:
-            return
+            raise NotFoundError("NotFoundError: Data Not Found")
         return name.get('name')

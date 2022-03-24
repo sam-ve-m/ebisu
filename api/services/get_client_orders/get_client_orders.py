@@ -32,6 +32,8 @@ class GetOrders(IService):
         user = self.jwt.get("user", {})
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
+        self.bovespa_account = br_portfolios.get("bovespa_account")
+        self.bmf_account = br_portfolios.get("bmf_account")
 
         self.bovespa_account = br_portfolios.get("user")
         self.bmf_account = br_portfolios.get("bmf_account")
@@ -83,7 +85,11 @@ class GetOrders(IService):
         open_orders = order_region[self.region]
         query = open_orders.build_query(self.bovespa_account, self.bmf_account, self.clorid)
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
-        return [
+        data = [
             GetOrders.normalize_open_order(user_open_order)
             for user_open_order in user_open_orders
         ]
+        if not data:
+            exception_response = ([{"NotFoundError": "Data Not Found"}])
+            return exception_response
+        return data

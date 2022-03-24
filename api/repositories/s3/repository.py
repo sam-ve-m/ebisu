@@ -29,13 +29,16 @@ class S3Repository:
                 Prefix=file_path,
                 Delimiter='/'
         )
+        if not directories:
+            return []
         return directories
 
     def upload_file(self, file_path: str, content, expire_date: datetime):
-        return self.s3_client.put_object(
+        files_upload = self.s3_client.put_object(
             Bucket=self._bucket_name,
             Key=file_path,
             Body=content,
             ContentType="application/pdf",
             Expires=expire_date
         )
+        return files_upload

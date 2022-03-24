@@ -12,6 +12,8 @@ from api.domain.enums.region import Region
 from api.utils.statement.utils import Statement
 from api.application_dependencies.singletons.oracle import OracleSingletonInstance
 from api.application_dependencies.singletons.s3 import S3SingletonInstance
+from api.exceptions.exceptions import NotFoundError
+
 log = logging.getLogger()
 
 
@@ -36,6 +38,9 @@ class RequestStatement(IService):
         user = self.jwt.get("user", {})
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
+        self.bovespa_account = br_portfolios.get("bovespa_account")
+        self.bmf_account = br_portfolios.get("bmf_account")
+        self.client_id = self.jwt.get("email")
 
         self.bovespa_account = br_portfolios.get("user")
         self.bmf_account = br_portfolios.get("bmf_account")
@@ -70,8 +75,14 @@ class RequestStatement(IService):
         RequestStatement.s3_singleton.upload_file(file_path=self.generate_path(), content=pdf,
                                                   expire_date=file_duration)
         link = RequestStatement.s3_singleton.generate_file_link(file_path=self.generate_path())
-        return {"pdf_link": link}
+        link_pdf = {"pdf_link": link}
+        if not link:
+            raise NotFoundError({"pdf_link": "PDF Not Found"})
+        return link_pdf
 
     def generate_path(self) -> str:
         path = f"{self.client_id}/statements/{self.start_date}-{self.end_date}.pdf"
+        if not self.client_id and self.start_date and self.end_date in path:
+            raise NotFoundError('Not Found Error: Data Not Found')
+
         return path

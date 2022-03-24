@@ -6,6 +6,9 @@ from api.application_dependencies.jwt_validator import jwt_validator_and_decompi
 from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
 from api.utils.statement.utils import Statement
+from api.exceptions.exceptions import NotFoundError
+
+
 from api.application_dependencies.singletons.oracle import OracleSingletonInstance
 log = logging.getLogger()
 
@@ -27,6 +30,8 @@ class GetBalance(IService):
         user = self.jwt.get("user", {})
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
+        self.bovespa_account = br_portfolios.get("bovespa_account")
+        self.bmf_account = br_portfolios.get("bmf_account")
 
         self.bovespa_account = br_portfolios.get("user")
         self.bmf_account = br_portfolios.get("bmf_account")
@@ -40,6 +45,8 @@ class GetBalance(IService):
         query = f"SELECT VL_TOTAL FROM CORRWIN.TCCSALDO WHERE CD_CLIENTE = {self.bmf_account}"
         balance = GetBalance.oracle_singleton_instance.get_data(sql=query)
 
+        if not balance:
+            raise NotFoundError({"NotFoundError": "Data Not Found"})
         return {
             'balance': balance.pop().get("VL_TOTAL"),
         }
