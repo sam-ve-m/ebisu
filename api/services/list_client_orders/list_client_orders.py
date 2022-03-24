@@ -8,8 +8,7 @@ from api.infrastructures.application_dependencies.jwt_validator import jwt_valid
 from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
 from api.services.list_client_orders.strategies import order_region
-from api.utils.pipe_to_list import pipe_to_list
-from api.utils.utils import str_to_timestamp
+from api.domain.time_formatter.time_formatter import str_to_timestamp
 from api.exceptions.exceptions import NotFoundError
 from api.infrastructures.application_dependencies.singletons.mongo import MongoSingletonInstance
 log = logging.getLogger()
@@ -27,7 +26,7 @@ class ListOrders(IService):
             order_status: str = Query(None),
             decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
     ):
-        self.order_status = pipe_to_list(order_status)
+        self.order_status = ListOrders.pipe_to_list(order_status)
         self.jwt: dict = decompiled_jwt
         self.region = region.value
         self.offset = offset
@@ -35,6 +34,14 @@ class ListOrders(IService):
         self.bovespa_account = None
         self.bmf_account = None
         self.url_path = str(request.url)
+
+    @staticmethod
+    def pipe_to_list(data: str):
+        list_data = None
+        if data:
+            data = data.upper()
+            list_data = data.split('|')
+        return list_data
 
     def get_account(self):
         user = self.jwt.get("user", {})

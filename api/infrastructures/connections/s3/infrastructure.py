@@ -1,6 +1,6 @@
 import boto3
 
-from api.utils.env_config import config
+from api.infrastructures.env_config import config
 from etria_logger import Gladsheim
 
 

@@ -1,7 +1,7 @@
 import motor.motor_asyncio as motor
 
 from api.core.interfaces.infrastructures.interface import IInfrastructure
-from api.utils.env_config import config
+from api.infrastructures.env_config import config
 from etria_logger import Gladsheim
 
 

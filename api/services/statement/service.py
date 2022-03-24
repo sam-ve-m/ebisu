@@ -3,7 +3,7 @@ from typing import List
 import pytz
 
 from api.services.get_statement.dw_connection import DWTransport
-from api.utils.utils import str_to_timestamp_statement, str_to_timestamp_statement_us
+from api.domain.time_formatter.time_formatter import str_to_timestamp_statement, str_to_timestamp_statement_us
 
 
 class Statement:

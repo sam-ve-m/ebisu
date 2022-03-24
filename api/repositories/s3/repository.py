@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from api.utils.env_config import config
+from api.infrastructures.env_config import config
 
 
 class S3Repository:

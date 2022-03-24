@@ -6,7 +6,7 @@ from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
 from api.domain.enums.order_tifs import OrderTifs
 from api.services.get_client_orders.strategies import order_region
-from api.utils.utils import str_to_timestamp
+from api.domain.time_formatter.time_formatter import str_to_timestamp
 
 
 log = logging.getLogger()

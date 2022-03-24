@@ -2,12 +2,18 @@
 import json
 import logging
 from typing import Optional
+from datetime import datetime
 
 # OUTSIDE LIBRARIES
 from fastapi import Response, status, Request
+from api.services.jwt.service import validate_jwt
 
-from api.utils.json_encoder.date_encoder import DateEncoder
-from api.utils.jwt import validate_jwt
+
+class DateEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.strftime("%Y/%m/%d %H:%M:%S")
+        return json.JSONEncoder.default(self, obj)
 
 
 class BaseController:
@@ -39,3 +45,4 @@ class BaseController:
                 ),
                 status_code=status_code,
             )
+

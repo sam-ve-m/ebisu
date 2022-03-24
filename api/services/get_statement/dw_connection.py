@@ -6,7 +6,7 @@ from typing import List
 # Third part
 from aiohttp import ClientSession, ClientResponse
 
-from api.utils.env_config import config
+from api.infrastructures.env_config import config
 
 
 class DWTransport:

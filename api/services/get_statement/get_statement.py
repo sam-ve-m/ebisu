@@ -5,7 +5,7 @@ from api.core.interfaces.interface import IService
 from fastapi import Depends
 from api.domain.enums.region import Region
 from api.infrastructures.application_dependencies.singletons.oracle import OracleSingletonInstance
-from api.utils.statement.utils import Statement
+from api.services.statement import Statement
 from api.exceptions.exceptions import NotFoundError
 
 log = logging.getLogger()
