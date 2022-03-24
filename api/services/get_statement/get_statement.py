@@ -1,9 +1,10 @@
 import logging
 
-from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
+from api.infrastructures.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService
 from fastapi import Depends
 from api.domain.enums.region import Region
+from api.infrastructures.application_dependencies.singletons.oracle import OracleSingletonInstance
 from api.utils.statement.utils import Statement
 from api.exceptions.exceptions import NotFoundError
 

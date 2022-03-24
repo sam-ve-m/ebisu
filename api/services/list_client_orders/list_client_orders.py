@@ -4,14 +4,14 @@ from typing import List
 
 from fastapi import Request, Query, Depends
 
-from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
+from api.infrastructures.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
 from api.services.list_client_orders.strategies import order_region
 from api.utils.pipe_to_list import pipe_to_list
 from api.utils.utils import str_to_timestamp
 from api.exceptions.exceptions import NotFoundError
-from api.application_dependencies.singletons.mongo import MongoSingletonInstance
+from api.infrastructures.application_dependencies.singletons.mongo import MongoSingletonInstance
 log = logging.getLogger()
 
 

@@ -1,5 +1,5 @@
 from typing import List
-from api.application_dependencies.singletons.oracle import OracleSingletonInstance
+from api.infrastructures.application_dependencies.singletons.oracle import OracleSingletonInstance
 from api.domain.enums.order_status import OrderStatus
 
 

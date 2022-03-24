@@ -1,4 +1,4 @@
-from api.infrastructures.s3.infrastructure import S3Infrastructure
+from api.infrastructures.connections.s3.infrastructure import S3Infrastructure
 from api.repositories.s3.repository import S3Repository
 
 from etria_logger import Gladsheim

@@ -2,10 +2,10 @@ import logging
 import os
 
 from fastapi import Query, Depends
-from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
+from api.infrastructures.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.domain.enums.region import Region
 from api.exceptions.exceptions import NoPath, NotFoundError
-from api.application_dependencies.singletons.s3 import S3SingletonInstance
+from api.infrastructures.application_dependencies.singletons.s3 import S3SingletonInstance
 log = logging.getLogger()
 
 

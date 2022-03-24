@@ -1,7 +1,7 @@
 from typing import List
 
 from api.domain.enums.order_status import OrderStatus
-from api.application_dependencies.singletons.oracle import OracleSingletonInstance
+from api.infrastructures.application_dependencies.singletons.oracle import OracleSingletonInstance
 
 class GetBrOrders:
     oracle_singleton_instance = OracleSingletonInstance.get_oracle_br_singleton_instance()

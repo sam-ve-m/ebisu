@@ -1,4 +1,4 @@
-from api.infrastructures.oracle.infrastructure import OracleInfrastructure
+from api.infrastructures.connections.oracle.infrastructure import OracleInfrastructure
 from api.repositories.oracle.repository import OracleRepository
 from api.utils.env_config import config
 from etria_logger import Gladsheim

@@ -1,11 +1,10 @@
 import json
 import logging
-import time
 
-from fastapi import APIRouter, FastAPI, Depends, HTTPException, Request, Response
+from fastapi import APIRouter, FastAPI, Depends, Request, Response
 from starlette import status
 
-from api.application_dependencies import (
+from api.infrastructures.application_dependencies import (
     API_TITLE,
     API_DESCRIPTION,
 )
@@ -19,7 +18,6 @@ from api.services.list_broker_note.list_broker_note import ListBrokerNote
 from api.services.list_client_orders.list_client_orders import ListOrders
 from api.services.request_statement.request_statement import RequestStatement
 from api.services.get_earnings.get_client_earnings import EarningsService
-from api.services.get_earnings.strategies.br_earnings import GetBrEarnings
 from etria_logger import Gladsheim
 
 log = logging.getLogger()
@@ -77,8 +75,6 @@ async def add_process_time_header(request: Request, call_next):
 
 @app.get("/client_orders", tags=["Client Orders"])
 async def get_client_orders(service: IService = Depends(GetOrders)):
-    GetUsOrdersDetails.oracle_singleton_instance = OracleSingletonInstance.get_oracle_us_singleton_instance()
-    GetBrOrdersDetails.oracle_singleton_instance = OracleSingletonInstance.get_oracle_br_singleton_instance()
     teste = await service.get_service_response()
     return teste
 
@@ -105,8 +101,6 @@ async def get_bank_statement(service: IService = Depends(GetStatement)):
 
 @app.get("/request_bank_statement_pdf", tags=["Bank Statement"])
 async def request_bank_RequestStatementstatement(service: IService = Depends(RequestStatement)):
-    RequestStatement.oracle_singleton_instance = OracleSingletonInstance.get_statement_singleton_instance()
-    RequestStatement.s3_singleton = S3SingletonInstance.get_s3_singleton_instance()
     return await service.get_service_response()
 
 

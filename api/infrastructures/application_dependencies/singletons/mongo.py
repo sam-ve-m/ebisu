@@ -1,4 +1,4 @@
-from api.infrastructures.mongo.infrastructure import MongoInfrastructure
+from api.infrastructures.connections.mongo.infrastructure import MongoInfrastructure
 from api.repositories.mongo.repository import MongoRepository
 from api.utils.env_config import config
 from etria_logger import Gladsheim
