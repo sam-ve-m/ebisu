@@ -6,7 +6,6 @@ from fastapi import Depends
 from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.services.get_earnings.strategies.br_earnings import earnings_regions
 from api.utils.earnings.earnings_utils import Earnings
-from api.domain.exception.model import DataNotFoundError
 
 
 log = logging.getLogger()
@@ -54,5 +53,5 @@ class EarningsService:
             for open_earning in open_earnings
         ]
         if not open_earnings_data:
-            raise Exception(DataNotFoundError)
+            return [{}]
         return open_earnings_data

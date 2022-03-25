@@ -18,11 +18,12 @@ async def verify_jwt_token_by_string(jwt: str) -> Union[Exception, dict]:
     if jwt_check_integrity:
         return jwt_content['decoded_jwt']
 
-    raise IntegrityJwtError(msg=f"The JWT was not allowed due to it's integrity")
+    raise IntegrityJwtError(msg=f"The JWT was not allowed due to its integrity")
 
 
 async def jwt_validator_and_decompile(request: Request) -> Union[Exception, dict]:
     jwt: str = request.headers.get(CLIENT_JWT_NAME)
+    print(type(jwt))
     if jwt is None:
         raise AuthenticationJwtError(msg=f"The JWT was not allowed due to Authentication Error")
 

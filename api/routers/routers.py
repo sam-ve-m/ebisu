@@ -79,7 +79,7 @@ async def get_bank_statement(service: IService = Depends(GetStatement)):
 
 
 @app.get("/request_bank_statement_pdf", tags=["Bank Statement"])
-async def request_bank_RequestStatementstatement(service: IService = Depends(RequestStatement)):
+async def request_bank_statement(service: IService = Depends(RequestStatement)):
     RequestStatement.oracle_singleton_instance = OracleSingletonInstance.get_statement_singleton_instance()
     RequestStatement.s3_singleton = S3SingletonInstance.get_s3_singleton_instance()
     response = await service.get_service_response()

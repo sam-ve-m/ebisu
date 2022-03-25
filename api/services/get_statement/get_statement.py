@@ -1,11 +1,9 @@
 import logging
-
 from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService
 from fastapi import Depends
 from api.domain.enums.region import Region
 from api.utils.statement.utils import Statement
-from api.domain.exception.model import DataNotFoundError
 
 
 log = logging.getLogger()
@@ -63,5 +61,5 @@ class GetStatement(IService):
             'statement': [Statement.normalize_statement(transc) for transc in statement]
         }
         if not data_balance:
-            raise Exception(DataNotFoundError)
+            return {}
         return data_balance

@@ -10,7 +10,7 @@ from api.application_dependencies.jwt_validator import jwt_validator_and_decompi
 from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
 from api.utils.statement.utils import Statement
-from api.domain.exception.model import DataNotFoundError, NoPdfFoundError
+from api.domain.exception.model import NoPdfFoundError, NoPathFoundError
 
 log = logging.getLogger()
 
@@ -72,11 +72,12 @@ class RequestStatement(IService):
         link_pdf = {"pdf_link": link}
         if not link:
             raise Exception(NoPdfFoundError)
+
         return link_pdf
 
     def generate_path(self) -> str:
         path = f"{self.client_id}/statements/{self.start_date}-{self.end_date}.pdf"
-        if not self.client_id and self.start_date and self.end_date in path:
-            raise Exception(DataNotFoundError)
+        if path:
+            return path
 
-        return path
+        raise Exception(NoPathFoundError)
