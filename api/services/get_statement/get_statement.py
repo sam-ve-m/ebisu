@@ -19,7 +19,7 @@ class GetStatement(IService):
             offset: int,
             start_date: float,
             end_date: float,
-            decompiled_jwt: str = Depends(jwt_validator_and_decompile),
+            decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
     ):
         self.region = region.value
         self.jwt = decompiled_jwt
@@ -35,6 +35,9 @@ class GetStatement(IService):
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
         self.bovespa_account = br_portfolios.get("bovespa_account")
+        self.bmf_account = br_portfolios.get("bmf_account")
+
+        self.bovespa_account = br_portfolios.get("user")
         self.bmf_account = br_portfolios.get("bmf_account")
 
     async def get_service_response(self) -> dict:

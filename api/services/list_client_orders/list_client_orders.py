@@ -26,10 +26,10 @@ class ListOrders(IService):
             limit: int,
             offset: int,
             order_status: str = Query(None),
-            decompiled_jwt: str = Depends(jwt_validator_and_decompile),
+            decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
     ):
         self.order_status = pipe_to_list(order_status)
-        self.jwt = decompiled_jwt
+        self.jwt: dict = decompiled_jwt
         self.region = region.value
         self.offset = offset
         self.limit = limit
@@ -42,6 +42,9 @@ class ListOrders(IService):
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
         self.bovespa_account = br_portfolios.get("bovespa_account")
+        self.bmf_account = br_portfolios.get("bmf_account")
+
+        self.bovespa_account = br_portfolios.get("user")
         self.bmf_account = br_portfolios.get("bmf_account")
 
     @staticmethod

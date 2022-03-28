@@ -22,10 +22,10 @@ class RequestStatement(IService):
     def __init__(
             self,
             region: Region,
-            decompiled_jwt: str = Depends(jwt_validator_and_decompile),
+            decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
     ):
         self.region = region.value
-        self.jwt = decompiled_jwt
+        self.jwt: dict = decompiled_jwt
         self.bovespa_account = None
         self.bmf_account = None
         self.client_id = None
@@ -39,6 +39,10 @@ class RequestStatement(IService):
         self.bovespa_account = br_portfolios.get("bovespa_account")
         self.bmf_account = br_portfolios.get("bmf_account")
         self.client_id = self.jwt.get("email")
+
+        self.bovespa_account = br_portfolios.get("user")
+        self.bmf_account = br_portfolios.get("bmf_account")
+        self.client_id = user.get("unique_id")
 
     async def get_service_response(self) -> dict:
         self.get_account()
