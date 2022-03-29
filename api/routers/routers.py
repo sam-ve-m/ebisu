@@ -1,4 +1,3 @@
-import json
 import logging
 
 from fastapi import APIRouter, FastAPI, Depends, Request, Response
@@ -9,7 +8,6 @@ from api.infrastructures.application_dependencies import (
     API_DESCRIPTION,
 )
 from api.core.interfaces.interface import IService
-from api.domain.exception.model import IntegrityJwtError, AuthenticationJwtError
 from api.services.get_balance.get_balance import GetBalance
 from api.services.get_broker_note.get_broker_note import GetBrokerNote
 from api.services.get_client_orders.get_client_orders import GetOrders
@@ -18,7 +16,10 @@ from api.services.list_broker_note.list_broker_note import ListBrokerNote
 from api.services.list_client_orders.list_client_orders import ListOrders
 from api.services.request_statement.request_statement import RequestStatement
 from api.services.get_earnings.get_client_earnings import EarningsService
+from api.services.get_earnings.strategies.br_earnings import GetBrEarnings
+from api.services.middleware.service import MiddlewareService
 from etria_logger import Gladsheim
+
 
 log = logging.getLogger()
 
@@ -31,45 +32,10 @@ app = FastAPI(
 
 
 @app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
-    try:
-        response = await call_next(request)
-    except IntegrityJwtError as err:
-        Gladsheim.error(erro=err)
-
-        return Response(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                content=json.dumps({
-                    "request_status": False,
-                    "status": 1,
-                    "msg": err.args[0]
-                })
-            )
-
-    except AuthenticationJwtError as err:
-        Gladsheim.error(erro=err)
-        return Response(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                content=
-                {
-                    "request_status": False,
-                    "status": 1,
-                    "msg": err.args[0]
-                }
-            )
-
-    except Exception as err:
-        Gladsheim.error(erro=err)
-        return Response(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                content=
-                {
-                    "request_status": False,
-                    "status": 2,
-                    "msg": err.args[0]
-                }
-            )
-
+async def middleware_response(request: Request, call_next):
+    response = await MiddlewareService.add_process_time_header(
+        request=request,
+        call_next=call_next)
     return response
 
 

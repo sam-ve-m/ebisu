@@ -92,5 +92,5 @@ class ListOrders(IService):
     async def get_name(symbol):
         name = await ListOrders.mongo_singleton.find_one({'symbol': symbol}, {'name': 1, '_id': 0})
         if not name:
-            raise NotFoundError("NotFoundError: Data Not Found")
+            return [{}]
         return name.get('name')

@@ -8,6 +8,7 @@ from api.infrastructures.application_dependencies.singletons.oracle import Oracl
 from api.services.statement import Statement
 from api.exceptions.exceptions import NotFoundError
 
+
 log = logging.getLogger()
 
 
@@ -18,7 +19,8 @@ class GetStatement(IService):
             self,
             region: Region,
             limit: int,
-            offset: float,
+            offset: int,
+            start_date: float,
             end_date: float,
             decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
     ):
@@ -28,6 +30,7 @@ class GetStatement(IService):
         self.bmf_account = None
         self.limit = limit
         self.offset = offset
+        self.start_date = start_date
         self.end_date = end_date
 
     def get_account(self):
@@ -43,9 +46,9 @@ class GetStatement(IService):
     async def get_service_response(self) -> dict:
         self.get_account()
         if self.region == 'US':
-            us_statement = await Statement.get_dw_statement(self.offset, self.end_date, self.limit)
+            us_statement = await Statement.get_dw_statement(self.start_date, self.end_date, self.limit)
             return us_statement
-        start_date = Statement.from_timestamp_to_utc_isoformat_br(self.offset)
+        start_date = Statement.from_timestamp_to_utc_isoformat_br(self.start_date)
         end_date = Statement.from_timestamp_to_utc_isoformat_br(self.end_date)
         query = f"""SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO 
                    FROM CORRWIN.TCCMOVTO 
@@ -64,6 +67,5 @@ class GetStatement(IService):
             'statement': [Statement.normalize_statement(transc) for transc in statement]
         }
         if not data_balance:
-            raise NotFoundError({'balance': 'Not Found',
-                                 'statement': 'Not Found'})
+            return {}
         return data_balance

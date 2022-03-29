@@ -54,5 +54,5 @@ class EarningsService:
             for open_earning in open_earnings
         ]
         if not open_earnings_data:
-            raise NotFoundError({"NotFoundError": "Data Not Found"})
+            return [{}]
         return open_earnings_data

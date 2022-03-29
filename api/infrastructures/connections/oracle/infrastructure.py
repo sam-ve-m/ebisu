@@ -14,7 +14,12 @@ class OracleInfrastructure(IInfrastructure):
             dsn=cx_Oracle.makedsn(base_dns, port, service_name=service),
         )
         if oracle_connection is None:
-            Gladsheim.error(
-                message=f"OracleInfrastructure::get_connection:: Error on getting the oracle connection"
-            )
+            try:
+                return oracle_connection
+            except Exception as exception:
+                Gladsheim.error(
+                    message=
+                    f"OracleInfrastructure::get_connection:: Error on getting the oracle connection, {exception}",
+                    error=exception,
+                )
         return oracle_connection

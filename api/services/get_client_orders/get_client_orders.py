@@ -90,6 +90,5 @@ class GetOrders(IService):
             for user_open_order in user_open_orders
         ]
         if not data:
-            exception_response = ([{"NotFoundError": "Data Not Found"}])
-            return exception_response
+            return [{}]
         return data

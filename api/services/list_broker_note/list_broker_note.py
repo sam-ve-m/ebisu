@@ -53,7 +53,7 @@ class ListBrokerNote:
 
         files_data = {"available": sorted(directories) if directories else sorted(files)}
         if not files_data:
-            raise NotFoundError("NotFoundError: The Data was not Found")
+            raise Exception(DataNotFoundError)
         return files_data
 
     @staticmethod
@@ -81,4 +81,4 @@ class ListBrokerNote:
         if self.bmf_account and self.region and path_route in path:
             return path
         else:
-            raise NoPath("No Path Error: Path Not Found")
+            raise Exception(NoPathFoundError)

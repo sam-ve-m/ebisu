@@ -12,7 +12,7 @@ from api.domain.enums.region import Region
 from api.services.statement import Statement
 from api.infrastructures.application_dependencies.singletons.oracle import OracleSingletonInstance
 from api.infrastructures.application_dependencies.singletons.s3 import S3SingletonInstance
-from api.exceptions.exceptions import NotFoundError
+from api.domain.exception.model import NoPdfFoundError, NoPathFoundError
 
 log = logging.getLogger()
 
@@ -77,12 +77,13 @@ class RequestStatement(IService):
         link = RequestStatement.s3_singleton.generate_file_link(file_path=self.generate_path())
         link_pdf = {"pdf_link": link}
         if not link:
-            raise NotFoundError({"pdf_link": "PDF Not Found"})
+            raise Exception(NoPdfFoundError)
+
         return link_pdf
 
     def generate_path(self) -> str:
         path = f"{self.client_id}/statements/{self.start_date}-{self.end_date}.pdf"
-        if not self.client_id and self.start_date and self.end_date in path:
-            raise NotFoundError('Not Found Error: Data Not Found')
+        if path:
+            return path
 
-        return path
+        raise Exception(NoPathFoundError)

@@ -25,8 +25,6 @@ class OracleSingletonInstance:
                 Gladsheim.error(
                     message=f"""OracleSingletonInstance::get_oracle_us_singleton_instance::Error on infra connection
                     service={config('ORACLE_SERVICE_US')},
-                    user={config("ORACLE_USER_ORDERS")},
-                    password={config("ORACLE_PASSWORD_ORDERS")},
                     base_dns={config("ORACLE_BASE_DSN_ORDERS")},
                     port={config("ORACLE_PORT_ORDERS")}:
                     {exception}""",
@@ -51,8 +49,6 @@ class OracleSingletonInstance:
                 Gladsheim.error(
                     message=f"""OracleInfrastructure::get_oracle_br_singleton_instance::Error on infra connection
                     service={config('ORACLE_SERVICE_BR')},
-                    user={config("ORACLE_USER_ORDERS")},
-                    password={config("ORACLE_PASSWORD_ORDERS")},
                     base_dns={config("ORACLE_BASE_DSN_ORDERS")},
                     port={config("ORACLE_PORT_ORDERS")}:
                     {exception}""",
@@ -77,8 +73,6 @@ class OracleSingletonInstance:
                 Gladsheim.error(
                     message=f"""OracleInfrastructure::get_statement_singleton_instance::Error on infra connection
                     service={config('ORACLE_SERVICE_STATEMENT')},
-                    user={config("ORACLE_USER_STATEMENT")},
-                    password={config("ORACLE_PASSWORD_STATEMENT")},
                     base_dns={config("ORACLE_BASE_DSN_STATEMENT")},
                     port={config("ORACLE_PORT_STATEMENT")}:
                     {exception}""",
@@ -91,19 +85,18 @@ class OracleSingletonInstance:
     def get_earnings_singleton_instance(cls):
         if cls.earnings_singleton_instance is None:
             try:
-                infra = OracleInfrastructure.get_connection(service=config('ORACLE_SERVICE_EARNINGS'),
-                                                            user=config("ORACLE_USER_EARNINGS"),
-                                                            password=config("ORACLE_PASSWORD_EARNINGS"),
-                                                            base_dns=config("ORACLE_BASE_DNS_EARNINGS"),
-                                                            port=config("ORACLE_PORT_EARNINGS")
+                infra = OracleInfrastructure.get_connection(
+                    service=config('ORACLE_SERVICE_EARNINGS'),
+                    user=config("ORACLE_USER_EARNINGS"),
+                    password=config("ORACLE_PASSWORD_EARNINGS"),
+                    base_dns=config("ORACLE_BASE_DNS_EARNINGS"),
+                    port=config("ORACLE_PORT_EARNINGS")
                                                             )
                 cls.earnings_singleton_instance = OracleRepository(infra)
             except Exception as exception:
                 Gladsheim.error(
                     message=f"""OracleInfrastructure::get_earnings_singleton_instance::Error on infra connection
                     service = {config('ORACLE_SERVICE_EARNINGS')},
-                    user = {config("ORACLE_USER_EARNINGS")},
-                    password = {config("ORACLE_PASSWORD_EARNINGS")},
                     base_dns = {config("ORACLE_BASE_DNS_EARNINGS")},
                     port = {config("ORACLE_PORT_EARNINGS")}:
                     {exception}""",

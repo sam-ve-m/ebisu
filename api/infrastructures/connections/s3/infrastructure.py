@@ -21,7 +21,6 @@ class S3Infrastructure:
                     message=f"""S3Infrastructure::get_connection::Error on making connection with AWS
                     "s3",
                     aws_access_key_id={config("AWS_ACCESS_KEY_ID")},
-                    aws_secret_access_key={config("AWS_SECRET_ACCESS_KEY")},
                     region_name={config("REGION_NAME")}:
                     {exception}""",
                     error=exception,

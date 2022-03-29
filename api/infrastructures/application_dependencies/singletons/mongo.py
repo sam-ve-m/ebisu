@@ -12,11 +12,15 @@ class MongoSingletonInstance:
         if cls.mongo_singleton_instance is None:
             try:
                 infra = await MongoInfrastructure.get_connection()
-                cls.mongo_singleton_instance = MongoRepository(infra, config("MONGO_DATABASE_POSEIDON"),
-                                                               config("MONGO_COLLECTION_IZANAMI"))
+                cls.mongo_singleton_instance = MongoRepository(
+                    infra,
+                    config("MONGO_DATABASE_POSEIDON"),
+                    config("MONGO_COLLECTION_IZANAMI")
+                )
             except Exception as exception:
                 Gladsheim.error(
-                    message=f"""MongoSingletonInstance::get_mongo_singleton_instance:: 
+                    message=
+                    f"""MongoSingletonInstance::get_mongo_singleton_instance:: 
                     Error connection with MongoDB, {exception}""",
                     error=exception,
                     )

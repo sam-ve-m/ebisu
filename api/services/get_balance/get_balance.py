@@ -46,7 +46,7 @@ class GetBalance(IService):
         balance = GetBalance.oracle_singleton_instance.get_data(sql=query)
 
         if not balance:
-            raise NotFoundError({"NotFoundError": "Data Not Found"})
+            return {}
         return {
             'balance': balance.pop().get("VL_TOTAL"),
         }
