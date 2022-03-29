@@ -16,7 +16,7 @@ class DWTransport:
         self.token = None
         self.expire_at = None
 
-    async def get_orders(
+    async def get_transactions(
             self, account: str, start: str, end: str, limit: int
     ) -> List[dict]:
         if not account:
