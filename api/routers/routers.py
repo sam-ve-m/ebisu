@@ -33,8 +33,8 @@ async def middleware_response(request: Request, call_next):
 
 @app.get("/client_orders", tags=["Client Orders"])
 async def get_client_orders(service: IService = Depends(GetOrders)):
-    teste = await service.get_service_response()
-    return teste
+    response = service.get_service_response()
+    return response
 
 
 @app.get("/list_client_orders", tags=["Client Orders"])

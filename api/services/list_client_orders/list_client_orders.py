@@ -49,9 +49,6 @@ class ListOrders(IService):
         self.bovespa_account = br_portfolios.get("bovespa_account")
         self.bmf_account = br_portfolios.get("bmf_account")
 
-        self.bovespa_account = br_portfolios.get("user")
-        self.bmf_account = br_portfolios.get("bmf_account")
-
     @staticmethod
     def decimal_128_converter(user_trade: dict, field: str) -> float:
         value = user_trade.get(field)
@@ -62,7 +59,7 @@ class ListOrders(IService):
     @staticmethod
     async def normalize_open_order(user_trade: dict) -> dict:
         normalized_data = {
-            "name": await ListOrders.company_information_repository.get_name(user_trade.get('SYMBOL')),
+            "name": await ListOrders.company_information_repository.get_company_name(user_trade.get('SYMBOL')),
             "cl_order_id": user_trade.get("CLORDID"),
             "time": str_to_timestamp(user_trade.get("TRANSACTTIME")),
             "quantity": user_trade.get("ORDERQTY"),

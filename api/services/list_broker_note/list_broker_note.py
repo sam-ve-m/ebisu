@@ -12,7 +12,7 @@ log = logging.getLogger()
 
 
 class ListBrokerNote:
-    s3_singletonv = FileRepository
+    s3_singleton = FileRepository
 
     def __init__(self,
                  region: Region,
@@ -20,6 +20,7 @@ class ListBrokerNote:
                  month: int = Query(None),
                  decompiled_jwt: dict = Depends(jwt_validator_and_decompile)
                  ):
+        self.client_id = None
         self.jwt = decompiled_jwt
         self.year = year
         self.month = month
@@ -78,7 +79,7 @@ class ListBrokerNote:
         path_route = os.path.join(*tuple(str(path_fragment)
                                          for path_fragment in ('broker_note', self.year, self.month)
                                          if path_fragment is not None))
-        path = f"{self.bmf_account}/{self.region}/{path_route}/"
+        path = f"{self.region}/{self.bmf_account}/{path_route}/"
 
         if self.bmf_account and self.region and path_route in path:
             return path

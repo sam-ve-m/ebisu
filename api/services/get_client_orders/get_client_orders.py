@@ -35,9 +35,6 @@ class GetOrders(IService):
         self.bovespa_account = br_portfolios.get("bovespa_account")
         self.bmf_account = br_portfolios.get("bmf_account")
 
-        self.bovespa_account = br_portfolios.get("user")
-        self.bmf_account = br_portfolios.get("bmf_account")
-
     @staticmethod
     def decimal_128_converter(user_trade: dict, field: str) -> float:
         value = user_trade.get(field)

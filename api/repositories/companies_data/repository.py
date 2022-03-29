@@ -45,7 +45,7 @@ class CompanyInformationRepository(IMongo):
         return data
 
     @classmethod
-    def find_all(cls, query: dict, select_fields_dict=None) -> Optional[Cursor]:
+    async def find_all(cls, query: dict, select_fields_dict=None) -> Optional[Cursor]:
         collection = await cls._get_collection()
         data = collection.find(query, select_fields_dict)
         return data
