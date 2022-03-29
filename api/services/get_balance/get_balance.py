@@ -2,19 +2,19 @@ import logging
 
 from fastapi import Depends
 
-from api.infrastructures.application_dependencies.jwt_validator import jwt_validator_and_decompile
+from api.services.jwt.service import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
-from api.services.statement import Statement
+from api.repositories.statements.repository import StatementsRepository
+from api.services.statement.service import Statement
 from api.exceptions.exceptions import NotFoundError
 
 
-from api.infrastructures.application_dependencies.singletons.oracle import OracleSingletonInstance
 log = logging.getLogger()
 
 
 class GetBalance(IService):
-    oracle_singleton_instance = OracleSingletonInstance.get_statement_singleton_instance()
+    oracle_singleton_instance = StatementsRepository
 
     def __init__(
             self,

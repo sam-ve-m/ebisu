@@ -1,9 +1,9 @@
-from api.infrastructures.application_dependencies.singletons.oracle import OracleSingletonInstance
+from api.repositories.orders.us.repository import UsOrdersRepository
 
 
 class GetUsOrdersDetails:
 
-    oracle_singleton_instance = OracleSingletonInstance.get_oracle_us_singleton_instance()
+    oracle_singleton_instance = UsOrdersRepository
 
     @staticmethod
     def build_query(bovespa_account: str, bmf_account: str, clordid: str) -> str:

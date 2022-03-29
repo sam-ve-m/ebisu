@@ -1,10 +1,10 @@
 from typing import List
-from api.infrastructures.application_dependencies.singletons.oracle import OracleSingletonInstance
 from api.domain.enums.order_status import OrderStatus
+from api.repositories.orders.us.repository import UsOrdersRepository
 
 
 class GetUsOrders:
-    oracle_singleton_instance = OracleSingletonInstance.get_oracle_us_singleton_instance()
+    oracle_singleton_instance = UsOrdersRepository
 
     @staticmethod
     def build_query(bovespa_account: str, bmf_account: str, offset: int, limit: int, order_status: List[OrderStatus]) -> str:

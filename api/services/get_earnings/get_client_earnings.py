@@ -3,8 +3,9 @@ from typing import List
 
 from fastapi import Depends
 
-from api.infrastructures.application_dependencies.jwt_validator import jwt_validator_and_decompile
-from api.exceptions.exceptions import NotFoundError
+from api.services.jwt.service import jwt_validator_and_decompile
+
+from api.repositories.earnings.repository import EarningsRepository
 from api.services.get_earnings.strategies.br_earnings import earnings_regions
 from api.services.earnings.service import Earnings
 
@@ -13,7 +14,7 @@ log = logging.getLogger()
 
 
 class EarningsService:
-    oracle_earnings_singleton_instance = None
+    oracle_earnings_singleton_instance = EarningsRepository
 
     def __init__(self,
                  symbol: str,

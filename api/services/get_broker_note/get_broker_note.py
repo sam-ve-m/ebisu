@@ -1,17 +1,16 @@
 import logging
 
 from fastapi import Depends
-from api.infrastructures.application_dependencies.singletons.s3 import S3SingletonInstance
-from api.infrastructures.application_dependencies.jwt_validator import jwt_validator_and_decompile
+from api.services.jwt.service import jwt_validator_and_decompile
 from api.domain.enums.region import Region
 from api.domain.exception.model import NoPathFoundError, NoPdfFoundError
-
+from api.repositories.files.repository import FileRepository
 
 log = logging.getLogger()
 
 
 class GetBrokerNote:
-    s3_singleton = S3SingletonInstance.get_s3_singleton_instance()
+    s3_singleton = FileRepository
 
     def __init__(self,
                  region: Region,

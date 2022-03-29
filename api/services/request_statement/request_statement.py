@@ -6,20 +6,20 @@ from datetime import datetime, timedelta
 import pdfkit
 from fastapi import Depends
 
-from api.infrastructures.application_dependencies.jwt_validator import jwt_validator_and_decompile
+from api.services.jwt.service import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
-from api.services.statement import Statement
-from api.infrastructures.application_dependencies.singletons.oracle import OracleSingletonInstance
-from api.infrastructures.application_dependencies.singletons.s3 import S3SingletonInstance
+from api.repositories.files.repository import FileRepository
+from api.repositories.statements.repository import StatementsRepository
+from api.services.statement.service import Statement
 from api.domain.exception.model import NoPdfFoundError, NoPathFoundError
 
 log = logging.getLogger()
 
 
 class RequestStatement(IService):
-    oracle_singleton_instance = OracleSingletonInstance.get_statement_singleton_instance()
-    s3_singleton = S3SingletonInstance.get_s3_singleton_instance()
+    oracle_singleton_instance = StatementsRepository
+    s3_singleton = FileRepository
 
     def __init__(
             self,

@@ -4,18 +4,17 @@ from typing import List
 
 from fastapi import Request, Query, Depends
 
-from api.infrastructures.application_dependencies.jwt_validator import jwt_validator_and_decompile
+from api.services.jwt.service import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
+from api.repositories.companies_data.repository import CompanyInformationRepository
 from api.services.list_client_orders.strategies import order_region
 from api.domain.time_formatter.time_formatter import str_to_timestamp
-from api.exceptions.exceptions import NotFoundError
-from api.infrastructures.application_dependencies.singletons.mongo import MongoSingletonInstance
 log = logging.getLogger()
 
 
 class ListOrders(IService):
-    mongo_singleton = MongoSingletonInstance.get_mongo_singleton_instance()
+    company_information_repository = CompanyInformationRepository
 
     def __init__(
             self,
@@ -63,7 +62,7 @@ class ListOrders(IService):
     @staticmethod
     async def normalize_open_order(user_trade: dict) -> dict:
         normalized_data = {
-            "name": await ListOrders.get_name(user_trade.get('SYMBOL')),
+            "name": await ListOrders.company_information_repository.get_name(user_trade.get('SYMBOL')),
             "cl_order_id": user_trade.get("CLORDID"),
             "time": str_to_timestamp(user_trade.get("TRANSACTTIME")),
             "quantity": user_trade.get("ORDERQTY"),
@@ -87,10 +86,3 @@ class ListOrders(IService):
             await ListOrders.normalize_open_order(user_open_order)
             for user_open_order in user_open_orders
         ]
-
-    @staticmethod
-    async def get_name(symbol):
-        name = await ListOrders.mongo_singleton.find_one({'symbol': symbol}, {'name': 1, '_id': 0})
-        if not name:
-            return [{}]
-        return name.get('name')

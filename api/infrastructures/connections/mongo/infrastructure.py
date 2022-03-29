@@ -7,11 +7,13 @@ from etria_logger import Gladsheim
 
 class MongoInfrastructure(IInfrastructure):
 
-    @staticmethod
-    async def get_connection(client=None):
-        if client is None:
+    client = None
+
+    @classmethod
+    async def get_connection(cls):
+        if cls.client is None:
             try:
-                client = motor.AsyncIOMotorClient(
+                cls.client = motor.AsyncIOMotorClient(
                     f'{config("MONGODB_CONNECTION")}://{config("MONGODB_USER")}:{config("MONGODB_PASSWORD")}@'
                     f'{config("MONGODB_HOST")}:{config("MONGODB_PORT")}'
                 )
@@ -20,4 +22,5 @@ class MongoInfrastructure(IInfrastructure):
                     message=f"""MongoInfrastructure::get_connection::Error on connecting with Mongo: {exception}""",
                     error=exception,
                 )
-        return client
+
+        return cls.client

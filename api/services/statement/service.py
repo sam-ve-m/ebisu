@@ -64,7 +64,7 @@ class Statement:
         statement = Statement.normalize_statement_us(*raw_statement)
         return {
             'balance': balance,
-            'statement': statement
+            'statements': statement
         }
 
     @staticmethod

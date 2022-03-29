@@ -1,5 +1,4 @@
 # This is a sample Python script.
-from etria_logger import GLADSHEIM_LOGGING_CONFIG
 import uvicorn
 from api.routers.routers import app
 from etria_logger import GLADSHEIM_LOGGING_CONFIG
