@@ -24,6 +24,7 @@ class GetStatement(IService):
             end_date: float,
             decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
     ):
+        self.dw_account = None
         self.region = region.value
         self.jwt = decompiled_jwt
         self.bovespa_account = None
@@ -37,16 +38,17 @@ class GetStatement(IService):
         user = self.jwt.get("user", {})
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
+        us_portfolios = portfolios.get("us", {})
+        self.dw_account = us_portfolios.get("dw_account")
         self.bovespa_account = br_portfolios.get("bovespa_account")
-        self.bmf_account = br_portfolios.get("bmf_account")
-
-        self.bovespa_account = br_portfolios.get("user")
         self.bmf_account = br_portfolios.get("bmf_account")
 
     async def get_service_response(self) -> dict:
         self.get_account()
         if self.region == 'US':
-            us_statement = await Statement.get_dw_statement(self.start_date, self.end_date, self.limit)
+            us_statement = await Statement.get_dw_statement(
+                self.dw_account, self.start_date, self.offset, self.end_date, self.limit
+            )
             return us_statement
         start_date = Statement.from_timestamp_to_utc_isoformat_br(self.start_date)
         end_date = Statement.from_timestamp_to_utc_isoformat_br(self.end_date)
@@ -54,9 +56,10 @@ class GetStatement(IService):
                    FROM CORRWIN.TCCMOVTO 
                    WHERE CD_CLIENTE = {self.bmf_account} 
                    AND DT_LANCAMENTO >= TO_DATE('{start_date}', 'yyyy-MM-dd')
-                   AND DT_LANCAMENTO <= TO_DATE('{end_date}', 'yyyy-MM-dd')
+                   AND DT_LANCAMENTO <= TO_DATE('{end_date}', 'yyyy-MM-dd')                   
                    ORDER BY NR_LANCAMENTO
-                   fetch first {self.limit}  row only
+                   OFFSET {self.offset} rows
+                   fetch first {self.limit} row only
                    """
         statement = GetStatement.oracle_singleton_instance.get_data(sql=query)
         query = f"SELECT VL_TOTAL FROM CORRWIN.TCCSALDO WHERE CD_CLIENTE = {self.bmf_account}"
