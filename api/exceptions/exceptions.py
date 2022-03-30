@@ -1,5 +1,3 @@
-# ------ exceptions
-
 class UnauthorizedError(Exception):
     pass
 

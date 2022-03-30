@@ -12,6 +12,14 @@ from api.services.request_statement.request_statement import RequestStatement
 from api.services.get_earnings.get_client_earnings import EarningsService
 from api.services.middleware.service import MiddlewareService
 
+from nidavellir import Sindri
+
+from api.controller.base_controller import BaseController, UserBaseController
+from api.controller.user_bank_accounts.controller import UserBankAccounts
+from api.domain.validators.bank_account import CreateUserBankAccount, UpdateUserBankAccounts, DeleteUsersBankAccount
+from api.services.jwt.service_jwt import JwtService
+
+
 log = logging.getLogger()
 
 router = APIRouter()
@@ -70,3 +78,49 @@ async def get_broker_note(service: IService = Depends(GetBrokerNote)):
 @app.get("/list_broker_note", tags=["Broker Note"])
 async def list_broker_note(service: IService = Depends(ListBrokerNote)):
     return service.get_service_response()
+
+
+@app.get("/user/list_bank_accounts", tags=["User Bank Account"])
+async def get_user_bank_accounts(request: Request):
+    jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+    payload = {
+        "x-thebes-answer": jwt_data
+    }
+    get_user_bank_accounts_response = await UserBaseController.run(UserBankAccounts.get, payload, request)
+    return get_user_bank_accounts_response
+
+
+@app.post("/user/create_bank_account", tags=["User Bank Account"])
+async def create_user_bank_accounts(create_bank_account: CreateUserBankAccount, request: Request):
+    jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+    payload = {
+        "x-thebes-answer": jwt_data,
+        "bank_account": create_bank_account.dict()
+    }
+    create_user_bank_accounts_response = await UserBaseController.run(UserBankAccounts.create, payload, request)
+    return create_user_bank_accounts_response
+
+
+@app.put("/user/update_bank_account", tags=["User Bank Account"])
+async def update_bank_account(update_account: UpdateUserBankAccounts, request: Request):
+    jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+    bank_account = update_account.dict()
+    Sindri.dict_to_primitive_types(obj=bank_account)
+    payload = {
+        "x-thebes-answer": jwt_data,
+        "bank_account": bank_account
+    }
+    update_bank_account_response = await UserBaseController.run(UserBankAccounts.update, payload, request)
+    return update_bank_account_response
+
+
+@app.delete("/user/delete_bank_account", tags=["User Bank Account"])
+async def delete_bank_account(delete_account: DeleteUsersBankAccount, request: Request):
+    jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+    bank_account = delete_account.dict()
+    payload = {
+        "x-thebes-answer": jwt_data,
+        "bank_account": bank_account
+    }
+    delete_bank_account_response = await UserBaseController.run(UserBankAccounts.delete, payload, request)
+    return delete_bank_account_response

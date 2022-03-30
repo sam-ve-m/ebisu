@@ -1,7 +1,6 @@
 from api.domain.user_bank_account.status.enum import UserBankAccountStatus
 from api.infrastructures.env_config import config
 
-# SPHINX
 from api.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 
 

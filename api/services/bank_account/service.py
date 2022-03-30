@@ -19,13 +19,15 @@ class UserBankAccountService:
         bank_account = payload["bank_account"]
 
         is_bank_account_from_user = (
-            await bank_account_repository.is_user_bank_account_from_client(unique_id=unique_id, bank_account=bank_account)
+            await bank_account_repository.is_user_bank_account_from_client(
+                unique_id=unique_id, bank_account=bank_account)
         )
         if not is_bank_account_from_user:
             raise BadRequestError("user.bank_account_is_not_yours")
 
         bank_account_exists_and_is_activated = (
-            await bank_account_repository.existing_user_bank_account_and_is_activated(unique_id=unique_id, bank_account=bank_account)
+            await bank_account_repository.existing_user_bank_account_and_is_activated(
+                unique_id=unique_id, bank_account=bank_account)
         )
         if bank_account_exists_and_is_activated:
             raise BadRequestError("common.register_exists")
@@ -80,13 +82,15 @@ class UserBankAccountService:
         bank_account = payload["bank_account"]
         bank_account_id = bank_account["id"]
         user_bank_account_id_exists = (
-            await bank_account_repository.user_bank_account_id_exists(unique_id=unique_id, bank_account_id=bank_account_id)
+            await bank_account_repository.user_bank_account_id_exists(
+                unique_id=unique_id, bank_account_id=bank_account_id)
         )
         if not user_bank_account_id_exists:
             raise BadRequestError("common.register_not_exists")
 
         user_bank_account_was_updated = (
-            await bank_account_repository.update_registered_user_bank_accounts(unique_id=unique_id, bank_account=bank_account)
+            await bank_account_repository.update_registered_user_bank_accounts(
+                unique_id=unique_id, bank_account=bank_account)
         )
         if not user_bank_account_was_updated:
             raise InternalServerError("common.process_issue")
@@ -107,13 +111,15 @@ class UserBankAccountService:
         bank_account = payload["bank_account"]
         bank_account_id = bank_account["id"]
         user_bank_account_id_exists = (
-            await bank_account_repository.user_bank_account_id_exists(unique_id=unique_id, bank_account_id=bank_account_id)
+            await bank_account_repository.user_bank_account_id_exists(
+                unique_id=unique_id, bank_account_id=bank_account_id)
         )
         if not user_bank_account_id_exists:
             raise BadRequestError("common.register_not_exists")
 
         user_bank_account_was_soft_deleted = (
-            await bank_account_repository.delete_registered_user_bank_accounts(unique_id=unique_id, bank_account=bank_account)
+            await bank_account_repository.delete_registered_user_bank_accounts(
+                unique_id=unique_id, bank_account=bank_account)
         )
         if not user_bank_account_was_soft_deleted:
             raise InternalServerError("common.process_issue")

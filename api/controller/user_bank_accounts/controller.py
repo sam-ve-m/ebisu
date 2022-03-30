@@ -1,4 +1,4 @@
-from src.services.bank_account.service import UserBankAccountService
+from api.services.bank_account.service import UserBankAccountService
 
 
 class UserBankAccounts:

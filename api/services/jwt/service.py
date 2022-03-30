@@ -20,6 +20,7 @@ def validate_jwt(request: Request) -> Optional[Response]:
 
     return
 
+
 async def verify_jwt_token_by_string(jwt: str) -> Union[Exception, dict]:
     jwt_content, heimdall_status = await Heimdall.decode_payload(jwt=jwt)
     jwt_heimdall = await Heimdall.validate_jwt_integrity(jwt, fields=["portfolios"])
