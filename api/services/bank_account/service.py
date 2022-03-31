@@ -4,6 +4,7 @@ from uuid import uuid4
 # OUTSIDE LIBRARIES
 from fastapi import status
 
+# INTERNAL LIBRARIES
 from api.domain.user_bank_account.status.enum import UserBankAccountStatus
 from api.exceptions.exceptions import BadRequestError, InternalServerError
 from api.repositories.bank_account.repository import UserBankAccountRepository
