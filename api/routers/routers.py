@@ -13,11 +13,11 @@ from api.services.list_client_orders.list_client_orders import ListOrders
 from api.services.request_statement.request_statement import RequestStatement
 from api.services.get_earnings.get_client_earnings import EarningsService
 from api.services.middleware.service import MiddlewareService
+from api.services.jwt.service import jwt_validator_and_decompile
 
 log = logging.getLogger()
 
 router = APIRouter()
-
 
 app = FastAPI(
     title="Customer Exchange Information",
@@ -73,8 +73,8 @@ async def get_broker_note(service: IService = Depends(GetBrokerNote)):
 async def list_broker_note(service: IService = Depends(ListBrokerNote)):
     return service.get_service_response()
 
+
 @app.get("/transfer", tags=["Bank Transfer"])
 async def bank_transfer(request: Request, service: IBankTransfer = Depends(BankTransferService)):
-    bank_transfer_account_dict = service.get_bank_transfer_account(request)
+    bank_transfer_account_dict = await service.get_bank_transfer_account(request)
     return bank_transfer_account_dict
-    
