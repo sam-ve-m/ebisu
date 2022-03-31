@@ -5,7 +5,6 @@ from etria_logger import Gladsheim
 
 
 class OracleInfrastructure(IInfrastructure):
-
     @staticmethod
     def get_connection(service, user, password, base_dns, port):
         try:
@@ -17,7 +16,6 @@ class OracleInfrastructure(IInfrastructure):
             return oracle_connection
         except Exception as exception:
             Gladsheim.error(
-                message=
-                f"OracleInfrastructure::get_connection:: Error on getting the oracle connection, {exception}",
+                message=f"OracleInfrastructure::get_connection:: Error on getting the oracle connection, {exception}",
                 error=exception,
             )

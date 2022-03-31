@@ -16,13 +16,13 @@ class GetStatement(IService):
     oracle_singleton_instance = StatementsRepository
 
     def __init__(
-            self,
-            region: Region,
-            limit: int,
-            offset: int,
-            start_date: float,
-            end_date: float,
-            decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
+        self,
+        region: Region,
+        limit: int,
+        offset: int,
+        start_date: float,
+        end_date: float,
+        decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
     ):
         self.dw_account = None
         self.region = region.value
@@ -45,7 +45,7 @@ class GetStatement(IService):
 
     async def get_service_response(self) -> dict:
         self.get_account()
-        if self.region == 'US':
+        if self.region == "US":
             us_statement = await Statement.get_dw_statement(
                 self.dw_account, self.start_date, self.offset, self.end_date, self.limit
             )
@@ -66,8 +66,10 @@ class GetStatement(IService):
         balance = GetStatement.oracle_singleton_instance.get_data(sql=query)
 
         data_balance = {
-            'balance': balance.pop().get("VL_TOTAL"),
-            'statements': [Statement.normalize_statement(transc) for transc in statement]
+            "balance": balance.pop().get("VL_TOTAL"),
+            "statements": [
+                Statement.normalize_statement(transc) for transc in statement
+            ],
         }
         if not data_balance:
             return {}

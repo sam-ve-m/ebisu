@@ -45,4 +45,3 @@ class BaseController:
                 ),
                 status_code=status_code,
             )
-

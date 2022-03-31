@@ -17,17 +17,12 @@ class DWTransport:
         self.expire_at = None
 
     async def get_transactions(
-            self, account: str, start: str, end: str, limit: int
+        self, account: str, start: str, end: str, limit: int
     ) -> List[dict]:
         if not account:
             return []
         url = config("DW_GET_ALL_TRANSACTIONS_URL")
-        query_params = {
-            "from": start,
-            "to": end,
-            "offset": start,
-            "limit": limit
-        }
+        query_params = {"from": start, "to": end, "offset": start, "limit": limit}
         if not limit:
             del query_params["limit"]
         response = await self.execute_get_with_auth(
@@ -40,12 +35,14 @@ class DWTransport:
         if not account:
             return []
         url = config("DW_BALANCE_URL")
-        response = await self.execute_get_with_auth(url=url, account=account, query_params={})
+        response = await self.execute_get_with_auth(
+            url=url, account=account, query_params={}
+        )
 
         return response
 
     async def execute_get_with_auth(
-            self, url, account: str, query_params: dict
+        self, url, account: str, query_params: dict
     ) -> List[dict]:
         # await self._do_authentication()
         session = await self._get_session()
@@ -56,14 +53,18 @@ class DWTransport:
         }
         url_formatted = url.format(account)
 
-        async with session.get(url=url_formatted, params=query_params, headers=headers) as response:
+        async with session.get(
+            url=url_formatted, params=query_params, headers=headers
+        ) as response:
             not_ok_response = response.status != 200
             if not_ok_response:
                 print(
                     f"DWTransport::execute_get_with_auth::Erros to get data from dw {response}"
                 )
 
-            response = await self._response_body_in_json_and_account_id(response=response, base_url=url_formatted)
+            response = await self._response_body_in_json_and_account_id(
+                response=response, base_url=url_formatted
+            )
 
         return response
 
@@ -82,16 +83,14 @@ class DWTransport:
             }
             try:
                 async with session.post(
-                        config("DW_AUTHENTICATION_URL"), json=payload, headers=headers
+                    config("DW_AUTHENTICATION_URL"), json=payload, headers=headers
                 ) as response:
                     body = await response.text()
                     dict_body = json.loads(body)
                     self.token = dict_body["authToken"]
                     self.expire_at = datetime.fromisoformat(dict_body["expiresAt"][:-1])
             except Exception as exception:
-                print(
-                    f"DWTransport::get_balances::Error to authenticate:  {exception}"
-                )
+                print(f"DWTransport::get_balances::Error to authenticate:  {exception}")
 
     @classmethod
     async def _get_session(cls) -> ClientSession:
@@ -120,7 +119,7 @@ class DWTransport:
 
     @staticmethod
     async def _response_body_in_json_and_account_id(
-            response: ClientResponse, base_url: str
+        response: ClientResponse, base_url: str
     ) -> List[dict]:
         bodies = list()
         body = await response.text()

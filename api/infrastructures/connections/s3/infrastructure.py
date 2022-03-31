@@ -5,7 +5,6 @@ from etria_logger import Gladsheim
 
 
 class S3Infrastructure:
-
     @staticmethod
     def get_connection():
         try:
@@ -25,4 +24,3 @@ class S3Infrastructure:
                 {exception}""",
                 error=exception,
             )
-

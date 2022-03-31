@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
+from fastapi import Request
 
 
 class IBankTransfer(ABC):
-
     @staticmethod
-    async def get_bank_transfer_account():
+    @abstractmethod
+    async def get_bank_transfer_account(request: Request):
         pass

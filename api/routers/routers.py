@@ -28,8 +28,8 @@ app = FastAPI(
 @app.middleware("http")
 async def middleware_response(request: Request, call_next):
     response = await MiddlewareService.add_process_time_header(
-        request=request,
-        call_next=call_next)
+        request=request, call_next=call_next
+    )
     return response
 
 
@@ -60,7 +60,9 @@ async def get_bank_statement(service: IService = Depends(GetStatement)):
 
 
 @app.get("/request_bank_statement_pdf", tags=["Bank Statement"])
-async def request_bank_RequestStatementstatement(service: IService = Depends(RequestStatement)):
+async def request_bank_RequestStatementstatement(
+    service: IService = Depends(RequestStatement),
+):
     return await service.get_service_response()
 
 
@@ -75,6 +77,8 @@ async def list_broker_note(service: IService = Depends(ListBrokerNote)):
 
 
 @app.get("/transfer", tags=["Bank Transfer"])
-async def bank_transfer(request: Request, service: IBankTransfer = Depends(BankTransferService)):
+async def bank_transfer(
+    request: Request, service: IBankTransfer = Depends(BankTransferService)
+):
     bank_transfer_account_dict = await service.get_bank_transfer_account(request)
     return bank_transfer_account_dict

@@ -16,13 +16,14 @@ log = logging.getLogger()
 class EarningsService:
     oracle_earnings_singleton_instance = EarningsRepository
 
-    def __init__(self,
-                 symbol: str,
-                 timestamp: float,
-                 offset: float,
-                 limit: int,
-                 decompiled_jwt: str = Depends(jwt_validator_and_decompile),
-                 ):
+    def __init__(
+        self,
+        symbol: str,
+        timestamp: float,
+        offset: float,
+        limit: int,
+        decompiled_jwt: str = Depends(jwt_validator_and_decompile),
+    ):
         self.symbol = symbol
         self.timestamp = timestamp
         self.offset = offset
@@ -36,7 +37,7 @@ class EarningsService:
     def normalize_earnings(client_earnings: dict) -> dict:
         normalize_data = {
             "symbol": client_earnings.get("SYMBOL"),
-            "date": client_earnings.get('EARNINGS_DATE'),
+            "date": client_earnings.get("EARNINGS_DATE"),
             "price": client_earnings.get("PRICE"),
             "earnings_type": client_earnings.get("EARNINGS_TYPE"),
         }
@@ -45,11 +46,14 @@ class EarningsService:
     async def get_service_response(self) -> List[dict]:
         earnings_region = earnings_regions.get("BR")
         query_earnings = earnings_region.build_query_earnings(
-                            symbol=self.symbol,
-                            timestamp=Earnings.from_timestamp_to_utc_isoformat_br(self.timestamp),
-                            limit=self.limit,
-                            offset=self.offset)
-        open_earnings = earnings_region.oracle_earnings_singleton_instance.get_data(sql=query_earnings)
+            symbol=self.symbol,
+            timestamp=Earnings.from_timestamp_to_utc_isoformat_br(self.timestamp),
+            limit=self.limit,
+            offset=self.offset,
+        )
+        open_earnings = earnings_region.oracle_earnings_singleton_instance.get_data(
+            sql=query_earnings
+        )
         open_earnings_data = [
             EarningsService.normalize_earnings(open_earning)
             for open_earning in open_earnings
