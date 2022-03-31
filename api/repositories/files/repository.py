@@ -35,9 +35,7 @@ class FileRepository:
     def list_all_directories_in_path(cls, file_path: str) -> List[str]:
         s3_client = cls._get_client()
         directories = s3_client.list_objects(
-                Bucket=cls._bucket_name,
-                Prefix=file_path,
-                Delimiter='/'
+            Bucket=cls._bucket_name, Prefix=file_path, Delimiter="/"
         )
         if not directories:
             return []
@@ -51,6 +49,6 @@ class FileRepository:
             Key=file_path,
             Body=content,
             ContentType="application/pdf",
-            Expires=expire_date
+            Expires=expire_date,
         )
         return files_upload

@@ -13,13 +13,12 @@ log = logging.getLogger()
 
 
 class GetOrders(IService):
-
     def __init__(
-            self,
-            request: Request,
-            region: Region,
-            cl_order_id: str,
-            decompiled_jwt: dict = Depends(jwt_validator_and_decompile)
+        self,
+        request: Request,
+        region: Region,
+        cl_order_id: str,
+        decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
     ):
         self.clorid = cl_order_id
         self.jwt = decompiled_jwt
@@ -65,7 +64,8 @@ class GetOrders(IService):
             "side": user_trade.get("SIDE").lower(),
             "status": user_trade.get("ORDSTATUS"),
             "tif": GetOrders.tiff_response_converter(user_trade.get("TIMEINFORCE")),
-            "total_spent": user_trade.get("CUMQTY") * GetOrders.decimal_128_converter(user_trade, "AVGPX"),
+            "total_spent": user_trade.get("CUMQTY")
+            * GetOrders.decimal_128_converter(user_trade, "AVGPX"),
             "quantity_filled": user_trade.get("CUMQTY"),
             "quantity_leaves": user_trade.get("LEAVESQTY"),
             "quantity_last": user_trade.get("LASTQTY"),
@@ -73,14 +73,16 @@ class GetOrders(IService):
             "reject_reason": user_trade.get("ORDREJREASON"),
             "exec_type": user_trade.get("EXECTYPE"),
             "expire_date": user_trade.get("EXPIREDATE"),
-            "error_message": user_trade.get('MESSAGE')
+            "error_message": user_trade.get("MESSAGE"),
         }
         return normalized_data
 
     def get_service_response(self) -> List[dict]:
         self.get_account()
         open_orders = order_region[self.region]
-        query = open_orders.build_query(self.bovespa_account, self.bmf_account, self.clorid)
+        query = open_orders.build_query(
+            self.bovespa_account, self.bmf_account, self.clorid
+        )
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
         data = [
             GetOrders.normalize_open_order(user_open_order)

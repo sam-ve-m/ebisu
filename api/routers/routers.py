@@ -2,6 +2,8 @@ import logging
 
 from fastapi import APIRouter, FastAPI, Depends, Request
 from api.core.interfaces.interface import IService
+from api.core.interfaces.bank_transfer.interface import IBankTransfer
+from api.services.bank_transfer.service import BankTransferService
 from api.services.get_balance.get_balance import GetBalance
 from api.services.get_broker_note.get_broker_note import GetBrokerNote
 from api.services.get_client_orders.get_client_orders import GetOrders
@@ -11,6 +13,7 @@ from api.services.list_client_orders.list_client_orders import ListOrders
 from api.services.request_statement.request_statement import RequestStatement
 from api.services.get_earnings.get_client_earnings import EarningsService
 from api.services.middleware.service import MiddlewareService
+from api.services.jwt.service import jwt_validator_and_decompile
 
 from nidavellir import Sindri
 
@@ -24,7 +27,6 @@ log = logging.getLogger()
 
 router = APIRouter()
 
-
 app = FastAPI(
     title="Customer Exchange Information",
     description="Dados de clientes",
@@ -34,8 +36,8 @@ app = FastAPI(
 @app.middleware("http")
 async def middleware_response(request: Request, call_next):
     response = await MiddlewareService.add_process_time_header(
-        request=request,
-        call_next=call_next)
+        request=request, call_next=call_next
+    )
     return response
 
 
@@ -66,7 +68,9 @@ async def get_bank_statement(service: IService = Depends(GetStatement)):
 
 
 @app.get("/request_bank_statement_pdf", tags=["Bank Statement"])
-async def request_bank_RequestStatementstatement(service: IService = Depends(RequestStatement)):
+async def request_bank_RequestStatementstatement(
+    service: IService = Depends(RequestStatement),
+):
     return await service.get_service_response()
 
 
@@ -78,6 +82,14 @@ async def get_broker_note(service: IService = Depends(GetBrokerNote)):
 @app.get("/list_broker_note", tags=["Broker Note"])
 async def list_broker_note(service: IService = Depends(ListBrokerNote)):
     return service.get_service_response()
+
+
+@app.get("/transfer", tags=["Bank Transfer"])
+async def bank_transfer(
+    request: Request, service: IBankTransfer = Depends(BankTransferService)
+):
+    bank_transfer_account_dict = await service.get_bank_transfer_account(request)
+    return bank_transfer_account_dict
 
 
 @app.get("/user/list_bank_accounts", tags=["User Bank Account"])
