@@ -34,11 +34,8 @@ async def verify_jwt_token_by_string(jwt: str) -> Union[Exception, dict]:
 
 async def jwt_validator_and_decompile(request: Request) -> Union[Exception, dict]:
 
-    try:
-        jwt: str = request.headers.get(CLIENT_JWT_NAME)
-        if jwt is None:
-            raise AuthenticationJwtError(msg=f"Jwt not allowed")
+    jwt: str = request.headers.get(CLIENT_JWT_NAME)
+    if jwt is None:
+        raise AuthenticationJwtError(msg=f"Jwt not allowed")
 
-        return await verify_jwt_token_by_string(jwt)
-    except Exception as err:
-        print(err)
+    return await verify_jwt_token_by_string(jwt)
