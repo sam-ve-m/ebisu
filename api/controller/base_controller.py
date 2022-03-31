@@ -112,7 +112,7 @@ class UserBaseController(IController):
         if "message_key" in response_metadata:
             payload.update(
                 {
-                    "message": "Account Created Successfully"
+                    "message": "SUCCESS"
                 }
             )
         if "payload" in response_metadata:
