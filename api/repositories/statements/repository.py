@@ -3,7 +3,7 @@ from api.repositories.base_repositories.oracle.repository import OracleBaseRepos
 
 
 class StatementsRepository(OracleBaseRepository):
-    service = config('ORACLE_SERVICE_STATEMENT')
+    service = config("ORACLE_SERVICE_STATEMENT")
     user = config("ORACLE_USER_STATEMENT")
     password = config("ORACLE_PASSWORD_STATEMENT")
     base_dns = config("ORACLE_BASE_DSN_STATEMENT")

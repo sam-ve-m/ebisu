@@ -23,10 +23,10 @@ class CompanyInformationRepository(IMongo):
 
     @classmethod
     async def get_company_name(cls, symbol: str):
-        name = await cls.find_one({'symbol': symbol}, {'name': 1, '_id': 0})
+        name = await cls.find_one({"symbol": symbol}, {"name": 1, "_id": 0})
         if not name:
             return [{}]
-        return name.get('name')
+        return name.get("name")
 
     @classmethod
     async def insert(cls, data: dict) -> bool:

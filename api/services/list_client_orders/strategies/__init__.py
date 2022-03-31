@@ -2,7 +2,6 @@ from api.services.list_client_orders.strategies.br_orders.strategy import GetBrO
 from api.services.list_client_orders.strategies.us_orders.strategy import GetUsOrders
 
 order_region = {
-        "BR": GetBrOrders,
-        "US": GetUsOrders,
-    }
-
+    "BR": GetBrOrders,
+    "US": GetUsOrders,
+}

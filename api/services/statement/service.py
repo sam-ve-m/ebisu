@@ -3,7 +3,10 @@ from typing import List
 import pytz
 
 from api.services.get_statement.dw_connection import DWTransport
-from api.domain.time_formatter.time_formatter import str_to_timestamp_statement, str_to_timestamp_statement_us
+from api.domain.time_formatter.time_formatter import (
+    str_to_timestamp_statement,
+    str_to_timestamp_statement_us,
+)
 from api.services.jwt.service import jwt_validator_and_decompile
 from fastapi import Depends
 
@@ -14,7 +17,7 @@ class Statement:
     @staticmethod
     def normalize_statement(client_statement: dict) -> dict:
         normalized_data = {
-            "date": str_to_timestamp_statement(client_statement.get('DT_LANCAMENTO')),
+            "date": str_to_timestamp_statement(client_statement.get("DT_LANCAMENTO")),
             "description": client_statement.get("DS_LANCAMENTO"),
             "value": client_statement.get("VL_LANCAMENTO"),
         }
@@ -23,12 +26,14 @@ class Statement:
     @staticmethod
     def normalize_statement_us(client_statement: dict) -> List[dict]:
         statements = []
-        for transaction in client_statement.get('dict_body'):
-            statements.append({
-                "date": str_to_timestamp_statement_us(transaction.get('tranWhen')),
-                "description": transaction.get("comment"),
-                "value": transaction.get("tranAmount"),
-            })
+        for transaction in client_statement.get("dict_body"):
+            statements.append(
+                {
+                    "date": str_to_timestamp_statement_us(transaction.get("tranWhen")),
+                    "description": transaction.get("comment"),
+                    "value": transaction.get("tranAmount"),
+                }
+            )
         return statements
 
     @staticmethod
@@ -39,7 +44,7 @@ class Statement:
 
     @staticmethod
     def normalize_balance_us(client_balance: dict) -> dict:
-        balance = client_balance.get('dict_body').get('cash').get('cashBalance')
+        balance = client_balance.get("dict_body").get("cash").get("cashBalance")
         return balance
 
     @staticmethod
@@ -68,16 +73,13 @@ class Statement:
         end_date = Statement.from_timestamp_to_utc_isoformat_us(end_date)
         dw_account = Statement.get_dw_account()
 
-        raw_statement = await Statement.dw.get_transactions(dw_account,
-                                                            start=start_date,
-                                                            end=end_date)
+        raw_statement = await Statement.dw.get_transactions(
+            dw_account, start=start_date, end=end_date
+        )
         raw_balance = await Statement.dw.get_balances(dw_account)
         balance = Statement.normalize_balance_us(*raw_balance)
         statement = Statement.normalize_statement_us(*raw_statement)
-        return {
-            'balance': balance,
-            'statements': statement
-        }
+        return {"balance": balance, "statements": statement}
 
     @staticmethod
     async def get_dw_balance():
@@ -85,6 +87,7 @@ class Statement:
         raw_balance = await Statement.dw.get_balances(dw_account)
         balance = Statement.normalize_balance_us(*raw_balance)
         return {"balance": balance}
+
 
 # if __name__ == "__main__":
 #     Statement.

@@ -14,12 +14,13 @@ log = logging.getLogger()
 class ListBrokerNote:
     s3_singleton = FileRepository
 
-    def __init__(self,
-                 region: Region,
-                 year: int = Query(None),
-                 month: int = Query(None),
-                 decompiled_jwt: dict = Depends(jwt_validator_and_decompile)
-                 ):
+    def __init__(
+        self,
+        region: Region,
+        year: int = Query(None),
+        month: int = Query(None),
+        decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
+    ):
         self.client_id = None
         self.jwt = decompiled_jwt
         self.year = year
@@ -43,18 +44,26 @@ class ListBrokerNote:
         self.get_account()
         file_path = self.generate_path()
 
-        list_directories = ListBrokerNote.s3_singleton.list_all_directories_in_path(file_path=file_path)
+        list_directories = ListBrokerNote.s3_singleton.list_all_directories_in_path(
+            file_path=file_path
+        )
         directories = []
         files = []
-        if list_directories.get('CommonPrefixes'):
-            directories = [ListBrokerNote.get_directory_name(directory) for directory in
-                           list_directories.get('CommonPrefixes')]
+        if list_directories.get("CommonPrefixes"):
+            directories = [
+                ListBrokerNote.get_directory_name(directory)
+                for directory in list_directories.get("CommonPrefixes")
+            ]
 
-        if list_directories.get('Contents'):
-            files = [ListBrokerNote.get_file_name(directory) for directory in
-                     list_directories.get('Contents')]
+        if list_directories.get("Contents"):
+            files = [
+                ListBrokerNote.get_file_name(directory)
+                for directory in list_directories.get("Contents")
+            ]
 
-        files_data = {"available": sorted(directories) if directories else sorted(files)}
+        files_data = {
+            "available": sorted(directories) if directories else sorted(files)
+        }
         if not files_data:
             raise Exception(DataNotFoundError)
         return files_data
@@ -63,7 +72,7 @@ class ListBrokerNote:
     def get_directory_name(directory: dict):
         directory_name = ""
         if directory:
-            directory_name = directory.get('Prefix').split('/')[-2]
+            directory_name = directory.get("Prefix").split("/")[-2]
 
         return int(directory_name)
 
@@ -71,14 +80,18 @@ class ListBrokerNote:
     def get_file_name(directory: dict):
         directory_name = ""
         if directory:
-            directory_name = directory.get('Key').split('/')[-1].replace('.pdf', '')
+            directory_name = directory.get("Key").split("/")[-1].replace(".pdf", "")
 
         return int(directory_name)
 
     def generate_path(self):
-        path_route = os.path.join(*tuple(str(path_fragment)
-                                         for path_fragment in ('broker_note', self.year, self.month)
-                                         if path_fragment is not None))
+        path_route = os.path.join(
+            *tuple(
+                str(path_fragment)
+                for path_fragment in ("broker_note", self.year, self.month)
+                if path_fragment is not None
+            )
+        )
         path = f"{self.region}/{self.bmf_account}/{path_route}/"
 
         if self.bmf_account and self.region and path_route in path:

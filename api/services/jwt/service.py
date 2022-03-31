@@ -20,18 +20,20 @@ def validate_jwt(request: Request) -> Optional[Response]:
 
     return
 
+
 async def verify_jwt_token_by_string(jwt: str) -> Union[Exception, dict]:
     jwt_content, heimdall_status = await Heimdall.decode_payload(jwt=jwt)
     jwt_heimdall = await Heimdall.validate_jwt_integrity(jwt, fields=["portfolios"])
-    jwt_check_integrity = jwt_heimdall[0]['jwt_integrity']
+    jwt_check_integrity = jwt_heimdall[0]["jwt_integrity"]
 
     if jwt_check_integrity:
-        return jwt_content['decoded_jwt']
+        return jwt_content["decoded_jwt"]
 
     raise IntegrityJwtError(msg=f"Jwt not allowed")
 
 
 async def jwt_validator_and_decompile(request: Request) -> Union[Exception, dict]:
+
     jwt: str = request.headers.get(CLIENT_JWT_NAME)
     if jwt is None:
         raise AuthenticationJwtError(msg=f"Jwt not allowed")

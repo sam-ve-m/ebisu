@@ -12,13 +12,14 @@ log = logging.getLogger()
 class GetBrokerNote:
     s3_singleton = FileRepository
 
-    def __init__(self,
-                 region: Region,
-                 year: str,
-                 month: str,
-                 day: str,
-                 decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
-                 ):
+    def __init__(
+        self,
+        region: Region,
+        year: str,
+        month: str,
+        day: str,
+        decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
+    ):
         self.jwt: dict = decompiled_jwt
         self.year = year
         self.month = month
@@ -49,6 +50,12 @@ class GetBrokerNote:
 
     def generate_path(self):
         path = f"{self.bmf_account}/{self.region}/broker_note/{self.year}/{self.month}/{self.day}.pdf"
-        if self.bmf_account and self.region and self.year and self.month and self.day in path:
+        if (
+            self.bmf_account
+            and self.region
+            and self.year
+            and self.month
+            and self.day in path
+        ):
             return path
         raise Exception(NoPathFoundError)

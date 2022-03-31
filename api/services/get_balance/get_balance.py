@@ -17,9 +17,9 @@ class GetBalance(IService):
     oracle_singleton_instance = StatementsRepository
 
     def __init__(
-            self,
-            region: Region,
-            decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
+        self,
+        region: Region,
+        decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
     ):
         self.region = region.value
         self.jwt: dict = decompiled_jwt
@@ -38,7 +38,7 @@ class GetBalance(IService):
 
     async def get_service_response(self) -> dict:
         self.get_account()
-        if self.region == 'US':
+        if self.region == "US":
             balance_us = await Statement.get_dw_balance()
             return balance_us
 
@@ -48,5 +48,5 @@ class GetBalance(IService):
         if not balance:
             return {}
         return {
-            'balance': balance.pop().get("VL_TOTAL"),
+            "balance": balance.pop().get("VL_TOTAL"),
         }
