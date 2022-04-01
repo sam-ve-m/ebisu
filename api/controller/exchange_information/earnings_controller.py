@@ -1,0 +1,4 @@
+
+
+class EarningsService:
+    pass

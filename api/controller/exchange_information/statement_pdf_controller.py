@@ -1,0 +1,4 @@
+
+
+class StatementPDFService:
+    pass

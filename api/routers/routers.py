@@ -1,8 +1,13 @@
+import json
 import logging
 
 from fastapi import APIRouter, FastAPI, Depends, Request
+
+from api.controller.exchange_information.get_balance_controller import GetBalanceController
 from api.core.interfaces.interface import IService
 from api.core.interfaces.bank_transfer.interface import IBankTransfer
+from api.domain.enums.region import Region
+from api.domain.validators.exchange_info_validators.get_balance_validator import GetBalanceData
 from api.services.bank_transfer.service import BankTransferService
 from api.services.get_balance.get_balance import GetBalance
 from api.services.get_broker_note.get_broker_note import GetBrokerNote
@@ -14,7 +19,7 @@ from api.services.request_statement.request_statement import RequestStatement
 from api.services.get_earnings.get_client_earnings import EarningsService
 from api.services.middleware.service import MiddlewareService
 from api.controller.user_bank_accounts.controller import UserBankAccounts
-from api.domain.validators.bank_account import CreateUserBankAccount, UpdateUserBankAccounts, DeleteUsersBankAccount
+from api.domain.validators.user_account_validators.bank_account import CreateUserBankAccount, UpdateUserBankAccounts, DeleteUsersBankAccount
 from api.services.jwt.service_jwt import JwtService
 
 from nidavellir import Sindri
@@ -31,9 +36,10 @@ app = FastAPI(
 
 
 @app.middleware("http")
-async def middleware_response(request: Request, call_next):
-    middleware_service_response = await MiddlewareService.add_process_time_header(
-        request=request, call_next=call_next
+async def middleware_response(request: Request, callback: callable):
+    payload = request.headers.raw
+    middleware_service_response = await MiddlewareService.run(
+        request=request, callback=callback, payload=payload
     )
     return middleware_service_response
 
@@ -54,12 +60,6 @@ async def get_client_orders(service: IService = Depends(ListOrders)):
 async def get_br_earnings(service: IService = Depends(EarningsService)):
     earnings_response = await service.get_service_response()
     return earnings_response
-
-
-@app.get("/balance", tags=["Balance"])
-async def get_balance(service: IService = Depends(GetBalance)):
-    balance_response = await service.get_service_response()
-    return balance_response
 
 
 @app.get("/bank_statement", tags=["Bank Statement"])
@@ -96,6 +96,17 @@ async def get_user_bank_accounts(request: Request):
     }
     get_user_bank_accounts_response = await MiddlewareService.run(UserBankAccounts.get, payload, request)
     return get_user_bank_accounts_response
+
+
+@app.get("/balance", tags=["Balance"])
+async def get_balance(region: Region, request: Request):
+    jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+    payload = {
+        "x-thebes-answer": jwt_data
+    }
+    balace_data_response = MiddlewareService.run(
+        GetBalanceController.get(payload=payload, region=region), payload, request)
+    return balace_data_response
 
 
 @app.post("/user/create_bank_account", tags=["User Bank Account"])

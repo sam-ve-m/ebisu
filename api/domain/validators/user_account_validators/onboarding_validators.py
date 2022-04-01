@@ -2,7 +2,7 @@
 from __future__ import annotations
 from pydantic import BaseModel, validator
 
-from api.domain.validators.brazil_register_number_validator import is_cpf_valid
+from api.domain.validators.user_account_validators.brazil_register_number_validator import is_cpf_valid
 
 
 class Cpf(BaseModel):
