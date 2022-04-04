@@ -1,11 +1,6 @@
-import logging
-from api.services.jwt.service import jwt_validator_and_decompile
 from api.domain.enums.region import Region
 from api.repositories.statements.repository import StatementsRepository
 from api.services.statement.service import Statement
-
-
-log = logging.getLogger()
 
 
 class GetBalance:
@@ -13,8 +8,8 @@ class GetBalance:
     oracle_singleton_instance = StatementsRepository
 
     @classmethod
-    async def get_service_response(cls, region: Region, payload: dict) -> dict:
-        user = payload.get("user", {})
+    async def get_service_response(cls, region: Region, jwt_data: dict) -> dict:
+        user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
         cls.bovespa_account = br_portfolios.get("bovespa_account")
@@ -29,6 +24,7 @@ class GetBalance:
 
         if not balance:
             return {}
-        return {
+        balance_response = {"payload": {
             "balance": balance.pop().get("VL_TOTAL"),
-        }
+        }}
+        return balance_response

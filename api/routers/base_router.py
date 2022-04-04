@@ -1,9 +1,10 @@
+import logging
 # Internal Libs
-from fastapi import Request, Response
+from fastapi import FastAPI, Request, Response
 from starlette import status
+
 from api.domain.exception.model import IntegrityJwtError, AuthenticationJwtError
 from etria_logger import Gladsheim
-from api.core.interfaces.controllers.base_controller.interface import IController
 from api.exceptions.exceptions import (
     ForbiddenError,
     BadRequestError,
@@ -12,13 +13,33 @@ from api.exceptions.exceptions import (
 
 # STANDARD LIBS
 import json
-from abc import ABC
-from typing import Optional
+
+from api.routers.exchange_informations.router import ExchangeRouter
 
 
-class MiddlewareService(IController, ABC):
+class BaseRouter:
+
+    app = FastAPI(
+        title="Customer Exchange Information",
+        description="Dados de clientes",
+    )
+
     @staticmethod
-    async def add_process_time_header(request: Request, call_next):
+    def register_routers():
+        exchange_router = ExchangeRouter.get_exchange_router()
+        BaseRouter.app.include_router(exchange_router)
+        return BaseRouter.app
+
+    @staticmethod
+    @app.middleware("http")
+    async def middleware_response(request: Request, call_next: callable):
+        middleware_service_response = await BaseRouter.__add_process_time_header(
+            request=request, call_next=call_next
+        )
+        return middleware_service_response
+
+    @staticmethod
+    async def __add_process_time_header(request: Request, call_next):
         try:
             response = await call_next(request)
 

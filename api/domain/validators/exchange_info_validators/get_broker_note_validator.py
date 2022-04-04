@@ -4,6 +4,6 @@ from api.domain.enums.region import Region
 
 class GetBrokerNoteData(BaseModel):
     region: Region
-    year: str
-    month: str
-    day: str
+    year: int
+    month: int
+    day: int

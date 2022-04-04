@@ -1,4 +1,0 @@
-
-
-class GetBrokerNoteController:
-    pass
