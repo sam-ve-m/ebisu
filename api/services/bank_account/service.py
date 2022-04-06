@@ -11,13 +11,14 @@ from api.repositories.bank_account.repository import UserBankAccountRepository
 
 
 class UserBankAccountService:
+
     @classmethod
     async def create_user_bank_accounts(
-            cls, payload: dict, bank_account_repository=UserBankAccountRepository
+            cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
     ):
-        thebes_answer = payload["x-thebes-answer"]
-        unique_id = thebes_answer["user"]["unique_id"]
-        bank_account = payload["bank_account"]
+        user = jwt_data.get("user", {})
+        unique_id = user.get("unique_id", {})
+        bank_account = jwt_data.get("bank_account")
 
         is_bank_account_from_user = (
             await bank_account_repository.is_user_bank_account_from_client(
@@ -57,10 +58,10 @@ class UserBankAccountService:
 
     @classmethod
     async def get_user_bank_accounts(
-            cls, payload: dict, bank_account_repository=UserBankAccountRepository
+            cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
     ):
-        thebes_answer = payload.get("x-thebes-answer")
-        unique_id = thebes_answer["user"]["unique_id"]
+        user = jwt_data.get("user", {})
+        unique_id = user.get("unique_id", {})
         bank_accounts = await bank_account_repository.get_registered_user_bank_accounts(
             unique_id=unique_id
         )
@@ -69,19 +70,19 @@ class UserBankAccountService:
 
         get_user_bank_accounts_response = {
             "status_code": status.HTTP_200_OK,
-            "payload": bank_accounts,
+            "jwt_data": bank_accounts,
         }
 
         return get_user_bank_accounts_response
 
     @classmethod
     async def update_user_bank_account(
-            cls, payload: dict, bank_account_repository=UserBankAccountRepository
+            cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
     ):
-        thebes_answer = payload["x-thebes-answer"]
-        unique_id = thebes_answer["user"]["unique_id"]
-        bank_account = payload["bank_account"]
-        bank_account_id = bank_account["id"]
+        user = jwt_data.get("user", {})
+        unique_id = user.get("unique_id", {})
+        bank_account = jwt_data.get("bank_account")
+        bank_account_id = bank_account.get("id")
         user_bank_account_id_exists = (
             await bank_account_repository.user_bank_account_id_exists(
                 unique_id=unique_id, bank_account_id=bank_account_id)
@@ -105,12 +106,12 @@ class UserBankAccountService:
 
     @classmethod
     async def delete_user_bank_account(
-            cls, payload: dict, bank_account_repository=UserBankAccountRepository
+            cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
     ):
-        thebes_answer = payload["x-thebes-answer"]
-        unique_id = thebes_answer["user"]["unique_id"]
-        bank_account = payload["bank_account"]
-        bank_account_id = bank_account["id"]
+        user = jwt_data.get("user", {})
+        unique_id = user.get("unique_id", {})
+        bank_account = jwt_data.get("bank_account")
+        bank_account_id = bank_account.get("id")
         user_bank_account_id_exists = (
             await bank_account_repository.user_bank_account_id_exists(
                 unique_id=unique_id, bank_account_id=bank_account_id)

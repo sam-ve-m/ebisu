@@ -15,6 +15,7 @@ from api.exceptions.exceptions import (
 import json
 
 from api.routers.exchange_informations.router import ExchangeRouter
+from api.routers.user_bank_accounts.router import UserBankAccountsRouter
 
 
 class BaseRouter:
@@ -25,9 +26,15 @@ class BaseRouter:
     )
 
     @staticmethod
-    def register_routers():
+    def register_router_exchange():
         exchange_router = ExchangeRouter.get_exchange_router()
         BaseRouter.app.include_router(exchange_router)
+        return BaseRouter.app
+
+    @staticmethod
+    def register_router_account():
+        user_bank_account_router = UserBankAccountsRouter.get_user_account_router()
+        BaseRouter.app.include_router(user_bank_account_router)
         return BaseRouter.app
 
     @staticmethod

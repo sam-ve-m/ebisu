@@ -38,11 +38,13 @@ async def get_br_earnings(service: IService = Depends(EarningsService)):
     earnings_response = await service.get_service_response()
     return earnings_response
 
+# ---------------- DONE 
 @app.get("/bank_statement", tags=["Bank Statement"])
 async def get_bank_statement(service: IService = Depends(GetStatement)):
     bank_statement_response = await service.get_service_response()
     return bank_statement_response
 
+# ---------------- DONE 
 @app.get("/request_bank_statement_pdf", tags=["Bank Statement"])
 async def request_bank_RequestStatementstatement(
     service: IService = Depends(RequestStatement),
@@ -50,6 +52,7 @@ async def request_bank_RequestStatementstatement(
     bank_statement_pdf_response = await service.get_service_response()
     return bank_statement_pdf_response
 
+# ---------------- DONE  
 @app.get("/broker_note_pdf", tags=["Broker Note"])
 async def get_broker_note(service: IService = Depends(GetBrokerNote)):
     broker_note_response = service.get_service_response()

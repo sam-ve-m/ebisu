@@ -1,54 +1,25 @@
-# standards
-import logging
+# Internal Lib
 from typing import List
+from fastapi import Query
 
-from fastapi import Request, Query, Depends
-
-from api.services.jwt.service import jwt_validator_and_decompile
-from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
 from api.repositories.companies_data.repository import CompanyInformationRepository
 from api.services.list_client_orders.strategies import order_region
 from api.domain.time_formatter.time_formatter import str_to_timestamp
 
-log = logging.getLogger()
 
-
-class ListOrders(IService):
+class ListOrders:
+    bmf_account = None
+    bovespa_account = None
     company_information_repository = CompanyInformationRepository
 
-    def __init__(
-        self,
-        request: Request,
-        region: Region,
-        limit: int,
-        offset: int,
-        order_status: str = Query(None),
-        decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
-    ):
-        self.order_status = ListOrders.pipe_to_list(order_status)
-        self.jwt: dict = decompiled_jwt
-        self.region = region.value
-        self.offset = offset
-        self.limit = limit
-        self.bovespa_account = None
-        self.bmf_account = None
-        self.url_path = str(request.url)
-
-    @staticmethod
-    def pipe_to_list(data: str):
+    @classmethod
+    def pipe_to_list(cls, data: str):
         list_data = None
         if data:
             data = data.upper()
             list_data = data.split("|")
         return list_data
-
-    def get_account(self):
-        user = self.jwt.get("user", {})
-        portfolios = user.get("portfolios", {})
-        br_portfolios = portfolios.get("br", {})
-        self.bovespa_account = br_portfolios.get("bovespa_account")
-        self.bmf_account = br_portfolios.get("bmf_account")
 
     @staticmethod
     def decimal_128_converter(user_trade: dict, field: str) -> float:
@@ -76,18 +47,36 @@ class ListOrders(IService):
         }
         return normalized_data
 
-    async def get_service_response(self) -> List[dict]:
-        self.get_account()
-        open_orders = order_region[self.region]
+    @classmethod
+    async def get_service_response(cls,
+                                   jwt_data: dict,
+                                   region: Region,
+                                   offset: int,
+                                   limit: int,
+                                   order_status: str = Query(None)
+                                   ) -> List[dict]:
+        user = jwt_data.get("user", {})
+        portfolios = user.get("portfolios", {})
+        br_portfolios = portfolios.get("br", {})
+        cls.bovespa_account = br_portfolios.get("bovespa_account")
+        cls.bmf_account = br_portfolios.get("bmf_account")
+
+        open_orders = order_region[region.value]
+
+        order_status_res = ListOrders.pipe_to_list(order_status)
+
         query = open_orders.build_query(
-            bovespa_account=self.bovespa_account,
-            bmf_account=self.bmf_account,
-            offset=self.offset,
-            limit=self.limit,
-            order_status=self.order_status,
+            bovespa_account=cls.bovespa_account,
+            bmf_account=cls.bmf_account,
+            offset=offset,
+            limit=limit,
+            order_status=order_status_res,
         )
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
-        return [
+        data = [
             await ListOrders.normalize_open_order(user_open_order)
             for user_open_order in user_open_orders
         ]
+        if not data:
+            return [{}]
+        return data

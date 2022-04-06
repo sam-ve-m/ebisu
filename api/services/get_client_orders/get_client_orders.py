@@ -1,38 +1,15 @@
-import logging
 from typing import List
-from fastapi import Request, Depends
-from api.services.jwt.service import jwt_validator_and_decompile
-from api.core.interfaces.interface import IService
+
 from api.domain.enums.region import Region
 from api.domain.enums.order_tifs import OrderTifs
 from api.services.get_client_orders.strategies import order_region
 from api.domain.time_formatter.time_formatter import str_to_timestamp
 
 
-log = logging.getLogger()
+class GetOrders:
 
-
-class GetOrders(IService):
-    def __init__(
-        self,
-        request: Request,
-        region: Region,
-        cl_order_id: str,
-        decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
-    ):
-        self.clorid = cl_order_id
-        self.jwt = decompiled_jwt
-        self.region = region.value
-        self.bovespa_account = None
-        self.bmf_account = None
-        self.url_path = str(request.url)
-
-    def get_account(self):
-        user = self.jwt.get("user", {})
-        portfolios = user.get("portfolios", {})
-        br_portfolios = portfolios.get("br", {})
-        self.bovespa_account = br_portfolios.get("bovespa_account")
-        self.bmf_account = br_portfolios.get("bmf_account")
+    bmf_account = None
+    bovespa_account = None
 
     @staticmethod
     def decimal_128_converter(user_trade: dict, field: str) -> float:
@@ -77,11 +54,17 @@ class GetOrders(IService):
         }
         return normalized_data
 
-    def get_service_response(self) -> List[dict]:
-        self.get_account()
-        open_orders = order_region[self.region]
+    @classmethod
+    def get_service_response(cls, jwt_data: dict, region: Region, cl_order_id: str) -> List[dict]:
+        user = jwt_data.get("user", {})
+        portfolios = user.get("portfolios", {})
+        br_portfolios = portfolios.get("br", {})
+        cls.bovespa_account = br_portfolios.get("bovespa_account")
+        cls.bmf_account = br_portfolios.get("bmf_account")
+
+        open_orders = order_region[region.value]
         query = open_orders.build_query(
-            self.bovespa_account, self.bmf_account, self.clorid
+            cls.bovespa_account, cls.bmf_account, clordid=cl_order_id
         )
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
         data = [
