@@ -72,7 +72,6 @@ class ListOrders(IService):
             "symbol": user_trade.get("SYMBOL"),
             "status": user_trade.get("ORDSTATUS"),
             "total_spent": user_trade.get("CUMQTY")
-            * ListOrders.decimal_128_converter(user_trade, "AVGPX"),
         }
         return normalized_data
 
