@@ -52,6 +52,8 @@ class GetOrders(IService):
 
     @staticmethod
     def normalize_open_order(user_trade: dict) -> dict:
+        side = user_trade.get("SIDE")
+
         normalized_data = {
             "cl_order_id": user_trade.get("CLORDID"),
             "account": user_trade.get("ACCOUNT"),
@@ -63,7 +65,7 @@ class GetOrders(IService):
             "stop_price": GetOrders.decimal_128_converter(user_trade, "STOPPX"),
             "currency": "BRL",
             "symbol": user_trade.get("SYMBOL"),
-            "side": user_trade.get("SIDE").lower(),
+            "side": side.lower() if side else side,
             "status": user_trade.get("ORDSTATUS"),
             "tif": GetOrders.tiff_response_converter(user_trade.get("TIMEINFORCE")),
             "total_spent": user_trade.get("CUMQTY") * GetOrders.decimal_128_converter(user_trade, "AVGPX"),
