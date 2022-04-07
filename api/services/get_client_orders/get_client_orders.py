@@ -66,8 +66,7 @@ class GetOrders(IService):
             "side": side.lower() if side else side,
             "status": user_trade.get("ORDSTATUS"),
             "tif": GetOrders.tiff_response_converter(user_trade.get("TIMEINFORCE")),
-            "total_spent": user_trade.get("CUMQTY")
-            * GetOrders.decimal_128_converter(user_trade, "AVGPX"),
+            "total_spent": (user_trade.get("CUMQTY") * GetOrders.decimal_128_converter(user_trade, "AVGPX")),
             "quantity_filled": user_trade.get("CUMQTY"),
             "quantity_leaves": user_trade.get("LEAVESQTY"),
             "quantity_last": user_trade.get("LASTQTY"),
