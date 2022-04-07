@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from api.domain.enums.region import Region
 
 
-class GetStatementData(BaseModel):
+class GetStatementModel(BaseModel):
     region: Region
     limit: int
     offset: int

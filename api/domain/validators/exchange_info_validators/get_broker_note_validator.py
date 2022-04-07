@@ -1,9 +1,10 @@
+from fastapi import Query
 from pydantic import BaseModel
 from api.domain.enums.region import Region
 
 
-class GetBrokerNoteData(BaseModel):
+class GetBrokerNoteModel(BaseModel):
     region: Region
-    year: int
-    month: int
-    day: int
+    year: int = Query(None)
+    month: int = Query(None)
+    day: int = Query(None)

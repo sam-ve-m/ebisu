@@ -4,6 +4,7 @@ import pdfkit
 from datetime import datetime, timedelta
 
 from api.domain.enums.region import Region
+from api.domain.validators.exchange_info_validators.statement_pdf_validator import StatementPdf
 from api.repositories.files.repository import FileRepository
 from api.repositories.statements.repository import StatementsRepository
 from api.services.statement.service import Statement

@@ -2,5 +2,5 @@ from pydantic import BaseModel
 from api.domain.enums.region import Region
 
 
-class ListClientOrder(BaseModel):
+class StatementPdf(BaseModel):
     region: Region

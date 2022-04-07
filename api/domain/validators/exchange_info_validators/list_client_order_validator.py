@@ -1,11 +1,12 @@
+from typing import Optional
 from pydantic import BaseModel
-from fastapi import Request, Query
+from fastapi import Query
+
 from api.domain.enums.region import Region
 
 
-class ListClientOrder(BaseModel):
-    request: Request
+class ListClientOrderModel(BaseModel):
     region: Region
     limit: int
     offset: int
-    order_status: str = Query(None)
+    order_status: Optional[str] = Query(None)

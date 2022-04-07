@@ -1,7 +1,7 @@
 import os
 
-from api.domain.enums.region import Region
 from api.domain.exception.model import DataNotFoundError, NoPathFoundError
+from api.domain.validators.exchange_info_validators.list_broker_note_validator import ListBrokerNoteModel
 from api.repositories.files.repository import FileRepository
 
 
@@ -10,7 +10,7 @@ class ListBrokerNote:
     bmf_account = None
 
     @classmethod
-    def get_service_response(cls, jwt_data: dict, region: Region, year: int, month: int):
+    def get_service_response(cls, jwt_data: dict, broker_note: ListBrokerNoteModel):
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
@@ -18,7 +18,7 @@ class ListBrokerNote:
         cls.bmf_account = br_portfolios.get("bmf_account")
         cls.client_id = jwt_data.get("email")
 
-        file_path = cls.generate_path(region=region, year=year, month=month)
+        file_path = cls.generate_path(broker_note=broker_note)
 
         list_directories = ListBrokerNote.s3_singleton.list_all_directories_in_path(
             file_path=file_path
@@ -61,17 +61,17 @@ class ListBrokerNote:
         return int(directory_name)
 
     @classmethod
-    def generate_path(cls, region: Region, year: int, month: int):
+    def generate_path(cls, broker_note: ListBrokerNoteModel):
         path_route = os.path.join(
             *tuple(
                 str(path_fragment)
-                for path_fragment in ("broker_note", year, month)
+                for path_fragment in ("broker_note", broker_note.year, broker_note.month)
                 if path_fragment is not None
             )
         )
-        path = f"{region.value}/{cls.bmf_account}/{path_route}/"
+        path = f"{broker_note.region.value}/{cls.bmf_account}/{path_route}/"
 
-        if cls.bmf_account and region.value and path_route in path:
+        if cls.bmf_account and broker_note.region.value and path_route in path:
             return path
         else:
             raise Exception(NoPathFoundError)

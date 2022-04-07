@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class GetEarningsData(BaseModel):
+class GetEarningsModel(BaseModel):
     symbol: str
     timestamp: float
     offset: float

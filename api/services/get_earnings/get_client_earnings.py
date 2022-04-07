@@ -1,5 +1,6 @@
 from typing import List
 
+from api.domain.validators.exchange_info_validators.earnings_validator import GetEarningsModel
 from api.repositories.earnings.repository import EarningsRepository
 from api.services.get_earnings.strategies.br_earnings import earnings_regions
 from api.services.get_earnings.strategies.service import Earnings
@@ -20,14 +21,14 @@ class EarningsService:
 
     @classmethod
     async def get_service_response(
-            cls, symbol: str, timestamp: float, limit: int, offset: int
+            cls, earnings: GetEarningsModel
     ) -> List[dict]:
         earnings_region = earnings_regions.get("BR")
         query_earnings = earnings_region.build_query_earnings(
-            symbol=symbol,
-            timestamp=Earnings.from_timestamp_to_utc_isoformat_br(timestamp),
-            limit=limit,
-            offset=offset,
+            symbol=GetEarningsModel.symbol,
+            timestamp=Earnings.from_timestamp_to_utc_isoformat_br(earnings.timestamp),
+            limit=earnings.limit,
+            offset=earnings.offset,
         )
         open_earnings = earnings_region.oracle_earnings_singleton_instance.get_data(
             sql=query_earnings

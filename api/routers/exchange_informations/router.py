@@ -1,6 +1,16 @@
 # Internal Libs
+from typing import Optional
+
 from api.domain.enums.region import Region
-from fastapi import Request, APIRouter
+from fastapi import Request, APIRouter, Query, Depends
+
+from api.domain.validators.exchange_info_validators.client_orders_validator import GetClientOrderModel
+from api.domain.validators.exchange_info_validators.earnings_validator import GetEarningsModel
+from api.domain.validators.exchange_info_validators.get_balance_validator import GetBalanceModel
+from api.domain.validators.exchange_info_validators.get_broker_note_validator import GetBrokerNoteModel
+from api.domain.validators.exchange_info_validators.get_statement_validator import GetStatementModel
+from api.domain.validators.exchange_info_validators.list_broker_note_validator import ListBrokerNoteModel
+from api.domain.validators.exchange_info_validators.list_client_order_validator import ListClientOrderModel
 from api.services.get_balance.get_balance import GetBalance
 from api.services.get_broker_note.get_broker_note import GetBrokerNotePDF
 from api.services.get_client_orders.get_client_orders import GetOrders
@@ -23,31 +33,33 @@ class ExchangeRouter:
     @staticmethod
     @__exchange_router.get("/balance", tags=["Balance"])
     async def get_balance(
-            region: Region, request: Request
+            request: Request, balance: GetBalanceModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        balance_response = await GetBalance.get_service_response(region=region, jwt_data=jwt_data)
+        balance_response = await GetBalance.get_service_response(
+            balance=balance, jwt_data=jwt_data
+        )
         return balance_response
 
     # still not working due to AWS has no correlated route yet
     @staticmethod
     @__exchange_router.get("/list_broker_note", tags=["Broker Note"])
     async def get_broker_note(
-            region: Region, year: int, month: int, request: Request
+            request: Request, broker_note: ListBrokerNoteModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         broker_note_response = ListBrokerNote.get_service_response(
-            region=region, year=year, month=month, jwt_data=jwt_data)
+            broker_note=broker_note, jwt_data=jwt_data)
         return broker_note_response
 
     @staticmethod
     @__exchange_router.get("/broker_note_pdf", tags=["Broker Note"])
     async def list_broker_note(
-            region: Region, year: int, month: int, day: int, request: Request
+            request: Request, broker_note_pdf: GetBrokerNoteModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         broker_note_pdf_response = GetBrokerNotePDF.get_service_response(
-            region=region, year=year, month=month, day=day, jwt_data=jwt_data
+            broker_note_pdf=broker_note_pdf, jwt_data=jwt_data
         )
         return broker_note_pdf_response
 
@@ -65,41 +77,41 @@ class ExchangeRouter:
     @staticmethod
     @__exchange_router.get("/bank_statement", tags=["Bank Statement"])
     async def get_bank_statement(
-            region: Region, limit: int, offset: int, start_date: float, end_date: float, request: Request
+            request: Request, statement: GetStatementModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         bank_statement_response = await GetStatement.get_service_response(
-            region=region, start_date=start_date, end_date=end_date, limit=limit, offset=offset, jwt_data=jwt_data
+            statement=statement, jwt_data=jwt_data
         )
         return bank_statement_response
 
     @staticmethod
     @__exchange_router.get("/client_orders", tags=["Client Orders"])
     async def get_client_orders(
-            region: Region, cl_order_id: str, request: Request
+            request: Request, client_order: GetClientOrderModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         client_orders_response = GetOrders.get_service_response(
-            region=region, cl_order_id=cl_order_id, jwt_data=jwt_data
+            client_order=client_order, jwt_data=jwt_data
         )
         return client_orders_response
 
     @staticmethod
     @__exchange_router.get("/list_client_orders", tags=["Client Orders"])
     async def get_client_orders(
-            region: Region, limit: int, offset: int, order_status: str, request: Request
+            request: Request, list_client_orders: ListClientOrderModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         list_client_orders_response = await ListOrders.get_service_response(
-            region=region, limit=limit, offset=offset, order_status=order_status, jwt_data=jwt_data)
+            list_client_orders=list_client_orders, jwt_data=jwt_data)
         return list_client_orders_response
 
     @staticmethod
     @__exchange_router.get("/earnings", tags=["Earnings"])
     async def get_br_earnings(
-            symbol: str, timestamp: float, offset: int, limit: int
+            earnings: GetEarningsModel = Depends()
     ):
         earnings_response = await EarningsService.get_service_response(
-            symbol=symbol, timestamp=timestamp, offset=offset, limit=limit
+            earnings=earnings
         )
         return earnings_response

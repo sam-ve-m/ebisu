@@ -3,7 +3,7 @@ from fastapi import Query
 from api.domain.enums.region import Region
 
 
-class ListBrokerNoteData(BaseModel):
+class ListBrokerNoteModel(BaseModel):
     region: Region
     year: int = Query(None)
     month: int = Query(None)

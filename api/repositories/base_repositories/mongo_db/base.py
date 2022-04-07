@@ -136,6 +136,16 @@ class MongoDbBaseRepository(IRepository):
             return False
 
     @classmethod
+    async def delete(cls, query: dict) -> bool:
+        try:
+            collection = await cls.get_collection()
+            data = await collection.delete_many(query)
+            return data
+        except Exception as e:
+            Gladsheim.error(error=e)
+            return False
+
+    @classmethod
     async def _get_from_cache(cls, query: dict):
         if query is None:
             return None

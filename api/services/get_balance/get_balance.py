@@ -1,4 +1,4 @@
-from api.domain.enums.region import Region
+from api.domain.validators.exchange_info_validators.get_balance_validator import GetBalanceModel
 from api.repositories.statements.repository import StatementsRepository
 from api.services.statement.service import Statement
 
@@ -8,14 +8,14 @@ class GetBalance:
     oracle_singleton_instance = StatementsRepository
 
     @classmethod
-    async def get_service_response(cls, region: Region, jwt_data: dict) -> dict:
+    async def get_service_response(cls, balance: GetBalanceModel, jwt_data: dict) -> dict:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
         cls.bovespa_account = br_portfolios.get("bovespa_account")
         cls.bmf_account = br_portfolios.get("bmf_account")
 
-        if region == "US":
+        if balance.region == "US":
             balance_us = await Statement.get_dw_balance()
             return balance_us
 

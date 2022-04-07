@@ -1,7 +1,7 @@
 from typing import List
 
-from api.domain.enums.region import Region
 from api.domain.enums.order_tifs import OrderTifs
+from api.domain.validators.exchange_info_validators.client_orders_validator import GetClientOrderModel
 from api.services.get_client_orders.strategies import order_region
 from api.domain.time_formatter.time_formatter import str_to_timestamp
 
@@ -27,6 +27,8 @@ class GetOrders:
 
     @staticmethod
     def normalize_open_order(user_trade: dict) -> dict:
+        side = user_trade.get("SIDE")
+
         normalized_data = {
             "cl_order_id": user_trade.get("CLORDID"),
             "account": user_trade.get("ACCOUNT"),
@@ -38,11 +40,10 @@ class GetOrders:
             "stop_price": GetOrders.decimal_128_converter(user_trade, "STOPPX"),
             "currency": "BRL",
             "symbol": user_trade.get("SYMBOL"),
-            "side": user_trade.get("SIDE").lower(),
+            "side": side.lower() if side else side,
             "status": user_trade.get("ORDSTATUS"),
             "tif": GetOrders.tiff_response_converter(user_trade.get("TIMEINFORCE")),
-            "total_spent": user_trade.get("CUMQTY")
-            * GetOrders.decimal_128_converter(user_trade, "AVGPX"),
+            "total_spent": user_trade.get("CUMQTY"),
             "quantity_filled": user_trade.get("CUMQTY"),
             "quantity_leaves": user_trade.get("LEAVESQTY"),
             "quantity_last": user_trade.get("LASTQTY"),
@@ -55,16 +56,17 @@ class GetOrders:
         return normalized_data
 
     @classmethod
-    def get_service_response(cls, jwt_data: dict, region: Region, cl_order_id: str) -> List[dict]:
+    def get_service_response(cls, client_order: GetClientOrderModel, jwt_data: dict) -> List[dict]:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
         cls.bovespa_account = br_portfolios.get("bovespa_account")
         cls.bmf_account = br_portfolios.get("bmf_account")
+        region_value = client_order.region.value
 
-        open_orders = order_region[region.value]
+        open_orders = order_region[region_value]
         query = open_orders.build_query(
-            cls.bovespa_account, cls.bmf_account, clordid=cl_order_id
+            cls.bovespa_account, cls.bmf_account, clordid=client_order.cl_order_id
         )
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
         data = [
