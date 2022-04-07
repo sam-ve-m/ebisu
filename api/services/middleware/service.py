@@ -16,7 +16,7 @@ class MiddlewareService:
             return Response(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 content=json.dumps(
-                    {"request_status": False, "status": 1, "msg": err.args[0]}
+                    {"request_status": False, "status": 1, "msg": str(err.args[0])}
                 ),
             )
 
@@ -25,7 +25,7 @@ class MiddlewareService:
             return Response(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 content=json.dumps(
-                    {"request_status": False, "status": 2, "msg": err.args[0]}
+                    {"request_status": False, "status": 2, "msg": str(err.args[0])}
                 ),
             )
 
@@ -34,7 +34,7 @@ class MiddlewareService:
             return Response(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 content=json.dumps(
-                    {"request_status": False, "status": 3, "msg": err.args[0]}
+                    {"request_status": False, "status": 3, "msg": str(err.args[0])}
                 ),
             )
 
