@@ -21,7 +21,7 @@ containers:
       value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
     - name: ORACLE_SERVICE_BR
       value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
-      #oracle statement
+      #oracle statements
     - name: ORACLE_BASE_DSN_STATEMENT
       value: "172.30.10.227"
     - name: ORACLE_USER_STATEMENT
@@ -80,7 +80,7 @@ containers:
     - name: REGION_NAME
       value: "sa-east-1"
     - name: AWS_FILE_BUCKET_NAME
-      value: "brokerage-note-and-bank-statement"
+      value: "brokerage-note-and-bank-statements"
     - name: BUCKET_NAME_KEY
       value: "auth-gateway-keys-dev"
     - name: AWS_BUCKET_USERS_FILES

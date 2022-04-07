@@ -6,22 +6,25 @@ from datetime import datetime, timedelta
 import pdfkit
 from fastapi import Depends
 
-from api.application_dependencies.jwt_validator import jwt_validator_and_decompile
+from api.services.jwt.service import jwt_validator_and_decompile
 from api.core.interfaces.interface import IService
 from api.domain.enums.region import Region
-from api.utils.statement.utils import Statement
+from api.repositories.files.repository import FileRepository
+from api.repositories.statements.repository import StatementsRepository
+from api.services.statement.service import Statement
+from api.domain.exception.model import NoPdfFoundError, NoPathFoundError
 
 log = logging.getLogger()
 
 
 class RequestStatement(IService):
-    oracle_singleton_instance = None
-    s3_singleton = None
+    oracle_singleton_instance = StatementsRepository
+    s3_singleton = FileRepository
 
     def __init__(
-            self,
-            region: Region,
-            decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
+        self,
+        region: Region,
+        decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
     ):
         self.region = region.value
         self.jwt: dict = decompiled_jwt
@@ -35,6 +38,9 @@ class RequestStatement(IService):
         user = self.jwt.get("user", {})
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
+        self.bovespa_account = br_portfolios.get("bovespa_account")
+        self.bmf_account = br_portfolios.get("bmf_account")
+        self.client_id = self.jwt.get("email")
 
         self.bovespa_account = br_portfolios.get("user")
         self.bmf_account = br_portfolios.get("bmf_account")
@@ -42,8 +48,10 @@ class RequestStatement(IService):
 
     async def get_service_response(self) -> dict:
         self.get_account()
-        if self.region == 'US':
-            us_statement = await Statement.get_dw_statement(self.start_date, self.end_date)
+        if self.region == "US":
+            us_statement = await Statement.get_dw_statement(
+                self.start_date, self.end_date
+            )
             return self.generate_pdf(us_statement)
 
         start_date = Statement.from_timestamp_to_utc_isoformat_br(self.start_date)
@@ -57,7 +65,7 @@ class RequestStatement(IService):
                    """
         statement = RequestStatement.oracle_singleton_instance.get_data(sql=query)
         normalized_statement = {
-            'Extrato': [Statement.normalize_statement(transc) for transc in statement]
+            "Extrato": [Statement.normalize_statement(transc) for transc in statement]
         }
 
         return self.generate_pdf(normalized_statement)
@@ -66,11 +74,21 @@ class RequestStatement(IService):
         pdf = pdfkit.from_string(json.dumps(statement))
         file_duration = (datetime.now() - timedelta(minutes=1)).isoformat()
 
-        RequestStatement.s3_singleton.upload_file(file_path=self.generate_path(), content=pdf,
-                                                  expire_date=file_duration)
-        link = RequestStatement.s3_singleton.generate_file_link(file_path=self.generate_path())
-        return {"pdf_link": link}
+        RequestStatement.s3_singleton.upload_file(
+            file_path=self.generate_path(), content=pdf, expire_date=file_duration
+        )
+        link = RequestStatement.s3_singleton.generate_file_link(
+            file_path=self.generate_path()
+        )
+        link_pdf = {"pdf_link": link}
+        if not link:
+            raise Exception(NoPdfFoundError)
+
+        return link_pdf
 
     def generate_path(self) -> str:
         path = f"{self.client_id}/statements/{self.start_date}-{self.end_date}.pdf"
-        return path
+        if path:
+            return path
+
+        raise Exception(NoPathFoundError)

@@ -1,13 +1,19 @@
 from typing import List
-
 from api.domain.enums.order_status import OrderStatus
+from api.repositories.orders.us.repository import UsOrdersRepository
 
 
 class GetUsOrders:
-    oracle_singleton_instance = None
+    oracle_singleton_instance = UsOrdersRepository
 
     @staticmethod
-    def build_query(bovespa_account: str, bmf_account: str, offset: int, limit: int, order_status: List[OrderStatus]) -> str:
+    def build_query(
+        bovespa_account: str,
+        bmf_account: str,
+        offset: int,
+        limit: int,
+        order_status: List[OrderStatus],
+    ) -> str:
         query = f"""SELECT B.SYMBOL, B.ORDSTATUS, B.CLORDID, B.TRANSACTTIME, B.CUMQTY, B.AVGPX, B.ORDTYPE
                     FROM UDRIVDB001.EXECUTION_REPORTS B
                     WHERE B.ACCOUNT in ('{bovespa_account}', '{bmf_account}')
