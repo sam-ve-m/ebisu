@@ -69,9 +69,9 @@ class ListBrokerNote:
                 if path_fragment is not None
             )
         )
-        path = f"{region}/{cls.bmf_account}/{path_route}/"
+        path = f"{region.value}/{cls.bmf_account}/{path_route}/"
 
-        if cls.bmf_account and region and path_route in path:
+        if cls.bmf_account and region.value and path_route in path:
             return path
         else:
             raise Exception(NoPathFoundError)

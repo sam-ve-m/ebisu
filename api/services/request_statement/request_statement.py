@@ -1,8 +1,8 @@
 import json
 import time
+import pdfkit
 from datetime import datetime, timedelta
 
-import pdfkit
 from api.domain.enums.region import Region
 from api.repositories.files.repository import FileRepository
 from api.repositories.statements.repository import StatementsRepository
@@ -31,13 +31,15 @@ class RequestStatement:
         br_portfolios = portfolios.get("br", {})
         cls.bovespa_account = br_portfolios.get("bovespa_account")
         cls.bmf_account = br_portfolios.get("bmf_account")
-        cls.client_id = jwt_data.get("email")
+        client_id = jwt_data.get("email")
 
         if region == "US":
             us_statement = await Statement.get_dw_statement(
                 cls.start_date, cls.end_date, cls.offset, cls.end_date
             )
-            return cls.generate_pdf(us_statement)
+            return cls.generate_pdf(
+                us_statement, client_id=client_id, start_date=start_date, end_date=end_date
+            )
 
         start_date = Statement.from_timestamp_to_utc_isoformat_br(start_date)
         end_date = Statement.from_timestamp_to_utc_isoformat_br(end_date)
@@ -53,7 +55,9 @@ class RequestStatement:
             "Extrato": [Statement.normalize_statement(transc) for transc in statement]
         }
 
-        return cls.generate_pdf(normalized_statement)
+        return cls.generate_pdf(
+            normalized_statement, client_id=client_id, start_date=start_date, end_date=end_date
+        )
 
     @classmethod
     def generate_pdf(cls, statement: dict, client_id, start_date, end_date) -> dict:

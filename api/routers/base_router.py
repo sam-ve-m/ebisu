@@ -1,7 +1,7 @@
-import logging
 # Internal Libs
 from fastapi import FastAPI, Request, Response
 from starlette import status
+import json
 
 from api.domain.exception.model import IntegrityJwtError, AuthenticationJwtError
 from etria_logger import Gladsheim
@@ -10,10 +10,6 @@ from api.exceptions.exceptions import (
     BadRequestError,
     InternalServerError,
 )
-
-# STANDARD LIBS
-import json
-
 from api.routers.exchange_informations.router import ExchangeRouter
 from api.routers.user_bank_accounts.router import UserBankAccountsRouter
 
@@ -26,15 +22,22 @@ class BaseRouter:
     )
 
     @staticmethod
-    def register_router_exchange():
+    def __register_router_exchange():
         exchange_router = ExchangeRouter.get_exchange_router()
         BaseRouter.app.include_router(exchange_router)
         return BaseRouter.app
 
     @staticmethod
-    def register_router_account():
+    def __register_router_account():
         user_bank_account_router = UserBankAccountsRouter.get_user_account_router()
         BaseRouter.app.include_router(user_bank_account_router)
+        return BaseRouter.app
+
+    @staticmethod
+    def register_routers():
+        BaseRouter.__register_router_exchange()
+        BaseRouter.__register_router_account()
+
         return BaseRouter.app
 
     @staticmethod
