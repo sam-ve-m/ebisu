@@ -11,5 +11,5 @@ class CompanyInformationRepository(MongoDbBaseRepository):
     async def get_company_name(cls, symbol: str):
         name = await cls.find_one(query={"symbol": symbol}, project={"name": 1, "_id": 0})
         if not name:
-            return [{}]
+            return None
         return name.get("name")
