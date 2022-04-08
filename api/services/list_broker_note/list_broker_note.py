@@ -1,48 +1,24 @@
-import logging
 import os
 
-from fastapi import Query, Depends
-from api.services.jwt.service import jwt_validator_and_decompile
-from api.domain.enums.region import Region
 from api.domain.exception.model import DataNotFoundError, NoPathFoundError
-
+from api.domain.validators.exchange_info_validators.list_broker_note_validator import ListBrokerNoteModel
 from api.repositories.files.repository import FileRepository
-
-log = logging.getLogger()
 
 
 class ListBrokerNote:
     s3_singleton = FileRepository
+    bmf_account = None
 
-    def __init__(
-        self,
-        region: Region,
-        year: int = Query(None),
-        month: int = Query(None),
-        decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
-    ):
-        self.client_id = None
-        self.jwt = decompiled_jwt
-        self.year = year
-        self.month = month
-        self.bovespa_account = None
-        self.bmf_account = None
-        self.region = region.value
-
-    def get_account(self):
-        user = self.jwt.get("user", {})
+    @classmethod
+    def get_service_response(cls, jwt_data: dict, broker_note: ListBrokerNoteModel):
+        user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
-        self.bovespa_account = br_portfolios.get("bovespa_account")
-        self.bmf_account = br_portfolios.get("bmf_account")
-        self.client_id = self.jwt.get("email")
+        cls.bovespa_account = br_portfolios.get("bovespa_account")
+        cls.bmf_account = br_portfolios.get("bmf_account")
+        cls.client_id = jwt_data.get("email")
 
-        self.bovespa_account = br_portfolios.get("user")
-        self.bmf_account = br_portfolios.get("bmf_account")
-
-    def get_service_response(self):
-        self.get_account()
-        file_path = self.generate_path()
+        file_path = cls.generate_path(broker_note=broker_note)
 
         list_directories = ListBrokerNote.s3_singleton.list_all_directories_in_path(
             file_path=file_path
@@ -68,33 +44,34 @@ class ListBrokerNote:
             raise Exception(DataNotFoundError)
         return files_data
 
-    @staticmethod
-    def get_directory_name(directory: dict):
+    @classmethod
+    def get_directory_name(cls, directory: dict):
         directory_name = ""
         if directory:
             directory_name = directory.get("Prefix").split("/")[-2]
 
         return int(directory_name)
 
-    @staticmethod
-    def get_file_name(directory: dict):
+    @classmethod
+    def get_file_name(cls, directory: dict):
         directory_name = ""
         if directory:
             directory_name = directory.get("Key").split("/")[-1].replace(".pdf", "")
 
         return int(directory_name)
 
-    def generate_path(self):
+    @classmethod
+    def generate_path(cls, broker_note: ListBrokerNoteModel):
         path_route = os.path.join(
             *tuple(
                 str(path_fragment)
-                for path_fragment in ("broker_note", self.year, self.month)
+                for path_fragment in ("broker_note", broker_note.year, broker_note.month)
                 if path_fragment is not None
             )
         )
-        path = f"{self.region}/{self.bmf_account}/{path_route}/"
+        path = f"{broker_note.region.value}/{cls.bmf_account}/{path_route}/"
 
-        if self.bmf_account and self.region and path_route in path:
+        if cls.bmf_account and broker_note.region.value and path_route in path:
             return path
         else:
             raise Exception(NoPathFoundError)
