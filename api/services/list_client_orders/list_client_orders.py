@@ -17,7 +17,7 @@ class ListOrders:
     @classmethod
     def pipe_to_list(cls, data: str):
         list_data = None
-        if data:
+        if isinstance(data, str):
             data = data.upper()
             list_data = data.split("|")
         return list_data
@@ -43,7 +43,8 @@ class ListOrders:
             "currency": "BRL",
             "symbol": user_trade.get("SYMBOL"),
             "status": user_trade.get("ORDSTATUS"),
-            "total_spent": user_trade.get("CUMQTY")
+            "total_spent": (user_trade.get("CUMQTY", float(0.0)) * ListOrders.decimal_128_converter(user_trade, "AVGPX")),
+
         }
         return normalized_data
 
