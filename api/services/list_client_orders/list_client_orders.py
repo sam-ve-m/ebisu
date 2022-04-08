@@ -59,6 +59,8 @@ class ListOrders(IService):
 
     @staticmethod
     async def normalize_open_order(user_trade: dict) -> dict:
+        accumulated_quantity = user_trade.get("CUMQTY")
+
         normalized_data = {
             "name": await ListOrders.company_information_repository.get_company_name(
                 user_trade.get("SYMBOL")
@@ -71,9 +73,12 @@ class ListOrders(IService):
             "currency": "BRL",
             "symbol": user_trade.get("SYMBOL"),
             "status": user_trade.get("ORDSTATUS"),
-            "total_spent": (user_trade.get("CUMQTY", float(0.0)) * ListOrders.decimal_128_converter(user_trade, "AVGPX")),
-
+            "total_spent": (
+                (accumulated_quantity if accumulated_quantity else float(0.0))
+                * ListOrders.decimal_128_converter(user_trade, "AVGPX")
+            ),
         }
+
         return normalized_data
 
     async def get_service_response(self) -> List[dict]:
