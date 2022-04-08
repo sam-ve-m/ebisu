@@ -1,61 +1,33 @@
-import logging
-
-from fastapi import Depends
-from api.services.jwt.service import jwt_validator_and_decompile
-from api.domain.enums.region import Region
-from api.domain.exception.model import NoPathFoundError, NoPdfFoundError
+from api.domain.exception.model import NoPathFoundError
+from api.domain.validators.exchange_info_validators.get_broker_note_validator import GetBrokerNoteModel
 from api.repositories.files.repository import FileRepository
 
-log = logging.getLogger()
 
-
-class GetBrokerNote:
+class GetBrokerNotePDF:
+    bmf_account = None
     s3_singleton = FileRepository
 
-    def __init__(
-        self,
-        region: Region,
-        year: str,
-        month: str,
-        day: str,
-        decompiled_jwt: dict = Depends(jwt_validator_and_decompile),
-    ):
-        self.jwt: dict = decompiled_jwt
-        self.year = year
-        self.month = month
-        self.day = day
-        self.region = region.value
-        self.bovespa_account = None
-        self.bmf_account = None
-
-    def get_account(self):
-        user = self.jwt.get("user", {})
+    @classmethod
+    def get_service_response(cls, broker_note_pdf: GetBrokerNoteModel, jwt_data: dict):
+        user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
-        self.bovespa_account = br_portfolios.get("bovespa_account")
-        self.bmf_account = br_portfolios.get("bmf_account")
-        self.client_id = self.jwt.get("email")
+        cls.bovespa_account = br_portfolios.get("bovespa_account")
+        cls.bmf_account = br_portfolios.get("bmf_account")
+        cls.client_id = jwt_data.get("email")
 
-        self.bovespa_account = br_portfolios.get("user")
-        self.bmf_account = br_portfolios.get("bmf_account")
+        file_path = f"{cls.bmf_account}/{broker_note_pdf.region}/broker_note/{broker_note_pdf.year}/{broker_note_pdf.month}/{broker_note_pdf.day}.pdf "
 
-    def get_service_response(self):
-        self.get_account()
-        file_path = self.generate_path()
-        broker_note = GetBrokerNote.s3_singleton.generate_file_link(file_path=file_path)
-        data = {"pdf_link": broker_note}
-        if not data:
-            raise Exception(NoPdfFoundError)
-        return data
-
-    def generate_path(self):
-        path = f"{self.bmf_account}/{self.region}/broker_note/{self.year}/{self.month}/{self.day}.pdf"
         if (
-            self.bmf_account
-            and self.region
-            and self.year
-            and self.month
-            and self.day in path
+            cls.bmf_account
+            and broker_note_pdf.region
+            and broker_note_pdf.year
+            and broker_note_pdf.month
+            and broker_note_pdf.day
         ):
-            return path
+            broker_note = GetBrokerNotePDF.s3_singleton.generate_file_link(
+                file_path=file_path
+            )
+            data = {"pdf_link": broker_note}
+            return data
         raise Exception(NoPathFoundError)
