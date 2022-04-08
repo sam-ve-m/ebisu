@@ -3,7 +3,7 @@ from api.exceptions.exceptions import InternalServerError
 
 from etria_logger import Gladsheim
 from api.infrastructures.s3.infrastructure import S3Infrastructure
-from api.repositories.cache.redis import RepositoryRedis
+from api.repositories.cache.repository import RepositoryRedis
 
 JWT_FILE_BUCKET_NAME = config("JWT_FILE_BUCKET_NAME")
 
