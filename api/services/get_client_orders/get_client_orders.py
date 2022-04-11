@@ -28,6 +28,7 @@ class GetOrders:
     @staticmethod
     def normalize_open_order(user_trade: dict) -> dict:
         side = user_trade.get("SIDE")
+        accumulated_quantity = user_trade.get("CUMQTY")
 
         normalized_data = {
             "cl_order_id": user_trade.get("CLORDID"),
@@ -44,10 +45,10 @@ class GetOrders:
             "status": user_trade.get("ORDSTATUS"),
             "tif": GetOrders.tiff_response_converter(user_trade.get("TIMEINFORCE")),
             "total_spent": (
-                user_trade.get("CUMQTY", float(0))
+                (accumulated_quantity if accumulated_quantity else float(0.0))
                 * GetOrders.decimal_128_converter(user_trade, "AVGPX")
             ),
-            "quantity_filled": user_trade.get("CUMQTY"),
+            "quantity_filled": (accumulated_quantity if accumulated_quantity else float(0.0)),
             "quantity_leaves": user_trade.get("LEAVESQTY"),
             "quantity_last": user_trade.get("LASTQTY"),
             "text": user_trade.get("TEXT"),
