@@ -1,8 +1,5 @@
-# Internal Libs
-from typing import Optional
-
 from api.domain.enums.region import Region
-from fastapi import Request, APIRouter, Query, Depends
+from fastapi import Request, APIRouter, Depends
 
 from api.domain.validators.exchange_info_validators.client_orders_validator import GetClientOrderModel
 from api.domain.validators.exchange_info_validators.earnings_validator import GetEarningsModel
