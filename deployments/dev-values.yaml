@@ -4,12 +4,6 @@ namespace: develop
 
 containers:
   - name: ebisu
-<<<<<<< refs/remotes/origin/develop
-    image: nexus.sigame.com.br/ebisu:0.0.4
-    ports:
-    - containerPort: 8000
-    env:
-=======
     image: nexus.sigame.com.br/ebisu:0.1.0
     ports:
     - containerPort: 8000
@@ -18,7 +12,6 @@ containers:
       value: "INFO"
     - name: ROOT_LOG_LEVEL
       value: "WARNING"
->>>>>>> chore: deploying v0.1.0 on dev and uat environment
     #oracle orders
     - name: ORACLE_USER_ORDERS
       value: "uordedb001"
