@@ -20,12 +20,6 @@ class GetBrOrders:
                     FROM USOLUDB001.VW_CURRENT_EXECUTION_REPORTS B
                     WHERE B.ACCOUNT in ('{bovespa_account}', '{bmf_account}')
                     {GetBrOrders.filter(order_status)}
-                    AND B.TRANSACTTIME = (
-                        SELECT max(A.TRANSACTTIME)
-                        FROM USOLUDB001.EXECUTION_REPORTS A
-                        WHERE A.ACCOUNT = B.ACCOUNT
-                        AND A.CLORDID = B.CLORDID
-                    )
                     ORDER BY B.TRANSACTTIME DESC
                     offset {offset} rows
                     fetch first {limit} row only  

@@ -17,13 +17,7 @@ class GetUsOrders:
         query = f"""SELECT B.SYMBOL, B.ORDSTATUS, B.CLORDID, B.TRANSACTTIME, B.CUMQTY, B.AVGPX, B.ORDTYPE
                     FROM UDRIVDB001.EXECUTION_REPORTS B
                     WHERE B.ACCOUNT in ('{bovespa_account}', '{bmf_account}')
-                    {GetUsOrders.filter(order_status)}
-                    AND B.TRANSACTTIME = (
-                        SELECT max(A.TRANSACTTIME)
-                        FROM UDRIVDB001.EXECUTION_REPORTS A
-                        WHERE A.ACCOUNT = B.ACCOUNT
-                        AND A.CLORDID = B.CLORDID
-                    )  
+                    {GetUsOrders.filter(order_status)}                   
                     ORDER BY B.TRANSACTTIME DESC
                     offset {offset} rows
                     fetch first {limit} row only  
