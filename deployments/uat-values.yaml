@@ -4,10 +4,14 @@ namespace: homolog
 
 containers:
   - name: ebisu
-    image: nexus.sigame.com.br/ebisu:0.0.4
+    image: nexus.sigame.com.br/ebisu:0.2.0
     ports:
     - containerPort: 8000
     env:
+    - name: ETRIA_LOG_LEVEL
+      value: "INFO"
+    - name: ROOT_LOG_LEVEL
+      value: "WARNING"
     #oracle orders
     - name: ORACLE_USER_ORDERS
       value: "uordedb001"
@@ -47,6 +51,14 @@ containers:
       value: "udataedb001"
     - name: ORACLE_PASSWORD_EARNINGS
       value: "1DbCt$4UdAe0"
+    - name: MONGO_CONNECTION_URL
+      value: "mongodb://bnd:4FZPY5Yj@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
+    - name: MONGODB_DATABASE_NAME
+      value: "lionx"
+    - name: MONGODB_USER_COLLECTION
+      value: "users"
+    - name: MONGODB_JWT_COLLECTION
+      value: "jwts"
     - name: MONGODB_USER
       value: "bnd"
     - name: MONGODB_PASSWORD
@@ -61,6 +73,56 @@ containers:
       value: "poseidon"
     - name: MONGO_COLLECTION_IZANAMI
       value: "izanami"
+    - name: MIST_REDIS_HOST
+      value: "lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com"
+    - name: MIST_REDIS_PORT
+      value: "6379"
+    - name: MIST_REDIS_DB
+      value: "1"
+    - name: MIST_REDIS_USER
+      value: "bnd"
+    - name: MIST_REDIS_PASSWORD
+      value: "93uOKu5H"
+    - name: MIST_AWS_ACCESS_KEY_ID
+      value: "AKIATZVFXI25USQWCS5O"
+    - name: MIST_AWS_SECRET_ACCESS_KEY
+      value: "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"
+    - name: MIST_REGION_NAME
+      value: "sa-east-1"
+    - name: MIST_BUCKET_NAME_KEY
+      value: "auth-gateway-keys-uat"
+    - name: MIST_JWT_FILE_BUCKET_NAME
+      value: "mist_rsa"
+    - name: MIST_ELECTRONIC_SIGNATURE_FILE_BUCKET_NAME
+      value: "eletronic-signature-key"
+    - name: MIST_JWT_REQUIRED_FIELDS
+      value: "[]"
+    - name: MIST_MONGODB_CONNECTION
+      value: "mongodb://bnd:4FZPY5Yj@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=MongoDB%20Compass&ssl=false"
+    - name: MIST_AUTH_DATABASE_MONGO_CONNECTION
+      value: "mongodb"
+    - name: MIST_AUTH_DATABASE_HOST
+      value: "172.30.18.223"
+    - name: MIST_AUTH_DATABASE_PORT
+      value: "41000"
+    - name: MIST_AUTH_DATABASE_USER
+      value: "bnd"
+    - name: MIST_AUTH_DATABASE_PASSWORD
+      value: "4FZPY5Yj"
+    - name: MIST_ELECTRONIC_SIGNATURE_MAX_ATTEMPTS
+      value: "5"
+    - name: MIST_ENCRYPT_KEY
+      value: "c_-e_-e_-e_-i_-i"
+    - name: MIST_FILE_BUCKET_NAME
+      value: "mist_rsa"
+    - name: MIST_AUTH_DATABASE_NAME
+      value: "lionx"
+    - name: MIST_AUTH_DATABASE_USER_COLLECTION
+      value: "users"
+    - name: JWT_FILE_BUCKET_NAME
+      value: "heimdall_rsa"
+    - name: BUCKET_NAME_KEY
+      value: "auth-gateway-keys-uat"
     - name: DW_APP_KEY
       value: "93d6184b-4692-4058-b32d-82624be89cb1"
     - name: DW_USER
