@@ -22,3 +22,7 @@ class UpdateUserBankAccounts(BaseModel):
 
 class DeleteUsersBankAccount(BaseModel):
     id: str
+
+
+class GetUserBankAccount(BaseModel):
+    unique_id: str

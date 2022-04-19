@@ -16,9 +16,9 @@ class UserBankAccountService:
     async def create_user_bank_accounts(
             cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
     ):
-        user = jwt_data.get("user", {})
-        unique_id = user.get("unique_id", {})
-        bank_account = jwt_data.get("bank_account")
+        thebes_answer = jwt_data["x-thebes-answer"]
+        unique_id = thebes_answer["user"]["unique_id"]
+        bank_account = jwt_data["bank_account"]
 
         is_bank_account_from_user = (
             await bank_account_repository.is_user_bank_account_from_client(
@@ -60,8 +60,8 @@ class UserBankAccountService:
     async def get_user_bank_accounts(
             cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
     ):
-        user = jwt_data.get("user", {})
-        unique_id = user.get("unique_id", {})
+        thebes_answer = jwt_data.get("x-thebes-answer")
+        unique_id = thebes_answer["user"]["unique_id"]
         bank_accounts = await bank_account_repository.get_registered_user_bank_accounts(
             unique_id=unique_id
         )
@@ -79,10 +79,10 @@ class UserBankAccountService:
     async def update_user_bank_account(
             cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
     ):
-        user = jwt_data.get("user", {})
-        unique_id = user.get("unique_id", {})
-        bank_account = jwt_data.get("bank_account")
-        bank_account_id = bank_account.get("id")
+        thebes_answer = jwt_data["x-thebes-answer"]
+        unique_id = thebes_answer["user"]["unique_id"]
+        bank_account = jwt_data["bank_account"]
+        bank_account_id = bank_account["id"]
         user_bank_account_id_exists = (
             await bank_account_repository.user_bank_account_id_exists(
                 unique_id=unique_id, bank_account_id=bank_account_id)
@@ -108,10 +108,10 @@ class UserBankAccountService:
     async def delete_user_bank_account(
             cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
     ):
-        user = jwt_data.get("user", {})
-        unique_id = user.get("unique_id", {})
-        bank_account = jwt_data.get("bank_account")
-        bank_account_id = bank_account.get("id")
+        thebes_answer = jwt_data["x-thebes-answer"]
+        unique_id = thebes_answer["user"]["unique_id"]
+        bank_account = jwt_data["bank_account"]
+        bank_account_id = bank_account["id"]
         user_bank_account_id_exists = (
             await bank_account_repository.user_bank_account_id_exists(
                 unique_id=unique_id, bank_account_id=bank_account_id)
