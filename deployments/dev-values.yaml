@@ -4,7 +4,7 @@ namespace: develop
 
 containers:
   - name: ebisu
-    image: nexus.sigame.com.br/ebisu:0.1.0
+    image: nexus.sigame.com.br/ebisu:0.2.0
     ports:
     - containerPort: 8000
     env:
