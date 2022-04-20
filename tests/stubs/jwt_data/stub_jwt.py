@@ -44,6 +44,16 @@ user_jwt_stub = {
         "client_profile": "investor"
     }
 
+portfolios_jwt_stub = {
+            "br": {
+                "bovespa_account": "000000014-6",
+                "bmf_account": "14"
+            },
+            "us": {
+                "_": None
+            }
+        }
+
 balance_response_stub_br = {'region': 'BR'}
 balance_payload_stub_br = {"payload": {"balance": 47499394.54}}
 
