@@ -1,12 +1,13 @@
 import pytest
 from unittest.mock import patch
-from tests.stubs.jwt_data.stub_jwt import (payload_data_stub,
-                                           balance_response_stub_br,
-                                           balance_response_stub_us,
-                                           balance_payload_stub_br,
-                                           balance_payload_stub_us,
-                                           user_jwt_stub,
-                                           portfolios_jwt_stub)
+from tests.stubs.stub_jwt.stub_data import (
+    payload_data_stub,
+    user_jwt_stub,
+    portfolios_jwt_stub,
+    balance_response_stub_br,
+    balance_response_stub_us,
+    balance_payload_stub_br,
+    balance_payload_stub_us)
 
 from api.services.get_balance.get_balance import GetBalance
 from api.services.statement.service import Statement
@@ -15,7 +16,8 @@ from api.services.statement.service import Statement
 @pytest.mark.asyncio
 @patch.object(GetBalance, "get_service_response", return_value={})
 async def test_when_balance_br_return_value_is_none_then_return_empty_dict(mock_get_service_response):
-    response = await GetBalance.get_service_response(balance=balance_response_stub_br,
+    balance_data = ""
+    response = await GetBalance.get_service_response(balance=balance_data,
                                                      jwt_data=payload_data_stub)
     assert response == {}
     mock_get_service_response.assert_called()
@@ -23,7 +25,7 @@ async def test_when_balance_br_return_value_is_none_then_return_empty_dict(mock_
 
 @pytest.mark.asyncio
 @patch.object(GetBalance, "get_service_response", return_value={})
-async def test_when_balance_br_return_value_is_none_then_return_empty_dict(mock_get_service_response):
+async def test_when_balance_br_return_value_is_none_then_return_empty_dict_and(mock_get_service_response):
     balance_data = None
     response = await GetBalance.get_service_response(balance=balance_data,
                                                      jwt_data=payload_data_stub)

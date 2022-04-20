@@ -70,7 +70,7 @@ class UserBankAccountService:
 
         get_user_bank_accounts_response = {
             "status_code": status.HTTP_200_OK,
-            "jwt_data": bank_accounts,
+            "stub_jwt": bank_accounts,
         }
 
         return get_user_bank_accounts_response
