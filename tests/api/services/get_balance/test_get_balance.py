@@ -22,6 +22,16 @@ async def test_when_balance_br_return_value_is_none_then_return_empty_dict(mock_
 
 
 @pytest.mark.asyncio
+@patch.object(GetBalance, "get_service_response", return_value={})
+async def test_when_balance_br_return_value_is_none_then_return_empty_dict(mock_get_service_response):
+    balance_data = None
+    response = await GetBalance.get_service_response(balance=balance_data,
+                                                     jwt_data=payload_data_stub)
+    assert response == {}
+    mock_get_service_response.assert_called()
+
+
+@pytest.mark.asyncio
 @patch.object(GetBalance, "get_service_response", return_value=balance_payload_stub_br)
 async def test_when_balance_return_value_is_valid_then_return_the_expected(mock_get_service_response):
     response = await GetBalance.get_service_response(balance=balance_response_stub_br,
@@ -100,4 +110,3 @@ async def test_when_jwt_data_payload_is_valid_then_check_if_portfolios_is_in_the
     assert jwt == portfolios_jwt_stub
     assert isinstance(jwt, dict)
     mock_get_service_response.assert_called()
-

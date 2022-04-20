@@ -59,12 +59,3 @@ balance_payload_stub_br = {"payload": {"balance": 47499394.54}}
 
 balance_response_stub_us = {'region': 'US'}
 balance_payload_stub_us = {"payload": {"balance": 47499394.54}}
-
-
-class StubRequestObj:
-    def __init__(self, status_code=None):
-        self.status_code = status_code
-
-    @staticmethod
-    def json():
-        return payload_data_stub
