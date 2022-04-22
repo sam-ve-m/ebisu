@@ -1,5 +1,10 @@
+# Standard Libs
 import pytest
 from unittest.mock import patch
+
+# External Libs
+from api.services.get_balance.get_balance import GetBalance
+from api.services.statement.service import Statement
 from tests.stubs.stub_jwt.stub_data import (
     payload_data_stub,
     user_jwt_stub,
@@ -8,9 +13,6 @@ from tests.stubs.stub_jwt.stub_data import (
     balance_response_stub_us,
     balance_payload_stub_br,
     balance_payload_stub_us)
-
-from api.services.get_balance.get_balance import GetBalance
-from api.services.statement.service import Statement
 
 
 @pytest.mark.asyncio
