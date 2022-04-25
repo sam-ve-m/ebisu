@@ -16,7 +16,7 @@ class GetBrokerNotePDF:
         cls.bmf_account = br_portfolios.get("bmf_account")
         cls.client_id = jwt_data.get("email")
 
-        file_path = f"{cls.bmf_account}/{broker_note_pdf.region}/broker_note/{broker_note_pdf.year}/{broker_note_pdf.month}/{broker_note_pdf.day}.pdf "
+        file_path = f"{cls.bmf_account}/{broker_note_pdf.region}/broker_note/{broker_note_pdf.year}/{broker_note_pdf.month}/{broker_note_pdf.day}.pdf"
 
         if (
             cls.bmf_account

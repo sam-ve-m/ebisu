@@ -1,8 +1,8 @@
 import urllib.parse
 from unittest.mock import MagicMock
 
-# ----------------- get Balance route
-payload_data_stub = {
+
+payload_data_dummy = {
     "exp": 1678209788,
     "created_at": 1646673788.442139,
     "scope": {
@@ -31,7 +31,7 @@ payload_data_stub = {
     }
 }
 
-user_jwt_stub = {
+user_jwt_dummy = {
     "unique_id": "40db7fee-6d60-4d73-824f-1bf87edc4491",
     "nick_name": "RAST3",
     "portfolios": {
@@ -48,7 +48,7 @@ user_jwt_stub = {
     "client_profile": "investor"
 }
 
-portfolios_jwt_stub = {
+portfolios_jwt_dummy = {
     "br": {
         "bovespa_account": "000000014-6",
         "bmf_account": "14"
@@ -58,34 +58,38 @@ portfolios_jwt_stub = {
     }
 }
 
-balance_response_stub_br = {'region': 'BR'}
-balance_payload_stub_br = {"payload": {"balance": 47499394.54}}
+balance_response_dummy_br = {'region': 'BR'}
+balance_payload_dummy_br = {"payload": {"balance": 47499394.54}}
 
-balance_response_stub_us = {'region': 'US'}
-balance_payload_stub_us = {"payload": {"balance": 47499394.54}}
+balance_response_dummy_us = {'region': 'US'}
+balance_payload_dummy_us = {"payload": {"balance": 104993635.20}}
+
+balance_payload_dummy_dw = {"balance": 104993635.20}
 
 # ----------------------- Get Broker Note Pdf Route
 
-broker_note_pdf_stub_br = {'year': 2021,
-                           'month': 4,
-                           'day': 20,
-                           'region': 'BR'}
+broker_note_pdf_dummy_br = {'year': 2021,
+                            'month': 4,
+                            'day': 20,
+                            'region': 'BR'}
 
-wrong_broker_note_pdf_stub_br = {'year': None,
-                                 'month': 4,
-                                 'day': None,
-                                 'region': 'BR'}
+wrong_broker_note_pdf_dummy_br = {'year': None,
+                                  'month': 4,
+                                  'day': None,
+                                  'region': 'BR'}
 
-broker_note_link_pdf_stub = {
+broker_note_link_pdf_dummy = {
     "pdf_link":
         "https://brokerage-note-and-bank-statement.s3.amazonaws.com/109/?AWSAccessKeyId=5243792748DGHDJDH&signature="
         "FHDGKFU6356489nfhjd65243&expires=875342628946"
 }
 
-S3_BUCKET = "BROKER_NOTE_BUCKET"
+file_link_brokerage_dummy = 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/109/?AWSAccessKeyId=5243792748DGHDJDH' \
+                      '&signature=FHDGKFU6356489nfhjd65243&expires=875342628946'
 
 
 class StubS3Connection:
+    S3_BUCKET = "BROKER_NOTE_BUCKET"
 
     @classmethod
     def get_s3(cls):
@@ -102,13 +106,32 @@ class StubS3Connection:
 
     @classmethod
     def generate_file_link(cls, file_path):
-
         s3_client = cls.get_s3()
         link = cls.generate_presigned_url(
             "get_object",
             Params={
-                "Bucket": S3_BUCKET,
+                "Bucket": StubS3Connection.S3_BUCKET,
                 "Key": file_path,
             }
         )
         return link
+
+
+class StubOracleRepository:
+
+    @classmethod
+    def _get_connection(cls):
+        return MagicMock()
+
+    @classmethod
+    def get_data(cls, sql: str = None):
+        sql_query = {
+            sql: [
+                {
+                    "VL_TOTAL": -44144434.41
+                }
+            ]}
+        rows = sql_query[sql][0]['VL_TOTAL']
+        if not rows:
+            return {}
+        return rows
