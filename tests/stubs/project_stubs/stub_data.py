@@ -110,9 +110,3 @@ portfolios_jwt_dummy = {
         "_": None
     }
 }
-
-balance_response_dummy_br = {'region': 'BR'}
-balance_payload_dummy_br = {"payload": {"balance": 47499394.54}}
-
-balance_response_dummy_us = {'region': 'US'}
-balance_payload_dummy_us = {"payload": {"balance": 104993635.20}}

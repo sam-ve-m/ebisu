@@ -9,10 +9,14 @@ from tests.stubs.project_stubs.stub_data import (
     payload_data_dummy,
     user_jwt_dummy,
     portfolios_jwt_dummy,
-    balance_response_dummy_br,
-    balance_payload_dummy_br,
-    balance_payload_dummy_us,
     StubOracleRepository)
+
+
+balance_response_dummy_br = {'region': 'BR'}
+balance_payload_dummy_br = {"payload": {"balance": 47499394.54}}
+
+balance_response_dummy_us = {'region': 'US'}
+balance_payload_dummy_us = {"payload": {"balance": 104993635.20}}
 
 
 @pytest.mark.asyncio
