@@ -68,10 +68,9 @@ class Statement:
         return dw_account_response
 
     @staticmethod
-    async def get_dw_statement(start_date: float, end_date: float, offset: int, limit: int) -> dict:
+    async def get_dw_statement(dw_account: str, start_date: float, end_date: float, offset: int, limit: int) -> dict:
         start_date = Statement.from_timestamp_to_utc_isoformat_us(start_date)
         end_date = Statement.from_timestamp_to_utc_isoformat_us(end_date)
-        dw_account = Statement.get_dw_account()
 
         raw_statement = await Statement.dw.get_transactions(
             dw_account, start=start_date, end=end_date, limit=limit
