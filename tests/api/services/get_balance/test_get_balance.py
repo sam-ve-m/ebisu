@@ -5,14 +5,14 @@ from unittest.mock import patch
 # External Libs
 from api.services.get_balance.get_balance import GetBalance
 from api.services.statement.service import Statement
-from tests.stubs.stub_jwt.stub_data import (
+from tests.stubs.project_stubs.stub_data import (
     payload_data_dummy,
     user_jwt_dummy,
     portfolios_jwt_dummy,
     balance_response_dummy_br,
     balance_payload_dummy_br,
     balance_payload_dummy_us,
-    StubOracleRepository, balance_payload_dummy_dw)
+    StubOracleRepository)
 
 
 @pytest.mark.asyncio
@@ -69,36 +69,35 @@ async def test_when_balance_us_return_value_is_valid_then_return_the_expected_va
     response = await GetBalance.get_service_response(balance=balance_payload_dummy_us,
                                                      jwt_data=payload_data_dummy)
     assert 'payload' in response
-    assert response == {'payload': {'balance': 47499394.54}}
+    assert response == {'payload': {'balance': 104993635.20}}
     mock_get_service_response.assert_called()
 
 
 @pytest.mark.asyncio
-@patch.object(Statement, "get_dw_balance", return_value=balance_payload_dummy_dw)
+@patch.object(Statement, "get_dw_balance", return_value={"balance": 104993635.20})
 async def test_dw_balance_function_us_then_return_expected_and_balance_is_in_response(mock_get_dw_balance):
     response = await Statement.get_dw_balance()
     assert response == {"balance": 104993635.20}
     assert response['balance'] == 104993635.20
+    assert isinstance(response, dict)
 
 
 @pytest.mark.asyncio
 @patch('api.repositories.base_repositories.oracle.repository.OracleBaseRepository.get_data', return_value={})
 async def test_when_sending_an_invalid_query_then_return_an_empty_dict_expected(mock_get_data):
-    query_dummy = ""
+    query_dummy = None
     GetBalance.oracle_singleton_instance = StubOracleRepository
     response = GetBalance.oracle_singleton_instance.get_data(sql=query_dummy)
     assert response == {}
-    mock_get_data.assert_called_with(sql=query_dummy)
-    mock_get_data.assert_called()
 
 
 @pytest.mark.asyncio
-@patch('api.repositories.base_repositories.oracle.repository.OracleBaseRepository.get_data', return_value=-44144434.41)
+@patch('api.repositories.base_repositories.oracle.repository.OracleBaseRepository.get_data', return_value=10000.41)
 async def test_when_sending_a_valid_query_then_return_expected_value(mock_get_data):
     query_dummy = "SELECT VL_TOTAL FROM CORRWIN.TCCSALDO WHERE CD_CLIENTE = '49'"
     GetBalance.oracle_singleton_instance = StubOracleRepository
     response = GetBalance.oracle_singleton_instance.get_data(sql=query_dummy)
-    assert response == -44144434.41
+    assert response == 10000.41
 
 
 @pytest.mark.asyncio
