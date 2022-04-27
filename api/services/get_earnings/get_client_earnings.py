@@ -25,7 +25,7 @@ class EarningsService:
     ) -> List[dict]:
         earnings_region = earnings_regions.get("BR")
         query_earnings = earnings_region.build_query_earnings(
-            symbol=GetEarningsModel.symbol,
+            symbol=earnings.symbol,
             timestamp=Earnings.from_timestamp_to_utc_isoformat_br(earnings.timestamp),
             limit=earnings.limit,
             offset=earnings.offset,
