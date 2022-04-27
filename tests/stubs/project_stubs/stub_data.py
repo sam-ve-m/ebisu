@@ -61,12 +61,14 @@ get_company_name_response = 'Iochpe Maxion SA'
 
 
 class StubCompanyInformationRepository:
-    """Connection to Mongo Repository"""
+    """Mongo Repository"""
 
     @classmethod
     def find_one(cls, query, project):
-        find_one_response = {'name': 'Iochpe Maxion SA'}
-        return find_one_response
+        if query["symbol"] == 'MYPK3':
+            find_one_response = {'name': 'Iochpe Maxion SA'}
+            return find_one_response
+        return {'name': None}
 
     @classmethod
     async def get_company_name(cls, symbol: str):

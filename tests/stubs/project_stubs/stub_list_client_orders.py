@@ -61,3 +61,13 @@ normalized_data_dummy = {'name': 'LELE3',
                          'symbol': 'MYPK3',
                          'status': 'NEW',
                          'total_spent': 0.0}
+
+list_client_orders_request_dummy = {'region': 'BR',
+                                    'offset': 0,
+                                    'limit': 1,
+                                    'order_status': 'new'}
+
+list_client_orders_dummy = {'region': 'BR',
+                            'offset': 0,
+                            'limit': 1,
+                            'order_status': 'NEW|FILLED'}
