@@ -52,6 +52,30 @@ class StubOracleRepository:
         return rows
 
 
+project_dummy = {'name': 1, '_id': 0}
+query_dummy = {'symbol': 'MYPK3'}
+ttl_dummy = {'ttl': None}
+
+data_find_one_response = {'name': 'Iochpe Maxion SA'}
+get_company_name_response = 'Iochpe Maxion SA'
+
+
+class StubCompanyInformationRepository:
+    """Connection to Mongo Repository"""
+
+    @classmethod
+    def find_one(cls, query, project):
+        find_one_response = {'name': 'Iochpe Maxion SA'}
+        return find_one_response
+
+    @classmethod
+    async def get_company_name(cls, symbol: str):
+        name = cls.find_one(query={"symbol": symbol}, project={"name": 1, "_id": 0})
+        if not name:
+            return None
+        return name.get("name")
+
+
 # Complete Dummy object of jwt requests
 payload_data_dummy = {
     "exp": 1678209788,
