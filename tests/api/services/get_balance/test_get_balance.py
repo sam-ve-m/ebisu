@@ -105,7 +105,7 @@ async def test_when_sending_a_valid_query_then_return_expected_value(mock_get_da
 
 
 @pytest.mark.asyncio
-@patch.object(GetBalance, "get_service_response", return_value=balance_payload_dummy_br)
+@patch.object(GetBalance, "get_service_response")
 async def test_when_jwt_data_payload_is_valid_then_check_if_the_user_is_in_the_payload_response(
         mock_get_service_response):
     response = await GetBalance.get_service_response(balance=balance_response_dummy_br,
@@ -118,7 +118,7 @@ async def test_when_jwt_data_payload_is_valid_then_check_if_the_user_is_in_the_p
 
 
 @pytest.mark.asyncio
-@patch.object(GetBalance, "get_service_response", return_value=balance_payload_dummy_br)
+@patch.object(GetBalance, "get_service_response")
 async def test_when_jwt_data_payload_is_valid_then_check_if_portfolios_is_in_the_payload_response(
         mock_get_service_response):
     response = await GetBalance.get_service_response(balance=balance_response_dummy_br,

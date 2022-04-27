@@ -59,7 +59,7 @@ async def test_when_either_jwt_and_statement_params_arent_sent_then_return_excep
 
 
 @pytest.mark.asyncio
-@patch.object(GetStatement, "get_service_response", return_value=dummy_statement_response_br)
+@patch.object(GetStatement, "get_service_response")
 async def test_when_jwt_data_payload_is_valid_then_check_if_the_user_is_in_the_payload_response(
         mock_get_service_response):
     response = await GetStatement.get_service_response(statement=statement_dummy_request,
@@ -72,7 +72,7 @@ async def test_when_jwt_data_payload_is_valid_then_check_if_the_user_is_in_the_p
 
 
 @pytest.mark.asyncio
-@patch.object(GetStatement, "get_service_response", return_value=dummy_statement_response_br)
+@patch.object(GetStatement, "get_service_response")
 async def test_when_jwt_data_payload_is_valid_then_check_if_portfolios_is_in_the_payload_response(
         mock_get_service_response):
     response = await GetStatement.get_service_response(statement=statement_dummy_request,

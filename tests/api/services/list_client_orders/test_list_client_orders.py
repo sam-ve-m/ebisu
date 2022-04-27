@@ -1,11 +1,13 @@
 # Standard Libs
 import pytest
 from unittest.mock import patch
-from typing import List
 
 # Internal Libs
 from api.services.list_client_orders.list_client_orders import ListOrders
-from tests.stubs.project_stubs.stub_data import StubCompanyInformationRepository, payload_data_dummy
+from tests.stubs.project_stubs.stub_data import (StubCompanyInformationRepository,
+                                                 payload_data_dummy,
+                                                 user_jwt_dummy,
+                                                 portfolios_jwt_dummy)
 from tests.stubs.project_stubs.stub_list_client_orders import (
     single_client_orders_response,
     list_client_orders_response,
@@ -102,29 +104,36 @@ async def test_when_sending_wrong_params_then_return_an_empty_object(mock_get_se
 
 
 @pytest.mark.asyncio
-@patch('api.services.list_client_orders.list_client_orders.')
+@patch.object(ListOrders, "get_service_response")
+async def test_when_jwt_data_payload_is_valid_then_check_if_the_user_is_in_the_payload_response(
+        mock_get_service_response):
+    response = await ListOrders.get_service_response(list_client_orders=list_client_orders_dummy,
+                                                     jwt_data=payload_data_dummy)
+    jwt = payload_data_dummy.get("user")
+    assert response is not None
+    assert jwt == user_jwt_dummy
+    assert isinstance(jwt, dict)
+    mock_get_service_response.assert_called()
 
-# @pytest.mark.asyncio
-# @patch.object(GetBalance, "get_service_response", return_value=balance_payload_dummy_br)
-# async def test_when_jwt_data_payload_is_valid_then_check_if_the_user_is_in_the_payload_response(
-#         mock_get_service_response):
-#     response = await GetBalance.get_service_response(balance=balance_response_dummy_br,
-#                                                      jwt_data=payload_data_dummy)
-#     jwt = payload_data_dummy.get("user")
-#     assert response is not None
-#     assert jwt == user_jwt_dummy
-#     assert isinstance(jwt, dict)
-#     mock_get_service_response.assert_called()
-#
-#
-# @pytest.mark.asyncio
-# @patch.object(GetBalance, "get_service_response", return_value=balance_payload_dummy_br)
-# async def test_when_jwt_data_payload_is_valid_then_check_if_portfolios_is_in_the_payload_response(
-#         mock_get_service_response):
-#     response = await GetBalance.get_service_response(balance=balance_response_dummy_br,
-#                                                      jwt_data=payload_data_dummy)
-#     jwt = payload_data_dummy["user"]["portfolios"]
-#     assert response is not None
-#     assert jwt == portfolios_jwt_dummy
-#     assert isinstance(jwt, dict)
-#     mock_get_service_response.assert_called()
+
+@pytest.mark.asyncio
+@patch.object(ListOrders, "get_service_response")
+async def test_when_jwt_data_payload_is_valid_then_check_if_portfolios_is_in_the_payload_response(
+        mock_get_service_response):
+    response = await ListOrders.get_service_response(list_client_orders=list_client_orders_dummy,
+                                                     jwt_data=payload_data_dummy)
+    jwt = payload_data_dummy["user"]["portfolios"]
+    assert response is not None
+    assert jwt == portfolios_jwt_dummy
+    assert isinstance(jwt, dict)
+    mock_get_service_response.assert_called()
+
+
+@pytest.mark.asyncio
+@patch.object(ListOrders, "get_service_response", return_value=Exception)
+async def test_when_jwt_data_payload_is_invalid_then_check_if_portfolios_is_in_the_payload_response(
+        mock_get_service_response):
+    payload_dummy = ""
+    response = await ListOrders.get_service_response(list_client_orders=list_client_orders_dummy,
+                                                     jwt_data=payload_dummy)
+    assert response == Exception
