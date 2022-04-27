@@ -5,11 +5,11 @@ from typing import List
 
 # Internal Libs
 from api.services.get_earnings.get_client_earnings import EarningsService
+from tests.stubs.project_stubs.stub_data import StubOracleRepository
 from tests.stubs.project_stubs.stub_earnings import (earnings_dummy_br,
                                                      earnings_dummy_response,
                                                      normalize_earnings_dummy_request,
                                                      query_dummy_earnings)
-from tests.stubs.project_stubs.stub_data import StubOracleRepository
 
 
 @pytest.mark.asyncio

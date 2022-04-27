@@ -5,10 +5,10 @@ from unittest.mock import patch
 # External Libs
 from api.services.get_broker_note.get_broker_note import GetBrokerNotePDF
 from tests.stubs.project_stubs.stub_broker_note_pdf import (
-    broker_note_pdf_dummy_br,
-    wrong_broker_note_pdf_dummy_br,
-    broker_note_link_pdf_dummy,
-    file_link_brokerage_dummy)
+                                                broker_note_pdf_dummy_br,
+                                                wrong_broker_note_pdf_dummy_br,
+                                                broker_note_link_pdf_dummy,
+                                                file_link_brokerage_dummy)
 from tests.stubs.project_stubs.stub_data import (payload_data_dummy,
                                                  user_jwt_dummy,
                                                  portfolios_jwt_dummy,

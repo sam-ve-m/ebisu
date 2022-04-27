@@ -1,14 +1,15 @@
 # Standard Libs
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from unittest import mock
-
 
 # Internal Libs
 from api.services.get_statement.get_statement import GetStatement
 from api.services.statement.service import Statement
 from tests.stubs.project_stubs.stub_data import (payload_data_dummy,
-                                                 user_jwt_dummy, portfolios_jwt_dummy, StubOracleRepository)
+                                                 user_jwt_dummy,
+                                                 portfolios_jwt_dummy,
+                                                 StubOracleRepository)
 from tests.stubs.project_stubs.stub_get_statement import (statement_dummy_request,
                                                           dummy_statement_response_br,
                                                           statement_another_dummy_request,

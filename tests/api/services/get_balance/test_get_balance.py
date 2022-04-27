@@ -6,10 +6,10 @@ from unittest.mock import patch
 from api.services.get_balance.get_balance import GetBalance
 from api.services.statement.service import Statement
 from tests.stubs.project_stubs.stub_data import (
-    payload_data_dummy,
-    user_jwt_dummy,
-    portfolios_jwt_dummy,
-    StubOracleRepository)
+                                                payload_data_dummy,
+                                                user_jwt_dummy,
+                                                portfolios_jwt_dummy,
+                                                StubOracleRepository)
 
 
 balance_response_dummy_br = {'region': 'BR'}
