@@ -40,7 +40,7 @@ list_client_orders_response = [
     }
 ]
 
-user_trade_dummy = {'SYMBOL': 'LELE3',
+user_trade_dummy = {'SYMBOL': 'MYPK3',
                     'ORDSTATUS': 'NEW',
                     'CLORDID': '17e05bfa-7df5-434c-baf6-55aebbdf5a7e',
                     'TRANSACTTIME': datetime.datetime(2022, 4, 22, 16, 11, 30, 498000),
@@ -51,7 +51,7 @@ user_trade_dummy = {'SYMBOL': 'LELE3',
 
 field_dummy = 'AVGPX'
 
-normalized_data_dummy = {'name': 'LELE3',
+normalized_data_dummy = {'name': 'Iochpe Maxion SA',
                          'cl_order_id': '17e05bfa-7df5-434c-baf6-55aebbdf5a7e',
                          'time': 1650654690.0,
                          'quantity': 5000,
