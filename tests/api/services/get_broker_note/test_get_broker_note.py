@@ -16,31 +16,14 @@ from tests.stubs.project_stubs.stub_data import (payload_data_dummy,
 
 
 @pytest.mark.asyncio
-@patch('api.services.get_broker_note.get_broker_note.GetBrokerNotePDF.get_service_response',
-       return_value=broker_note_link_pdf_dummy)
+@patch('api.services.get_broker_note.get_broker_note.GetBrokerNotePDF.s3_singleton.generate_file_link',
+       return_value="")
 def test_when_jwt_data_payload_is_valid_then_check_if_the_user_is_in_the_payload_response_for_get_broker_note(
         mock_get_service_response):
     response = mock_get_service_response(broker_note_pdf=broker_note_pdf_dummy_br,
                                          jwt_data=payload_data_dummy)
-    jwt = payload_data_dummy.get("user")
-    assert jwt == user_jwt_dummy
     assert response == broker_note_link_pdf_dummy
-    assert isinstance(jwt, dict)
     mock_get_service_response.assert_called()
-
-
-@pytest.mark.asyncio
-@patch.object(GetBrokerNotePDF, "get_service_response", return_value=broker_note_link_pdf_dummy)
-def test_when_jwt_data_payload_is_valid_then_check_if_portfolios_is_in_the_payload_response(
-        mock_get_service_response):
-    response = GetBrokerNotePDF.get_service_response(broker_note_pdf=broker_note_pdf_dummy_br,
-                                                     jwt_data=broker_note_pdf_dummy_br)
-    jwt = payload_data_dummy["user"]["portfolios"]
-    assert jwt == portfolios_jwt_dummy
-    assert response == broker_note_link_pdf_dummy
-    assert isinstance(jwt, dict)
-    mock_get_service_response.assert_called()
-    mock_get_service_response.assert_called_once()
 
 
 @pytest.mark.asyncio
