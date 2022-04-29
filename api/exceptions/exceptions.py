@@ -20,3 +20,11 @@ class NoPath(Exception):
 
 class NotFoundError(Exception):
     pass
+
+
+class MoneyFlowResolverNoFoundError(Exception):
+    pass
+
+
+class InvalidAccountsOwnership(Exception):
+    pass

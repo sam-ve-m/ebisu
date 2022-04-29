@@ -1,4 +1,4 @@
-from api.domain.validators.exchange_info_validators.get_balance_validator import GetBalanceModel
+from api.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from api.repositories.statements.repository import StatementsRepository
 from api.services.statement.service import Statement
 

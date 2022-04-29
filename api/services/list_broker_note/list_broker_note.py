@@ -1,7 +1,7 @@
 import os
 
 from api.domain.exception.model import DataNotFoundError, NoPathFoundError
-from api.domain.validators.exchange_info_validators.list_broker_note_validator import ListBrokerNoteModel
+from api.domain.validators.exchange_info.list_broker_note_validator import ListBrokerNoteModel
 from api.repositories.files.repository import FileRepository
 
 

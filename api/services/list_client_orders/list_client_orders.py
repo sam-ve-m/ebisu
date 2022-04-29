@@ -3,7 +3,7 @@ from typing import List
 from fastapi import Query
 
 from api.domain.enums.region import Region
-from api.domain.validators.exchange_info_validators.list_client_order_validator import ListClientOrderModel
+from api.domain.validators.exchange_info.list_client_order_validator import ListClientOrderModel
 from api.repositories.companies_data.repository import CompanyInformationRepository
 from api.services.list_client_orders.strategies import order_region
 from api.domain.time_formatter.time_formatter import str_to_timestamp

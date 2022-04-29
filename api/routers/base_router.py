@@ -9,6 +9,8 @@ from api.exceptions.exceptions import (
     ForbiddenError,
     BadRequestError,
     InternalServerError,
+    MoneyFlowResolverNoFoundError,
+    InvalidAccountsOwnership
 )
 from api.routers.exchange_informations.router import ExchangeRouter
 from api.routers.user_bank_accounts.router import UserBankAccountsRouter
@@ -92,6 +94,22 @@ class BaseRouter:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 content=json.dumps(
                     {"request_status": False, "status": 5, "msg": e.args[0]}
+                ),
+            )
+
+        except MoneyFlowResolverNoFoundError as e:
+            return Response(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content=json.dumps(
+                    {"request_status": False, "status": 7, "msg": e.args[0]}
+                ),
+            )
+
+        except InvalidAccountsOwnership as e:
+            return Response(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content=json.dumps(
+                    {"request_status": False, "status": 8, "msg": e.args[0]}
                 ),
             )
 

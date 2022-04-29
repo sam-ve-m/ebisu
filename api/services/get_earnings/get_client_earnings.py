@@ -1,6 +1,6 @@
 from typing import List
 
-from api.domain.validators.exchange_info_validators.earnings_validator import GetEarningsModel
+from api.domain.validators.exchange_info.earnings_validator import GetEarningsModel
 from api.repositories.earnings.repository import EarningsRepository
 from api.services.get_earnings.strategies.br_earnings import earnings_regions
 from api.services.get_earnings.strategies.service import Earnings

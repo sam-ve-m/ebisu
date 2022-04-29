@@ -28,3 +28,13 @@ class NoPathFoundError(Exception):
 class NoPdfFoundError(Exception):
     def __init__(self, msg="Broker note not found", *args, **kwargs):
         super().__init__(msg, *args, **kwargs)
+
+
+class MoneyFlowResolverNoFoundError(Exception):
+    def __init__(self, msg="Money flow resolver not found", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
+class InvalidAccountsOwnership(Exception):
+    def __init__(self, msg="Invalid accounts ownership", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)

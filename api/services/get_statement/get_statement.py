@@ -1,5 +1,5 @@
 from api.domain.enums.region import Region
-from api.domain.validators.exchange_info_validators.get_statement_validator import GetStatementModel
+from api.domain.validators.exchange_info.get_statement_validator import GetStatementModel
 from api.repositories.statements.repository import StatementsRepository
 from api.services.statement.service import Statement
 

@@ -1,5 +1,5 @@
 from api.domain.exception.model import NoPathFoundError
-from api.domain.validators.exchange_info_validators.get_broker_note_validator import GetBrokerNoteModel
+from api.domain.validators.exchange_info.get_broker_note_validator import GetBrokerNoteModel
 from api.repositories.files.repository import FileRepository
 
 
