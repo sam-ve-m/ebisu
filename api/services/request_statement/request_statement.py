@@ -28,7 +28,7 @@ class RequestStatement:
         us_portfolios = portfolios.get("us", {})
 
         bmf_account = br_portfolios.get("bmf_account")
-        dw_account = us_portfolios.get("dw_account")
+        cls.dw_account = us_portfolios.get("dw_account")
         dw_account = "6bf1ef07-55c9-43ce-802b-f62ad5b56337.1634935585221"
 
         client_id = user.get("unique_id")
@@ -45,7 +45,7 @@ class RequestStatement:
         end_date = Statement.from_timestamp_to_utc_isoformat_br(end_date)
         query = f"""SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO 
                    FROM CORRWIN.TCCMOVTO 
-                   WHERE CD_CLIENTE = {cls.bmf_account} 
+                   WHERE CD_CLIENTE = {bmf_account} 
                    AND DT_LANCAMENTO > TO_DATE('{start_date}', 'yyyy-MM-dd')
                    AND DT_LANCAMENTO <= TO_DATE('{end_date}', 'yyyy-MM-dd')
                    ORDER BY DT_LANCAMENTO
