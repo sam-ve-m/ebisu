@@ -1,14 +1,12 @@
 # Standard Libs
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from unittest import mock
 
 # Internal Libs
 from api.services.get_statement.get_statement import GetStatement
 from api.services.statement.service import Statement
 from tests.stubs.project_stubs.stub_data import (payload_data_dummy,
-                                                 user_jwt_dummy,
-                                                 portfolios_jwt_dummy,
                                                  StubOracleRepository)
 from tests.stubs.project_stubs.stub_get_statement import (statement_dummy_request,
                                                           dummy_statement_response_br,
@@ -17,11 +15,10 @@ from tests.stubs.project_stubs.stub_get_statement import (statement_dummy_reques
 
 
 @pytest.mark.asyncio
-@patch('api.services.get_statement.get_statement.GetStatement.get_service_response',
-       return_value=dummy_statement_response_br)
-async def test_when_jwt_and_params_are_valid_then_return_the_expected_response(mock_get_service_response):
+async def test_when_jwt_and_params_are_valid_then_return_the_expected_response():
     statement_response = await GetStatement.get_service_response(jwt_data=payload_data_dummy,
-                                                                 statement=statement_dummy_request)
+                                                                 statement=MagicMock(region=MagicMock(value='BR'),
+                                                                 order_status=['FILLED', 'NEW']))
     assert statement_response == dummy_statement_response_br
     assert statement_response.get('balance') == 987654.3
     assert statement_response.get('statements')[0]['value'] == -23456.98
@@ -56,32 +53,6 @@ async def test_when_either_jwt_and_statement_params_arent_sent_then_return_excep
     statement_response = await GetStatement.get_service_response(jwt_data=jwt_data_dummy,
                                                                  statement=invalid_statement_dummy)
     assert statement_response == Exception
-
-
-@pytest.mark.asyncio
-@patch.object(GetStatement, "get_service_response")
-async def test_when_jwt_data_payload_is_valid_then_check_if_the_user_is_in_the_payload_response(
-        mock_get_service_response):
-    response = await GetStatement.get_service_response(statement=statement_dummy_request,
-                                                       jwt_data=payload_data_dummy)
-    jwt = payload_data_dummy.get("user")
-    assert response is not None
-    assert jwt == user_jwt_dummy
-    assert isinstance(jwt, dict)
-    mock_get_service_response.assert_called()
-
-
-@pytest.mark.asyncio
-@patch.object(GetStatement, "get_service_response")
-async def test_when_jwt_data_payload_is_valid_then_check_if_portfolios_is_in_the_payload_response(
-        mock_get_service_response):
-    response = await GetStatement.get_service_response(statement=statement_dummy_request,
-                                                       jwt_data=payload_data_dummy)
-    jwt = payload_data_dummy["user"]["portfolios"]
-    assert response is not None
-    assert jwt == portfolios_jwt_dummy
-    assert isinstance(jwt, dict)
-    mock_get_service_response.assert_called()
 
 
 @pytest.mark.asyncio
