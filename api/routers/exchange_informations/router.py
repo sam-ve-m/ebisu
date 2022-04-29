@@ -62,7 +62,7 @@ class ExchangeRouter:
 
     @staticmethod
     @__exchange_router.get("/request_bank_statement_pdf", tags=["Bank Statement"])
-    async def request_bank_RequestStatementstatement(
+    async def get_request_bank_statement(
             region: Region, start_date: float, end_date: float, request: Request
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
