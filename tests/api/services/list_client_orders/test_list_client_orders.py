@@ -1,14 +1,18 @@
 # Standard Libs
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 # Internal Libs
 import api.services.list_client_orders.list_client_orders
+from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from api.services.list_client_orders.list_client_orders import ListOrders
+from api.services.list_client_orders.strategies import GetBrOrders
 from tests.stubs.project_stubs.stub_data import (StubCompanyInformationRepository,
                                                  payload_data_dummy,
                                                  user_jwt_dummy,
-                                                 portfolios_jwt_dummy)
+                                                 portfolios_jwt_dummy,
+                                                 StubOracleRepositoryInstance, payload_invalid_data_dummy,
+                                                 )
 from tests.stubs.project_stubs.stub_list_client_orders import (
     single_client_orders_response,
     list_client_orders_response,
@@ -16,9 +20,12 @@ from tests.stubs.project_stubs.stub_list_client_orders import (
     field_dummy,
     normalized_data_dummy,
     list_client_orders_dummy,
-    list_client_orders_request_dummy
+    open_orders_dummy,
+    query_dummy_two_status,
+    query_dummy_orders,
+    list_client_orders_request_dummy,
+    client_response, open_orders_two_dummy, client_two_response
 )
-
 
 list_data_dummy = ['NEW', 'FILLED']
 
@@ -58,87 +65,98 @@ async def test_when_sending_the_right_params_to_get_company_name_then_return_the
 
 
 @pytest.mark.asyncio
-@patch('api.repositories.companies_data.repository.CompanyInformationRepository.get_company_name')
-async def test_when_sending_the_right_params_to_get_company_name_then_return_the_expected(mock_get_company_name):
+async def test_when_sending_the_right_params_to_get_company_name_then_return_the_expected():
     symbol_dummy = None
     ListOrders.company_information_repository = StubCompanyInformationRepository
     response = await ListOrders.company_information_repository.get_company_name(symbol=symbol_dummy)
     assert response is None
 
 
-# @pytest.mark.asyncio
-# @patch('api.services.list_client_orders.list_client_orders.open_orders.oracle_singleton_instance.get_data',
-#        return_value=)
-# async def test_when_sending_the_right_params_and_single_order_status_then_return_the_expected():
-#     response = await ListOrders.get_service_response(jwt_data=payload_data_dummy,
-#                                                      list_client_orders=list_client_orders_request_dummy)
-#     assert response == single_client_orders_response
-#     assert response[0]['symbol'] == 'LALA3'
-#     assert isinstance(response, list)
-#
-#
-# @pytest.mark.asyncio
-# @patch.object(ListOrders, 'get_service_response', return_value=list_client_orders_response)
-# async def test_when_sending_the_right_params_and_two_order_status_then_return_the_expected(
-#         mock_get_service_response):
-#     response = await ListOrders.get_service_response(jwt_data=payload_data_dummy,
-#                                                      list_client_orders=list_client_orders_dummy)
-#     assert response == list_client_orders_response
-#     assert response[0]['symbol'] == 'MYPK3'
-#     assert response[1]['symbol'] == 'BAZA3'
-#     assert isinstance(response, list)
-#
-#
-# @pytest.mark.asyncio
-# @patch.object(ListOrders, 'get_service_response', return_value=[{}])
-# async def test_when_sending_wrong_params_then_return_an_empty_object(mock_get_service_response):
-#     client_orders = {'region': '',
-#                      'offset': 0,
-#                      'limit': 1,
-#                      'order_status': ''}
-#     response = await ListOrders.get_service_response(jwt_data=payload_data_dummy,
-#                                                      list_client_orders=client_orders)
-#     assert response == [{}]
-#
-#
-# @pytest.mark.asyncio
-# @patch.object(ListOrders, "get_service_response")
-# async def test_when_jwt_data_payload_is_valid_then_check_if_the_user_is_in_the_payload_response(
-#         mock_get_service_response):
-#     response = await ListOrders.get_service_response(list_client_orders=list_client_orders_dummy,
-#                                                      jwt_data=payload_data_dummy)
-#     jwt = payload_data_dummy.get("user")
-#     assert response is not None
-#     assert jwt == user_jwt_dummy
-#     assert isinstance(jwt, dict)
-#     mock_get_service_response.assert_called()
-#
-#
-# @pytest.mark.asyncio
-# @patch.object(ListOrders, "get_service_response")
-# async def test_when_jwt_data_payload_is_valid_then_check_if_portfolios_is_in_the_payload_response(
-#         mock_get_service_response):
-#     response = await ListOrders.get_service_response(list_client_orders=list_client_orders_dummy,
-#                                                      jwt_data=payload_data_dummy)
-#     jwt = payload_data_dummy["user"]["portfolios"]
-#     assert response is not None
-#     assert jwt == portfolios_jwt_dummy
-#     assert isinstance(jwt, dict)
-#     mock_get_service_response.assert_called()
-#
-#
-# @pytest.mark.asyncio
-# @patch.object(ListOrders, "get_service_response", return_value=Exception)
-# async def test_when_jwt_data_payload_is_invalid_then_check_if_portfolios_is_in_the_payload_response(
-#         mock_get_service_response):
-#     payload_dummy = ""
-#     response = await ListOrders.get_service_response(list_client_orders=list_client_orders_dummy,
-#                                                      jwt_data=payload_dummy)
-#     assert response == Exception
-#
-#
-# @pytest.mark.asyncio
-# @patch.object(ListOrders, "get_service_response")
-# async def test_if_the_jwt_is_valid_then_return_the_expected(mock_get_service_response):
-#     response = await ListOrders.get_service_response(list_client_orders=list_client_orders_dummy,
-#                                                      jwt_data=payload_data_dummy)
+@pytest.mark.asyncio
+@patch.object(GetBrOrders, 'build_query', return_value=query_dummy_orders)
+@patch.object(OracleBaseRepository, 'get_data', return_value=open_orders_dummy)
+@patch('api.services.list_client_orders.list_client_orders.order_region')
+async def test_when_sending_the_right_params_and_single_order_status_then_return_the_expected(mock_order_region,
+                                                                                              mock_build_query,
+                                                                                              mock_get_data):
+    mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrders)
+    response = await ListOrders.get_service_response(jwt_data=payload_data_dummy,
+                                                     list_client_orders=
+                                                     MagicMock(region=MagicMock(value='BR'),
+                                                               order_status='NEW'))
+    assert response == list(client_response)
+    assert response[0]['status'] == 'FILLED'
+    assert isinstance(response, list)
+
+
+@pytest.mark.asyncio
+@patch.object(GetBrOrders, 'build_query', return_value=query_dummy_two_status)
+@patch.object(OracleBaseRepository, 'get_data', return_value=open_orders_two_dummy)
+@patch('api.services.list_client_orders.list_client_orders.order_region')
+async def test_when_sending_the_right_params_and_two_order_status_then_return_the_expected(
+        mock_order_region, mock_build_query, mock_get_data):
+    mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrders)
+    response = await ListOrders.get_service_response(jwt_data=payload_data_dummy,
+                                                     list_client_orders=
+                                                     MagicMock(region=MagicMock(value='BR'),
+                                                               order_status=['FILLED', 'NEW']))
+    assert response == list(client_two_response)
+    assert response[0]['symbol'] == 'MYPK3'
+    assert response[1]['symbol'] == 'PETR4'
+    assert isinstance(response, list)
+
+
+@pytest.mark.asyncio
+@patch.object(GetBrOrders, 'build_query', return_value='')
+@patch.object(OracleBaseRepository, 'get_data', return_value='')
+@patch('api.services.list_client_orders.list_client_orders.order_region')
+async def test_when_sending_wrong_params_then_return_an_empty_object(
+        mock_order_region, mock_build_query, mock_get_data
+):
+    mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrders)
+    response = await ListOrders.get_service_response(jwt_data=payload_data_dummy,
+                                                     list_client_orders=MagicMock(region=MagicMock(value=''),
+                                                                                  order_status=[]))
+    assert response == [{}]
+
+
+@pytest.mark.asyncio
+@patch.object(GetBrOrders, 'build_query', return_value=query_dummy_orders)
+@patch.object(OracleBaseRepository, 'get_data', return_value=open_orders_dummy)
+@patch('api.services.list_client_orders.list_client_orders.order_region')
+async def test_when_jwt_data_payload_is_valid_then_check_if_the_user_is_in_the_payload_response(
+        mock_order_region, mock_build_query, mock_get_data):
+    mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrders)
+    response = await ListOrders.get_service_response(list_client_orders=MagicMock(),
+                                                     jwt_data=payload_data_dummy)
+    jwt = payload_data_dummy.get("user")
+    assert response is not None
+    assert jwt == user_jwt_dummy
+    assert isinstance(jwt, dict)
+
+
+@pytest.mark.asyncio
+@patch.object(GetBrOrders, 'build_query', return_value=query_dummy_orders)
+@patch.object(OracleBaseRepository, 'get_data', return_value=open_orders_dummy)
+@patch('api.services.list_client_orders.list_client_orders.order_region')
+async def test_when_jwt_data_payload_is_valid_then_check_if_portfolios_is_in_the_payload_response(
+        mock_order_region, mock_build_query, mock_get_data):
+    mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrders)
+    response = await ListOrders.get_service_response(list_client_orders=MagicMock(),
+                                                     jwt_data=payload_data_dummy)
+    jwt = payload_data_dummy["user"]["portfolios"]
+    assert response is not None
+    assert jwt == portfolios_jwt_dummy
+    assert isinstance(jwt, dict)
+
+
+@pytest.mark.asyncio
+@patch.object(GetBrOrders, 'build_query', return_value="")
+@patch.object(OracleBaseRepository, 'get_data', return_value="")
+@patch('api.services.list_client_orders.list_client_orders.order_region')
+async def test_when_jwt_data_payload_is_invalid_then_check_if_portfolios_is_in_the_payload_response(
+        mock_order_region, mock_build_query, mock_get_data):
+    mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrders)
+    response = await ListOrders.get_service_response(list_client_orders=MagicMock(),
+                                                     jwt_data=payload_invalid_data_dummy)
+    assert response == [{}]

@@ -1,5 +1,6 @@
 import urllib.parse
 from unittest.mock import MagicMock
+import datetime
 
 
 # Stubs Oracle and AWS Connection
@@ -50,6 +51,22 @@ class StubOracleRepository:
         if not rows:
             return {}
         return rows
+
+
+class StubOracleRepositoryInstance:
+
+    @classmethod
+    def _get_connection(cls):
+        return MagicMock()
+
+    @classmethod
+    def get_data(cls, sql: str = None):
+        return_get_data = [{'SYMBOL': 'JBSS3F',
+                            'ORDSTATUS': 'NEW',
+                            'CLORDID': '5dc25b9e290490a5f35498b132232bb29388f71d',
+                            'TRANSACTTIME': datetime.datetime(2022, 4, 11, 18, 22, 22, 320000),
+                            'CUMQTY': 0, 'AVGPX': 0, 'ORDTYPE': 'LIMIT', 'ORDERQTY': 95}]
+        return return_get_data
 
 
 project_dummy = {'name': 1, '_id': 0}
@@ -134,5 +151,35 @@ portfolios_jwt_dummy = {
     },
     "us": {
         "_": None
+    }
+}
+
+
+payload_invalid_data_dummy = {
+    "exp": None,
+    "created_at": None,
+    "scope": {
+        "view_type": "default",
+        "user_level": "client",
+        "features": [
+            "default",
+            "realtime"
+        ]
+    },
+    "user": {
+        "unique_id": None,
+        "nick_name": None,
+        "portfolios": {
+            "br": {
+                "bovespa_account": None,
+                "bmf_account": None
+            },
+            "us": {
+                "_": None
+            }
+        },
+        "client_has_br_trade_allowed": False,
+        "client_has_us_trade_allowed": False,
+        "client_profile": "investor"
     }
 }
