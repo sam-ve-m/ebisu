@@ -3,7 +3,6 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 # Internal Libs
-import api.services.list_client_orders.list_client_orders
 from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from api.services.list_client_orders.list_client_orders import ListOrders
 from api.services.list_client_orders.strategies import GetBrOrders
@@ -11,19 +10,15 @@ from tests.stubs.project_stubs.stub_data import (StubCompanyInformationRepositor
                                                  payload_data_dummy,
                                                  user_jwt_dummy,
                                                  portfolios_jwt_dummy,
-                                                 StubOracleRepositoryInstance, payload_invalid_data_dummy,
+                                                 payload_invalid_data_dummy,
                                                  )
 from tests.stubs.project_stubs.stub_list_client_orders import (
-    single_client_orders_response,
-    list_client_orders_response,
     user_trade_dummy,
     field_dummy,
     normalized_data_dummy,
-    list_client_orders_dummy,
     open_orders_dummy,
     query_dummy_two_status,
     query_dummy_orders,
-    list_client_orders_request_dummy,
     client_response, open_orders_two_dummy, client_two_response
 )
 
