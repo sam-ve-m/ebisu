@@ -38,3 +38,13 @@ class MoneyFlowResolverNoFoundError(Exception):
 class InvalidAccountsOwnership(Exception):
     def __init__(self, msg="Invalid accounts ownership", *args, **kwargs):
         super().__init__(msg, *args, **kwargs)
+
+
+class UnableToProcessMoneyFlow(Exception):
+    def __init__(self, msg="Unable to process money flow", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
+class NotMappedCurrency(Exception):
+    def __init__(self, msg="Unable to process money flow, because currency is not mapped", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)

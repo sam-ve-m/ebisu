@@ -1,0 +1,20 @@
+# Third part
+from aiokafka import AIOKafkaProducer
+
+from api.infrastructures.env_config import config
+
+
+class KafkaInfrastructure:
+
+    producer = None
+
+    @classmethod
+    async def get_or_create_producer(cls):
+        if cls.producer is None:
+            cls.producer = AIOKafkaProducer(
+                bootstrap_servers=config("BIFROST_KAFKA"),
+                enable_idempotence=True
+            )
+            await cls.producer.start()
+
+        return cls.producer

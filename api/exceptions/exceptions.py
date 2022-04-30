@@ -28,3 +28,11 @@ class MoneyFlowResolverNoFoundError(Exception):
 
 class InvalidAccountsOwnership(Exception):
     pass
+
+
+class UnableToProcessMoneyFlow(Exception):
+    pass
+
+
+class NotMappedCurrency(Exception):
+    pass
