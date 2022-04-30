@@ -3,7 +3,7 @@ from nidavellir import Sindri
 from api.core.interfaces.bank_transfer.interface import IBankTransfer
 from fastapi import Request, APIRouter, Depends
 
-from api.domain.validators.user_account_validators.bank_account import CreateUserBankAccount, UpdateUserBankAccounts, \
+from api.domain.validators.user_account.bank_account import CreateUserBankAccount, UpdateUserBankAccounts, \
     DeleteUsersBankAccount
 from api.services.bank_account.service import UserBankAccountService
 from api.services.bank_transfer.service import BankTransferService

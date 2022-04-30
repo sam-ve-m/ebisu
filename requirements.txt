@@ -1,3 +1,4 @@
+aiokafka==0.7.2
 boto3==1.20.24
 cx-oracle==8.3.0
 fastapi==0.66.0
