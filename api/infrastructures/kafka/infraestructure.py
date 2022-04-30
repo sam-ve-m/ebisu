@@ -12,8 +12,7 @@ class KafkaInfrastructure:
     async def get_or_create_producer(cls):
         if cls.producer is None:
             cls.producer = AIOKafkaProducer(
-                bootstrap_servers=config("BIFROST_KAFKA"),
-                enable_idempotence=True
+                bootstrap_servers=config("BIFROST_KAFKA")
             )
             await cls.producer.start()
 

@@ -5,7 +5,7 @@ from api.domain.enums.currency import Currency
 from api.core.interfaces.services.funding_and_withdrawal.money_flow_resolvers.interface import IBaseMoneyFlowResolver
 from api.domain.model.internal.account_transfer.model import AccountTransfer
 from api.repositories.funding_and_withdrawal.queue.repository import FundingAndWithdrawalRepository
-
+from api.exceptions.exceptions import UnableToProcessMoneyFlow
 
 class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
 
@@ -49,9 +49,9 @@ class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
 
     async def _send(self, resume: dict, funding_and_withdrawal_repository=FundingAndWithdrawalRepository):
         topic = self._get_topic_name()
-        # was_sent = await funding_and_withdrawal_repository.send_to_bifrost(topic=topic, message=resume)
-        # if not was_sent:
-        #     raise UnableToProcessMoneyFlow()
+        was_sent = await funding_and_withdrawal_repository.send_to_bifrost(topic=topic, message=resume)
+        if not was_sent:
+            raise UnableToProcessMoneyFlow()
 
     async def _build_resume(self) -> dict:
         details = {
@@ -79,5 +79,6 @@ class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
         self._converted_value = await self._convert_value()
         self._due_date = await self._calculate_due_date()
         resume = await self._build_resume()
+        # TO PERSEPHONE
         await self._send(resume=resume)
         return resume

@@ -36,3 +36,7 @@ class UnableToProcessMoneyFlow(Exception):
 
 class NotMappedCurrency(Exception):
     pass
+
+
+class InvalidElectronicaSignature(Exception):
+    pass

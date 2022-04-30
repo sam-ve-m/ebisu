@@ -36,4 +36,4 @@ class TransfersBetweenSinacorAndDriveWealth(MoneyFlowResolverAbstract):
         return datetime.utcnow() + timedelta(days=1)
 
     def _get_topic_name(self) -> str:
-        pass
+        return "tranfers_between_sinacor_and_drive_wealth"

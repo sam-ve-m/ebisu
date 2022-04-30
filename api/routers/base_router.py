@@ -12,7 +12,8 @@ from api.exceptions.exceptions import (
     MoneyFlowResolverNoFoundError,
     InvalidAccountsOwnership,
     UnableToProcessMoneyFlow,
-    NotMappedCurrency
+    NotMappedCurrency,
+    InvalidElectronicaSignature,
 )
 from api.routers.exchange_informations.router import ExchangeRouter
 from api.routers.user_bank_accounts.router import UserBankAccountsRouter
@@ -136,6 +137,14 @@ class BaseRouter:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 content=json.dumps(
                     {"request_status": False, "status": 9, "msg": e.args[0]}
+                ),
+            )
+
+        except InvalidElectronicaSignature as e:
+            return Response(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content=json.dumps(
+                    {"request_status": False, "status": 10, "msg": e.args[0]}
                 ),
             )
 

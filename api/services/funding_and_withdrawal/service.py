@@ -4,13 +4,14 @@ from typing import Type
 from api.domain.abstract_classes.services.funding_and_withdrawal.money_flow_resolvers.abstract_class import \
     MoneyFlowResolverAbstract
 from api.domain.enums.region import Region
-from api.domain.exception.model import MoneyFlowResolverNoFoundError, InvalidAccountsOwnership
+from api.domain.exception.model import MoneyFlowResolverNoFoundError
 from api.domain.model.internal.account_transfer.model import AccountTransfer
 from api.repositories.user.repository import UserRepository
 from api.services.funding_and_withdrawal.money_flow_resolvers.transfers_between_drive_wealth_and_sinacor import \
     TransfersBetweenDriveWealthAndSinacor
 from api.services.funding_and_withdrawal.money_flow_resolvers.transfers_between_sinacor_and_drive_wealth import \
     TransfersBetweenSinacorAndDriveWealth
+from nidavellir import Sindri
 
 
 class FundingAndWithdrawalService:
@@ -37,6 +38,7 @@ class FundingAndWithdrawalService:
             value=money_flow_between_user_accounts_request_data["value"]
         )
         resume = await money_flow_resolver()
+        Sindri.dict_to_primitive_types(resume)
         return resume
 
     @classmethod
@@ -58,16 +60,3 @@ class FundingAndWithdrawalService:
         if money_flow_resolver := money_flow_resolver_map.get(money_flow_fingerprint):
             return money_flow_resolver
         raise MoneyFlowResolverNoFoundError()
-
-
-    @classmethod
-    async def transfers_between_sinacor_accounts(cls):
-        pass
-
-    @classmethod
-    async def transfers_between_sinacor_and_drive_wealth(cls):
-        pass
-
-    @classmethod
-    async def transfers_between_drive_wealth_and_sinacor(cls):
-        pass

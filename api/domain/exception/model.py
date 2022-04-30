@@ -48,3 +48,8 @@ class UnableToProcessMoneyFlow(Exception):
 class NotMappedCurrency(Exception):
     def __init__(self, msg="Unable to process money flow, because currency is not mapped", *args, **kwargs):
         super().__init__(msg, *args, **kwargs)
+
+
+class InvalidElectronicaSignature(Exception):
+    def __init__(self, msg="Invalid electronica signature", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)

@@ -2,6 +2,7 @@ from api.domain.enums.currency import Currency
 from typing import Tuple
 from api.infrastructures.redis.infraestructure import RedisInfrastructure
 from api.infrastructures.env_config import config
+from api.domain.exception.model import NotMappedCurrency
 
 class RealtimeFundingAndWithdrawalRepository(RedisInfrastructure):
 
@@ -13,6 +14,8 @@ class RealtimeFundingAndWithdrawalRepository(RedisInfrastructure):
         key = cls.generate_key(cash_conversion=cash_conversion, data_type="tax")
         redis = cls.get_redis()
         binary_value = await redis.get(name=key)
+        if not isinstance(binary_value, bytes):
+            raise NotMappedCurrency()
         value = float(binary_value.decode())
         return value
 
@@ -21,6 +24,8 @@ class RealtimeFundingAndWithdrawalRepository(RedisInfrastructure):
         key = cls.generate_key(cash_conversion=cash_conversion, data_type="spread")
         redis = cls.get_redis()
         binary_value = await redis.get(name=key)
+        if not isinstance(binary_value, bytes):
+            raise NotMappedCurrency()
         value = float(binary_value.decode())
         return value
 
@@ -29,6 +34,8 @@ class RealtimeFundingAndWithdrawalRepository(RedisInfrastructure):
         key = cls.generate_key(cash_conversion=cash_conversion, data_type="currency_quote")
         redis = cls.get_redis()
         binary_value = await redis.get(name=key)
+        if not isinstance(binary_value, bytes):
+            raise NotMappedCurrency()
         value = float(binary_value.decode())
         return value
 
