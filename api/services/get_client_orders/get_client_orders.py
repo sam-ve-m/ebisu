@@ -77,6 +77,4 @@ class GetOrders:
             GetOrders.normalize_open_order(user_open_order)
             for user_open_order in user_open_orders
         ]
-        if not data:
-            return [{}]
         return data
