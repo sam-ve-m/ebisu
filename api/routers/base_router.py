@@ -65,7 +65,6 @@ class BaseRouter:
     async def __add_process_time_header(request: Request, call_next):
         try:
             response = await call_next(request)
-
         except IntegrityJwtError as err:
             Gladsheim.error(erro=err)
 
@@ -156,5 +155,6 @@ class BaseRouter:
                     {"request_status": False, "status": 6, "msg": err.args[0]}
                 ),
             )
+
 
         return response

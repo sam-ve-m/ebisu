@@ -19,7 +19,7 @@ class FileRepository:
         return cls.client
 
     @classmethod
-    def generate_file_link(cls, file_path: str):
+    def generate_file_link(cls, file_path: str, url_link_expire_seconds: int = URL_LINK_EXPIRE_SECONDS):
         s3_client = cls._get_client()
         link = s3_client.generate_presigned_url(
             "get_object",
@@ -27,7 +27,7 @@ class FileRepository:
                 "Bucket": cls._bucket_name,
                 "Key": file_path,
             },
-            ExpiresIn=cls.URL_LINK_EXPIRE_SECONDS,
+            ExpiresIn=url_link_expire_seconds,
         )
         return link
 

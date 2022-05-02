@@ -4,12 +4,10 @@ from fastapi import Request, APIRouter, Depends
 from api.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
 from api.domain.validators.exchange_info.earnings_validator import GetEarningsModel
 from api.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
-from api.domain.validators.exchange_info.get_broker_note_validator import GetBrokerNoteModel
 from api.domain.validators.exchange_info.get_statement_validator import GetStatementModel
 from api.domain.validators.exchange_info.list_broker_note_validator import ListBrokerNoteModel
 from api.domain.validators.exchange_info.list_client_order_validator import ListClientOrderModel
 from api.services.get_balance.get_balance import GetBalance
-from api.services.get_broker_note.get_broker_note import GetBrokerNotePDF
 from api.services.get_client_orders.get_client_orders import GetOrders
 from api.services.get_earnings.get_client_earnings import EarningsService
 from api.services.get_statement.get_statement import GetStatement
@@ -49,16 +47,16 @@ class ExchangeRouter:
             broker_note=broker_note, jwt_data=jwt_data)
         return broker_note_response
 
-    @staticmethod
-    @__exchange_router.get("/broker_note_pdf", tags=["Broker Note"])
-    async def list_broker_note(
-            request: Request, broker_note_pdf: GetBrokerNoteModel = Depends()
-    ):
-        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        broker_note_pdf_response = GetBrokerNotePDF.get_service_response(
-            broker_note_pdf=broker_note_pdf, jwt_data=jwt_data
-        )
-        return broker_note_pdf_response
+    # @staticmethod
+    # @__exchange_router.get("/broker_note_pdf", tags=["Broker Note"])
+    # async def list_broker_note(
+    #         request: Request, broker_note_pdf: GetBrokerNoteModel = Depends()
+    # ):
+    #     jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+    #     broker_note_pdf_response = GetBrokerNotePDF.get_service_response(
+    #         broker_note_pdf=broker_note_pdf, jwt_data=jwt_data
+    #     )
+    #     return broker_note_pdf_response
 
     @staticmethod
     @__exchange_router.get("/request_bank_statement_pdf", tags=["Bank Statement"])
