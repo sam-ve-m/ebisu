@@ -66,14 +66,14 @@ async def test_when_sending_an_invalid_query_then_return_an_empty_dict_expected(
 
 
 @pytest.mark.asyncio
-async def test_when_dw_the_params_are_not_valid_then_return_an_empty_dict_as_expected():
+async def test_get_service_response_when_the_params_are_not_valid_then_raise_error_as_expected():
     with pytest.raises(AttributeError) as err:
         await GetStatement.get_service_response(jwt_data="", statement=statement_invalid_params_us)
         assert err == "'str' object has no attribute 'get'"
 
 
 @pytest.mark.asyncio
-async def test_when_dw_the_params_are_not_valid_then_return_an_empty_dict_as_expected():
+async def test_get_service_response_when_the_statement_params_are_not_valid_then_raise_error_as_expected():
     with pytest.raises(AttributeError) as err:
         await GetStatement.get_service_response(jwt_data=payload_data_dummy, statement="")
         assert err == "AttributeError: 'str' object has no attribute 'region'"

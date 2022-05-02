@@ -61,3 +61,19 @@ async def test_when_sending_a_valid_query_then_return_expected_value():
     GetBalance.oracle_singleton_instance = StubOracleRepository
     response = GetBalance.oracle_singleton_instance.get_data(sql=query_dummy)
     assert response == 10000.41
+
+
+@pytest.mark.asyncio
+def test_balance_get_service_response_when_the_params_are_not_valid_then_raise_error_as_expected():
+    balance_invalid_params = MagicMock(region=MagicMock(value=None),
+                                          cl_order_id='008cf873-ee2a-4b08-b277-74b8b17f6e64')
+    with pytest.raises(Exception) as err:
+        GetBalance.get_service_response(jwt_data="", balance=balance_invalid_params)
+        assert err == Exception
+
+
+@pytest.mark.asyncio
+def test_balance_get_service_response_when_the_statement_params_are_not_valid_then_raise_error_as_expected():
+    with pytest.raises(Exception) as err:
+        GetBalance.get_service_response(jwt_data=payload_data_dummy, balance="")
+        assert err == Exception
