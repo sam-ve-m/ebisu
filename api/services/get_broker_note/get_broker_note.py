@@ -30,4 +30,4 @@ class GetBrokerNotePDF:
             )
             data = {"pdf_link": broker_note}
             return data
-        raise Exception(NoPathFoundError)
+        raise NoPathFoundError
