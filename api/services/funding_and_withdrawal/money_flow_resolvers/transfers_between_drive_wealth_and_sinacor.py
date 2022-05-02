@@ -2,6 +2,7 @@ from api.domain.abstract_classes.services.funding_and_withdrawal.money_flow_reso
     MoneyFlowResolverAbstract
 from datetime import datetime, timedelta
 from api.repositories.funding_and_withdrawal.realtime.repository import RealtimeFundingAndWithdrawalRepository
+from api.infrastructures.env_config import config
 
 
 class TransfersBetweenDriveWealthAndSinacor(MoneyFlowResolverAbstract):
@@ -22,16 +23,20 @@ class TransfersBetweenDriveWealthAndSinacor(MoneyFlowResolverAbstract):
 
     async def _convert_value(self) -> float:
         cash_conversion_references = self._get_cash_conversion_references()
-        conversion_base = await self.funding_and_withdrawal_realtime_data_repository.get_tax(cash_conversion=cash_conversion_references)
+        conversion_base = await self.funding_and_withdrawal_realtime_data_repository.get_currency_quote(cash_conversion=cash_conversion_references)
 
         base_value = await self._get_base_value()
         spread = await self._get_spread()
         tax = await self._get_tax()
 
-        return (base_value - ((base_value * spread) + (base_value * tax))) * conversion_base
+        spread_price = (base_value * spread)
+        tax_price = (base_value * tax)
+
+        convert_value = (base_value - (spread_price + tax_price)) * conversion_base
+        return round(convert_value, 4)
 
     async def _calculate_due_date(self) -> datetime:
         return datetime.utcnow() + timedelta(days=1)
 
     def _get_topic_name(self) -> str:
-        return "tranfers_between_drive_wealth_and_sinacor"
+        return config("TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC")
