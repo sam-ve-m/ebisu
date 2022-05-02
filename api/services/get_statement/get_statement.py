@@ -1,15 +1,11 @@
-from api.domain.validators.exchange_info_validators.get_statement_validator import GetStatementModel
+from api.domain.enums.region import Region
+from api.domain.validators.exchange_info.get_statement_validator import GetStatementModel
 from api.repositories.statements.repository import StatementsRepository
 from api.services.statement.service import Statement
 
 
 class GetStatement:
-    end_date = None
-    offset = None
-    start_date = None
-    dw_account = None
     oracle_singleton_instance = StatementsRepository
-    bmf_account = None
 
     @classmethod
     async def get_service_response(
@@ -21,20 +17,26 @@ class GetStatement:
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
         us_portfolios = portfolios.get("us", {})
-        cls.dw_account = us_portfolios.get("dw_account")
-        cls.bovespa_account = br_portfolios.get("bovespa_account")
-        cls.bmf_account = br_portfolios.get("bmf_account")
 
-        if statement.region == "US":
+        dw_account = us_portfolios.get("dw_account")
+        dw_account = "6bf1ef07-55c9-43ce-802b-f62ad5b56337.1634935585221"
+        bmf_account = br_portfolios.get("bmf_account")
+
+        if statement.region == Region.US:
             us_statement = await Statement.get_dw_statement(
-                cls.dw_account, cls.start_date, cls.offset, cls.end_date
+                dw_account=dw_account,
+                start_date=statement.start_date,
+                end_date=statement.end_date,
+                offset=statement.offset,
+                limit=statement.limit
             )
             return us_statement
+
         start_date = Statement.from_timestamp_to_utc_isoformat_br(statement.start_date)
         end_date = Statement.from_timestamp_to_utc_isoformat_br(statement.end_date)
         query = f"""SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO 
                    FROM CORRWIN.TCCMOVTO 
-                   WHERE CD_CLIENTE = {cls.bmf_account} 
+                   WHERE CD_CLIENTE = {bmf_account} 
                    AND DT_LANCAMENTO >= TO_DATE('{start_date}', 'yyyy-MM-dd')
                    AND DT_LANCAMENTO <= TO_DATE('{end_date}', 'yyyy-MM-dd')                   
                    ORDER BY NR_LANCAMENTO
@@ -42,7 +44,7 @@ class GetStatement:
                    fetch first {statement.limit} row only
                    """
         statement = GetStatement.oracle_singleton_instance.get_data(sql=query)
-        query = f"SELECT VL_TOTAL FROM CORRWIN.TCCSALDO WHERE CD_CLIENTE = {cls.bmf_account}"
+        query = f"SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = {bmf_account}"
         balance = GetStatement.oracle_singleton_instance.get_data(sql=query)
 
         data_balance = {
@@ -53,4 +55,5 @@ class GetStatement:
         }
         if not data_balance:
             return {}
+
         return data_balance

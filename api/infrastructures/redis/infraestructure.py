@@ -1,14 +1,15 @@
 # OUTSIDE LIBRARIES
 import aioredis
-from api.infrastructures.env_config import config
 
 
 class RedisInfrastructure:
     redis = None
+    host = None
+    db = None
 
     @classmethod
     def get_redis(cls):
         if cls.redis is None:
-            url = config("REDIS_HOST_URL")
+            url = f"{cls.host}?db={cls.db}"
             cls.redis = aioredis.from_url(url)
         return cls.redis

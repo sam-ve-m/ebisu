@@ -1,16 +1,13 @@
-# Internal Libs
-from typing import Optional
-
 from api.domain.enums.region import Region
-from fastapi import Request, APIRouter, Query, Depends
+from fastapi import Request, APIRouter, Depends
 
-from api.domain.validators.exchange_info_validators.client_orders_validator import GetClientOrderModel
-from api.domain.validators.exchange_info_validators.earnings_validator import GetEarningsModel
-from api.domain.validators.exchange_info_validators.get_balance_validator import GetBalanceModel
-from api.domain.validators.exchange_info_validators.get_broker_note_validator import GetBrokerNoteModel
-from api.domain.validators.exchange_info_validators.get_statement_validator import GetStatementModel
-from api.domain.validators.exchange_info_validators.list_broker_note_validator import ListBrokerNoteModel
-from api.domain.validators.exchange_info_validators.list_client_order_validator import ListClientOrderModel
+from api.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
+from api.domain.validators.exchange_info.earnings_validator import GetEarningsModel
+from api.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
+from api.domain.validators.exchange_info.get_broker_note_validator import GetBrokerNoteModel
+from api.domain.validators.exchange_info.get_statement_validator import GetStatementModel
+from api.domain.validators.exchange_info.list_broker_note_validator import ListBrokerNoteModel
+from api.domain.validators.exchange_info.list_client_order_validator import ListClientOrderModel
 from api.services.get_balance.get_balance import GetBalance
 from api.services.get_broker_note.get_broker_note import GetBrokerNotePDF
 from api.services.get_client_orders.get_client_orders import GetOrders
@@ -65,7 +62,7 @@ class ExchangeRouter:
 
     @staticmethod
     @__exchange_router.get("/request_bank_statement_pdf", tags=["Bank Statement"])
-    async def request_bank_RequestStatementstatement(
+    async def get_request_bank_statement(
             region: Region, start_date: float, end_date: float, request: Request
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)

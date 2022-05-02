@@ -46,12 +46,15 @@ class OracleBaseRepository:
 
     @classmethod
     def get_data(cls, sql: str):
-        oracle_connection = cls._get_connection()
-        connection = oracle_connection.acquire()
-        with connection.cursor() as cursor:
-            cursor.execute(sql)
-            columns = [col[0] for col in cursor.description]
-            cursor.rowfactory = lambda *args: dict(zip(columns, args))
-            rows = cursor.fetchall()
-        oracle_connection.release(connection)
-        return rows
+        try:
+            oracle_connection = cls._get_connection()
+            connection = oracle_connection.acquire()
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+                columns = [col[0] for col in cursor.description]
+                cursor.rowfactory = lambda *args: dict(zip(columns, args))
+                rows = cursor.fetchall()
+            oracle_connection.release(connection)
+            return rows
+        except Exception as ex:
+            print(ex)

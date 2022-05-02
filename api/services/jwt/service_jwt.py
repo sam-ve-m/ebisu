@@ -66,6 +66,25 @@ class JwtService:
                 break
         return thebes_answer
 
+    @staticmethod
+    async def validate_electronic_signature(
+        request: Request, user_data: dict
+    ) -> bool:
+        mist_token = None
+        for header_tuple in request.headers.raw:
+            if b"x-mist" in header_tuple:
+                mist_token = header_tuple[1].decode()
+                break
+        is_valid = await JwtService.mist.validate_jwt(jwt=mist_token)
+        if is_valid:
+            mist_content, status = await JwtService.mist.decode_payload(jwt=mist_token)
+            if (
+                status == MistStatusResponses.SUCCESS
+                and user_data["unique_id"] == mist_content["decoded_jwt"]["unique_id"]
+            ):
+                return True
+        return False
+
     @classmethod
     async def get_thebes_answer_from_request(cls, request: Request) -> dict:
         jwt = JwtService.get_jwt_from_request(request=request)

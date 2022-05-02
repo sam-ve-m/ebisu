@@ -1,3 +1,4 @@
+aiokafka==0.7.2
 boto3==1.20.24
 cx-oracle==8.3.0
 fastapi==0.66.0
@@ -10,3 +11,5 @@ redis==3.5.3
 uvicorn==0.14.0
 mist-client==2.2.0
 python-i18n==0.3.9
+mepho==0.1.0
+wkhtmltopdf==0.2

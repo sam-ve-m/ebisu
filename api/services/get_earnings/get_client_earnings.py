@@ -1,6 +1,6 @@
 from typing import List
 
-from api.domain.validators.exchange_info_validators.earnings_validator import GetEarningsModel
+from api.domain.validators.exchange_info.earnings_validator import GetEarningsModel
 from api.repositories.earnings.repository import EarningsRepository
 from api.services.get_earnings.strategies.br_earnings import earnings_regions
 from api.services.get_earnings.strategies.service import Earnings
@@ -25,7 +25,7 @@ class EarningsService:
     ) -> List[dict]:
         earnings_region = earnings_regions.get("BR")
         query_earnings = earnings_region.build_query_earnings(
-            symbol=GetEarningsModel.symbol,
+            symbol=earnings.symbol,
             timestamp=Earnings.from_timestamp_to_utc_isoformat_br(earnings.timestamp),
             limit=earnings.limit,
             offset=earnings.offset,

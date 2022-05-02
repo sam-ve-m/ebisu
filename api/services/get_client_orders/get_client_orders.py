@@ -1,7 +1,7 @@
 from typing import List
 
 from api.domain.enums.order_tifs import OrderTifs
-from api.domain.validators.exchange_info_validators.client_orders_validator import GetClientOrderModel
+from api.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
 from api.services.get_client_orders.strategies import order_region
 from api.domain.time_formatter.time_formatter import str_to_timestamp
 
@@ -77,6 +77,4 @@ class GetOrders:
             GetOrders.normalize_open_order(user_open_order)
             for user_open_order in user_open_orders
         ]
-        if not data:
-            return [{}]
         return data
