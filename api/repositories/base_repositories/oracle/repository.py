@@ -1,3 +1,5 @@
+from etria_logger import Gladsheim
+
 from api.infrastructures.connections.oracle.infrastructure import OracleInfrastructure
 
 
@@ -57,4 +59,4 @@ class OracleBaseRepository:
             oracle_connection.release(connection)
             return rows
         except Exception as ex:
-            print(ex)
+            Gladsheim.error(error=ex, msg="Error when get date in oracle database")
