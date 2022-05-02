@@ -37,6 +37,4 @@ class EarningsService:
             EarningsService.normalize_earnings(open_earning)
             for open_earning in open_earnings
         ]
-        if not open_earnings_data:
-            return [{}]
         return open_earnings_data
