@@ -69,14 +69,6 @@ class StubOracleRepositoryInstance:
         return return_get_data
 
 
-project_dummy = {'name': 1, '_id': 0}
-query_dummy = {'symbol': 'MYPK3'}
-ttl_dummy = {'ttl': None}
-
-data_find_one_response = {'name': 'Iochpe Maxion SA'}
-get_company_name_response = 'Iochpe Maxion SA'
-
-
 class StubCompanyInformationRepository:
     """Mongo Repository"""
 

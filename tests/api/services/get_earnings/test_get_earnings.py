@@ -1,12 +1,15 @@
 # Standard Libs
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from typing import List
 
 # Internal Libs
+from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from api.services.get_earnings.get_client_earnings import EarningsService
+from api.services.get_earnings.strategies.br_earnings import GetBrEarnings
 from tests.stubs.project_stubs.stub_data import StubOracleRepository
-from tests.stubs.project_stubs.stub_earnings import (earnings_dummy_br,
+from tests.stubs.project_stubs.stub_earnings import (
+                                                     earnings_dummy_br,
                                                      earnings_dummy_response,
                                                      normalize_earnings_dummy_request,
                                                      query_dummy_earnings)
@@ -32,21 +35,17 @@ async def test_when_a_valid_request_is_sent_then_return_the_earnings_expected_re
 
 
 @pytest.mark.asyncio
-@patch.object(EarningsService, 'get_service_response', return_value=[{}])
-async def test_when_invalid_request_is_sent_then_return_an_empty_object(mock_get_service_response):
-    earnings_dummy_params = ""
-    earnings_response = await EarningsService.get_service_response(earnings=earnings_dummy_params)
-    assert earnings_response == [{}]
-
-
-@pytest.mark.asyncio
-@patch('api.services.get_earnings.get_client_earnings.EarningsService.get_service_response', return_value=[{}])
-async def test_when_wrong_earnings_pydantic_is_sent_then_return_the_expected(mock_get_service_response):
-    dummy_wrong_earnings_params = {'symbol': '',
-                                   'timestamp': '',
-                                   'offset': 0,
-                                   'limit': '10'}
-    earnings_response = await EarningsService.get_service_response(earnings=dummy_wrong_earnings_params)
+@patch.object(GetBrEarnings, 'build_query_earnings', return_value="")
+@patch.object(OracleBaseRepository, 'get_data', return_value="")
+@patch('api.services.get_earnings.get_client_earnings.earnings_regions')
+async def test_when_invalid_request_is_sent_then_return_an_empty_object(mock_earnings_region,
+                                                                        mock_build_query_earnings,
+                                                                        mock_get_data):
+    mock_earnings_region.__getitem__ = MagicMock(return_value=GetBrEarnings)
+    earnings_response = await EarningsService.get_service_response(earnings=MagicMock(symbol="PETR4",
+                                                                                      timestamp=1649611840000,
+                                                                                      offset=0,
+                                                                                      limit=1))
     assert earnings_response == [{}]
 
 
@@ -68,3 +67,11 @@ async def test_when_sending_an_invalid_query_then_return_the_expected_value(mock
     EarningsService.oracle_earnings_singleton_instance = StubOracleRepository
     response = EarningsService.oracle_earnings_singleton_instance.get_data(sql=query_dummy)
     assert response == {}
+
+
+@pytest.mark.asyncio
+def test_get_earnings_get_service_response_when_the_params_are_not_valid_then_raise_error_as_expected():
+    earnings_invalid_params = MagicMock(symbol=None, timestamp=None, offset=0, limit=1)
+    with pytest.raises(Exception) as err:
+        EarningsService.get_service_response(earnings=earnings_invalid_params)
+        assert err == Exception

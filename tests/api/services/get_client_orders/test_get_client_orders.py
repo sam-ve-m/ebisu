@@ -6,7 +6,6 @@ from unittest.mock import patch, MagicMock
 from api.services.get_client_orders.strategies.br_orders.strategy import GetBrOrdersDetails
 from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from api.services.get_client_orders.get_client_orders import GetOrders
-from tests.stubs.project_stubs.stub_list_client_orders import field_dummy
 from tests.stubs.project_stubs.stub_data import payload_data_dummy
 from tests.stubs.project_stubs.stub_get_client_orders import (user_open_orders_dummy,
                                                               query_dummy_get_client,
@@ -17,8 +16,7 @@ from tests.stubs.project_stubs.stub_get_client_orders import (user_open_orders_d
 
 
 def test_decimal_converter_when_sending_user_trade_and_field_to_decimal_converter_then_return_the_expected():
-    response = GetOrders.decimal_128_converter(user_trade=dummy_user_trade,
-                                                field=field_dummy)
+    response = GetOrders.decimal_128_converter(user_trade=dummy_user_trade, field='AVGPX')
     assert response == 0.0
     assert type(response) is int
 
@@ -53,8 +51,10 @@ def test_get_service_response_when_sending_the_right_parans_then_return_the_expe
                                                                                      mock_get_data):
     mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrdersDetails)
     response = GetOrders.get_service_response(jwt_data=payload_data_dummy,
-                                              client_order=MagicMock(region=MagicMock(value='BR'),
-                                                                     cl_order_id='008cf873-ee2a-4b08-b277-74b8b17f6e64'))
+                                              client_order=MagicMock(
+                                                  region=MagicMock(value='BR'),
+                                                  cl_order_id='008cf873-ee2a-4b08-b277-74b8b17f6e64'))
+
     assert response == client_order_response_dummy
     assert response[0]['symbol'] == 'VALE3'
     assert isinstance(response, list)
@@ -69,9 +69,12 @@ def test_get_service_response_when_sending_the_right_parans_then_return_empty_ob
                                                                                      mock_get_data):
     mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrdersDetails)
     response = GetOrders.get_service_response(jwt_data=payload_data_dummy,
-                                              client_order=MagicMock(region=MagicMock(value='BR'),
-                                                                     cl_order_id='008cf873-ee2a-4b08-b277-74b8b17f6e64'))
+                                              client_order=MagicMock(
+                                                  region=MagicMock(value='BR'),
+                                                  cl_order_id='008cf873-ee2a-4b08-b277-74b8b17f6e64'))
+
     assert response == [{}]
+    assert response[0] == {}
     assert isinstance(response, list)
 
 
