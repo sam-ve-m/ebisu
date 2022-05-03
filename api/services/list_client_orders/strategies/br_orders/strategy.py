@@ -9,8 +9,7 @@ class GetBrOrders:
 
     @staticmethod
     def build_query(
-        bovespa_account: str,
-        bmf_account: str,
+        accounts: List[str],
         offset: int,
         limit: int,
         order_status: List[OrderStatus],
@@ -18,7 +17,7 @@ class GetBrOrders:
         query = f"""SELECT B.SYMBOL, ORDSTATUS, B.CLORDID, B.TRANSACTTIME, B.CUMQTY, B.AVGPX, 
                     B.ORDTYPE, B.ORDERQTY
                     FROM USOLUDB001.VW_CURRENT_EXECUTION_REPORTS B
-                    WHERE B.ACCOUNT in ('{bovespa_account}', '{bmf_account}')
+                    WHERE B.ACCOUNT in ('{"','".join(accounts)}')
                     {GetBrOrders.filter(order_status)}
                     ORDER BY B.TRANSACTTIME DESC
                     offset {offset} rows

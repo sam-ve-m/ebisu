@@ -50,8 +50,7 @@ class UserBankAccountService:
             raise InternalServerError("common.process_issue")
 
         create_account_response = {
-            "status_code": status.HTTP_200_OK,
-            "message_key": "requests.created",
+            "message": "Created",
         }
 
         return create_account_response
@@ -67,13 +66,7 @@ class UserBankAccountService:
         )
         if bank_accounts is None:
             bank_accounts = {"bank_accounts": []}
-
-        get_user_bank_accounts_response = {
-            "status_code": status.HTTP_200_OK,
-            "project_stubs": bank_accounts,
-        }
-
-        return get_user_bank_accounts_response
+        return bank_accounts
 
     @classmethod
     async def update_user_bank_account(
@@ -98,8 +91,7 @@ class UserBankAccountService:
             raise InternalServerError("common.process_issue")
 
         update_bank_account_response = {
-            "status_code": status.HTTP_200_OK,
-            "message_key": "requests.updated",
+            "message": "Updated",
         }
 
         return update_bank_account_response
@@ -127,8 +119,7 @@ class UserBankAccountService:
             raise InternalServerError("common.process_issue")
 
         delete_bank_account_response = {
-            "status_code": status.HTTP_200_OK,
-            "message_key": "requests.deleted",
+            "message": "Deleted",
         }
 
         return delete_bank_account_response

@@ -1,6 +1,7 @@
 from typing import List
 
-from api.domain.validators.exchange_info_validators.earnings_validator import GetEarningsModel
+from api.domain.time_formatter.time_formatter import str_to_timestamp
+from api.domain.validators.exchange_info.earnings_validator import GetEarningsModel
 from api.repositories.earnings.repository import EarningsRepository
 from api.services.get_earnings.strategies.br_earnings import earnings_regions
 from api.services.get_earnings.strategies.service import Earnings
@@ -13,7 +14,7 @@ class EarningsService:
     def normalize_earnings(cls, client_earnings: dict) -> dict:
         normalize_data = {
             "symbol": client_earnings.get("SYMBOL"),
-            "date": client_earnings.get("EARNINGS_DATE"),
+            "date": str_to_timestamp(client_earnings.get("EARNINGS_DATE")),
             "price": client_earnings.get("PRICE"),
             "earnings_type": client_earnings.get("EARNINGS_TYPE"),
         }

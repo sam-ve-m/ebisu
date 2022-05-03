@@ -1,6 +1,6 @@
 from pydantic import BaseModel, UUID4
 from typing import Optional
-from api.domain.validators.user_account_validators.onboarding_validators import Cpf
+from api.domain.validators.user_account.onboarding_validators import Cpf
 
 
 class CreateUserBankAccount(Cpf):

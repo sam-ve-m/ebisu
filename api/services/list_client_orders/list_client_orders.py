@@ -1,7 +1,8 @@
 # Internal Lib
 from typing import List
 
-from api.domain.validators.exchange_info_validators.list_client_order_validator import ListClientOrderModel
+from api.domain.enums.region import Region
+from api.domain.validators.exchange_info.list_client_order_validator import ListClientOrderModel
 from api.repositories.companies_data.repository import CompanyInformationRepository
 from api.services.list_client_orders.strategies import order_region
 from api.domain.time_formatter.time_formatter import str_to_timestamp
@@ -51,24 +52,38 @@ class ListOrders:
 
         return normalized_data
 
+    @staticmethod
+    def get_accounts_by_region(portfolios: dict, region: str) -> List[str]:
+        accounts_by_region = {
+            Region.BR.value: ["bovespa_account", "bmf_account"],
+            Region.US.value: ["dw_id", "dw_account"],
+        }
+        fields = accounts_by_region[region]
+        accounts = []
+        for field in fields:
+            if account := portfolios.get(field):
+                accounts.append(account)
+        return accounts
+
     @classmethod
-    async def get_service_response(cls,
-                                   jwt_data: dict,
-                                   list_client_orders: ListClientOrderModel
-                                   ) -> List[dict]:
+    async def get_service_response(
+        cls,
+        jwt_data: dict,
+        list_client_orders: ListClientOrderModel
+    ) -> List[dict]:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
-        br_portfolios = portfolios.get("br", {})
-        cls.bovespa_account = br_portfolios.get("bovespa_account")
-        cls.bmf_account = br_portfolios.get("bmf_account")
 
-        open_orders = order_region[list_client_orders.region.value]
+        region = list_client_orders.region.value
+        region_portfolios = portfolios.get(region.lower(), {})
 
+        accounts = cls.get_accounts_by_region(region_portfolios, region)
+
+        open_orders = order_region[region]
         order_status_res = ListOrders.pipe_to_list(list_client_orders.order_status)
 
         query = open_orders.build_query(
-            bovespa_account=cls.bovespa_account,
-            bmf_account=cls.bmf_account,
+            accounts=accounts,
             offset=list_client_orders.offset,
             limit=list_client_orders.limit,
             order_status=order_status_res,

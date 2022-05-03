@@ -13,10 +13,6 @@ from api.domain.exception.model import NoPdfFoundError, NoPathFoundError
 class RequestStatement:
     oracle_singleton_instance = StatementsRepository
     s3_singleton = FileRepository
-    end_date = None
-    offset = None
-    start_date = None
-    bmf_account = None
 
     @classmethod
     async def get_service_response(
@@ -29,13 +25,17 @@ class RequestStatement:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
         br_portfolios = portfolios.get("br", {})
-        cls.bovespa_account = br_portfolios.get("bovespa_account")
-        cls.bmf_account = br_portfolios.get("bmf_account")
-        client_id = jwt_data.get("email")
+        us_portfolios = portfolios.get("us", {})
 
-        if region.value == "US":
+        bmf_account = br_portfolios.get("bmf_account")
+        cls.dw_account = us_portfolios.get("dw_account")
+        dw_account = "6bf1ef07-55c9-43ce-802b-f62ad5b56337.1634935585221"
+
+        client_id = user.get("unique_id")
+
+        if region == Region.US:
             us_statement = await Statement.get_dw_statement(
-                cls.start_date, cls.end_date, cls.offset, cls.end_date
+                dw_account=dw_account, start_date=start_date, end_date=end_date, limit=100, offset=0
             )
             us_statement_response = cls.generate_pdf(
                 us_statement, client_id=client_id, start_date=start_date, end_date=end_date
@@ -46,7 +46,7 @@ class RequestStatement:
         end_date = Statement.from_timestamp_to_utc_isoformat_br(end_date)
         query = f"""SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO 
                    FROM CORRWIN.TCCMOVTO 
-                   WHERE CD_CLIENTE = {cls.bmf_account} 
+                   WHERE CD_CLIENTE = {bmf_account} 
                    AND DT_LANCAMENTO > TO_DATE('{start_date}', 'yyyy-MM-dd')
                    AND DT_LANCAMENTO <= TO_DATE('{end_date}', 'yyyy-MM-dd')
                    ORDER BY DT_LANCAMENTO
