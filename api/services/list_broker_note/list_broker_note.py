@@ -2,7 +2,6 @@ import os
 from operator import itemgetter
 from typing import List
 
-from api.domain.enums.region import Region
 from api.domain.validators.exchange_info.list_broker_note_validator import ListBrokerNoteModel, BrokerNoteMarket, \
     BrokerNoteRegion
 from api.repositories.files.repository import FileRepository

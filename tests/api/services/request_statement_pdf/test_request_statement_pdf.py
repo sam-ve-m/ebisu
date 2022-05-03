@@ -6,7 +6,8 @@ from unittest.mock import patch, MagicMock
 from api.domain.exception.model import NoPdfFoundError
 from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from api.repositories.files.repository import FileRepository
-from tests.stubs.project_stubs.stub_data import (payload_data_dummy)
+from api.services.statement.service import Statement
+from tests.stubs.project_stubs.stub_data import (payload_data_dummy, payload_data_us_gringa_dummy)
 from api.services.request_statement.request_statement import RequestStatement
 from tests.stubs.project_stubs.stub_request_statement_pdf import (bank_statement_pdf_br_dummy,
                                                                   file_upload_response,
@@ -58,7 +59,7 @@ def test_generate_pdf_function_when_no_link_is_the_response_then_return_the_expe
 mock_generate_path, mock_upload_file, mock_generate_file_link
 ):
     with pytest.raises(NoPdfFoundError) as err:
-        response = RequestStatement.generate_pdf(statement=None,
+        response = RequestStatement.generate_pdf(statement={},
                                                  client_id=None,
                                                  start_date=None,
                                                  end_date=None)
@@ -74,8 +75,9 @@ async def test_when_right_params_for_br_account_are_sent_to_service_response_fun
         mock_upload_file, mock_generate_path, mock_get_data, mock_generate_file_link
 ):
     response = await RequestStatement.get_service_response(MagicMock(region=MagicMock(value='BR'),
-                                                               start_date=1646757399000, end_date=1648485399000),
-                                                     jwt_data=payload_data_dummy)
+                                                                     start_date=1646757399000,
+                                                                     end_date=1648485399000),
+                                                                     jwt_data=payload_data_dummy)
     assert response == bank_statement_pdf_br_dummy
     assert isinstance(response, dict)
 
@@ -85,11 +87,34 @@ async def test_when_right_params_for_br_account_are_sent_to_service_response_fun
 @patch.object(FileRepository, 'generate_file_link', return_value=file_link_stub)
 @patch.object(RequestStatement, 'generate_path', return_value=generate_path_response)
 @patch.object(OracleBaseRepository, 'get_data', return_value=[])
+@patch.object(Statement, 'get_dw_statement', return_value={"balance": 40000.45, "statements": 20000.0})
 async def test_when_right_params_for_us_account_are_sent_to_service_response_function_then_return_the_expected(
-        mock_upload_file, mock_generate_path, mock_get_data, mock_generate_file_link
+        mock_upload_file, mock_generate_path, mock_get_data, mock_generate_file_link, mock_get_dw_statement
 ):
-    response = await RequestStatement.get_service_response(MagicMock(region=MagicMock(value='BR'),
-                                                               start_date=1646757399000, end_date=1648485399000),
-                                                     jwt_data=payload_data_dummy)
+    response = await RequestStatement.get_service_response(MagicMock(region=MagicMock(value='US'),
+                                                                     start_date=1646757399000,
+                                                                     end_date=1648485399000),
+                                                                     jwt_data=payload_data_us_gringa_dummy)
     assert response == bank_statement_pdf_us_dummy
     assert isinstance(response, dict)
+
+
+@pytest.mark.asyncio
+async def test_request_statement_get_service_response_when_the_params_are_not_valid_then_raise_error_as_expected():
+    with pytest.raises(AttributeError) as err:
+        await RequestStatement.get_service_response(MagicMock(region=MagicMock(value='US'),
+                                                                     start_date=1646757399000,
+                                                                     end_date=1648485399000),
+                                                                     jwt_data="")
+        assert err == "'str' object has no attribute 'get'"
+
+
+@pytest.mark.asyncio
+async def test_get_service_response_when_the_statement_params_are_not_valid_then_raise_error_as_expected():
+    with pytest.raises(TypeError) as err:
+        await RequestStatement.get_service_response(jwt_data=payload_data_us_gringa_dummy,
+                                                    region=None,
+                                                    start_date=None,
+                                                    end_date=None)
+        assert err == "unsupported operand type(s) for /: 'NoneType' and 'int'"
+        assert err == TypeError

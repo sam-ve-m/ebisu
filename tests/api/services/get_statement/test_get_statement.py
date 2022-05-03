@@ -40,13 +40,13 @@ async def test_when_region_and_timestamp_are_invalid_then_return_an_empty_dict_w
 
 
 @pytest.mark.asyncio
-@mock.patch.object(Statement, "get_dw_statement", return_value={"balance": 49019398.69})
+@mock.patch.object(Statement, "get_dw_statement", return_value={"balance": 48981636.93})
 async def test_when_dw_statement_function_us_then_return_expected_which_is_the_statement_as_response(
         mock_get_dw_statement):
     statement_response = await GetStatement.get_service_response(jwt_data=payload_data_dummy,
                                                                  statement=statement_valid_params_us)
     assert 'balance' in statement_response
-    assert statement_response['balance'] == 49019398.69
+    assert statement_response['balance'] == 48981636.93
 
 
 @pytest.mark.asyncio

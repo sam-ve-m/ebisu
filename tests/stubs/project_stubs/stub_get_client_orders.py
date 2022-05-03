@@ -6,7 +6,7 @@ client_order_response_dummy = [
     {
         "cl_order_id": "008cf873-ee2a-4b08-b277-74b8b17f6e64",
         "account": "000000049-9",
-        "time": 1644626388.0,
+        "time": 1644626388.675,
         "quantity": 100,
         "average_price": 0,
         "price": 0,
@@ -67,7 +67,7 @@ dummy_user_trade = {'MESSAGE': None,
 
 dummy_normalized_data = {'cl_order_id': '008cf873-ee2a-4b08-b277-74b8b17f6e64',
                          'account': '000000049-9',
-                         'time': 1644626388.0,
+                         'time': 1644626388.675,
                          'quantity': 100,
                          'average_price': 0,
                          'price': 0,

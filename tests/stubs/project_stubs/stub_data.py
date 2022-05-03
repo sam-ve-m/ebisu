@@ -175,3 +175,33 @@ payload_invalid_data_dummy = {
         "client_profile": "investor"
     }
 }
+
+payload_data_us_gringa_dummy =   {
+  "exp": 1682967481,
+  "created_at": 1651431481.395905,
+  "scope": {
+    "view_type": "default",
+    "user_level": "client",
+    "features": [
+      "default",
+      "realtime"
+    ]
+  },
+  "user": {
+    "unique_id": "40db7fee-6d60-4d73-824f-1bf87edc4491",
+    "nick_name": "RAST3",
+    "portfolios": {
+      "br": {
+        "bovespa_account": "000000014-6",
+        "bmf_account": "14"
+      },
+      "us": {
+        "dw_account": "LXPD000001",
+        "dw_id": "7d1ef3a1-1b5c-44b7-bdaf-6f0d9a9bbf69"
+      }
+    },
+    "client_has_br_trade_allowed": True,
+    "client_has_us_trade_allowed": True,
+    "client_profile": "investor"
+  }
+}

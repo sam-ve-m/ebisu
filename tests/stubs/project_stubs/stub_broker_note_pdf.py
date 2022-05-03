@@ -10,3 +10,13 @@ file_link_brokerage_dummy = 'https://brokerage-note-and-bank-statement.s3.amazon
 broker_note_link_dummy = 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/Region.BR/broker_note/2022/4/19.pdf?AWSAccessKeyId=AKIATZVFXI25USQWCS5O&Signature=U0fZ7EtnQr5c2HStRgLowD8H22w%3D&Expires=1651258518'
 
 broker_note_us_link_dummy = "https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/Region.US/broker_note/2022/4/19.pdf?AWSAccessKeyId=AKIATZVFXI25USQWCS5O&Signature=qk787uKUGTTYEFiUomCAZuC0z6w%3D&Expires=1651261099"
+
+list_broker_note_dummy = [{
+                                "market": "bmf",
+                                "region": "ALL",
+                                "day": 5,
+                                "broker_note_link": "https://brokerage-note-and-bank-statement.s3.amazonaws.com"
+                                                    "/14/BR/broker_note/2022/4/5.pdf?AWSAccessKeyId="
+                                                    "AKIATZVFXI25USQWCS5O&Signature="
+                                                    "V27flz5Xf%2B0%2FdnmVk%2BPP3pMQhag%3D&Expires=1651607591"
+                            }]
