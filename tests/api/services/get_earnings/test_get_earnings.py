@@ -46,7 +46,7 @@ async def test_when_invalid_request_is_sent_then_return_an_empty_object(mock_ear
                                                                                       timestamp=1649611840000,
                                                                                       offset=0,
                                                                                       limit=1))
-    assert earnings_response == [{}]
+    assert earnings_response == []
 
 
 @pytest.mark.asyncio

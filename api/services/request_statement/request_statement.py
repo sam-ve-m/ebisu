@@ -33,13 +33,14 @@ class RequestStatement:
         cls.bmf_account = br_portfolios.get("bmf_account")
         client_id = jwt_data.get("email")
 
-        if region == "US":
+        if region.value == "US":
             us_statement = await Statement.get_dw_statement(
                 cls.start_date, cls.end_date, cls.offset, cls.end_date
             )
-            return cls.generate_pdf(
+            us_statement_response = cls.generate_pdf(
                 us_statement, client_id=client_id, start_date=start_date, end_date=end_date
             )
+            return us_statement_response
 
         start_date = Statement.from_timestamp_to_utc_isoformat_br(start_date)
         end_date = Statement.from_timestamp_to_utc_isoformat_br(end_date)
@@ -55,27 +56,28 @@ class RequestStatement:
             "Extrato": [Statement.normalize_statement(transc) for transc in statement]
         }
 
-        return cls.generate_pdf(
+        statement_response = cls.generate_pdf(
             normalized_statement, client_id=client_id, start_date=start_date, end_date=end_date
         )
+        return statement_response
 
     @classmethod
     def generate_pdf(cls, statement: dict, client_id, start_date, end_date) -> dict:
         pdf = pdfkit.from_string(json.dumps(statement))
         file_duration = (datetime.now() - timedelta(minutes=1)).isoformat()
 
+        file_path = cls.generate_path(
+            client_id=client_id, start_date=start_date, end_date=end_date
+        )
         RequestStatement.s3_singleton.upload_file(
-            file_path=cls.generate_path(
-                client_id=client_id, start_date=start_date, end_date=end_date
-            ), content=pdf, expire_date=file_duration
+            file_path=file_path, content=pdf, expire_date=file_duration
         )
         link = RequestStatement.s3_singleton.generate_file_link(
-            file_path=cls.generate_path(
-                client_id=client_id, start_date=start_date, end_date=end_date)
+            file_path=file_path
         )
         link_pdf = {"pdf_link": link}
         if not link:
-            raise Exception(NoPdfFoundError)
+            raise NoPdfFoundError
 
         return link_pdf
 
@@ -85,4 +87,4 @@ class RequestStatement:
         if path:
             return path
 
-        raise Exception(NoPathFoundError)
+        raise NoPathFoundError

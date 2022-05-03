@@ -73,8 +73,7 @@ def test_get_service_response_when_sending_the_right_parans_then_return_empty_ob
                                                   region=MagicMock(value='BR'),
                                                   cl_order_id='008cf873-ee2a-4b08-b277-74b8b17f6e64'))
 
-    assert response == [{}]
-    assert response[0] == {}
+    assert response == []
     assert isinstance(response, list)
 
 
