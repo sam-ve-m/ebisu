@@ -10,8 +10,6 @@ from api.domain.time_formatter.time_formatter import str_to_timestamp
 
 
 class ListOrders:
-    bmf_account = None
-    bovespa_account = None
     company_information_repository = CompanyInformationRepository
 
     @classmethod
@@ -32,7 +30,6 @@ class ListOrders:
     @staticmethod
     async def normalize_open_order(user_trade: dict) -> dict:
         accumulated_quantity = user_trade.get("CUMQTY")
-
         normalized_data = {
             "name": await ListOrders.company_information_repository.get_company_name(
                 user_trade.get("SYMBOL")
