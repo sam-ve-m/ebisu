@@ -7,6 +7,7 @@ from api.domain.validators.exchange_info.list_client_order_validator import List
 from api.repositories.companies_data.repository import CompanyInformationRepository
 from api.services.list_client_orders.strategies import order_region
 from api.domain.time_formatter.time_formatter import str_to_timestamp
+from api.domain.currency_map.country_to_currency.map import country_to_currency
 
 
 class ListOrders:
@@ -28,7 +29,8 @@ class ListOrders:
         return 0
 
     @staticmethod
-    async def normalize_open_order(user_trade: dict) -> dict:
+    async def normalize_open_order(user_trade: dict, region: Region) -> dict:
+        currency = country_to_currency[region]
         accumulated_quantity = user_trade.get("CUMQTY")
         normalized_data = {
             "name": await ListOrders.company_information_repository.get_company_name(
@@ -39,7 +41,7 @@ class ListOrders:
             "quantity": user_trade.get("ORDERQTY"),
             "order_type": user_trade.get("ORDTYPE"),
             "average_price": ListOrders.decimal_128_converter(user_trade, "AVGPX"),
-            "currency": "BRL",
+            "currency": currency.value,
             "symbol": user_trade.get("SYMBOL"),
             "status": user_trade.get("ORDSTATUS"),
             "total_spent": (
@@ -88,7 +90,7 @@ class ListOrders:
         )
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
         data = [
-            await ListOrders.normalize_open_order(user_open_order)
+            await ListOrders.normalize_open_order(user_open_order, list_client_orders.region)
             for user_open_order in user_open_orders
         ]
         return data

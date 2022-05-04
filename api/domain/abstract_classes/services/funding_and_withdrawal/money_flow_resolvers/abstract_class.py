@@ -48,7 +48,6 @@ class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
         pass
 
     async def _send(self, resume: dict, funding_and_withdrawal_repository=FundingAndWithdrawalRepository):
-        resume["origin_account"]["account_number"] = "3067bacb-7768-4406-ab86-82342a9d9130.1642440844096"
         topic = self._get_topic_name()
         was_sent = await funding_and_withdrawal_repository.send_to_bifrost(topic=topic, message=resume)
         if not was_sent:
@@ -60,7 +59,7 @@ class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
             "origin_account": self._origin_account.resume(),
             "account_destination": self._account_destination.resume(),
             "value": self._value,
-            "cash_conversion": f"{origin_account_currency.value} > {account_destination_currency.value}",
+            "cash_conversion": f"{origin_account_currency.value}>{account_destination_currency.value}",
             "tax": self._tax,
             "spread": self._spread,
             "convert_value": self._converted_value,

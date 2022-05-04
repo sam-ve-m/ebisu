@@ -5,6 +5,7 @@ from api.domain.validators.exchange_info.client_orders_validator import GetClien
 from api.services.get_client_orders.strategies import order_region
 from api.domain.time_formatter.time_formatter import str_to_timestamp
 from api.domain.enums.region import Region
+from api.domain.currency_map.country_to_currency.map import country_to_currency
 
 
 class GetOrders:
@@ -24,9 +25,10 @@ class GetOrders:
         return OrderTifs.NOT_AVAILABLE.value
 
     @staticmethod
-    def normalize_open_order(user_trade: dict) -> dict:
+    def normalize_open_order(user_trade: dict, region: Region) -> dict:
         side = user_trade.get("SIDE")
         accumulated_quantity = user_trade.get("CUMQTY")
+        currency = country_to_currency[region]
 
         normalized_data = {
             "cl_order_id": user_trade.get("CLORDID"),
@@ -37,7 +39,7 @@ class GetOrders:
             "price": GetOrders.decimal_128_converter(user_trade, "PRICE"),
             "last_price": GetOrders.decimal_128_converter(user_trade, "LASTPX"),
             "stop_price": GetOrders.decimal_128_converter(user_trade, "STOPPX"),
-            "currency": "BRL",
+            "currency": currency.value,
             "symbol": user_trade.get("SYMBOL"),
             "side": side.lower() if side else side,
             "status": user_trade.get("ORDSTATUS"),
@@ -86,7 +88,7 @@ class GetOrders:
         )
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
         data = [
-            GetOrders.normalize_open_order(user_open_order)
+            GetOrders.normalize_open_order(user_open_order, client_order.region)
             for user_open_order in user_open_orders
         ]
         return data
