@@ -43,5 +43,29 @@ month_broker_note_bmf_dummy = [{'market': 'bmf', 'region': 'BR', 'day': 5, 'brok
 
 month_broker_note_all_dummy = [{'market': 'all', 'region': 'ALL', 'day': 5, 'broker_note_link': 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/BR/broker_note/2022/4/5.pdf?AWSAccessKeyId=AKIATZVFXI25USQWCS5O&Signature=d9vYYouHGiwtQptZIBZQCOpszj4%3D&Expires=1651608773'}]
 
+month_broker_note_all_br_dummy = [{'market': 'all', 'region': 'BR', 'day': 5, 'broker_note_link': 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/BR/broker_note/2022/4/5.pdf?AWSAccessKeyId=AKIATZVFXI25USQWCS5O&Signature=d9vYYouHGiwtQptZIBZQCOpszj4%3D&Expires=1651608773'}]
+
 
 directories = MagicMock()
+
+all_broker_note_from_all_markets_dummy = [{'broker_note_link': 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/US/broker_note/2022/4/5.pdf?AWSAccessKeyId=AKIATZVFXI25USQWCS5O&Signature=d9vYYouHGiwtQptZIBZQCOpszj4%3D&Expires=1651608773',
+                          'day': 5,
+                          'market': 'us',
+                          'region': 'US'},
+                         {'broker_note_link': 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/US/broker_note/2022/4/5.pdf?AWSAccessKeyId=AKIATZVFXI25USQWCS5O&Signature=d9vYYouHGiwtQptZIBZQCOpszj4%3D&Expires=1651608773',
+                          'day': 5,
+                          'market': 'us',
+                          'region': 'US'},
+                         {'broker_note_link': 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/US/broker_note/2022/4/5.pdf?AWSAccessKeyId=AKIATZVFXI25USQWCS5O&Signature=d9vYYouHGiwtQptZIBZQCOpszj4%3D&Expires=1651608773',
+                          'day': 5,
+                          'market': 'us',
+                          'region': 'US'}]
+
+broker_note_from_br_markets_dummy = [{'broker_note_link': 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/BR/broker_note/2022/4/5.pdf?AWSAccessKeyId=AKIATZVFXI25USQWCS5O&Signature=d9vYYouHGiwtQptZIBZQCOpszj4%3D&Expires=1651608773',
+                                      'day': 5,
+                                      'market': 'all',
+                                      'region': 'BR'},
+                                     {'broker_note_link': 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/BR/broker_note/2022/4/5.pdf?AWSAccessKeyId=AKIATZVFXI25USQWCS5O&Signature=d9vYYouHGiwtQptZIBZQCOpszj4%3D&Expires=1651608773',
+                                      'day': 5,
+                                      'market': 'all',
+                                      'region': 'BR'}]

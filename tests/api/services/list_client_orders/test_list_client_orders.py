@@ -8,21 +8,18 @@ from api.services.list_client_orders.list_client_orders import ListOrders
 from api.services.list_client_orders.strategies import GetBrOrders
 from tests.stubs.project_stubs.stub_data import (StubCompanyInformationRepository,
                                                  payload_data_dummy,
-                                                 user_jwt_dummy,
-                                                 portfolios_jwt_dummy,
                                                  payload_invalid_data_dummy,
                                                  )
 from tests.stubs.project_stubs.stub_list_client_orders import (
-    user_trade_dummy,
-    normalized_data_dummy,
-    open_orders_dummy,
-    query_dummy_two_status,
-    query_dummy_orders,
-    client_response,
-    open_orders_two_dummy,
-    client_two_response,
-    stub_expected_response
-)
+                                                    user_trade_dummy,
+                                                    normalized_data_dummy,
+                                                    open_orders_dummy,
+                                                    query_dummy_two_status,
+                                                    query_dummy_orders,
+                                                    open_orders_two_dummy,
+                                                    client_two_response,
+                                                    stub_expected_response
+                                                )
 
 list_data_dummy = ['NEW', 'FILLED']
 
@@ -86,7 +83,8 @@ async def test_when_sending_the_right_params_and_single_order_status_then_return
     assert response[0]['status'] == 'FILLED'
     assert isinstance(response, list)
 
-# ------------- checar esse teste novamente
+
+# refazer teste
 @pytest.mark.asyncio
 @patch.object(GetBrOrders, 'build_query', return_value=query_dummy_two_status)
 @patch.object(OracleBaseRepository, 'get_data', return_value=open_orders_two_dummy)
