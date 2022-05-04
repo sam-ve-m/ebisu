@@ -47,7 +47,7 @@ class ListBrokerNote:
                 file_path=us_file_path
             )
             us_files_data = cls.get_month_broker_notes(
-                market=BrokerNoteMarket.BOVESPA,
+                market=BrokerNoteMarket.US,
                 region=broker_note.region,
                 month_broker_notes_directories=list_directories
             )
@@ -63,7 +63,7 @@ class ListBrokerNote:
             )
             bovespa_files_data = cls.get_month_broker_notes(
                 market=BrokerNoteMarket.BOVESPA,
-                region=broker_note.region,
+                region=BrokerNoteRegion.BR,
                 month_broker_notes_directories=month_broker_notes_directories
             )
 
@@ -72,7 +72,7 @@ class ListBrokerNote:
             )
             bmf_files_data = cls.get_month_broker_notes(
                 market=BrokerNoteMarket.BMF,
-                region=broker_note.region,
+                region=BrokerNoteRegion.BR,
                 month_broker_notes_directories=month_broker_notes_directories
             )
 
@@ -80,8 +80,8 @@ class ListBrokerNote:
                 file_path=us_file_path
             )
             us_files_data = cls.get_month_broker_notes(
-                market=BrokerNoteMarket.BOVESPA,
-                region=broker_note.region,
+                market=BrokerNoteMarket.US,
+                region=BrokerNoteRegion.US,
                 month_broker_notes_directories=list_directories
             )
 
