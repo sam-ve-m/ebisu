@@ -18,44 +18,44 @@ class ListBrokerNote:
         br_portfolios = portfolios.get("br", {})
         us_portfolios = portfolios.get("us", {})
 
-        if broker_note.market == BrokerNoteMarket.BOVESPA:
+        if broker_note.market == BrokerNoteMarket.BOVESPA and broker_note.region == BrokerNoteRegion.BR:
             bovespa_file_path = cls.generate_path(account=br_portfolios.get("bovespa_account"), region=broker_note.region, broker_note=broker_note)
             month_broker_notes_directories = ListBrokerNote.FileRepository.list_all_directories_in_path(
                 file_path=bovespa_file_path
             )
             bovespa_files_data = cls.get_month_broker_notes(
                 market=BrokerNoteMarket.BOVESPA,
-                region=broker_note.region,
+                region=BrokerNoteRegion.BR,
                 month_broker_notes_directories=month_broker_notes_directories
             )
             return bovespa_files_data
 
-        if broker_note.market == BrokerNoteMarket.BMF:
+        if broker_note.market == BrokerNoteMarket.BMF  and broker_note.region == BrokerNoteRegion.BR:
             bmf_file_path = cls.generate_path(account=br_portfolios.get("bmf_account"), region=broker_note.region, broker_note=broker_note)
             month_broker_notes_directories = ListBrokerNote.FileRepository.list_all_directories_in_path(
                 file_path=bmf_file_path
             )
             bmf_files_data = cls.get_month_broker_notes(
-                market=BrokerNoteMarket.BOVESPA,
-                region=broker_note.region,
+                market=BrokerNoteMarket.BMF,
+                region=BrokerNoteRegion.BR,
                 month_broker_notes_directories=month_broker_notes_directories
             )
             return bmf_files_data
 
-        if broker_note.market == BrokerNoteMarket.US:
-            us_file_path = cls.generate_path(account=us_portfolios.get("dw_id"), region=broker_note.region, broker_note=broker_note)
+        if broker_note.market == BrokerNoteMarket.US and broker_note.region == BrokerNoteRegion.US:
+            us_file_path = cls.generate_path(account=us_portfolios.get("dw_account"), region=broker_note.region, broker_note=broker_note)
             list_directories = ListBrokerNote.FileRepository.list_all_directories_in_path(
                 file_path=us_file_path
             )
             us_files_data = cls.get_month_broker_notes(
-                market=BrokerNoteMarket.BOVESPA,
-                region=broker_note.region,
+                market=BrokerNoteMarket.US,
+                region=BrokerNoteRegion.US,
                 month_broker_notes_directories=list_directories
             )
             return us_files_data
 
         if broker_note.market == BrokerNoteMarket.ALL and broker_note.region == BrokerNoteRegion.ALL:
-            us_file_path = cls.generate_path(account=us_portfolios.get("dw_id"), region=BrokerNoteRegion.US, broker_note=broker_note)
+            us_file_path = cls.generate_path(account=us_portfolios.get("dw_account"), region=BrokerNoteRegion.US, broker_note=broker_note)
             bmf_file_path = cls.generate_path(account=br_portfolios.get("bmf_account"), region=BrokerNoteRegion.BR, broker_note=broker_note)
             bovespa_file_path = cls.generate_path(account=br_portfolios.get("bovespa_account"), region=BrokerNoteRegion.BR, broker_note=broker_note)
 
@@ -64,7 +64,7 @@ class ListBrokerNote:
             )
             bovespa_files_data = cls.get_month_broker_notes(
                 market=BrokerNoteMarket.BOVESPA,
-                region=broker_note.region,
+                region=BrokerNoteRegion.BR,
                 month_broker_notes_directories=month_broker_notes_directories
             )
 
@@ -73,7 +73,7 @@ class ListBrokerNote:
             )
             bmf_files_data = cls.get_month_broker_notes(
                 market=BrokerNoteMarket.BMF,
-                region=broker_note.region,
+                region=BrokerNoteRegion.BR,
                 month_broker_notes_directories=month_broker_notes_directories
             )
 
@@ -82,7 +82,7 @@ class ListBrokerNote:
             )
             us_files_data = cls.get_month_broker_notes(
                 market=BrokerNoteMarket.BOVESPA,
-                region=broker_note.region,
+                region=BrokerNoteRegion.US,
                 month_broker_notes_directories=list_directories
             )
 
@@ -99,7 +99,7 @@ class ListBrokerNote:
             )
             bovespa_files_data = cls.get_month_broker_notes(
                 market=BrokerNoteMarket.BOVESPA,
-                region=broker_note.region,
+                region=BrokerNoteRegion.BR,
                 month_broker_notes_directories=month_broker_notes_directories
             )
 
@@ -108,7 +108,7 @@ class ListBrokerNote:
             )
             bmf_files_data = cls.get_month_broker_notes(
                 market=BrokerNoteMarket.BMF,
-                region=broker_note.region,
+                region=BrokerNoteRegion.BR,
                 month_broker_notes_directories=month_broker_notes_directories
             )
 
@@ -117,13 +117,13 @@ class ListBrokerNote:
             return all_broker_note_from_all_markets
 
         if broker_note.market == BrokerNoteMarket.US and broker_note.region == BrokerNoteRegion.ALL:
-            us_file_path = cls.generate_path(account=us_portfolios.get("dw_id"), region=BrokerNoteRegion.US, broker_note=broker_note)
+            us_file_path = cls.generate_path(account=us_portfolios.get("dw_account"), region=BrokerNoteRegion.US, broker_note=broker_note)
             list_directories = ListBrokerNote.FileRepository.list_all_directories_in_path(
                 file_path=us_file_path
             )
             us_files_data = cls.get_month_broker_notes(
-                market=BrokerNoteMarket.BOVESPA,
-                region=broker_note.region,
+                market=BrokerNoteMarket.US,
+                region=BrokerNoteRegion.US,
                 month_broker_notes_directories=list_directories
             )
             return us_files_data
