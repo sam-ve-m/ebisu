@@ -18,7 +18,7 @@ async def test_update_user_when_sending_the_right_params_then_return_the_duly_up
 
     response = await UserBankAccountService.update_user_bank_account(jwt_data=jwt_with_bank_account_to_update,
                                                                    bank_account_repository=UserBankAccountRepository)
-    
+
     updating_message = {"message": "Updated"}
 
     assert response == updating_message
