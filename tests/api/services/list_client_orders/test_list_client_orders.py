@@ -114,9 +114,19 @@ async def test_when_sending_wrong_params_then_return_an_empty_object():
 
 @pytest.mark.asyncio
 async def test_when_jwt_data_payload_is_invalid_then_check_if_portfolios_is_in_the_payload_response():
-    with pytest.raises(TypeError) as err:
+    with pytest.raises(AttributeError) as err:
         response = await ListOrders.get_service_response(jwt_data=payload_invalid_data_dummy,
                                                          list_client_orders=MagicMock(
-                                                                             region=MagicMock(value='BR'),
+                                                                             region="BR",
                                                                              order_status=MagicMock()))
-        assert response == TypeError
+        assert response == AttributeError
+
+
+@pytest.mark.asyncio
+async def test_when_jwt_data_payload_is_none_then_raise_attribute_error():
+    with pytest.raises(AttributeError) as err:
+        response = await ListOrders.get_service_response(jwt_data="",
+                                                         list_client_orders=MagicMock(
+                                                                             region="BR",
+                                                                             order_status=MagicMock()))
+        assert response == AttributeError

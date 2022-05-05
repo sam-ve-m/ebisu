@@ -15,8 +15,10 @@ from tests.stubs.project_stubs.stub_data import payload_data_dummy
 @patch.object(UserBankAccountRepository, 'update_registered_user_bank_accounts', return_value=True)
 async def test_update_user_when_sending_the_right_params_then_return_the_duly_updated_message(
         mock_get_registered_user_bank_accounts, mock_update_registered_user_bank_accounts):
+
     response = await UserBankAccountService.update_user_bank_account(jwt_data=jwt_with_bank_account_to_update,
                                                                    bank_account_repository=UserBankAccountRepository)
+    
     updating_message = {"message": "Updated"}
 
     assert response == updating_message
@@ -29,6 +31,7 @@ async def test_update_user_when_sending_the_right_params_then_return_the_duly_up
 @patch.object(UserBankAccountRepository, 'update_registered_user_bank_accounts', return_value=True)
 async def test_update_user_when_sending_an_invalid_jwt_data_then_return_the_expected_exception(
         mock_get_registered_user_bank_accounts, mock_update_registered_user_bank_accounts):
+
     with pytest.raises(KeyError):
         await UserBankAccountService.update_user_bank_account(jwt_data=payload_data_dummy,
                                                               bank_account_repository=UserBankAccountRepository)
@@ -39,6 +42,7 @@ async def test_update_user_when_sending_an_invalid_jwt_data_then_return_the_expe
 @patch.object(UserBankAccountRepository, 'update_registered_user_bank_accounts', return_value=True)
 async def test_update_user_when_sending_an_invalid_bank_repository_call_then_return_the_expected_exception(
         mock_get_registered_user_bank_accounts, mock_update_registered_user_bank_accounts):
+
     with pytest.raises(AttributeError):
         await UserBankAccountService.update_user_bank_account(jwt_data=jwt_with_bank_account_to_update,
                                                                      bank_account_repository="")
@@ -49,6 +53,7 @@ async def test_update_user_when_sending_an_invalid_bank_repository_call_then_ret
 @patch.object(UserBankAccountRepository, 'update_registered_user_bank_accounts', return_value=False)
 async def test_when_bank_account_and_register_account_are_false_then_raise_the_expected_bad_request(
         mock_get_registered_user_bank_accounts, mock_update_registered_user_bank_accounts):
+
     with pytest.raises(BadRequestError):
         await UserBankAccountService.update_user_bank_account(jwt_data=jwt_with_bank_account_to_update,
                                                               bank_account_repository=UserBankAccountRepository)
@@ -59,6 +64,7 @@ async def test_when_bank_account_and_register_account_are_false_then_raise_the_e
 @patch.object(UserBankAccountRepository, 'update_registered_user_bank_accounts', return_value=False)
 async def test_when_register_account_is_false_then_raise_the_expected_internal_server_error(
         mock_get_registered_user_bank_accounts, mock_update_registered_user_bank_accounts):
+
     with pytest.raises(InternalServerError):
         await UserBankAccountService.update_user_bank_account(jwt_data=jwt_with_bank_account_to_update,
                                                               bank_account_repository=UserBankAccountRepository)

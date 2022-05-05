@@ -167,36 +167,12 @@ def test_when_jwt_data_and_broker_note_is_valid_to_bovespa_market_then_return_th
     assert response[0]['market'] == "us"
 
 
-
 @pytest.mark.asyncio
 async def test_when_sending_the_right_file_path_then_return_a_valid_generated_file_link():
     file_path = f"{'49'}/{'BR'}/broker_note/{'2021'}/{'10'}/{'5'}.pdf"
     ListBrokerNote.s3_singleton = StubS3Connection
     response = ListBrokerNote.s3_singleton.generate_file_link(file_path=file_path)
     assert response == file_link_brokerage_dummy
-
-
-@patch.object(FileRepository, 'generate_file_link', return_value="")
-def test_when_broker_note_params_are_missing_then_return_exception_as_expected(mock_generate_file_link):
-    with pytest.raises(Exception) as err:
-        ListBrokerNote.get_service_response(broker_note=MagicMock(
-                                                                    region=MagicMock(value=''),
-                                                                    year=None,
-                                                                    month=20,
-                                                                    day=4),
-                                                                    jwt_data=payload_data_dummy)
-        assert err == Exception
-
-
-@patch.object(FileRepository, 'generate_file_link', return_value="")
-def test_when_broker_note_jwt_data_is_missing_then_raise_attr_error_as_expected(mock_generate_file_link):
-    with pytest.raises(AttributeError) as err:
-        ListBrokerNote.get_service_response(broker_note=MagicMock(  region=MagicMock(value='BR'),
-                                                                    year=2021,
-                                                                    month=20,
-                                                                    day=4),
-                                                                    jwt_data="")
-        assert err == AttributeError
 
 
 def test_when_not_passing_either_jwt_and_broker_note_params_to_request_body_then_return_attr_error():

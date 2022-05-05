@@ -67,11 +67,3 @@ async def test_when_sending_an_invalid_query_then_return_the_expected_value(mock
     EarningsService.oracle_earnings_singleton_instance = StubOracleRepository
     response = EarningsService.oracle_earnings_singleton_instance.get_data(sql=query_dummy)
     assert response == {}
-
-
-@pytest.mark.asyncio
-def test_get_earnings_get_service_response_when_the_params_are_not_valid_then_raise_error_as_expected():
-    earnings_invalid_params = MagicMock(symbol=None, timestamp=None, offset=0, limit=1)
-    with pytest.raises(Exception) as err:
-        EarningsService.get_service_response(earnings=earnings_invalid_params)
-        assert err == Exception

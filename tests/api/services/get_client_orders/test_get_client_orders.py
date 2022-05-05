@@ -21,7 +21,6 @@ def test_decimal_converter_when_sending_user_trade_and_field_to_decimal_converte
     assert type(response) is int
 
 
-# ---------  nao passou
 @pytest.mark.asyncio
 def test_normalized_data_when_sending_the_user_trade_params_then_return_the_normalized_data():
     response = GetOrders.normalize_open_order(user_trade=dummy_user_trade)
@@ -48,7 +47,7 @@ def test_tiff_response_converter_when_sending_no_params_then_return_the_expected
 @patch.object(GetBrOrdersDetails, 'build_query', return_value=query_dummy_get_client)
 @patch.object(OracleBaseRepository, 'get_data', return_value=user_open_orders_dummy)
 @patch('api.services.list_client_orders.list_client_orders.order_region')
-def test_get_service_response_when_sending_the_right_parans_then_return_the_expected(mock_order_region,
+def test_get_service_response_when_sending_the_right_paramks_then_return_the_expected(mock_order_region,
                                                                                      mock_build_query,
                                                                                      mock_get_data):
     mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrdersDetails)
@@ -66,7 +65,7 @@ def test_get_service_response_when_sending_the_right_parans_then_return_the_expe
 @patch.object(GetBrOrdersDetails, 'build_query', return_value="")
 @patch.object(OracleBaseRepository, 'get_data', return_value="")
 @patch('api.services.list_client_orders.list_client_orders.order_region')
-def test_get_service_response_when_sending_the_right_parans_then_return_empty_object(mock_order_region,
+def test_get_service_response_when_sending_the_right_params_then_return_empty_object(mock_order_region,
                                                                                      mock_build_query,
                                                                                      mock_get_data):
     mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrdersDetails)

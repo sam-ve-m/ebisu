@@ -35,8 +35,8 @@ async def test_get_user_when_sending_the_right_params_then_return_no_account_as_
 
 @pytest.mark.asyncio
 async def test_get_user_account_when_jwt_param_is_not_valid_then_raise_error_as_expected():
-    with pytest.raises(AttributeError):
-        await UserBankAccountService.get_user_bank_accounts(jwt_data="",
+    with pytest.raises(TypeError):
+        await UserBankAccountService.get_user_bank_accounts(jwt_data={},
                                                             bank_account_repository=UserBankAccountRepository)
 
 
