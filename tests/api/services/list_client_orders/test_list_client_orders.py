@@ -15,10 +15,13 @@ from tests.stubs.project_stubs.stub_list_client_orders import (
                                                     normalized_data_dummy,
                                                     open_orders_dummy,
                                                     query_dummy_two_status,
+                                                    data_response_stub,
                                                     query_dummy_orders,
+                                                    get_data_stub,
                                                     open_orders_two_dummy,
                                                     client_two_response,
-                                                    stub_expected_response
+                                                    stub_expected_response,
+                                                    normalized_data_stub
                                                 )
 
 list_data_dummy = ['NEW', 'FILLED']
@@ -36,6 +39,14 @@ def test_when_sending_user_trade_and_field_to_decimal_converter_then_return_the_
                                                 field='AVGPX')
     assert response == 0.0
     assert type(response) is int
+
+
+@pytest.mark.asyncio
+async def test_when_sending_the_right_params_to_get_company_name_then_return_the_expected():
+    symbol_dummy = None
+    ListOrders.company_information_repository = StubCompanyInformationRepository
+    response = await ListOrders.company_information_repository.get_company_name(symbol=symbol_dummy)
+    assert response is None
 
 
 @pytest.mark.asyncio
@@ -58,18 +69,11 @@ async def test_when_sending_the_right_params_to_get_company_name_then_return_the
     assert isinstance(response, str)
 
 
-@pytest.mark.asyncio
-async def test_when_sending_the_right_params_to_get_company_name_then_return_the_expected():
-    symbol_dummy = None
-    ListOrders.company_information_repository = StubCompanyInformationRepository
-    response = await ListOrders.company_information_repository.get_company_name(symbol=symbol_dummy)
-    assert response is None
-
-
-# ------------- checar esse teste novamente
+# refazer teste
 @pytest.mark.asyncio
 @patch.object(GetBrOrders, 'build_query', return_value=query_dummy_orders)
 @patch.object(OracleBaseRepository, 'get_data', return_value=open_orders_dummy)
+@patch.object(ListOrders, 'normalize_open_order', return_value="")
 @patch('api.services.list_client_orders.list_client_orders.order_region')
 async def test_when_sending_the_right_params_and_single_order_status_then_return_the_expected(mock_order_region,
                                                                                               mock_build_query,
@@ -84,21 +88,29 @@ async def test_when_sending_the_right_params_and_single_order_status_then_return
     assert isinstance(response, list)
 
 
-# refazer teste
+# this test has passed
 @pytest.mark.asyncio
-@patch.object(GetBrOrders, 'build_query', return_value=query_dummy_two_status)
-@patch.object(OracleBaseRepository, 'get_data', return_value=open_orders_two_dummy)
+@patch.object(GetBrOrders, 'build_query', return_value=MagicMock())
+@patch.object(OracleBaseRepository, 'get_data', return_value=get_data_stub)
+@patch.object(ListOrders, 'get_accounts_by_region', return_value=['000000014-6', '14'])
+@patch.object(ListOrders, 'decimal_128_converter', return_value=0)
+@patch.object(ListOrders, 'normalize_open_order', return_value=normalized_data_stub)
 @patch('api.services.list_client_orders.list_client_orders.order_region')
 async def test_when_sending_the_right_params_and_two_order_status_then_return_the_expected(
-        mock_order_region, mock_build_query, mock_get_data):
+        mock_order_region,
+        normalize_open_order,
+        decimal_128_converter,
+        get_accounts_by_region,
+        mock_get_data,
+        mock_build_query):
     mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrders)
     response = await ListOrders.get_service_response(jwt_data=payload_data_dummy,
                                                      list_client_orders=
                                                      MagicMock(region=MagicMock(value='BR'),
                                                                order_status=['FILLED', 'NEW']))
-    assert response == list(client_two_response)
-    assert response[0]['symbol'] == 'MYPK3'
-    assert response[1]['symbol'] == 'PETR4'
+    assert response == list(data_response_stub)
+    assert response[0]['name'] == 'JBS SA'
+    assert response[0]['symbol'] == 'JBSS3'
     assert isinstance(response, list)
 
 

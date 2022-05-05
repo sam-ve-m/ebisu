@@ -68,3 +68,19 @@ async def test_when_register_account_is_false_then_raise_the_expected_internal_s
     with pytest.raises(InternalServerError):
         await UserBankAccountService.update_user_bank_account(jwt_data=jwt_with_bank_account_to_update,
                                                               bank_account_repository=UserBankAccountRepository)
+
+
+@pytest.mark.asyncio
+async def test_when_sending_wrong_params_then_return_an_empty_object():
+    with pytest.raises(AttributeError):
+        response = await UserBankAccountService.update_user_bank_account(  bank_account_repository="",
+                                                                            jwt_data=jwt_with_bank_account_to_update)
+        assert response == "'NoneType' object has no attribute 'lower'"
+
+
+@pytest.mark.asyncio
+async def test_when_jwt_data_payload_is_invalid_then_check_if_portfolios_is_in_the_payload_response():
+    with pytest.raises(TypeError) as err:
+        response = await UserBankAccountService.update_user_bank_account(jwt_data="",
+                                                                        bank_account_repository=UserBankAccountRepository)
+        assert response == "string indices must be integers"

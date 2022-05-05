@@ -22,6 +22,10 @@ normalized_data_dummy = {'name': 'Iochpe Maxion SA',
                          'status': 'NEW',
                          'total_spent': 0.0}
 
+get_data_stub = [{'SYMBOL': 'JBSS3', 'ORDSTATUS': 'NEW', 'CLORDID': 'af7ed971b0872011b2b2ca86378da3780bfef0ba', 'TRANSACTTIME': datetime.datetime(2022, 5, 3, 19, 44, 31, 867000), 'CUMQTY': 0, 'AVGPX': 0, 'ORDTYPE': 'STOP_LOSS', 'ORDERQTY': 100}]
+
+normalized_data_stub = {'name': 'JBS SA', 'cl_order_id': 'af7ed971b0872011b2b2ca86378da3780bfef0ba', 'time': 1651617871.867, 'quantity': 100, 'order_type': 'STOP_LOSS', 'average_price': 0, 'currency': 'BRL', 'symbol': 'JBSS3', 'status': 'NEW', 'total_spent': 0.0}
+
 
 stub_expected_response = [{'average_price': 1.0,
   'cl_order_id': 'f63d5adc9f4b1380c8a3882a80aeb41167cc5835',
@@ -105,3 +109,14 @@ client_two_response = [
         "total_spent": 5000.0
     }
 ]
+
+data_response_stub = [{'average_price': 0,
+  'cl_order_id': 'af7ed971b0872011b2b2ca86378da3780bfef0ba',
+  'currency': 'BRL',
+  'name': 'JBS SA',
+  'order_type': 'STOP_LOSS',
+  'quantity': 100,
+  'status': 'NEW',
+  'symbol': 'JBSS3',
+  'time': 1651617871.867,
+  'total_spent': 0.0}]
