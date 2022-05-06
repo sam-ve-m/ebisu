@@ -11,18 +11,15 @@ from tests.stubs.project_stubs.stub_data import (StubCompanyInformationRepositor
                                                  payload_invalid_data_dummy,
                                                  )
 from tests.stubs.project_stubs.stub_list_client_orders import (
-                                                    user_trade_dummy,
-                                                    normalized_data_dummy,
-                                                    open_orders_dummy,
-                                                    query_dummy_two_status,
-                                                    data_response_stub,
-                                                    query_dummy_orders,
-                                                    get_data_stub,
-                                                    open_orders_two_dummy,
-                                                    client_two_response,
-                                                    stub_expected_response,
-                                                    normalized_data_stub
-                                                )
+    user_trade_dummy,
+    normalized_data_dummy,
+    data_response_stub,
+    get_data_stub,
+    normalized_data_stub,
+    get_data_two_status_stub,
+    normalized_data_second_status,
+    data_two_response
+)
 
 list_data_dummy = ['NEW', 'FILLED']
 
@@ -69,22 +66,38 @@ async def test_when_sending_the_right_params_to_get_company_name_then_return_the
     assert isinstance(response, str)
 
 
-# refazer teste
 @pytest.mark.asyncio
-@patch.object(GetBrOrders, 'build_query', return_value=query_dummy_orders)
-@patch.object(OracleBaseRepository, 'get_data', return_value=open_orders_dummy)
-@patch.object(ListOrders, 'normalize_open_order', return_value="")
 @patch('api.services.list_client_orders.list_client_orders.order_region')
-async def test_when_sending_the_right_params_and_single_order_status_then_return_the_expected(mock_order_region,
-                                                                                              mock_build_query,
-                                                                                              mock_get_data):
+def test_when_sending_the_right_params_to_get_accounts_by_region_then_return_the_expected_value(mock_order_region):
+    mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrders)
+    pass
+
+
+@pytest.mark.asyncio
+@patch.object(GetBrOrders, 'build_query', return_value=MagicMock())
+@patch.object(OracleBaseRepository, 'get_data', return_value=get_data_two_status_stub)
+@patch.object(ListOrders, 'get_accounts_by_region', return_value=['000000014-6', '14'])
+@patch.object(ListOrders, 'decimal_128_converter', return_value=0)
+@patch.object(ListOrders, 'normalize_open_order', side_effect=[normalized_data_stub, normalized_data_second_status])
+@patch.object(ListOrders, 'pipe_to_list', return_value=['NEW', 'CANCELLED'])
+@patch('api.services.list_client_orders.list_client_orders.order_region')
+async def test_when_sending_the_right_params_and_single_order_status_then_return_the_expected(  mock_order_region,
+                                                                                                mock_pipe_to_list,
+                                                                                                normalize_open_order,
+                                                                                                decimal_128_converter,
+                                                                                                get_accounts_by_region,
+                                                                                                mock_get_data,
+                                                                                                mock_build_query):
     mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrders)
     response = await ListOrders.get_service_response(jwt_data=payload_data_dummy,
                                                      list_client_orders=
                                                      MagicMock(region=MagicMock(value='BR'),
-                                                               order_status='NEW'))
-    assert response == list(stub_expected_response)
-    assert response[0]['status'] == 'FILLED'
+                                                               order_status=['NEW', 'CANCELLED']))
+    assert response == list(data_two_response)
+    assert response[0]['status'] == 'NEW'
+    assert response[0]['symbol'] == 'JBSS3'
+    assert response[1]['status'] == 'CANCELLED'
+    assert response[1]['symbol'] == 'VALE3'
     assert isinstance(response, list)
 
 
@@ -107,7 +120,7 @@ async def test_when_sending_the_right_params_and_two_order_status_then_return_th
     response = await ListOrders.get_service_response(jwt_data=payload_data_dummy,
                                                      list_client_orders=
                                                      MagicMock(region=MagicMock(value='BR'),
-                                                               order_status=['FILLED', 'NEW']))
+                                                               order_status=['FILLED']))
     assert response == list(data_response_stub)
     assert response[0]['name'] == 'JBS SA'
     assert response[0]['symbol'] == 'JBSS3'

@@ -24,8 +24,12 @@ normalized_data_dummy = {'name': 'Iochpe Maxion SA',
 
 get_data_stub = [{'SYMBOL': 'JBSS3', 'ORDSTATUS': 'NEW', 'CLORDID': 'af7ed971b0872011b2b2ca86378da3780bfef0ba', 'TRANSACTTIME': datetime.datetime(2022, 5, 3, 19, 44, 31, 867000), 'CUMQTY': 0, 'AVGPX': 0, 'ORDTYPE': 'STOP_LOSS', 'ORDERQTY': 100}]
 
+get_data_two_status_stub = [{'SYMBOL': 'JBSS3', 'ORDSTATUS': 'NEW', 'CLORDID': 'af7ed971b0872011b2b2ca86378da3780bfef0ba', 'TRANSACTTIME': datetime.datetime(2022, 5, 3, 19, 44, 31, 867000), 'CUMQTY': 0, 'AVGPX': 0, 'ORDTYPE': 'STOP_LOSS', 'ORDERQTY': 100},
+                            {'SYMBOL': 'VALE3', 'ORDSTATUS': 'CANCELLED', 'CLORDID': '93355b54cf51e99e3e7f0695cb37959b272ffc23', 'TRANSACTTIME': datetime.datetime(2022, 5, 3, 17, 59, 18, 624000), 'CUMQTY': 0, 'AVGPX': 0, 'ORDTYPE': 'STOP_LOSS', 'ORDERQTY': 100}]
+
 normalized_data_stub = {'name': 'JBS SA', 'cl_order_id': 'af7ed971b0872011b2b2ca86378da3780bfef0ba', 'time': 1651617871.867, 'quantity': 100, 'order_type': 'STOP_LOSS', 'average_price': 0, 'currency': 'BRL', 'symbol': 'JBSS3', 'status': 'NEW', 'total_spent': 0.0}
 
+normalized_data_second_status = {'name': 'VALE SA', 'cl_order_id': '93355b54cf51e99e3e7f0695cb37959b272ffc23', 'time': 1651611558.624, 'quantity': 100, 'order_type': 'STOP_LOSS', 'average_price': 0, 'currency': 'BRL', 'symbol': 'VALE3', 'status': 'CANCELLED', 'total_spent': 0.0}
 
 stub_expected_response = [{'average_price': 1.0,
   'cl_order_id': 'f63d5adc9f4b1380c8a3882a80aeb41167cc5835',
@@ -120,3 +124,30 @@ data_response_stub = [{'average_price': 0,
   'symbol': 'JBSS3',
   'time': 1651617871.867,
   'total_spent': 0.0}]
+
+data_two_response = [
+    {
+        "name": "JBS SA",
+        "cl_order_id": "af7ed971b0872011b2b2ca86378da3780bfef0ba",
+        "time": 1651617871.867,
+        "quantity": 100,
+        "order_type": "STOP_LOSS",
+        "average_price": 0,
+        "currency": "BRL",
+        "symbol": "JBSS3",
+        "status": "NEW",
+        "total_spent": 0.0
+    },
+    {
+        "name": "VALE SA",
+        "cl_order_id": "93355b54cf51e99e3e7f0695cb37959b272ffc23",
+        "time": 1651611558.624,
+        "quantity": 100,
+        "order_type": "STOP_LOSS",
+        "average_price": 0,
+        "currency": "BRL",
+        "symbol": "VALE3",
+        "status": "CANCELLED",
+        "total_spent": 0.0
+    }
+]
