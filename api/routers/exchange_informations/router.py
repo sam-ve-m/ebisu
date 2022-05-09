@@ -36,7 +36,6 @@ class ExchangeRouter:
         )
         return balance_response
 
-    # still not working due to AWS has no correlated route yet
     @staticmethod
     @__exchange_router.get("/list_broker_note", tags=["Broker Note"])
     async def get_broker_note(
