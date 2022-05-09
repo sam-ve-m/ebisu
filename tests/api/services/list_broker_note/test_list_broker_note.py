@@ -8,11 +8,11 @@ from api.repositories.files.repository import FileRepository
 from api.services.list_broker_note.list_broker_note import ListBrokerNote
 from api.domain.validators.exchange_info.list_broker_note_validator import (BrokerNoteMarket,
                                                                             BrokerNoteRegion)
-from tests.stubs.project_stubs.stub_data import (
+from tests.api.stubs.project_stubs.stub_data import (
                                                     payload_data_dummy,
                                                     StubS3Connection,
                                                     payload_data_us_gringa_dummy)
-from tests.stubs.project_stubs.stub_broker_note_pdf import (
+from tests.api.stubs.project_stubs.stub_broker_note_pdf import (
                                                     file_link_brokerage_dummy,
                                                     broker_note_link_dummy,
                                                     month_broker_note_bmf_dummy,

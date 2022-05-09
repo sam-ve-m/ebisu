@@ -35,7 +35,7 @@ class ListBrokerNote:
                 file_path=bmf_file_path
             )
             bmf_files_data = cls.get_month_broker_notes(
-                market=BrokerNoteMarket.BOVESPA,
+                market=BrokerNoteMarket.BMF,
                 region=broker_note.region,
                 month_broker_notes_directories=month_broker_notes_directories
             )

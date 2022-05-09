@@ -7,13 +7,13 @@ from api.domain.exception.model import NoPdfFoundError
 from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from api.repositories.files.repository import FileRepository
 from api.services.statement.service import Statement
-from tests.stubs.project_stubs.stub_data import (payload_data_dummy, payload_data_us_gringa_dummy)
+from tests.api.stubs.project_stubs.stub_data import (payload_data_dummy, payload_data_us_gringa_dummy)
 from api.services.request_statement.request_statement import RequestStatement
-from tests.stubs.project_stubs.stub_request_statement_pdf import (bank_statement_pdf_br_dummy,
-                                                                  file_upload_response,
-                                                                  generate_path_response,
-                                                                  file_link_stub,
-                                                                  bank_statement_pdf_us_dummy)
+from tests.api.stubs.project_stubs.stub_request_statement_pdf import (bank_statement_pdf_br_dummy,
+                                                                      file_upload_response,
+                                                                      generate_path_response,
+                                                                      file_link_stub,
+                                                                      bank_statement_pdf_us_dummy)
 
 
 @pytest.mark.asyncio

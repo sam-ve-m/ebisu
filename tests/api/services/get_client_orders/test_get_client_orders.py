@@ -6,13 +6,13 @@ from unittest.mock import patch, MagicMock
 from api.services.get_client_orders.strategies.br_orders.strategy import GetBrOrdersDetails
 from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from api.services.get_client_orders.get_client_orders import GetOrders
-from tests.stubs.project_stubs.stub_data import payload_data_dummy
-from tests.stubs.project_stubs.stub_get_client_orders import (user_open_orders_dummy,
-                                                              query_dummy_get_client,
-                                                              dummy_user_trade,
-                                                              dummy_normalized_data,
-                                                              client_order_response_dummy,
-                                                              clorder_invalid_params_us)
+from tests.api.stubs.project_stubs.stub_data import payload_data_dummy
+from tests.api.stubs.project_stubs.stub_get_client_orders import (user_open_orders_dummy,
+                                                                  query_dummy_get_client,
+                                                                  dummy_user_trade,
+                                                                  dummy_normalized_data,
+                                                                  client_order_response_dummy,
+                                                                  clorder_invalid_params_us)
 
 
 def test_decimal_converter_when_sending_user_trade_and_field_to_decimal_converter_then_return_the_expected():
@@ -21,29 +21,24 @@ def test_decimal_converter_when_sending_user_trade_and_field_to_decimal_converte
     assert type(response) is int
 
 
-@pytest.mark.asyncio
 def test_normalized_data_when_sending_the_user_trade_params_then_return_the_normalized_data():
     response = GetOrders.normalize_open_order(user_trade=dummy_user_trade)
     assert response == dummy_normalized_data
     assert isinstance(response, dict)
 
 
-@pytest.mark.asyncio
 def test_tiff_response_converter_when_sending_right_params_then_return_the_expected():
     response = GetOrders.tiff_response_converter(tif_value='DAY')
     assert response == 'DAY'
     assert isinstance(response, str)
 
 
-@pytest.mark.asyncio
 def test_tiff_response_converter_when_sending_no_params_then_return_the_expected():
     response = GetOrders.tiff_response_converter(tif_value="")
     assert response == 'NA'
     assert isinstance(response, str)
 
 
-# não passou
-@pytest.mark.asyncio
 @patch.object(GetBrOrdersDetails, 'build_query', return_value=query_dummy_get_client)
 @patch.object(OracleBaseRepository, 'get_data', return_value=user_open_orders_dummy)
 @patch('api.services.list_client_orders.list_client_orders.order_region')
@@ -61,7 +56,6 @@ def test_get_service_response_when_sending_the_right_paramks_then_return_the_exp
     assert isinstance(response, list)
 
 
-@pytest.mark.asyncio
 @patch.object(GetBrOrdersDetails, 'build_query', return_value="")
 @patch.object(OracleBaseRepository, 'get_data', return_value="")
 @patch('api.services.list_client_orders.list_client_orders.order_region')
@@ -78,14 +72,12 @@ def test_get_service_response_when_sending_the_right_params_then_return_empty_ob
     assert isinstance(response, list)
 
 
-@pytest.mark.asyncio
 def test_clorder_get_service_response_when_the_params_are_not_valid_then_raise_error_as_expected():
     with pytest.raises(AttributeError) as err:
         GetOrders.get_service_response(jwt_data="", client_order=clorder_invalid_params_us)
         assert err == "'str' object has no attribute 'get'"
 
 
-@pytest.mark.asyncio
 def test_clorder_get_service_response_when_the_statement_params_are_not_valid_then_raise_error_as_expected():
     with pytest.raises(AttributeError) as err:
         GetOrders.get_service_response(jwt_data=payload_data_dummy, client_order="")

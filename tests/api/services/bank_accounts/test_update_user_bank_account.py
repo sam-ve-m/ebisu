@@ -3,11 +3,11 @@ import pytest
 from unittest.mock import patch
 
 # INTERNAL LIBS
-from tests.stubs.bank_account_stubs.stub_get_account import jwt_with_bank_account_to_update
+from tests.api.stubs.bank_account_stubs.stub_get_account import jwt_with_bank_account_to_update
 from api.services.bank_account.service import UserBankAccountService
 from api.repositories.bank_account.repository import UserBankAccountRepository
 from api.exceptions.exceptions import BadRequestError, InternalServerError
-from tests.stubs.project_stubs.stub_data import payload_data_dummy
+from tests.api.stubs.project_stubs.stub_data import payload_data_dummy
 
 
 @pytest.mark.asyncio

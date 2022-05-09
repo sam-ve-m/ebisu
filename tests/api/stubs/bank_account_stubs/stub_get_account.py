@@ -35,3 +35,4 @@ get_accounts_dummy = {
         }
     ] }
 
+find_all_response_dummy = [{'bank_accounts': [{'bank': '789456123', 'account_type': '123456', 'agency': '00321654', 'account_number': '000000666-1', 'account_name': 'corrente teste', 'id': '15f11e59-4d44-4939-9bf0-25c1501e3b5d', 'status': 'active'}]}]

@@ -7,15 +7,14 @@ from typing import List
 from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from api.services.get_earnings.get_client_earnings import EarningsService
 from api.services.get_earnings.strategies.br_earnings import GetBrEarnings
-from tests.stubs.project_stubs.stub_data import StubOracleRepository
-from tests.stubs.project_stubs.stub_earnings import (
+from tests.api.stubs.project_stubs.stub_data import StubOracleRepository
+from tests.api.stubs.project_stubs.stub_earnings import (
                                                      earnings_dummy_br,
                                                      earnings_dummy_response,
                                                      normalize_earnings_dummy_request,
                                                      query_dummy_earnings)
 
 
-@pytest.mark.asyncio
 @patch('api.services.get_earnings.get_client_earnings.EarningsService.normalize_earnings',
        return_value=earnings_dummy_response)
 def test_when_a_request_of_normalization_is_sent_then_return_the_normalized_data(mock_normalize_earnings):

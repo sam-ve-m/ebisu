@@ -6,7 +6,7 @@ from unittest.mock import patch, MagicMock
 from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from api.services.get_balance.get_balance import GetBalance
 from api.services.statement.service import Statement
-from tests.stubs.project_stubs.stub_data import (
+from tests.api.stubs.project_stubs.stub_data import (
                                                 payload_data_dummy,
                                                 StubOracleRepository)
 
@@ -61,17 +61,3 @@ async def test_when_sending_a_valid_query_then_return_expected_value():
     GetBalance.oracle_singleton_instance = StubOracleRepository
     response = GetBalance.oracle_singleton_instance.get_data(sql=query_dummy)
     assert response == 10000.41
-
-
-@pytest.mark.asyncio
-def test_balance_get_service_response_when_the_params_are_not_valid_then_raise_error_as_expected():
-    balance_invalid_params = MagicMock(region=MagicMock(value=None),
-                                          cl_order_id='008cf873-ee2a-4b08-b277-74b8b17f6e64')
-    with pytest.raises(Exception):
-        GetBalance.get_service_response(jwt_data="", balance=balance_invalid_params)
-
-
-@pytest.mark.asyncio
-def test_balance_get_service_response_when_the_statement_params_are_not_valid_then_raise_error_as_expected():
-    with pytest.raises(Exception):
-        GetBalance.get_service_response(jwt_data=payload_data_dummy, balance="")

@@ -6,14 +6,14 @@ from unittest import mock
 # Internal Libs
 from api.services.get_statement.get_statement import GetStatement
 from api.services.statement.service import Statement
-from tests.stubs.project_stubs.stub_data import (payload_data_dummy,
-                                                 StubOracleRepository)
-from tests.stubs.project_stubs.stub_get_statement import (query_dummy,
-                                                          dummy_bank_statement_response,
-                                                          statement_params,
-                                                          statement_valid_params,
-                                                          statement_valid_params_us,
-                                                          statement_invalid_params_us)
+from tests.api.stubs.project_stubs.stub_data import (payload_data_dummy,
+                                                     StubOracleRepository)
+from tests.api.stubs.project_stubs.stub_get_statement import (query_dummy,
+                                                              dummy_bank_statement_response,
+                                                              statement_params,
+                                                              statement_valid_params,
+                                                              statement_valid_params_us,
+                                                              statement_invalid_params_us)
 
 
 @pytest.mark.asyncio
@@ -46,7 +46,7 @@ async def test_when_dw_statement_function_us_then_return_expected_which_is_the_s
     statement_response = await GetStatement.get_service_response(jwt_data=payload_data_dummy,
                                                                  statement=statement_valid_params_us)
     assert 'balance' in statement_response
-    assert statement_response['balance'] == 48981636.93
+    assert statement_response['balance'] == 49030153.7
 
 
 @pytest.mark.asyncio

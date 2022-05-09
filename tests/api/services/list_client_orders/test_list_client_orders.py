@@ -6,11 +6,11 @@ from unittest.mock import patch, MagicMock
 from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from api.services.list_client_orders.list_client_orders import ListOrders
 from api.services.list_client_orders.strategies import GetBrOrders
-from tests.stubs.project_stubs.stub_data import (StubCompanyInformationRepository,
-                                                 payload_data_dummy,
-                                                 payload_invalid_data_dummy,
-                                                 )
-from tests.stubs.project_stubs.stub_list_client_orders import (
+from tests.api.stubs.project_stubs.stub_data import (StubCompanyInformationRepository,
+                                                     payload_data_dummy,
+                                                     payload_invalid_data_dummy,
+                                                     )
+from tests.api.stubs.project_stubs.stub_list_client_orders import (
     user_trade_dummy,
     normalized_data_dummy,
     data_response_stub,
