@@ -46,17 +46,6 @@ class ExchangeRouter:
             broker_note=broker_note, jwt_data=jwt_data)
         return broker_note_response
 
-    # @staticmethod
-    # @__exchange_router.get("/broker_note_pdf", tags=["Broker Note"])
-    # async def list_broker_note(
-    #         request: Request, broker_note_pdf: GetBrokerNoteModel = Depends()
-    # ):
-    #     jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-    #     broker_note_pdf_response = GetBrokerNotePDF.get_service_response(
-    #         broker_note_pdf=broker_note_pdf, jwt_data=jwt_data
-    #     )
-    #     return broker_note_pdf_response
-
     @staticmethod
     @__exchange_router.get("/request_bank_statement_pdf", tags=["Bank Statement"])
     async def get_request_bank_statement(
@@ -92,7 +81,7 @@ class ExchangeRouter:
 
     @staticmethod
     @__exchange_router.get("/list_client_orders", tags=["Client Orders"])
-    async def get_client_orders(
+    async def list_client_orders(
             request: Request, list_client_orders: ListClientOrderModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
