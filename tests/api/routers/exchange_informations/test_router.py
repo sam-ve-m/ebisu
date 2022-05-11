@@ -2,8 +2,11 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from pydantic import ValidationError
+from requests import Request
+from typing import Optional
 
 # INTERNAL LIBS
+import api.routers.exchange_informations.router
 from api.domain.enums.region import Region
 from api.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
 from api.domain.validators.exchange_info.earnings_validator import GetEarningsModel
@@ -18,14 +21,16 @@ from api.exceptions.exceptions import UnauthorizedError
 from api.services.get_client_orders.get_client_orders import GetOrders
 from api.services.get_earnings.get_client_earnings import EarningsService
 from api.services.get_statement.get_statement import GetStatement
+from api.services.jwt.service_jwt import JwtService
 from api.services.list_broker_note.list_broker_note import ListBrokerNote
 from api.services.list_client_orders.list_client_orders import ListOrders
 from api.services.request_statement.request_statement import RequestStatement
 from tests.api.stubs.project_stubs.stub_earnings import earnings_dummy_response
 from tests.api.stubs.project_stubs.stub_get_client_orders import client_order_response_dummy
-from tests.api.stubs.project_stubs.stub_get_statement import dummy_bank_statement_response, statement_valid_params
-from tests.api.stubs.project_stubs.stub_list_client_orders import stub_expected_response
+from tests.api.stubs.project_stubs.stub_list_client_orders import stub_expected_response, client_response
 from tests.api.stubs.project_stubs.stub_request_statement_pdf import bank_statement_pdf_br_dummy, file_link_stub
+from tests.api.stubs.project_stubs.stub_data import payload_data_dummy
+from api.exceptions.exceptions import InternalServerError
 
 # STUBS
 balance_stub = {'payload': {'balance': 49030153.7}}
@@ -35,15 +40,16 @@ x_thebes_tuple = [(b'x-thebes-answer', b'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.ey
 list_broker_note_stub = [{"market": "bmf", "region": "BR", "day": 5,
         "broker_note_link": "https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/BR/broker_note/2022/4/5.pdf?AWS"}]
 statement_stub = {"balance": 10000.2, "statements": [1035546, 3000, 20000]}
+empty_response_stub = {"payload": {}}
 
 
 # get balance router
 @pytest.mark.asyncio
+@patch.object(JwtService, 'get_thebes_answer_from_request', return_value=payload_data_dummy)
 @patch.object(GetBalance, 'get_service_response', return_value=balance_stub)
 async def test_when_sending_the_right_params_to_get_balance_then_return_the_expected(
-        mock_get_service_response
+        mock_get_thebes_answer_from_request, mock_get_service_response
 ):
-
     response = await ExchangeRouter.get_balance(
         request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
         balance=GetBalanceModel(**{"region": 'BR'}))
@@ -55,17 +61,17 @@ async def test_when_sending_the_right_params_to_get_balance_then_return_the_expe
 
 
 @pytest.mark.asyncio
-@patch.object(GetBalance, 'get_service_response', return_value={"payload": {}})
+@patch('api.routers.exchange_informations.router.GetBalance.get_service_response', return_value={})
+@patch.object(JwtService, 'get_thebes_answer_from_request', return_value=payload_data_dummy)
 async def test_when_sending_the_right_params_to_get_balance_then_return_an_empty_list_as_expected(
-        mock_get_service_response
+        mock_get_thebes_answer_from_request, mock_get_service_response
 ):
 
     response = await ExchangeRouter.get_balance(
         request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
         balance=GetBalanceModel(**{"region": 'BR'}))
 
-    assert 'payload' in response
-    assert response.get('payload') == {}
+    assert response == {}
     assert isinstance(response, dict)
 
 
@@ -88,9 +94,10 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_get_balance_then_ra
 
 # list broker note router
 @pytest.mark.asyncio
+@patch.object(JwtService, 'get_thebes_answer_from_request', return_value=payload_data_dummy)
 @patch.object(ListBrokerNote, 'get_service_response', return_value=list_broker_note_stub)
 async def test_when_sending_the_right_params_to_get_list_broker_note_then_return_the_expected(
-        mock_get_service_response
+        mock_get_thebes_answer_from_request, mock_get_service_response
 ):
     link_response_stub = 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/BR/broker_note/2022/4/5.pdf?AWS'
 
@@ -107,9 +114,10 @@ async def test_when_sending_the_right_params_to_get_list_broker_note_then_return
 
 
 @pytest.mark.asyncio
+@patch.object(JwtService, 'get_thebes_answer_from_request', return_value=payload_data_dummy)
 @patch.object(ListBrokerNote, 'get_service_response', return_value=[])
 async def test_when_sending_the_right_params_to_get_list_broker_note_then_return_the_an_empty_list(
-        mock_get_service_response
+        mock_mock_get_thebes_answer_from_request, mock_get_service_response
 ):
     list_broker_response = await ExchangeRouter.get_broker_note(
         request=MagicMock(scope=scope_stub_2,
@@ -151,9 +159,10 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_broker_note_router_
 
 # request bank statement pdf router
 @pytest.mark.asyncio
+@patch.object(JwtService, 'get_thebes_answer_from_request', return_value=payload_data_dummy)
 @patch.object(RequestStatement, 'get_service_response', return_value=bank_statement_pdf_br_dummy)
 async def test_when_sending_the_right_params_to_request_bank_statement_pdf_then_return_the_expected(
-        mock_get_service_response
+        mock_get_thebes_answer_from_request, mock_get_service_response
 ):
     response_statement = await ExchangeRouter.get_request_bank_statement(
         request=MagicMock(scope=scope_stub_2,
@@ -172,12 +181,12 @@ async def test_when_sending_wrong_params_of_request_statement_model_then_raise_v
 
     with pytest.raises(TypeError):
         response = await ExchangeRouter.get_request_bank_statement(
-        request=MagicMock(scope=scope_stub_2,
-                          headers=MagicMock(
-                              raw=x_thebes_tuple)),
-        region="",
-        start_date=None,
-        end_date=None)
+            request=MagicMock(scope=scope_stub_2,
+                              headers=MagicMock(
+                                  raw=x_thebes_tuple)),
+            region="",
+            start_date=None,
+            end_date=None)
 
         assert response == "unsupported operand type(s) for /: 'NoneType' and 'int'"
 
@@ -195,9 +204,10 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_request_statement_r
 
 # bank statement router
 @pytest.mark.asyncio
+@patch.object(JwtService, 'get_thebes_answer_from_request', return_value=payload_data_dummy)
 @patch.object(GetStatement, 'get_service_response', return_value=statement_stub)
 async def test_when_sending_the_right_params_to_bank_statement_then_return_the_expected(
-        mock_get_service_response
+        mock_get_thebes_answer_from_request, mock_get_service_response
 ):
     response_statement = await ExchangeRouter.get_bank_statement(
         request=MagicMock(scope=scope_stub_2,
@@ -242,9 +252,10 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_get_statement_route
 
 #get client orders router
 @pytest.mark.asyncio
+@patch.object(JwtService, 'get_thebes_answer_from_request', return_value=payload_data_dummy)
 @patch.object(GetOrders, 'get_service_response', return_value=client_order_response_dummy)
 async def test_when_sending_the_right_params_to_client_order_router_then_return_the_expected(
-        mock_get_service_response
+        mock_get_thebes_answer_from_request, mock_get_service_response
 ):
 
     response = await ExchangeRouter.get_client_orders(
@@ -255,7 +266,7 @@ async def test_when_sending_the_right_params_to_client_order_router_then_return_
                                             "cl_order_id": "008cf873-ee2a-4b08-b277-74b8b17f6e64"}))
 
     assert response == client_order_response_dummy
-    assert response.get('symbol') == "VALE3"
+    assert response[0].get('symbol') == "VALE3"
 
 
 @pytest.mark.asyncio
@@ -282,11 +293,11 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_get_client_orders_r
 
 # list client orders router
 @pytest.mark.asyncio
-@patch.object(ListOrders, 'get_service_response', return_value=stub_expected_response)
+@patch.object(JwtService, 'get_thebes_answer_from_request', return_value=payload_data_dummy)
+@patch.object(ListOrders, 'get_service_response', return_value=client_response)
 async def test_when_sending_the_right_params_to_list_client_order_router_then_return_the_expected(
-        mock_get_service_response
+        mock_get_thebes_answer_from_request, mock_get_service_response
 ):
-
     response = await ExchangeRouter.list_client_orders(
         request=MagicMock(scope=scope_stub_2,
                           headers=MagicMock(

@@ -113,7 +113,8 @@ payload_data_dummy = {
         },
         "client_has_br_trade_allowed": False,
         "client_has_us_trade_allowed": False,
-        "client_profile": "investor"
+        "client_profile": "investor",
+        "status": "SUCCESS"
     }
 }
 
