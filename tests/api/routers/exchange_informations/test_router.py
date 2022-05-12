@@ -2,18 +2,16 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from pydantic import ValidationError
-from requests import Request
-from typing import Optional
 
 # INTERNAL LIBS
-import api.routers.exchange_informations.router
 from api.domain.enums.region import Region
 from api.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
 from api.domain.validators.exchange_info.earnings_validator import GetEarningsModel
 from api.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from api.domain.validators.exchange_info.get_statement_validator import GetStatementModel
-from api.domain.validators.exchange_info.list_broker_note_validator import BrokerNoteRegion, BrokerNoteMarket, \
-    ListBrokerNoteModel
+from api.domain.validators.exchange_info.list_broker_note_validator import (BrokerNoteRegion,
+                                                                            BrokerNoteMarket,
+                                                                            ListBrokerNoteModel)
 from api.domain.validators.exchange_info.list_client_order_validator import ListClientOrderModel
 from api.routers.exchange_informations.router import ExchangeRouter
 from api.services.get_balance.get_balance import GetBalance
@@ -32,18 +30,11 @@ from tests.api.stubs.project_stubs.stub_request_statement_pdf import bank_statem
 from tests.api.stubs.project_stubs.stub_data import payload_data_dummy
 from api.exceptions.exceptions import InternalServerError
 
-# STUBS
-balance_stub = {'payload': {'balance': 49030153.7}}
-scope_stub = {'type': 'http', 'headers': {'x-thebes-answer': None}}
-scope_stub_2 = {'type': 'http', 'headers': {'x-thebes-answer': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOiAxNjc4MjA5Nzg4LCAiY3JlYXRlZF9hdCI6IDE2NDY2NzM3ODguNDQyMTM5LCAic2NvcGUiOiB7InZpZXdfdHlwZSI6ICJkZWZhdWx0IiwgInVzZXJfbGV2ZWwiOiAiY2xpZW50IiwgImZlYXR1cmVzIjogWyJkZWZhdWx0IiwgInJlYWx0aW1lIl19LCAidXNlciI6IHsidW5pcXVlX2lkIjogIjQwZGI3ZmVlLTZkNjAtNGQ3My04MjRmLTFiZjg3ZWRjNDQ5MSIsICJuaWNrX25hbWUiOiAiUkFTVDMiLCAicG9ydGZvbGlvcyI6IHsiYnIiOiB7ImJvdmVzcGFfYWNjb3VudCI6ICIwMDAwMDAwMTQtNiIsICJibWZfYWNjb3VudCI6ICIxNCJ9LCAidXMiOiB7Il8iOiBudWxsfX0sICJjbGllbnRfaGFzX2JyX3RyYWRlX2FsbG93ZWQiOiBmYWxzZSwgImNsaWVudF9oYXNfdXNfdHJhZGVfYWxsb3dlZCI6IGZhbHNlLCAiY2xpZW50X3Byb2ZpbGUiOiAiaW52ZXN0b3IifX0.ccXheG6ORUWlsOmp0iZnyx39aEgW9zIEtL9Tf3aZ4bXXz_pIwI9f8LW15MHYjyvrkCjjb6dEuxQSqwxbYQvPdwq2PTJ0kLROYnDx8v0z9CX6WYHiLDapWHRoosgGUU20x1hqD_k_GSvpw_7DEyKkXavAJtK7XvwnZToFyWb1F1UhTVFsr_Oybh2PDsi6NvVgd3fhs17GVI81DmWFcBfz4J01S_446P-xmgfHjlOTatCKR1_0I2oDKeLi2fH160xXfApqfT5nOq9vsui-WaoI87_noUc3CQXk2BvqfFu83TRk2sIj4xKZp633DtCyM8D6iJngNPclH-K6o23EwSSa1g'}}
-x_thebes_tuple = [(b'x-thebes-answer', b'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJleHAiOiAxNjc4MjA5Nzg4LCAiY3JlYXRlZF9hdCI6IDE2NDY2NzM3ODguNDQyMTM5LCAic2NvcGUiOiB7InZpZXdfdHlwZSI6ICJkZWZhdWx0IiwgInVzZXJfbGV2ZWwiOiAiY2xpZW50IiwgImZlYXR1cmVzIjogWyJkZWZhdWx0IiwgInJlYWx0aW1lIl19LCAidXNlciI6IHsidW5pcXVlX2lkIjogIjQwZGI3ZmVlLTZkNjAtNGQ3My04MjRmLTFiZjg3ZWRjNDQ5MSIsICJuaWNrX25hbWUiOiAiUkFTVDMiLCAicG9ydGZvbGlvcyI6IHsiYnIiOiB7ImJvdmVzcGFfYWNjb3VudCI6ICIwMDAwMDAwMTQtNiIsICJibWZfYWNjb3VudCI6ICIxNCJ9LCAidXMiOiB7Il8iOiBudWxsfX0sICJjbGllbnRfaGFzX2JyX3RyYWRlX2FsbG93ZWQiOiBmYWxzZSwgImNsaWVudF9oYXNfdXNfdHJhZGVfYWxsb3dlZCI6IGZhbHNlLCAiY2xpZW50X3Byb2ZpbGUiOiAiaW52ZXN0b3IifX0.ccXheG6ORUWlsOmp0iZnyx39aEgW9zIEtL9Tf3aZ4bXXz_pIwI9f8LW15MHYjyvrkCjjb6dEuxQSqwxbYQvPdwq2PTJ0kLROYnDx8v0z9CX6WYHiLDapWHRoosgGUU20x1hqD_k_GSvpw_7DEyKkXavAJtK7XvwnZToFyWb1F1UhTVFsr_Oybh2PDsi6NvVgd3fhs17GVI81DmWFcBfz4J01S_446P-xmgfHjlOTatCKR1_0I2oDKeLi2fH160xXfApqfT5nOq9vsui-WaoI87_noUc3CQXk2BvqfFu83TRk2sIj4xKZp633DtCyM8D6iJngNPclH-K6o23EwSSa1g')]
-list_broker_note_stub = [{"market": "bmf", "region": "BR", "day": 5,
-        "broker_note_link": "https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/BR/broker_note/2022/4/5.pdf?AWS"}]
-statement_stub = {"balance": 10000.2, "statements": [1035546, 3000, 20000]}
-empty_response_stub = {"payload": {}}
+# stubs
+from tests.api.stubs.router_exchange_infos.stubs import balance_stub, scope_stub_2, x_thebes_tuple, scope_stub, \
+    list_broker_note_stub, statement_stub
 
 
-# get balance router
 @pytest.mark.asyncio
 @patch.object(JwtService, 'get_thebes_answer_from_request', return_value=payload_data_dummy)
 @patch.object(GetBalance, 'get_service_response', return_value=balance_stub)
