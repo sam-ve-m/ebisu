@@ -1,12 +1,15 @@
-from api.domain.enums.region import Region
+# STANDARD LIBS
 from fastapi import Request, APIRouter, Depends
 
+# MODELS
 from api.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
 from api.domain.validators.exchange_info.earnings_validator import GetEarningsModel
 from api.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from api.domain.validators.exchange_info.get_statement_validator import GetStatementModel
 from api.domain.validators.exchange_info.list_broker_note_validator import ListBrokerNoteModel
 from api.domain.validators.exchange_info.list_client_order_validator import ListClientOrderModel
+
+# SERVICES
 from api.services.get_balance.service import GetBalance
 from api.services.get_client_orders.get_client_orders import GetOrders
 from api.services.get_earnings.get_client_earnings import EarningsService

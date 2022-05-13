@@ -41,10 +41,16 @@ month_broker_note_us_dummy = [{'market': 'us', 'region': 'US', 'day': 5, 'broker
 
 month_broker_note_bmf_dummy = [{'market': 'bmf', 'region': 'BR', 'day': 5, 'broker_note_link': 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/BR/broker_note/2022/4/5.pdf?AWSAccessKeyId=AKIATZVFXI25USQWCS5O&Signature=d9vYYouHGiwtQptZIBZQCOpszj4%3D&Expires=1651608773'}]
 
+month_response_stub = [{'broker_note_link': 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/Region.BR/broker_note/2022/4/19.pdf?AWSAccessKeyId=AKIATZVFXI25USQWCS5O&Signature=U0fZ7EtnQr5c2HStRgLowD8H22w%3D&Expires=1651258518',
+  'day': 5,
+  'market': 'bmf',
+  'region': 'BR'}]
+
 month_broker_note_all_dummy = [{'market': 'all', 'region': 'ALL', 'day': 5, 'broker_note_link': 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/BR/broker_note/2022/4/5.pdf?AWSAccessKeyId=AKIATZVFXI25USQWCS5O&Signature=d9vYYouHGiwtQptZIBZQCOpszj4%3D&Expires=1651608773'}]
 
 month_broker_note_all_br_dummy = [{'market': 'all', 'region': 'BR', 'day': 5, 'broker_note_link': 'https://brokerage-note-and-bank-statement.s3.amazonaws.com/14/BR/broker_note/2022/4/5.pdf?AWSAccessKeyId=AKIATZVFXI25USQWCS5O&Signature=d9vYYouHGiwtQptZIBZQCOpszj4%3D&Expires=1651608773'}]
 
+directories_stub = {'Key': '14/BR/broker_note/2022/4/5.pdf', 'ETag': '"ff275b543b941d1da1de55bbb5517681-1"', 'Size': 37874, 'StorageClass': 'STANDARD', 'Owner': {'DisplayName': 'billing', 'ID': 'ddadb26827b39dff7bf757ada428f98b7a1f69409bd241069e1db04bf4aefd19'}}
 
 directories = MagicMock()
 

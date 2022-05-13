@@ -10,10 +10,6 @@ from api.exceptions.exceptions import BadRequestError, InternalServerError
 
 
 @pytest.mark.asyncio
-
-
-
-@pytest.mark.asyncio
 @patch.object(UserBankAccountRepository, 'is_user_bank_account_from_client', return_value=True)
 @patch.object(UserBankAccountRepository, 'existing_user_bank_account_and_is_activated', return_value=False)
 @patch.object(UserBankAccountRepository, 'save_registered_user_bank_accounts', return_value=True)
@@ -24,6 +20,7 @@ async def test_create_user_when_sending_the_right_params_then_return_the_duly_de
     response = await UserBankAccountService.create_user_bank_accounts(bank_account_repository=UserBankAccountRepository,
                                                                       jwt_data=jwt_with_bank_account_to_create)
     assert response == {'message': 'Created'}
+    assert isinstance(response, dict)
 
 
 @pytest.mark.asyncio

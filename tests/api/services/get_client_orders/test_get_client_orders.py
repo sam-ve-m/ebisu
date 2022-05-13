@@ -74,13 +74,13 @@ def test_get_service_response_when_sending_the_right_params_then_return_empty_ob
     assert isinstance(response, list)
 
 
-def test_clorder_get_service_response_when_the_params_are_not_valid_then_raise_error_as_expected():
+def test_cl_order_get_service_response_when_the_params_are_not_valid_then_raise_error_as_expected():
     with pytest.raises(AttributeError) as err:
         GetOrders.get_service_response(jwt_data="", client_order=clorder_invalid_params_us)
         assert err == "'str' object has no attribute 'get'"
 
 
-def test_clorder_get_service_response_when_the_statement_params_are_not_valid_then_raise_error_as_expected():
+def test_cl_order_get_service_response_when_the_statement_params_are_not_valid_then_raise_error_as_expected():
     with pytest.raises(AttributeError) as err:
         GetOrders.get_service_response(jwt_data=payload_data_dummy, client_order="")
         assert err == "AttributeError: 'str' object has no attribute 'region'"

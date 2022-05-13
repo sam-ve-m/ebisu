@@ -1,6 +1,6 @@
 # Standard Libs
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 # External Libs
 from api.domain.enums.region import Region
@@ -8,9 +8,7 @@ from api.domain.validators.exchange_info.get_balance_validator import GetBalance
 from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from api.services.get_balance.service import GetBalance
 from api.services.statement.service import Statement
-from tests.api.stubs.project_stubs.stub_data import (
-                                                payload_data_dummy,
-                                                StubOracleRepository)
+from tests.api.stubs.project_stubs.stub_data import payload_data_dummy, StubOracleRepository
 
 
 @pytest.mark.asyncio
@@ -19,7 +17,6 @@ async def test_when_balance_br_return_value_is_none_then_return_empty_dict(mock_
     response = await GetBalance.get_service_response(balance=GetBalanceModel(**{"region": Region.BR.value}),
                                                      jwt_data=payload_data_dummy)
     assert response == {}
-    mock_get_data.assert_called()
 
 
 @pytest.mark.asyncio

@@ -22,14 +22,18 @@ from api.services.get_statement.get_statement import GetStatement
 from api.services.jwt.service_jwt import JwtService
 from api.services.list_broker_note.list_broker_note import ListBrokerNote
 from api.services.list_client_orders.list_client_orders import ListOrders
+
+# stubs
 from tests.api.stubs.project_stubs.stub_earnings import earnings_dummy_response
 from tests.api.stubs.project_stubs.stub_get_client_orders import client_order_response_dummy
 from tests.api.stubs.project_stubs.stub_list_client_orders import stub_expected_response, client_response
 from tests.api.stubs.project_stubs.stub_data import payload_data_dummy
-
-# stubs
-from tests.api.stubs.router_exchange_infos.stubs import balance_stub, scope_stub_2, x_thebes_tuple, scope_stub, \
-    list_broker_note_stub, statement_stub
+from tests.api.stubs.router_exchange_infos.stubs import (balance_stub,
+                                                         scope_stub_2,
+                                                         x_thebes_tuple,
+                                                         scope_stub,
+                                                         list_broker_note_stub,
+                                                         statement_stub)
 
 
 @pytest.mark.asyncio

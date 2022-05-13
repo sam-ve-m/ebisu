@@ -13,20 +13,18 @@ from api.services.bank_account.service import UserBankAccountService
 from api.services.jwt.service_jwt import JwtService
 
 # stubs
-from tests.api.stubs.bank_account_stubs.stub_get_account import get_accounts_dummy, \
-    jwt_data_to_create_account, \
-    jwt_with_bank_account_to_create, jwt_with_bank_account_to_update, jwt_with_bank_account_to_delete
 from tests.api.stubs.project_stubs.stub_data import payload_data_dummy
+from tests.api.stubs.router_exchange_infos.stubs import scope_stub
+from tests.api.stubs.bank_account_stubs.stub_get_account import (get_accounts_dummy,
+                                                                 jwt_data_to_create_account,
+                                                                 jwt_with_bank_account_to_update,
+                                                                 jwt_with_bank_account_to_delete)
 from tests.api.stubs.router_bank_accounts_stubs.stubs import (scope_wrong_stub,
                                                               scope_correct_stub,
                                                               x_thebes_bank_tuple,
                                                               create_account_stub,
                                                               update_router_account_stub,
                                                               x_mist_bank_tuple, delete_router_account_stub)
-
-
-# get user bank account
-from tests.api.stubs.router_exchange_infos.stubs import scope_stub
 
 
 @pytest.mark.asyncio

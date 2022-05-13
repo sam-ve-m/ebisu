@@ -1,6 +1,6 @@
 import os
 from operator import itemgetter
-from typing import List
+from etria_logger import Gladsheim
 
 from api.domain.validators.exchange_info.list_broker_note_validator import ListBrokerNoteModel, BrokerNoteMarket, \
     BrokerNoteRegion
@@ -130,22 +130,29 @@ class ListBrokerNote:
         return []
 
     @staticmethod
-    def get_month_broker_notes(market: BrokerNoteMarket, region: BrokerNoteRegion, month_broker_notes_directories: List[str]):
+    def get_month_broker_notes(market: BrokerNoteMarket, region: BrokerNoteRegion, month_broker_notes_directories: dict):
 
         has_month_broker_note = month_broker_notes_directories.get("Contents")
         broker_notes = []
         if has_month_broker_note:
             for directory in month_broker_notes_directories.get("Contents"):
-                broker_note_day = ListBrokerNote.get_broker_note_file_name(directory)
-                broker_note_link = FileRepository.generate_file_link(file_path=directory.get("Key"), url_link_expire_seconds=900)
+                try:
+                    broker_note_day = ListBrokerNote.get_broker_note_file_name(directory)
+                    broker_note_link = FileRepository.generate_file_link(file_path=directory.get("Key"), url_link_expire_seconds=900)
 
-                broker_note = {
-                    "market": market.value,
-                    "region": region.value,
-                    "day": broker_note_day,
-                    "broker_note_link": broker_note_link
-                }
-                broker_notes.append(broker_note)
+                    broker_note = {
+                        "market": market.value,
+                        "region": region.value,
+                        "day": broker_note_day,
+                        "broker_note_link": broker_note_link
+                    }
+
+                    broker_notes.append(broker_note)
+
+                except Exception as err:
+                    raise Gladsheim.error(
+                            message=f"get_broker_note_file_name::directory_name:: No directory found, {err}",
+                            error=err)
 
         broker_notes = sorted(broker_notes, key=itemgetter('day'), reverse=True)
 
@@ -153,11 +160,10 @@ class ListBrokerNote:
 
     @classmethod
     def get_broker_note_file_name(cls, directory: dict):
-        directory_name = ""
-        if directory:
-            directory_name = directory.get("Key").split("/")[-1].replace(".pdf", "")
 
+        directory_name = directory.get("Key").split("/")[-1].replace(".pdf", "")
         return int(directory_name)
+
 
     @classmethod
     def generate_path(cls, account: str, region: BrokerNoteRegion, broker_note: ListBrokerNoteModel):

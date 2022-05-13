@@ -4,10 +4,13 @@ from unittest.mock import patch
 from unittest import mock
 
 # Internal Libs
+from api.domain.enums.region import Region
+from api.domain.validators.exchange_info.get_statement_validator import GetStatementModel
 from api.services.get_statement.get_statement import GetStatement
 from api.services.statement.service import Statement
 from tests.api.stubs.project_stubs.stub_data import (payload_data_dummy,
-                                                     StubOracleRepository)
+                                                     StubOracleRepository,
+                                                     payload_data_us_gringa_dummy)
 from tests.api.stubs.project_stubs.stub_get_statement import (query_dummy,
                                                               dummy_bank_statement_response,
                                                               statement_params,
@@ -36,17 +39,21 @@ async def test_when_region_and_timestamp_are_invalid_then_return_an_empty_dict_w
     statement_response = await GetStatement.get_service_response(jwt_data=payload_data_dummy,
                                                                  statement=statement_params)
     assert statement_response == {'balance': None, 'statements': []}
-    mock_get_data.assert_called()
 
 
-# @pytest.mark.asyncio
-# @mock.patch.object(Statement, "get_dw_statement", return_value={"balance": 48981636.93})
-# async def test_when_dw_statement_function_us_then_return_expected_which_is_the_statement_as_response(
-#         mock_get_dw_statement):
-#     statement_response = await GetStatement.get_service_response(jwt_data=payload_data_dummy,
-#                                                                  statement=statement_valid_params_us)
-#     assert 'balance' in statement_response
-#     assert statement_response['balance'] == 49030153.7
+@pytest.mark.asyncio
+@mock.patch.object(Statement, "get_dw_statement", return_value={"balance": 48981636.93})
+async def test_when_dw_statement_function_us_then_return_expected_which_is_the_statement_as_response(
+        mock_get_dw_statement):
+    statement_response = await GetStatement.get_service_response(jwt_data=payload_data_us_gringa_dummy,
+                                                                 statement=GetStatementModel(
+                                                                     **{"region": Region.US,
+                                                                        "limit": 1,
+                                                                        "offset": 0,
+                                                                        "start_date": 1646757399000,
+                                                                        "end_date": 1648485399000}))
+    assert 'balance' in statement_response
+    assert statement_response['balance'] == 48981636.93
 
 
 @pytest.mark.asyncio

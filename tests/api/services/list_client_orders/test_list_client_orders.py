@@ -12,14 +12,14 @@ from tests.api.stubs.project_stubs.stub_data import (StubCompanyInformationRepos
                                                      payload_invalid_data_dummy,
                                                      )
 from tests.api.stubs.project_stubs.stub_list_client_orders import (
-    user_trade_dummy,
-    normalized_data_dummy,
-    data_response_stub,
-    get_data_stub,
-    normalized_data_stub,
-    get_data_two_status_stub,
-    normalized_data_second_status,
-    data_two_response
+                                                                    user_trade_dummy,
+                                                                    normalized_data_dummy,
+                                                                    data_response_stub,
+                                                                    get_data_stub,
+                                                                    normalized_data_stub,
+                                                                    get_data_two_status_stub,
+                                                                    normalized_data_second_status,
+                                                                    data_two_response
 )
 
 list_data_dummy = ['NEW', 'FILLED']
