@@ -2,12 +2,18 @@ replicaCount: 1
 name: ebisu
 namespace: develop
 
+image:
+  repository: nexus.sigame.com.br
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: latest
+
+ports:
+  protocol: TCP
+  containerPort: 8000
+
 containers:
-  - name: ebisu
-    image: nexus.sigame.com.br/ebisu:1.1.3
-    ports:
-    - containerPort: 8000
-    env:
+  env:
     - name: ETRIA_LOG_LEVEL
       value: "INFO"
     - name: ROOT_LOG_LEVEL
@@ -210,8 +216,6 @@ containers:
     - name: TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC
       value: "transfers_between_drive_wealth_and_sinacor"
 
-
-
 service:
   name: ebisu-service
   type: ClusterIP
@@ -222,7 +226,7 @@ service:
 
 labels:
   app: ebisu
-  
+
 imagePullSecrets:
   - name: nexus-v3
 

@@ -19,7 +19,6 @@ class GetStatement:
         us_portfolios = portfolios.get("us", {})
 
         dw_account = us_portfolios.get("dw_account")
-        dw_account = "6bf1ef07-55c9-43ce-802b-f62ad5b56337.1634935585221"
         bmf_account = br_portfolios.get("bmf_account")
 
         if statement.region == Region.US:

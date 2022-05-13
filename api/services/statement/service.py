@@ -81,8 +81,7 @@ class Statement:
         return {"balance": balance, "statements": statement}
 
     @staticmethod
-    async def get_dw_balance():
-        dw_account = Statement.get_dw_account()
+    async def get_dw_balance(dw_account: str):
         raw_balance = await Statement.dw.get_balances(dw_account)
         balance = Statement.normalize_balance_us(*raw_balance)
         return {"balance": balance}

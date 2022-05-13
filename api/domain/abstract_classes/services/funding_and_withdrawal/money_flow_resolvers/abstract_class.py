@@ -54,22 +54,17 @@ class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
             raise UnableToProcessMoneyFlow()
 
     async def _build_resume(self) -> dict:
-        details = {
-            "tax": self._tax,
-            "spread": self._spread,
-            "convert_value": self._converted_value,
-            "due_date": self._due_date,
-        }
         origin_account_currency, account_destination_currency = self._get_cash_conversion_references()
         resume = {
             "origin_account": self._origin_account.resume(),
             "account_destination": self._account_destination.resume(),
             "value": self._value,
-            "cash_conversion": f"{origin_account_currency.value} > {account_destination_currency.value}",
+            "cash_conversion": f"{origin_account_currency.value}>{account_destination_currency.value}",
+            "tax": self._tax,
+            "spread": self._spread,
+            "convert_value": self._converted_value,
+            "due_date": self._due_date,
         }
-        for detail, value in details.items():
-            if value:
-                resume.update({detail: value})
         return resume
 
 

@@ -7,14 +7,13 @@ from api.domain.validators.exchange_info.get_balance_validator import GetBalance
 from api.domain.validators.exchange_info.get_statement_validator import GetStatementModel
 from api.domain.validators.exchange_info.list_broker_note_validator import ListBrokerNoteModel
 from api.domain.validators.exchange_info.list_client_order_validator import ListClientOrderModel
-from api.services.get_balance.get_balance import GetBalance
+from api.services.get_balance.service import GetBalance
 from api.services.get_client_orders.get_client_orders import GetOrders
 from api.services.get_earnings.get_client_earnings import EarningsService
 from api.services.get_statement.get_statement import GetStatement
 from api.services.jwt.service_jwt import JwtService
 from api.services.list_broker_note.list_broker_note import ListBrokerNote
 from api.services.list_client_orders.list_client_orders import ListOrders
-from api.services.request_statement.request_statement import RequestStatement
 
 
 class ExchangeRouter:
@@ -45,17 +44,6 @@ class ExchangeRouter:
         broker_note_response = ListBrokerNote.get_service_response(
             broker_note=broker_note, jwt_data=jwt_data)
         return broker_note_response
-
-    @staticmethod
-    @__exchange_router.get("/request_bank_statement_pdf", tags=["Bank Statement"])
-    async def get_request_bank_statement(
-            region: Region, start_date: float, end_date: float, request: Request
-    ):
-        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        bank_statement_pdf_response = await RequestStatement.get_service_response(
-            region=region, start_date=start_date, end_date=end_date, jwt_data=jwt_data
-        )
-        return bank_statement_pdf_response
 
     @staticmethod
     @__exchange_router.get("/bank_statement", tags=["Bank Statement"])
