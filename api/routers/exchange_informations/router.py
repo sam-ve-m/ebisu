@@ -87,3 +87,8 @@ class ExchangeRouter:
             earnings=earnings
         )
         return earnings_response
+
+    @staticmethod
+    @__exchange_router.get("/earnings_from_client", tags=["Earnings"])
+    async def get_earnings_from_client():
+        pass
