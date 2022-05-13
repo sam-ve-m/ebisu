@@ -39,5 +39,10 @@ get_accounts_dummy = {
 find_all_response_dummy = [{'bank_accounts': [{'bank': '789456123', 'account_type': '123456', 'agency': '00321654', 'account_number': '000000666-1', 'account_name': 'corrente teste', 'id': '15f11e59-4d44-4939-9bf0-25c1501e3b5d', 'status': 'active'}]}]
 
 find_one_response_dummy =  {'bank': '789456123', 'account_type': '123456', 'agency': '00321654', 'account_number': '000000666-1', 'account_name': 'corrente teste', 'id': '15f11e59-4d44-4939-9bf0-25c1501e3b5d', 'status': 'active'}
+find_one_wrong_response_dummy =  {'bank': None, 'account_type': None, 'agency': None, 'account_number': None, 'status': 'deactivated', 'id': None}
+find_one_response_with_cpf_dummy = {'bank': '789456123', 'cpf': '58038116020', 'account_type': '123456', 'agency': '00321654', 'account_number': '000000666-1', 'account_name': 'corrente teste', 'id': '15f11e59-4d44-4939-9bf0-25c1501e3b5d', 'status': 'active'}
 
 request_bank_account_dummy = {'unique_id': '15f11e59-4d44-4939-9bf0-25c1501e3b5d', "bank_accounts": {'bank': '789456123', 'account_type': '123456', 'agency': '00321654', 'account_number': '000000666-1', 'account_name': 'corrente teste', 'status': 'active'}}
+
+user_from_client_stub = {'cpf': '58038116020', 'bank': '725344232627826', 'account_type': '837746545453', 'agency': '0000005343', 'account_number': '99927276253-2', 'account_name': 'corrente'}
+user_from_client_2_stub = {'cpf': None, 'bank': None, 'account_type': None, 'agency': '0000005343', 'account_number': '99927276253-2', 'account_name': 'corrente'}

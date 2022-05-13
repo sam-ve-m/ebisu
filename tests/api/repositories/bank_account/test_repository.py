@@ -6,7 +6,8 @@ from unittest.mock import patch, MagicMock
 from api.repositories.bank_account.repository import UserBankAccountRepository
 from api.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 from tests.api.stubs.bank_account_stubs.stub_get_account import find_all_response_dummy, find_one_response_dummy, \
-    request_bank_account_dummy
+    request_bank_account_dummy, find_one_wrong_response_dummy, user_from_client_stub, user_from_client_2_stub, \
+    find_one_response_with_cpf_dummy
 
 # stubs
 account_repository_id_stub = "40db7fee-6d60-4d73-824f-1bf87edc4491"
@@ -45,13 +46,131 @@ async def test_when_sending_valid_params_to_save_register_accounts_then_return_t
 
 
 existing_account_repository_stub = {"bank_account": "648498574893"}
+existing_account_repository_2_stub = {"bank_account": None}
 
-# existing_user_bank_account_and_is_activated function wasn't tested
-# @pytest.mark.asyncio
-# @patch.object(MongoDbBaseRepository, "find_one", return_value=existing_account_repository_stub)
-# async def test_when_sending_the_right_params_then_return_the_expect_which_is_true(mock_find_one):
-#     response = await UserBankAccountRepository.existing_user_bank_account_and_is_activated(
-#         unique_id=account_repository_id_stub,
-#         bank_account=find_one_response_dummy
-#     )
-#     assert response == True
+@pytest.mark.asyncio
+@patch.object(MongoDbBaseRepository, "find_one", return_value=existing_account_repository_stub)
+async def test_when_sending_the_right_params_then_return_the_expect_which_is_true(mock_find_one):
+    response = await UserBankAccountRepository.existing_user_bank_account_and_is_activated(
+        unique_id=account_repository_id_stub,
+        bank_account=find_one_response_dummy
+    )
+    assert response == True
+
+
+@pytest.mark.asyncio
+@patch.object(MongoDbBaseRepository, "find_one", return_value=None)
+async def test_when_sending_the_right_params_then_return_the_expect_which_is_false(mock_find_one):
+    response = await UserBankAccountRepository.existing_user_bank_account_and_is_activated(
+        unique_id=account_repository_id_stub,
+        bank_account=find_one_wrong_response_dummy
+    )
+    assert response == False
+
+
+@pytest.mark.asyncio
+@patch.object(MongoDbBaseRepository, "find_one", return_value=existing_account_repository_stub)
+async def test_when_sending_the_right_params_to_is_bank_account_from_client_then_return_the_expected(mock_find_one):
+    response = await UserBankAccountRepository.is_user_bank_account_from_client(
+        unique_id=account_repository_id_stub,
+        bank_account=user_from_client_stub
+    )
+    assert response == True
+
+
+@pytest.mark.asyncio
+@patch.object(MongoDbBaseRepository, "find_one", return_value=None)
+async def test_when_sending_the_right_params_to_is_bank_account_from_client_then_return_false(mock_find_one):
+    response = await UserBankAccountRepository.is_user_bank_account_from_client(
+        unique_id=account_repository_id_stub,
+        bank_account=user_from_client_2_stub
+    )
+    assert response == False
+
+
+@pytest.mark.asyncio
+@patch.object(MongoDbBaseRepository, "find_one", return_value=existing_account_repository_stub)
+async def test_when_sending_the_right_params_to_account_id_exists_then_return_the_expected_which_is_true(
+        mock_find_one
+):
+    response = await UserBankAccountRepository.user_bank_account_id_exists(
+        unique_id=account_repository_id_stub,
+        bank_account_id="99927276253-2"
+    )
+    assert response == True
+
+
+@pytest.mark.asyncio
+@patch.object(MongoDbBaseRepository, "find_one", return_value=None)
+async def test_when_sending_the_right_params_to_account_id_exists_then_return_the_expected_which_is_false(
+        mock_find_one
+):
+    response = await UserBankAccountRepository.user_bank_account_id_exists(
+        unique_id=account_repository_id_stub,
+        bank_account_id=None
+    )
+    assert response == False
+
+
+@pytest.mark.asyncio
+@patch.object(MongoDbBaseRepository, "update_one", return_value=True)
+async def test_when_sending_the_right_params_to_update_registered_bank_account_then_return_the_expected(
+        mock_update_one
+):
+
+    response = await UserBankAccountRepository.update_registered_user_bank_accounts(
+        unique_id=account_repository_id_stub,
+        bank_account=find_one_response_dummy)
+
+    assert response == True
+
+
+@pytest.mark.asyncio
+@patch.object(MongoDbBaseRepository, "update_one", return_value=False)
+async def test_when_sending_the_right_params_to_update_registered_bank_account_then_return_false(
+        mock_update_one
+):
+
+    response = await UserBankAccountRepository.update_registered_user_bank_accounts(
+        unique_id=account_repository_id_stub,
+        bank_account=find_one_response_dummy)
+
+    assert response == False
+
+
+@pytest.mark.asyncio
+@patch.object(MongoDbBaseRepository, "update_one", return_value=True)
+async def test_when_sending_the_right_params_to_update_registered_bank_account_then_return_false(
+        mock_update_one
+):
+    response = await UserBankAccountRepository.update_registered_user_bank_accounts(
+        unique_id=account_repository_id_stub,
+        bank_account=find_one_response_with_cpf_dummy)
+
+    assert response == True
+
+
+@pytest.mark.asyncio
+@patch.object(MongoDbBaseRepository, "update_one", return_value=True)
+async def test_when_sending_the_right_params_to_delete_registered_bank_account_then_return_true(
+        mock_update_one
+):
+    response = await UserBankAccountRepository.delete_registered_user_bank_accounts(
+        unique_id=account_repository_id_stub,
+        bank_account=find_one_response_with_cpf_dummy
+    )
+
+    assert response == True
+
+
+@pytest.mark.asyncio
+@patch.object(MongoDbBaseRepository, "update_one", return_value=False)
+async def test_when_sending_the_right_params_to_delete_registered_bank_account_then_return_true(
+        mock_update_one
+):
+    response = await UserBankAccountRepository.delete_registered_user_bank_accounts(
+        unique_id=account_repository_id_stub,
+        bank_account=find_one_response_with_cpf_dummy
+    )
+
+    assert response == False
