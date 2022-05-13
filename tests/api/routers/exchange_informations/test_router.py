@@ -14,7 +14,7 @@ from api.domain.validators.exchange_info.list_broker_note_validator import (Brok
                                                                             ListBrokerNoteModel)
 from api.domain.validators.exchange_info.list_client_order_validator import ListClientOrderModel
 from api.routers.exchange_informations.router import ExchangeRouter
-from api.services.get_balance.get_balance import GetBalance
+from api.services.get_balance.service import GetBalance
 from api.exceptions.exceptions import UnauthorizedError
 from api.services.get_client_orders.get_client_orders import GetOrders
 from api.services.get_earnings.get_client_earnings import EarningsService
@@ -22,13 +22,10 @@ from api.services.get_statement.get_statement import GetStatement
 from api.services.jwt.service_jwt import JwtService
 from api.services.list_broker_note.list_broker_note import ListBrokerNote
 from api.services.list_client_orders.list_client_orders import ListOrders
-from api.services.request_statement.request_statement import RequestStatement
 from tests.api.stubs.project_stubs.stub_earnings import earnings_dummy_response
 from tests.api.stubs.project_stubs.stub_get_client_orders import client_order_response_dummy
 from tests.api.stubs.project_stubs.stub_list_client_orders import stub_expected_response, client_response
-from tests.api.stubs.project_stubs.stub_request_statement_pdf import bank_statement_pdf_br_dummy, file_link_stub
 from tests.api.stubs.project_stubs.stub_data import payload_data_dummy
-from api.exceptions.exceptions import InternalServerError
 
 # stubs
 from tests.api.stubs.router_exchange_infos.stubs import balance_stub, scope_stub_2, x_thebes_tuple, scope_stub, \
@@ -146,51 +143,6 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_broker_note_router_
                                            "market": BrokerNoteMarket.BOVESPA.value,
                                            "year": 2018,
                                            "month": 1}))
-
-
-# request bank statement pdf router
-@pytest.mark.asyncio
-@patch.object(JwtService, 'get_thebes_answer_from_request', return_value=payload_data_dummy)
-@patch.object(RequestStatement, 'get_service_response', return_value=bank_statement_pdf_br_dummy)
-async def test_when_sending_the_right_params_to_request_bank_statement_pdf_then_return_the_expected(
-        mock_get_thebes_answer_from_request, mock_get_service_response
-):
-    response_statement = await ExchangeRouter.get_request_bank_statement(
-        request=MagicMock(scope=scope_stub_2,
-                          headers=MagicMock(
-                              raw=x_thebes_tuple)),
-        region=Region.BR.value,
-        start_date=1646757399000,
-        end_date=1648485399000)
-
-    assert response_statement == bank_statement_pdf_br_dummy
-    assert response_statement.get('pdf_link') == file_link_stub
-
-
-@pytest.mark.asyncio
-async def test_when_sending_wrong_params_of_request_statement_model_then_raise_validation_error():
-
-    with pytest.raises(TypeError):
-        response = await ExchangeRouter.get_request_bank_statement(
-            request=MagicMock(scope=scope_stub_2,
-                              headers=MagicMock(
-                                  raw=x_thebes_tuple)),
-            region="",
-            start_date=None,
-            end_date=None)
-
-        assert response == "unsupported operand type(s) for /: 'NoneType' and 'int'"
-
-
-@pytest.mark.asyncio
-async def test_when_sending_the_wrong_payload_jwt_invalid_to_request_statement_router_then_raise_unauthorized_error():
-
-    with pytest.raises(UnauthorizedError):
-        await ExchangeRouter.get_request_bank_statement(
-        request=MagicMock(scope=scope_stub_2),
-        region=Region.BR.value,
-        start_date=1646757399000,
-        end_date=1648485399000)
 
 
 # bank statement router

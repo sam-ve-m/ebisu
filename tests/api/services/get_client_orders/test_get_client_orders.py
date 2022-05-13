@@ -3,6 +3,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 # Internal Libs
+from api.domain.enums.region import Region
 from api.services.get_client_orders.strategies.br_orders.strategy import GetBrOrdersDetails
 from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from api.services.get_client_orders.get_client_orders import GetOrders
@@ -22,7 +23,8 @@ def test_decimal_converter_when_sending_user_trade_and_field_to_decimal_converte
 
 
 def test_normalized_data_when_sending_the_user_trade_params_then_return_the_normalized_data():
-    response = GetOrders.normalize_open_order(user_trade=dummy_user_trade)
+    response = GetOrders.normalize_open_order(user_trade=dummy_user_trade,
+                                              region=Region.BR)
     assert response == dummy_normalized_data
     assert isinstance(response, dict)
 
@@ -48,7 +50,7 @@ def test_get_service_response_when_sending_the_right_paramks_then_return_the_exp
     mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrdersDetails)
     response = GetOrders.get_service_response(jwt_data=payload_data_dummy,
                                               client_order=MagicMock(
-                                                  region=MagicMock(value='BR'),
+                                                  region=Region.BR,
                                                   cl_order_id='008cf873-ee2a-4b08-b277-74b8b17f6e64'))
 
     assert response == client_order_response_dummy

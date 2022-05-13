@@ -26,54 +26,54 @@ from tests.api.stubs.project_stubs.stub_broker_note_pdf import (
                                                 )
 
 
-@patch.object(ListBrokerNote, 'generate_path', return_value="'LXPD000001/US/broker_note/2022/4/'")
-@patch.object(FileRepository, 'generate_file_link', return_value=broker_note_us_link_dummy)
-@patch.object(ListBrokerNote, 'get_broker_note_file_name', return_value=5)
-@patch.object(ListBrokerNote, 'get_month_broker_notes', return_value=month_broker_note_us_dummy)
-@patch.object(FileRepository, 'list_all_directories_in_path', return_value=directories)
-def test_when_params_are_valid_for_us_market_then_get_broker_note_link_as_expected_for_us_account(
-        mock_list_all_directories_in_path,
-        mock_get_month_broker_notes,
-        mock_get_broker_note_file_name,
-        mock_generate_file_link,
-        mock_generate_path):
-    response = ListBrokerNote.get_service_response(
-        broker_note=MagicMock(region='US',
-                              market=BrokerNoteMarket.US,
-                              year=2022,
-                              month=4),
-        jwt_data=payload_data_us_gringa_dummy)
-    mock_get_month_broker_notes.assert_called_with(market=BrokerNoteMarket.US,
-                                                   region='US',
-                                                   month_broker_notes_directories=directories)
+# @patch.object(ListBrokerNote, 'generate_path', return_value="'LXPD000001/US/broker_note/2022/4/'")
+# @patch.object(FileRepository, 'generate_file_link', return_value=broker_note_us_link_dummy)
+# @patch.object(ListBrokerNote, 'get_broker_note_file_name', return_value=5)
+# @patch.object(ListBrokerNote, 'get_month_broker_notes', return_value=month_broker_note_us_dummy)
+# @patch.object(FileRepository, 'list_all_directories_in_path', return_value=directories)
+# def test_when_params_are_valid_for_us_market_then_get_broker_note_link_as_expected_for_us_account(
+#         mock_list_all_directories_in_path,
+#         mock_get_month_broker_notes,
+#         mock_get_broker_note_file_name,
+#         mock_generate_file_link,
+#         mock_generate_path):
+#     response = ListBrokerNote.get_service_response(
+#         broker_note=MagicMock(region='US',
+#                               market=BrokerNoteMarket.US,
+#                               year=2022,
+#                               month=4),
+#         jwt_data=payload_data_us_gringa_dummy)
+#     mock_get_month_broker_notes.assert_called_with(market=BrokerNoteMarket.US,
+#                                                    region='US',
+#                                                    month_broker_notes_directories=directories)
+#
+#     assert response == month_broker_note_us_dummy
+#     assert response[0]['market'] == "us"
 
-    assert response == month_broker_note_us_dummy
-    assert response[0]['market'] == "us"
 
-
-@patch.object(ListBrokerNote, 'generate_path', return_value="'000000014-6/BR/broker_note/2022/4/'")
-@patch.object(FileRepository, 'generate_file_link', return_value=broker_note_link_dummy)
-@patch.object(ListBrokerNote, 'get_broker_note_file_name', return_value=5)
-@patch.object(ListBrokerNote, 'get_month_broker_notes', return_value=month_broker_note_bmf_dummy)
-@patch.object(FileRepository, 'list_all_directories_in_path', return_value=directories)
-def test_when_jwt_data_and_broker_note_is_valid_to_bmf_market_then_return_the_response_to_get_broker_note_for_br_account(
-        mock_list_all_directories_in_path,
-        mock_get_month_broker_notes,
-        mock_get_broker_note_file_name,
-        mock_generate_file_link,
-        mock_generate_path,):
-    response_bmf = ListBrokerNote.get_service_response(
-        broker_note=MagicMock(region='BR',
-                              market=BrokerNoteMarket.BMF,
-                              year=2022,
-                              month=4),
-        jwt_data=payload_data_dummy)
-    mock_get_month_broker_notes.assert_called_with(market=BrokerNoteMarket.BMF,
-                                                   region='BR',
-                                                   month_broker_notes_directories=directories)
-
-    assert response_bmf == month_broker_note_bmf_dummy
-    assert response_bmf[0]['market'] == "bmf"
+# @patch.object(ListBrokerNote, 'generate_path', return_value="'000000014-6/BR/broker_note/2022/4/'")
+# @patch.object(FileRepository, 'generate_file_link', return_value=broker_note_link_dummy)
+# @patch.object(ListBrokerNote, 'get_broker_note_file_name', return_value=5)
+# @patch.object(ListBrokerNote, 'get_month_broker_notes', return_value=month_broker_note_bmf_dummy)
+# @patch.object(FileRepository, 'list_all_directories_in_path', return_value=directories)
+# def test_when_jwt_data_and_broker_note_is_valid_to_bmf_market_then_return_the_response_to_get_broker_note_for_br_account(
+#         mock_list_all_directories_in_path,
+#         mock_get_month_broker_notes,
+#         mock_get_broker_note_file_name,
+#         mock_generate_file_link,
+#         mock_generate_path,):
+#     response_bmf = ListBrokerNote.get_service_response(
+#         broker_note=MagicMock(region='BR',
+#                               market=BrokerNoteMarket.BMF,
+#                               year=2022,
+#                               month=4),
+#         jwt_data=payload_data_dummy)
+#     mock_get_month_broker_notes.assert_called_with(market=BrokerNoteMarket.BMF,
+#                                                    region='BR',
+#                                                    month_broker_notes_directories=directories)
+#
+#     assert response_bmf == month_broker_note_bmf_dummy
+#     assert response_bmf[0]['market'] == "bmf"
 
 
 @patch.object(ListBrokerNote, 'generate_path', return_value="'000000014-6/BR/broker_note/2022/4/'")

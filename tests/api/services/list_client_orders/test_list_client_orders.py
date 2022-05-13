@@ -3,6 +3,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 # Internal Libs
+from api.domain.enums.region import Region
 from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from api.services.list_client_orders.list_client_orders import ListOrders
 from api.services.list_client_orders.strategies import GetBrOrders
@@ -50,7 +51,8 @@ async def test_when_sending_the_right_params_to_get_company_name_then_return_the
 @patch('api.services.list_client_orders.list_client_orders.CompanyInformationRepository.get_company_name',
        return_value='Iochpe Maxion SA')
 async def test_when_sending_the_user_trade_params_then_return_the_normalized_data(mock_normalize_open_order):
-    response = await ListOrders.normalize_open_order(user_trade=user_trade_dummy)
+    response = await ListOrders.normalize_open_order(user_trade=user_trade_dummy,
+                                                     region=Region.BR)
     assert response == normalized_data_dummy
     mock_normalize_open_order.assert_called_with('MYPK3')
     assert isinstance(response, dict)

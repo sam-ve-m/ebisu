@@ -3,8 +3,10 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 # External Libs
+from api.domain.enums.region import Region
+from api.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
-from api.services.get_balance.get_balance import GetBalance
+from api.services.get_balance.service import GetBalance
 from api.services.statement.service import Statement
 from tests.api.stubs.project_stubs.stub_data import (
                                                 payload_data_dummy,
@@ -14,7 +16,7 @@ from tests.api.stubs.project_stubs.stub_data import (
 @pytest.mark.asyncio
 @patch.object(OracleBaseRepository, 'get_data', return_value="")
 async def test_when_balance_br_return_value_is_none_then_return_empty_dict(mock_get_data):
-    response = await GetBalance.get_service_response(balance=MagicMock(region=""),
+    response = await GetBalance.get_service_response(balance=GetBalanceModel(**{"region": Region.BR.value}),
                                                      jwt_data=payload_data_dummy)
     assert response == {}
     mock_get_data.assert_called()
@@ -23,16 +25,16 @@ async def test_when_balance_br_return_value_is_none_then_return_empty_dict(mock_
 @pytest.mark.asyncio
 @patch.object(OracleBaseRepository, 'get_data', return_value=[{'VL_TOTAL': 10000.0}])
 async def test_when_balance_return_value_is_valid_then_return_the_expected(mock_get_data):
-    response = await GetBalance.get_service_response(balance=MagicMock(region="BR"),
+    response = await GetBalance.get_service_response(balance=GetBalanceModel(**{"region": Region.BR.value}),
                                                      jwt_data=payload_data_dummy)
-    assert 'payload' in response
-    assert response == {'payload': {'balance': 10000.0}}
+    assert response == {'balance': 10000.0}
+    assert response.get('balance') == 10000.0
 
 
 @pytest.mark.asyncio
 @patch.object(Statement, "get_dw_balance", return_value={"balance": 12000.0})
 async def test_when_balance_us_return_value_is_valid_then_return_the_expected_value(mock_get_dw_balance):
-    response = await GetBalance.get_service_response(balance=MagicMock(region="US"),
+    response = await GetBalance.get_service_response(balance=GetBalanceModel(**{"region": Region.US.value}),
                                                      jwt_data=payload_data_dummy)
     assert response == {"balance": 12000.0}
     assert response.get('balance') == 12000.0
