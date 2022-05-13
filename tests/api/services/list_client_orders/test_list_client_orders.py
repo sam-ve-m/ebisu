@@ -67,13 +67,6 @@ async def test_when_sending_the_right_params_to_get_company_name_then_return_the
 
 
 @pytest.mark.asyncio
-@patch('api.services.list_client_orders.list_client_orders.order_region')
-def test_when_sending_the_right_params_to_get_accounts_by_region_then_return_the_expected_value(mock_order_region):
-    mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrders)
-    pass
-
-
-@pytest.mark.asyncio
 @patch.object(GetBrOrders, 'build_query', return_value=MagicMock())
 @patch.object(OracleBaseRepository, 'get_data', return_value=get_data_two_status_stub)
 @patch.object(ListOrders, 'get_accounts_by_region', return_value=['000000014-6', '14'])

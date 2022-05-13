@@ -1,13 +1,16 @@
 # # Standard Libs
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 # INTERNAL LIBS
 from api.repositories.bank_account.repository import UserBankAccountRepository
 from api.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
-from tests.api.stubs.bank_account_stubs.stub_get_account import find_all_response_dummy, find_one_response_dummy, \
-    request_bank_account_dummy, find_one_wrong_response_dummy, user_from_client_stub, user_from_client_2_stub, \
-    find_one_response_with_cpf_dummy
+from tests.api.stubs.bank_account_stubs.stub_get_account import (find_all_response_dummy,
+                                                                 find_one_response_dummy,
+                                                                 find_one_wrong_response_dummy,
+                                                                 user_from_client_stub,
+                                                                 user_from_client_2_stub,
+                                                                 find_one_response_with_cpf_dummy)
 
 # stubs
 account_repository_id_stub = "40db7fee-6d60-4d73-824f-1bf87edc4491"

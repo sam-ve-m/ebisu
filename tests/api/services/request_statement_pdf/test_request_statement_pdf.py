@@ -16,7 +16,6 @@ from tests.api.stubs.project_stubs.stub_request_statement_pdf import (bank_state
                                                                       bank_statement_pdf_us_dummy)
 
 
-@pytest.mark.asyncio
 def test_generate_path_function_when_sending_the_right_params_then_return_the_expected():
     response = RequestStatement.generate_path(client_id=None,
                                               start_date=1646757399000,
@@ -26,7 +25,6 @@ def test_generate_path_function_when_sending_the_right_params_then_return_the_ex
     assert isinstance(response, str)
 
 
-@pytest.mark.asyncio
 def test_when_params_of_generate_path_are_none_then_raise_exception_error():
     with pytest.raises(Exception) as err:
         response = RequestStatement.generate_path(client_id=None,
@@ -35,7 +33,6 @@ def test_when_params_of_generate_path_are_none_then_raise_exception_error():
         assert err == response
 
 
-@pytest.mark.asyncio
 @patch.object(RequestStatement, 'generate_path', return_value=generate_path_response)
 @patch.object(FileRepository, 'upload_file', return_value=file_upload_response)
 @patch.object(FileRepository, 'generate_file_link', return_value=file_link_stub)
@@ -51,7 +48,6 @@ def test_generate_pdf_function_when_all_params_are_right_then_return_the_expecte
     assert 'pdf_link' in response
 
 
-@pytest.mark.asyncio
 @patch.object(RequestStatement, 'generate_path', return_value=None)
 @patch.object(FileRepository, 'upload_file', return_value=None)
 @patch.object(FileRepository, 'generate_file_link', return_value=None)
