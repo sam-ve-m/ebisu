@@ -4,56 +4,77 @@ from unittest.mock import patch
 from unittest import mock
 
 # Internal Libs
-from api.domain.enums.region import Region
-from api.domain.validators.exchange_info.get_statement_validator import GetStatementModel
-from api.services.get_statement.get_statement import GetStatement
-from api.services.statement.service import Statement
-from tests.api.stubs.project_stubs.stub_data import (payload_data_dummy,
-                                                     StubOracleRepository,
-                                                     payload_data_us_gringa_dummy)
-from tests.api.stubs.project_stubs.stub_get_statement import (query_dummy,
-                                                              dummy_bank_statement_response,
-                                                              statement_params,
-                                                              statement_valid_params,
-                                                              statement_valid_params_us,
-                                                              statement_invalid_params_us)
+from src.domain.enums.region import Region
+from src.domain.validators.exchange_info.get_statement_validator import (
+    GetStatementModel,
+)
+from src.services.get_statement.get_statement import GetStatement
+from src.services.statement.service import Statement
+from tests.api.stubs.project_stubs.stub_data import (
+    payload_data_dummy,
+    StubOracleRepository,
+    payload_data_us_gringa_dummy,
+)
+from tests.api.stubs.project_stubs.stub_get_statement import (
+    query_dummy,
+    dummy_bank_statement_response,
+    statement_params,
+    statement_valid_params,
+    statement_valid_params_us,
+    statement_invalid_params_us,
+)
 
 
 @pytest.mark.asyncio
-@patch('api.services.get_statement.get_statement.GetStatement.oracle_singleton_instance.get_data',
-       return_value=[{'VL_TOTAL': 10000.2}])
-async def test_when_jwt_and_params_are_valid_then_return_the_expected_response(mock_get_data):
-    statement_response = await GetStatement.get_service_response(jwt_data=payload_data_dummy,
-                                                                 statement=statement_valid_params)
+@patch(
+    "src.services.get_statement.get_statement.GetStatement.oracle_singleton_instance.get_data",
+    return_value=[{"VL_TOTAL": 10000.2}],
+)
+async def test_when_jwt_and_params_are_valid_then_return_the_expected_response(
+    mock_get_data,
+):
+    statement_response = await GetStatement.get_service_response(
+        jwt_data=payload_data_dummy, statement=statement_valid_params
+    )
     assert statement_response == dummy_bank_statement_response
-    assert statement_response.get('balance') == 10000.2
-    assert statement_response.get('statements') == []
+    assert statement_response.get("balance") == 10000.2
+    assert statement_response.get("statements") == []
     assert isinstance(statement_response, dict)
 
 
 @pytest.mark.asyncio
-@patch('api.services.get_statement.get_statement.GetStatement.oracle_singleton_instance.get_data',
-       return_value=[{'VL_TOTAL': None}])
+@patch(
+    "src.services.get_statement.get_statement.GetStatement.oracle_singleton_instance.get_data",
+    return_value=[{"VL_TOTAL": None}],
+)
 async def test_when_region_and_timestamp_are_invalid_then_return_an_empty_dict_which_is_the_expected_value(
-        mock_get_data):
-    statement_response = await GetStatement.get_service_response(jwt_data=payload_data_dummy,
-                                                                 statement=statement_params)
-    assert statement_response == {'balance': None, 'statements': []}
+    mock_get_data,
+):
+    statement_response = await GetStatement.get_service_response(
+        jwt_data=payload_data_dummy, statement=statement_params
+    )
+    assert statement_response == {"balance": None, "statements": []}
 
 
 @pytest.mark.asyncio
 @mock.patch.object(Statement, "get_dw_statement", return_value={"balance": 48981636.93})
 async def test_when_dw_statement_function_us_then_return_expected_which_is_the_statement_as_response(
-        mock_get_dw_statement):
-    statement_response = await GetStatement.get_service_response(jwt_data=payload_data_us_gringa_dummy,
-                                                                 statement=GetStatementModel(
-                                                                     **{"region": Region.US,
-                                                                        "limit": 1,
-                                                                        "offset": 0,
-                                                                        "start_date": 1646757399000,
-                                                                        "end_date": 1648485399000}))
-    assert 'balance' in statement_response
-    assert statement_response['balance'] == 48981636.93
+    mock_get_dw_statement,
+):
+    statement_response = await GetStatement.get_service_response(
+        jwt_data=payload_data_us_gringa_dummy,
+        statement=GetStatementModel(
+            **{
+                "region": Region.US,
+                "limit": 1,
+                "offset": 0,
+                "start_date": 1646757399000,
+                "end_date": 1648485399000,
+            }
+        ),
+    )
+    assert "balance" in statement_response
+    assert statement_response["balance"] == 48981636.93
 
 
 @pytest.mark.asyncio
@@ -75,12 +96,16 @@ async def test_when_sending_an_invalid_query_then_return_an_empty_dict_expected(
 @pytest.mark.asyncio
 async def test_get_service_response_when_the_params_are_not_valid_then_raise_error_as_expected():
     with pytest.raises(AttributeError) as err:
-        await GetStatement.get_service_response(jwt_data="", statement=statement_invalid_params_us)
+        await GetStatement.get_service_response(
+            jwt_data="", statement=statement_invalid_params_us
+        )
         assert err == "'str' object has no attribute 'get'"
 
 
 @pytest.mark.asyncio
 async def test_get_service_response_when_the_statement_params_are_not_valid_then_raise_error_as_expected():
     with pytest.raises(AttributeError) as err:
-        await GetStatement.get_service_response(jwt_data=payload_data_dummy, statement="")
+        await GetStatement.get_service_response(
+            jwt_data=payload_data_dummy, statement=""
+        )
         assert err == "AttributeError: 'str' object has no attribute 'region'"

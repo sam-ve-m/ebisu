@@ -3,46 +3,63 @@ import pytest
 from unittest.mock import patch
 
 # External Libs
-from api.domain.enums.region import Region
-from api.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
-from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
-from api.services.get_balance.service import GetBalance
-from api.services.statement.service import Statement
-from tests.api.stubs.project_stubs.stub_data import payload_data_dummy, StubOracleRepository
+from src.domain.enums.region import Region
+from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
+from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
+from src.services.get_balance.service import GetBalance
+from src.services.statement.service import Statement
+from tests.api.stubs.project_stubs.stub_data import (
+    payload_data_dummy,
+    StubOracleRepository,
+)
 
 
 @pytest.mark.asyncio
-@patch.object(OracleBaseRepository, 'get_data', return_value="")
-async def test_when_balance_br_return_value_is_none_then_return_empty_dict(mock_get_data):
-    response = await GetBalance.get_service_response(balance=GetBalanceModel(**{"region": Region.BR.value}),
-                                                     jwt_data=payload_data_dummy)
+@patch.object(OracleBaseRepository, "get_data", return_value="")
+async def test_when_balance_br_return_value_is_none_then_return_empty_dict(
+    mock_get_data,
+):
+    response = await GetBalance.get_service_response(
+        balance=GetBalanceModel(**{"region": Region.BR.value}),
+        jwt_data=payload_data_dummy,
+    )
     assert response == {}
 
 
 @pytest.mark.asyncio
-@patch.object(OracleBaseRepository, 'get_data', return_value=[{'VL_TOTAL': 10000.0}])
-async def test_when_balance_return_value_is_valid_then_return_the_expected(mock_get_data):
-    response = await GetBalance.get_service_response(balance=GetBalanceModel(**{"region": Region.BR.value}),
-                                                     jwt_data=payload_data_dummy)
-    assert response == {'balance': 10000.0}
-    assert response.get('balance') == 10000.0
+@patch.object(OracleBaseRepository, "get_data", return_value=[{"VL_TOTAL": 10000.0}])
+async def test_when_balance_return_value_is_valid_then_return_the_expected(
+    mock_get_data,
+):
+    response = await GetBalance.get_service_response(
+        balance=GetBalanceModel(**{"region": Region.BR.value}),
+        jwt_data=payload_data_dummy,
+    )
+    assert response == {"balance": 10000.0}
+    assert response.get("balance") == 10000.0
 
 
 @pytest.mark.asyncio
 @patch.object(Statement, "get_dw_balance", return_value={"balance": 12000.0})
-async def test_when_balance_us_return_value_is_valid_then_return_the_expected_value(mock_get_dw_balance):
-    response = await GetBalance.get_service_response(balance=GetBalanceModel(**{"region": Region.US.value}),
-                                                     jwt_data=payload_data_dummy)
+async def test_when_balance_us_return_value_is_valid_then_return_the_expected_value(
+    mock_get_dw_balance,
+):
+    response = await GetBalance.get_service_response(
+        balance=GetBalanceModel(**{"region": Region.US.value}),
+        jwt_data=payload_data_dummy,
+    )
     assert response == {"balance": 12000.0}
-    assert response.get('balance') == 12000.0
+    assert response.get("balance") == 12000.0
 
 
 @pytest.mark.asyncio
 @patch.object(Statement, "get_dw_balance", return_value={"balance": 104993635.20})
-async def test_dw_balance_function_us_then_return_expected_and_balance_is_in_response(mock_get_dw_balance):
+async def test_dw_balance_function_us_then_return_expected_and_balance_is_in_response(
+    mock_get_dw_balance,
+):
     response = await Statement.get_dw_balance()
     assert response == {"balance": 104993635.20}
-    assert response['balance'] == 104993635.20
+    assert response["balance"] == 104993635.20
     assert isinstance(response, dict)
 
 

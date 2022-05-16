@@ -3,13 +3,13 @@
 # from unittest.mock import patch, MagicMock
 #
 # # External Libs
-# from api.domain.exception.model import NoPdfFoundError
-# from api.repositories.base_repositories.oracle.repository import OracleBaseRepository
-# from api.repositories.files.repository import FileRepository
-# from api.services.statement.service import Statement
-# from tests.api.stubs.project_stubs.stub_data import (payload_data_dummy, payload_data_us_gringa_dummy)
-# from api.services.request_statement.request_statement import RequestStatement
-# from tests.api.stubs.project_stubs.stub_request_statement_pdf import (bank_statement_pdf_br_dummy,
+# from src.domain.exception.model import NoPdfFoundError
+# from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
+# from src.repositories.files.repository import FileRepository
+# from src.services.statement.service import Statement
+# from tests.src.stubs.project_stubs.stub_data import (payload_data_dummy, payload_data_us_gringa_dummy)
+# from src.services.request_statement.request_statement import RequestStatement
+# from tests.src.stubs.project_stubs.stub_request_statement_pdf import (bank_statement_pdf_br_dummy,
 #                                                                       file_upload_response,
 #                                                                       generate_path_response,
 #                                                                       file_link_stub,
