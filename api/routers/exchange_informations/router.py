@@ -1,12 +1,15 @@
-from api.domain.enums.region import Region
+# Standard Libs
 from fastapi import Request, APIRouter, Depends
 
+# Internal Libs
 from api.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
 from api.domain.validators.exchange_info.earnings_validator import GetEarningsModel
 from api.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
+from api.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from api.domain.validators.exchange_info.get_statement_validator import GetStatementModel
 from api.domain.validators.exchange_info.list_broker_note_validator import ListBrokerNoteModel
 from api.domain.validators.exchange_info.list_client_order_validator import ListClientOrderModel
+from api.services.earnings_from_client.get_earnings_from_client import EarningsFromClient
 from api.services.get_balance.service import GetBalance
 from api.services.get_client_orders.get_client_orders import GetOrders
 from api.services.get_earnings.get_client_earnings import EarningsService
@@ -89,6 +92,12 @@ class ExchangeRouter:
         return earnings_response
 
     @staticmethod
-    @__exchange_router.get("/earnings_from_client", tags=["Earnings"])
-    async def get_earnings_from_client():
-        pass
+    @__exchange_router.get("/earnings_client", tags=["Earnings"])
+    async def get_earnings_from_client(
+            request: Request, earnings_client: EarningsClientModel = Depends()
+    ):
+        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        earnings_client_response = EarningsFromClient.get_service_response(
+            earnings_client=earnings_client, jwt_data=jwt_data
+        )
+        return earnings_client_response
