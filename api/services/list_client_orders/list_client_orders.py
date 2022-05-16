@@ -8,6 +8,7 @@ from api.repositories.companies_data.repository import CompanyInformationReposit
 from api.services.list_client_orders.strategies import order_region
 from api.domain.time_formatter.time_formatter import str_to_timestamp
 from api.domain.currency_map.country_to_currency.map import country_to_currency
+from api.domain.enums.order_status import OrderStatus
 
 
 class ListOrders:
@@ -18,7 +19,7 @@ class ListOrders:
         list_data = None
         if isinstance(data, str):
             data = data.upper()
-            list_data = data.split("|")
+            list_data = [OrderStatus[status] for status in data.split("|")]
         return list_data
 
     @staticmethod
