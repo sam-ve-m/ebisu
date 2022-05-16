@@ -16,7 +16,7 @@ class IRepository(ABC):
         pass
 
     @abstractmethod
-    async def find_all(self, query: dict, project: dict = None,) -> Optional[Cursor]:
+    async def find_all(self, query: dict, project: dict = None) -> Optional[Cursor]:
         pass
 
     @abstractmethod

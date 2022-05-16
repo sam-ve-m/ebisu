@@ -67,9 +67,7 @@ class JwtService:
         return thebes_answer
 
     @staticmethod
-    async def validate_electronic_signature(
-        request: Request, user_data: dict
-    ) -> bool:
+    async def validate_electronic_signature(request: Request, user_data: dict) -> bool:
         mist_token = None
         for header_tuple in request.headers.raw:
             if b"x-mist" in header_tuple:

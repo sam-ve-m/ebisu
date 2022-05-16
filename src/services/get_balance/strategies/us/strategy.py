@@ -1,5 +1,6 @@
 from src.services.statement.service import Statement
 
+
 class GetUsBalance:
     @staticmethod
     async def get_balance(account: str) -> str:

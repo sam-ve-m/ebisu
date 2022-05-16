@@ -21,7 +21,10 @@ class UserMoneyFloSameExchange(BaseModel):
 
     @root_validator
     def validate(cls, values):
-        if values["origin_account"]["country"] != values["account_destination"]["country"]:
+        if (
+            values["origin_account"]["country"]
+            != values["account_destination"]["country"]
+        ):
             raise ValueError("Accounts are not from the same country")
         return UserMoneyFlow(**values)
 
@@ -33,6 +36,9 @@ class UserMoneyFloDifferentExchange(BaseModel):
 
     @root_validator
     def validate(cls, values):
-        if values["origin_account"]["country"] == values["account_destination"]["country"]:
+        if (
+            values["origin_account"]["country"]
+            == values["account_destination"]["country"]
+        ):
             raise ValueError("Accounts are not from the same country")
         return UserMoneyFlow(**values)

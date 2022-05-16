@@ -12,5 +12,7 @@ class UserRepository(MongoDbBaseRepository):
 
     @classmethod
     async def get_user_portfolios(cls, unique_id: str):
-        user_portfolios = await cls.find_one(query={"unique_id": unique_id}, project={"portfolios": True, "_id": False})
+        user_portfolios = await cls.find_one(
+            query={"unique_id": unique_id}, project={"portfolios": True, "_id": False}
+        )
         return user_portfolios["portfolios"]

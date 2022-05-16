@@ -2,14 +2,23 @@ from abc import abstractmethod
 from datetime import datetime
 from typing import Tuple
 from src.domain.enums.currency import Currency
-from src.core.interfaces.services.funding_and_withdrawal.money_flow_resolvers.interface import IBaseMoneyFlowResolver
+from src.core.interfaces.services.funding_and_withdrawal.money_flow_resolvers.interface import (
+    IBaseMoneyFlowResolver,
+)
 from src.domain.model.internal.account_transfer.model import AccountTransfer
-from src.repositories.funding_and_withdrawal.queue.repository import FundingAndWithdrawalRepository
+from src.repositories.funding_and_withdrawal.queue.repository import (
+    FundingAndWithdrawalRepository,
+)
 from src.exceptions.exceptions import UnableToProcessMoneyFlow
 
-class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
 
-    def __init__(self, origin_account: AccountTransfer, account_destination: AccountTransfer, value: float):
+class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
+    def __init__(
+        self,
+        origin_account: AccountTransfer,
+        account_destination: AccountTransfer,
+        value: float,
+    ):
         self._origin_account = origin_account
         self._account_destination = account_destination
         self._cash_conversion = self._get_cash_conversion_references()
@@ -47,14 +56,22 @@ class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
     def _get_topic_name(self) -> str:
         pass
 
-    async def _send(self, resume: dict, funding_and_withdrawal_repository=FundingAndWithdrawalRepository):
+    async def _send(
+        self,
+        resume: dict,
+        funding_and_withdrawal_repository=FundingAndWithdrawalRepository,
+    ):
         topic = self._get_topic_name()
-        was_sent = await funding_and_withdrawal_repository.send_to_bifrost(topic=topic, message=resume)
+        was_sent = await funding_and_withdrawal_repository.send_to_bifrost(
+            topic=topic, message=resume
+        )
         if not was_sent:
             raise UnableToProcessMoneyFlow()
 
     async def _build_resume(self) -> dict:
-        origin_account_currency, account_destination_currency = self._get_cash_conversion_references()
+        origin_account_currency, account_destination_currency = (
+            self._get_cash_conversion_references()
+        )
         resume = {
             "origin_account": self._origin_account.resume(),
             "account_destination": self._account_destination.resume(),
@@ -66,7 +83,6 @@ class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
             "due_date": self._due_date,
         }
         return resume
-
 
     async def __call__(self, *args, **kwargs) -> dict:
         self._spread = await self._get_spread()

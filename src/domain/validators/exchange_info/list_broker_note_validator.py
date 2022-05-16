@@ -11,10 +11,12 @@ class BrokerNoteMarket(Enum):
     US = "us"
     ALL = "all"
 
+
 class BrokerNoteRegion(Enum):
     BR = "BR"
     US = "US"
     ALL = "ALL"
+
 
 class ListBrokerNoteModel(BaseModel):
     region: BrokerNoteRegion
@@ -24,5 +26,3 @@ class ListBrokerNoteModel(BaseModel):
 
     class Config:
         extra = Extra.forbid
-
-

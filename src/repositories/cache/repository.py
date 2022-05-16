@@ -8,7 +8,6 @@ from src.infrastructures.redis.infraestructure import RedisInfrastructure
 from src.infrastructures.env_config import config
 
 
-
 class RepositoryRedis(IRedis, RedisInfrastructure):
     prefix = "ebisu:"
     host = config("REDIS_HOST_URL")

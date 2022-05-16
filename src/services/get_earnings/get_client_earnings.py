@@ -21,9 +21,7 @@ class EarningsService:
         return normalize_data
 
     @classmethod
-    async def get_service_response(
-            cls, earnings: GetEarningsModel
-    ) -> List[dict]:
+    async def get_service_response(cls, earnings: GetEarningsModel) -> List[dict]:
         earnings_region = earnings_regions.get("BR")
         query_earnings = earnings_region.build_query_earnings(
             symbol=earnings.symbol,

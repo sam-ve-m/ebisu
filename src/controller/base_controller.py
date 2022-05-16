@@ -17,10 +17,9 @@ from src.exceptions.exceptions import (
 
 
 class BaseController(IController, ABC):
-
     @staticmethod
     async def run(
-            callback: callable, payload: Optional[dict], request: Request
+        callback: callable, payload: Optional[dict], request: Request
     ) -> Union[dict, Response]:
         try:
             response_metadata = await callback(payload)
@@ -44,8 +43,7 @@ class BaseController(IController, ABC):
 
         except ForbiddenError as e:
             error_response = await BaseController.compile_error_response(
-                status_code=status.HTTP_403_FORBIDDEN,
-                message="Error 403: Forbiden",
+                status_code=status.HTTP_403_FORBIDDEN, message="Error 403: Forbiden"
             )
             return error_response
 
@@ -84,11 +82,7 @@ class BaseController(IController, ABC):
     async def create_response_payload(response_metadata: dict) -> dict:
         payload = dict()
         if "message_key" in response_metadata:
-            payload.update(
-                {
-                    "message": "SUCCESS"
-                }
-            )
+            payload.update({"message": "SUCCESS"})
         if "payload" in response_metadata:
             payload.update(response_metadata.get("payload"))
 

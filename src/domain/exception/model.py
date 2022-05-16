@@ -46,7 +46,12 @@ class UnableToProcessMoneyFlow(Exception):
 
 
 class NotMappedCurrency(Exception):
-    def __init__(self, msg="Unable to process money flow, because currency is not mapped", *args, **kwargs):
+    def __init__(
+        self,
+        msg="Unable to process money flow, because currency is not mapped",
+        *args,
+        **kwargs
+    ):
         super().__init__(msg, *args, **kwargs)
 
 

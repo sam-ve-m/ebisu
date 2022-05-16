@@ -1,5 +1,7 @@
 from src.domain.enums.region import Region
-from src.domain.validators.exchange_info.get_statement_validator import GetStatementModel
+from src.domain.validators.exchange_info.get_statement_validator import (
+    GetStatementModel,
+)
 from src.repositories.statements.repository import StatementsRepository
 from src.services.statement.service import Statement
 
@@ -9,9 +11,7 @@ class GetStatement:
 
     @classmethod
     async def get_service_response(
-            cls,
-            jwt_data: dict,
-            statement: GetStatementModel
+        cls, jwt_data: dict, statement: GetStatementModel
     ) -> dict:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
@@ -27,7 +27,7 @@ class GetStatement:
                 start_date=statement.start_date,
                 end_date=statement.end_date,
                 offset=statement.offset,
-                limit=statement.limit
+                limit=statement.limit,
             )
             return us_statement
 
@@ -43,7 +43,9 @@ class GetStatement:
                    fetch first {statement.limit} row only
                    """
         statement = GetStatement.oracle_singleton_instance.get_data(sql=query)
-        query = f"SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = '{bmf_account}'"
+        query = (
+            f"SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = '{bmf_account}'"
+        )
         balance = GetStatement.oracle_singleton_instance.get_data(sql=query)
 
         data_balance = {

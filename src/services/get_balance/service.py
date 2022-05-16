@@ -17,9 +17,10 @@ class GetBalance:
         field = accounts_by_region[region]
         return portfolios.get(field)
 
-
     @classmethod
-    async def get_service_response(cls, balance: GetBalanceModel, jwt_data: dict) -> dict:
+    async def get_service_response(
+        cls, balance: GetBalanceModel, jwt_data: dict
+    ) -> dict:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
 

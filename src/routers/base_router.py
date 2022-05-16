@@ -23,8 +23,7 @@ from src.routers.funding_and_withdrawal.router import FundingAndWithdrawalRouter
 class BaseRouter:
 
     app = FastAPI(
-        title="Customer Exchange Information",
-        description="Dados de clientes",
+        title="Customer Exchange Information", description="Dados de clientes"
     )
 
     @staticmethod
@@ -155,6 +154,5 @@ class BaseRouter:
                     {"request_status": False, "status": 6, "msg": err.args[0]}
                 ),
             )
-
 
         return response

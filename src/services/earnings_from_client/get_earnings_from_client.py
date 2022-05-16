@@ -19,7 +19,6 @@ class EarningsFromClient:
         field = accounts_by_region[region]
         return portfolios.get(field)
 
-
     @classmethod
     def normalize_earnings_data(cls, client_earnings: dict) -> dict:
 
@@ -30,14 +29,15 @@ class EarningsFromClient:
             "trade_code": client_earnings.get("COD_NEG"),
             "transaction_amount": client_earnings.get("QTDE_MVTO"),
             "net_price": client_earnings.get("PREC_LQDO"),
-            "transaction_date": client_earnings.get("DATA_MVTO")
+            "transaction_date": client_earnings.get("DATA_MVTO"),
         }
 
         return normalized_data
 
-
     @classmethod
-    def get_service_response(cls,earnings_client: EarningsClientModel, jwt_data: dict) -> dict:
+    def get_service_response(
+        cls, earnings_client: EarningsClientModel, jwt_data: dict
+    ) -> dict:
 
         region = earnings_client.region.value
         open_earnings = earnings_client_region[region]
@@ -46,7 +46,7 @@ class EarningsFromClient:
         query_payable_values = open_earnings.build_query_payable_earnings(
             cod_client=earnings_client.cod_client,
             limit=earnings_client.limit,
-            offset=earnings_client.offset
+            offset=earnings_client.offset,
         )
 
         payable_earnings_request = open_earnings.oracle_earnings_client_singleton_instance.get_data(
@@ -62,7 +62,7 @@ class EarningsFromClient:
         query_record_date_values = open_earnings.build_query_record_date_earnings(
             cod_client=earnings_client.cod_client,
             limit=earnings_client.limit,
-            offset=earnings_client.offset
+            offset=earnings_client.offset,
         )
 
         record_date_earnings_request = open_earnings.oracle_earnings_client_singleton_instance.get_data(
@@ -76,7 +76,7 @@ class EarningsFromClient:
 
         response = {
             "payable_earnings": earnings_payable_values,
-            "record_date_earnings": earnings_record_date_values
+            "record_date_earnings": earnings_record_date_values,
         }
 
         return response

@@ -28,10 +28,10 @@ class DWTransport:
             del query_params["limit"]
 
         url_formatted = url.format(account)
-        response = await DWApiTransport.execute_get(url=url_formatted, query_params=query_params)
-        response = await self._response_body_in_json_and_account_id(
-            response=response
+        response = await DWApiTransport.execute_get(
+            url=url_formatted, query_params=query_params
         )
+        response = await self._response_body_in_json_and_account_id(response=response)
         return response
 
     async def get_balances(self, account: str) -> List[dict]:
@@ -41,9 +41,7 @@ class DWTransport:
 
         url_formatted = url.format(account)
         response = await DWApiTransport.execute_get(url=url_formatted, query_params={})
-        response = await self._response_body_in_json_and_account_id(
-            response=response
-        )
+        response = await self._response_body_in_json_and_account_id(response=response)
         return response
 
     @staticmethod

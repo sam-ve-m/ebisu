@@ -1,6 +1,7 @@
 from src.repositories.orders.br.repository import BrOrdersRepository
 from typing import List
 
+
 class GetBrOrdersDetails:
 
     oracle_singleton_instance = BrOrdersRepository

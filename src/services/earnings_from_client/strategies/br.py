@@ -22,9 +22,10 @@ class GetBrEarningsDetails:
                 """
         return query
 
-
     @staticmethod
-    def build_query_record_date_earnings(cod_client: int, limit: int, offset: int) -> str:
+    def build_query_record_date_earnings(
+        cod_client: int, limit: int, offset: int
+    ) -> str:
         # query to find record date == 31-12-9999 (to be paid with no date specified)
 
         query = f"""

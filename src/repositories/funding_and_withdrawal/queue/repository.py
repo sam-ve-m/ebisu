@@ -18,7 +18,9 @@ class FundingAndWithdrawalRepository:
         try:
             kafka_producer = await cls.infra.get_or_create_producer()
             message = dumps(message, default=Sindri.dict_to_primitive_types)
-            record_metadata = await kafka_producer.send_and_wait(topic=topic, value=message.encode())
+            record_metadata = await kafka_producer.send_and_wait(
+                topic=topic, value=message.encode()
+            )
             is_message_sent = True
         except KafkaTimeoutError as err:
             message = f"FundingAndWithdrawalRepository::send_to_persephone::KafkaTimeoutError::is_message_sent:{is_message_sent}::record metadata:{record_metadata}"
