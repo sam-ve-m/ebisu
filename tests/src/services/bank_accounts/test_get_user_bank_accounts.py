@@ -3,7 +3,7 @@ import pytest
 from unittest.mock import patch
 
 # INTERNAL LIBS
-from tests.api.stubs.bank_account_stubs.stub_get_account import (
+from tests.src.stubs.bank_account_stubs.stub_get_account import (
     jwt_data_dummy,
     get_accounts_dummy,
 )

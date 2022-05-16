@@ -4,7 +4,7 @@ from unittest.mock import patch, MagicMock
 
 # External Libs
 from src.services.bank_transfer.service import BankTransferService
-from tests.api.stubs.router_bank_accounts_stubs.stubs import x_thebes_bank_tuple
+from tests.src.stubs.router_bank_accounts_stubs.stubs import x_thebes_bank_tuple
 
 # stub
 jwt_decompiled_stub = {

@@ -7,8 +7,8 @@ from typing import List
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from src.services.get_earnings.get_client_earnings import EarningsService
 from src.services.get_earnings.strategies.br_earnings import GetBrEarnings
-from tests.api.stubs.project_stubs.stub_data import StubOracleRepository
-from tests.api.stubs.project_stubs.stub_earnings import (
+from tests.src.stubs.project_stubs.stub_data import StubOracleRepository
+from tests.src.stubs.project_stubs.stub_earnings import (
     earnings_dummy_br,
     earnings_dummy_response,
     normalize_earnings_dummy_request,

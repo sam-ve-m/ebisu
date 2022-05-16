@@ -32,16 +32,16 @@ from src.services.list_broker_note.list_broker_note import ListBrokerNote
 from src.services.list_client_orders.list_client_orders import ListOrders
 
 # stubs
-from tests.api.stubs.project_stubs.stub_earnings import earnings_dummy_response
-from tests.api.stubs.project_stubs.stub_get_client_orders import (
+from tests.src.stubs.project_stubs.stub_earnings import earnings_dummy_response
+from tests.src.stubs.project_stubs.stub_get_client_orders import (
     client_order_response_dummy,
 )
-from tests.api.stubs.project_stubs.stub_list_client_orders import (
+from tests.src.stubs.project_stubs.stub_list_client_orders import (
     stub_expected_response,
     client_response,
 )
-from tests.api.stubs.project_stubs.stub_data import payload_data_dummy
-from tests.api.stubs.router_exchange_infos.stubs import (
+from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
+from tests.src.stubs.router_exchange_infos.stubs import (
     balance_stub,
     scope_stub_2,
     x_thebes_tuple,

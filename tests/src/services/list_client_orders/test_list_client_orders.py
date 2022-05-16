@@ -7,12 +7,12 @@ from src.domain.enums.region import Region
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from src.services.list_client_orders.list_client_orders import ListOrders
 from src.services.list_client_orders.strategies import GetBrOrders
-from tests.api.stubs.project_stubs.stub_data import (
+from tests.src.stubs.project_stubs.stub_data import (
     StubCompanyInformationRepository,
     payload_data_dummy,
     payload_invalid_data_dummy,
 )
-from tests.api.stubs.project_stubs.stub_list_client_orders import (
+from tests.src.stubs.project_stubs.stub_list_client_orders import (
     user_trade_dummy,
     normalized_data_dummy,
     data_response_stub,

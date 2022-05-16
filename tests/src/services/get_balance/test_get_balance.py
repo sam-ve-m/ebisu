@@ -8,7 +8,7 @@ from src.domain.validators.exchange_info.get_balance_validator import GetBalance
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from src.services.get_balance.service import GetBalance
 from src.services.statement.service import Statement
-from tests.api.stubs.project_stubs.stub_data import (
+from tests.src.stubs.project_stubs.stub_data import (
     payload_data_dummy,
     StubOracleRepository,
 )

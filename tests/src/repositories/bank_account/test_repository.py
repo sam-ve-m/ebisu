@@ -5,7 +5,7 @@ from unittest.mock import patch
 # INTERNAL LIBS
 from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
-from tests.api.stubs.bank_account_stubs.stub_get_account import (
+from tests.src.stubs.bank_account_stubs.stub_get_account import (
     find_all_response_dummy,
     find_one_response_dummy,
     find_one_wrong_response_dummy,

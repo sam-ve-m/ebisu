@@ -3,13 +3,13 @@ import pytest
 from unittest.mock import patch
 
 # INTERNAL LIBS
-from tests.api.stubs.bank_account_stubs.stub_get_account import (
-    jwt_with_bank_account_to_update,
+from tests.src.stubs.bank_account_stubs.stub_get_account import (
+    jwt_with_bank_account_to_delete,
 )
 from src.services.bank_account.service import UserBankAccountService
 from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.exceptions.exceptions import BadRequestError, InternalServerError
-from tests.api.stubs.project_stubs.stub_data import payload_data_dummy
+from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
 
 
 @pytest.mark.asyncio
@@ -17,56 +17,37 @@ from tests.api.stubs.project_stubs.stub_data import payload_data_dummy
     UserBankAccountRepository, "user_bank_account_id_exists", return_value=True
 )
 @patch.object(
-    UserBankAccountRepository, "update_registered_user_bank_accounts", return_value=True
+    UserBankAccountRepository, "delete_registered_user_bank_accounts", return_value=True
 )
-async def test_update_user_when_sending_the_right_params_then_return_the_duly_updated_message(
-    mock_get_registered_user_bank_accounts, mock_update_registered_user_bank_accounts
+async def test_delete_user_when_sending_the_right_params_then_return_the_duly_updated_message(
+    mock_get_registered_user_bank_accounts, mock_delete_registered_user_bank_accounts
 ):
 
-    response = await UserBankAccountService.update_user_bank_account(
-        jwt_data=jwt_with_bank_account_to_update,
+    response = await UserBankAccountService.delete_user_bank_account(
+        jwt_data=jwt_with_bank_account_to_delete,
         bank_account_repository=UserBankAccountRepository,
     )
+    dully_deleted_response = {"message": "Deleted"}
 
-    updating_message = {"message": "Updated"}
-
-    assert response == updating_message
+    assert response == dully_deleted_response
     assert isinstance(response, dict)
-    assert response.get("message") == "Updated"
+    assert response.get("message") == "Deleted"
 
 
 @pytest.mark.asyncio
-@patch.object(
-    UserBankAccountRepository, "user_bank_account_id_exists", return_value=True
-)
-@patch.object(
-    UserBankAccountRepository, "update_registered_user_bank_accounts", return_value=True
-)
-async def test_update_user_when_sending_an_invalid_jwt_data_then_return_the_expected_exception(
-    mock_get_registered_user_bank_accounts, mock_update_registered_user_bank_accounts
-):
-
+async def test_delete_user_when_sending_an_invalid_jwt_data_then_return_the_expected_exception():
     with pytest.raises(KeyError):
-        await UserBankAccountService.update_user_bank_account(
+        await UserBankAccountService.delete_user_bank_account(
             jwt_data=payload_data_dummy,
             bank_account_repository=UserBankAccountRepository,
         )
 
 
 @pytest.mark.asyncio
-@patch.object(
-    UserBankAccountRepository, "user_bank_account_id_exists", return_value=True
-)
-@patch.object(
-    UserBankAccountRepository, "update_registered_user_bank_accounts", return_value=True
-)
-async def test_update_user_when_sending_an_invalid_bank_repository_call_then_return_the_expected_exception(
-    mock_get_registered_user_bank_accounts, mock_update_registered_user_bank_accounts
-):
-
+async def test_delete_user_when_sending_an_invalid_bank_repository_call_then_return_the_expected_attribute_exception():
     with pytest.raises(AttributeError):
-        await UserBankAccountService.update_user_bank_account(
-            jwt_data=jwt_with_bank_account_to_update, bank_account_repository=""
+        await UserBankAccountService.delete_user_bank_account(
+            jwt_data=jwt_with_bank_account_to_delete, bank_account_repository=""
         )
 
 
@@ -76,7 +57,7 @@ async def test_update_user_when_sending_an_invalid_bank_repository_call_then_ret
 )
 @patch.object(
     UserBankAccountRepository,
-    "update_registered_user_bank_accounts",
+    "delete_registered_user_bank_accounts",
     return_value=False,
 )
 async def test_when_bank_account_and_register_account_are_false_then_raise_the_expected_bad_request(
@@ -84,8 +65,8 @@ async def test_when_bank_account_and_register_account_are_false_then_raise_the_e
 ):
 
     with pytest.raises(BadRequestError):
-        await UserBankAccountService.update_user_bank_account(
-            jwt_data=jwt_with_bank_account_to_update,
+        await UserBankAccountService.delete_user_bank_account(
+            jwt_data=jwt_with_bank_account_to_delete,
             bank_account_repository=UserBankAccountRepository,
         )
 
@@ -96,7 +77,7 @@ async def test_when_bank_account_and_register_account_are_false_then_raise_the_e
 )
 @patch.object(
     UserBankAccountRepository,
-    "update_registered_user_bank_accounts",
+    "delete_registered_user_bank_accounts",
     return_value=False,
 )
 async def test_when_register_account_is_false_then_raise_the_expected_internal_server_error(
@@ -104,8 +85,8 @@ async def test_when_register_account_is_false_then_raise_the_expected_internal_s
 ):
 
     with pytest.raises(InternalServerError):
-        await UserBankAccountService.update_user_bank_account(
-            jwt_data=jwt_with_bank_account_to_update,
+        await UserBankAccountService.delete_user_bank_account(
+            jwt_data=jwt_with_bank_account_to_delete,
             bank_account_repository=UserBankAccountRepository,
         )
 
@@ -113,8 +94,8 @@ async def test_when_register_account_is_false_then_raise_the_expected_internal_s
 @pytest.mark.asyncio
 async def test_when_sending_wrong_params_then_return_an_empty_object():
     with pytest.raises(AttributeError):
-        response = await UserBankAccountService.update_user_bank_account(
-            bank_account_repository="", jwt_data=jwt_with_bank_account_to_update
+        response = await UserBankAccountService.delete_user_bank_account(
+            bank_account_repository="", jwt_data=jwt_with_bank_account_to_delete
         )
         assert response == "'NoneType' object has no attribute 'lower'"
 
@@ -122,7 +103,7 @@ async def test_when_sending_wrong_params_then_return_an_empty_object():
 @pytest.mark.asyncio
 async def test_when_jwt_data_payload_is_invalid_then_check_if_portfolios_is_in_the_payload_response():
     with pytest.raises(TypeError) as err:
-        response = await UserBankAccountService.update_user_bank_account(
+        response = await UserBankAccountService.delete_user_bank_account(
             jwt_data="", bank_account_repository=UserBankAccountRepository
         )
         assert response == "string indices must be integers"

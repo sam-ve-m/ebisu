@@ -9,8 +9,8 @@ from src.services.get_client_orders.strategies.br_orders.strategy import (
 )
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from src.services.get_client_orders.get_client_orders import GetOrders
-from tests.api.stubs.project_stubs.stub_data import payload_data_dummy
-from tests.api.stubs.project_stubs.stub_get_client_orders import (
+from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
+from tests.src.stubs.project_stubs.stub_get_client_orders import (
     user_open_orders_dummy,
     query_dummy_get_client,
     dummy_user_trade,

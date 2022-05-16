@@ -10,12 +10,12 @@ from src.domain.validators.exchange_info.get_statement_validator import (
 )
 from src.services.get_statement.get_statement import GetStatement
 from src.services.statement.service import Statement
-from tests.api.stubs.project_stubs.stub_data import (
+from tests.src.stubs.project_stubs.stub_data import (
     payload_data_dummy,
     StubOracleRepository,
     payload_data_us_gringa_dummy,
 )
-from tests.api.stubs.project_stubs.stub_get_statement import (
+from tests.src.stubs.project_stubs.stub_get_statement import (
     query_dummy,
     dummy_bank_statement_response,
     statement_params,
