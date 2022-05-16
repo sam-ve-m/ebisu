@@ -46,7 +46,7 @@ class DWTransport:
 
     @staticmethod
     async def _response_body_in_json_and_account_id(
-        response: ClientResponse
+        response: ClientResponse,
     ) -> List[dict]:
         bodies = list()
         body = await response.text()

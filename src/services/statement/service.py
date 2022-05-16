@@ -78,6 +78,7 @@ class Statement:
             dw_account, start=start_date, end=end_date, limit=limit
         )
         raw_balance = await Statement.dw.get_balances(dw_account)
+        # TODO INTERNAL SERVER ERROR
         balance = Statement.normalize_balance_us(*raw_balance)
         statement = Statement.normalize_statement_us(*raw_statement)
         return {"balance": balance, "statements": statement}
@@ -85,5 +86,6 @@ class Statement:
     @staticmethod
     async def get_dw_balance(dw_account: str):
         raw_balance = await Statement.dw.get_balances(dw_account)
+        # TODO INTERNAL SERVER ERROR
         balance = Statement.normalize_balance_us(*raw_balance)
         return {"balance": balance}

@@ -1,16 +1,19 @@
-from nidavellir import Sindri
-
-from src.core.interfaces.bank_transfer.interface import IBankTransfer
+# STANDARD LIBS
 from fastapi import Request, APIRouter, Depends
 
+# INTERNAL LIBS
+from nidavellir import Sindri
+from src.core.interfaces.bank_transfer.interface import IBankTransfer
+from src.services.jwt.service_jwt import JwtService
 from src.domain.validators.user_account.bank_account import (
     CreateUserBankAccount,
     UpdateUserBankAccounts,
     DeleteUsersBankAccount,
 )
+
+# SERVICES
 from src.services.bank_account.service import UserBankAccountService
 from src.services.bank_transfer.service import BankTransferService
-from src.services.jwt.service_jwt import JwtService
 
 
 class UserBankAccountsRouter:
@@ -26,8 +29,8 @@ class UserBankAccountsRouter:
     async def get_user_bank_accounts(request: Request):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         jwt_data = {"x-thebes-answer": jwt_data}
-        get_user_bank_accounts_response = await UserBankAccountService.get_user_bank_accounts(
-            jwt_data
+        get_user_bank_accounts_response = (
+            await UserBankAccountService.get_user_bank_accounts(jwt_data)
         )
         return get_user_bank_accounts_response
 
@@ -41,8 +44,8 @@ class UserBankAccountsRouter:
             "x-thebes-answer": jwt_data,
             "bank_account": create_bank_account.dict(),
         }
-        create_user_bank_accounts_response = await UserBankAccountService.create_user_bank_accounts(
-            jwt_data=jwt_data
+        create_user_bank_accounts_response = (
+            await UserBankAccountService.create_user_bank_accounts(jwt_data=jwt_data)
         )
         return create_user_bank_accounts_response
 
@@ -55,8 +58,8 @@ class UserBankAccountsRouter:
         bank_account = update_bank_account.dict()
         Sindri.dict_to_primitive_types(obj=bank_account)
         jwt_data = {"x-thebes-answer": jwt_data, "bank_account": bank_account}
-        update_bank_account_response = await UserBankAccountService.update_user_bank_account(
-            jwt_data=jwt_data
+        update_bank_account_response = (
+            await UserBankAccountService.update_user_bank_account(jwt_data=jwt_data)
         )
         return update_bank_account_response
 
@@ -70,8 +73,8 @@ class UserBankAccountsRouter:
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         bank_account = delete_bank_account.dict()
         jwt_data = {"x-thebes-answer": jwt_data, "bank_account": bank_account}
-        delete_bank_account_response = await UserBankAccountService.delete_user_bank_account(
-            jwt_data=jwt_data
+        delete_bank_account_response = (
+            await UserBankAccountService.delete_user_bank_account(jwt_data=jwt_data)
         )
         return delete_bank_account_response
 

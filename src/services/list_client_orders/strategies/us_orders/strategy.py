@@ -8,7 +8,10 @@ class GetUsOrders:
 
     @staticmethod
     def build_query(
-        accounts: List[str], offset: int, limit: int, order_status: List[OrderStatus]
+        accounts: List[str],
+        offset: int,
+        limit: int,
+        order_status: List[OrderStatus],
     ) -> str:
         query = f"""SELECT B.SYMBOL, ORDSTATUS, B.CLORDID, B.TRANSACTTIME, B.CUMQTY, B.AVGPX, B.ORDTYPE, B.ORDERQTY
                     FROM UDRIVDB001.VW_CURRENT_EXECUTION_REPORTS B

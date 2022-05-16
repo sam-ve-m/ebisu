@@ -1,6 +1,6 @@
 # from fastapi import Query
 # from pydantic import BaseModel
-# from api.domain.enums.region import Region
+# from src.domain.enums.region import Region
 #
 #
 # class GetBrokerNoteModel(BaseModel):

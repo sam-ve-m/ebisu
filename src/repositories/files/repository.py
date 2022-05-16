@@ -25,7 +25,10 @@ class FileRepository:
         s3_client = cls._get_client()
         link = s3_client.generate_presigned_url(
             "get_object",
-            Params={"Bucket": cls._bucket_name, "Key": file_path},
+            Params={
+                "Bucket": cls._bucket_name,
+                "Key": file_path,
+            },
             ExpiresIn=url_link_expire_seconds,
         )
         return link

@@ -44,7 +44,7 @@ class GetStatement:
                    """
         statement = GetStatement.oracle_singleton_instance.get_data(sql=query)
         query = (
-            f"SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = '{bmf_account}'"
+            f"SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = {bmf_account}"
         )
         balance = GetStatement.oracle_singleton_instance.get_data(sql=query)
 

@@ -3,6 +3,7 @@ from fastapi import FastAPI, Request, Response
 from starlette import status
 import json
 
+# ERRORS
 from src.domain.exception.model import IntegrityJwtError, AuthenticationJwtError
 from etria_logger import Gladsheim
 from src.exceptions.exceptions import (
@@ -15,6 +16,8 @@ from src.exceptions.exceptions import (
     NotMappedCurrency,
     InvalidElectronicaSignature,
 )
+
+# ROUTERS
 from src.routers.exchange_informations.router import ExchangeRouter
 from src.routers.user_bank_accounts.router import UserBankAccountsRouter
 from src.routers.funding_and_withdrawal.router import FundingAndWithdrawalRouter
@@ -23,7 +26,8 @@ from src.routers.funding_and_withdrawal.router import FundingAndWithdrawalRouter
 class BaseRouter:
 
     app = FastAPI(
-        title="Customer Exchange Information", description="Dados de clientes"
+        title="Customer Exchange Information",
+        description="Dados de clientes",
     )
 
     @staticmethod

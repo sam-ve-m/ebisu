@@ -69,9 +69,10 @@ class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
             raise UnableToProcessMoneyFlow()
 
     async def _build_resume(self) -> dict:
-        origin_account_currency, account_destination_currency = (
-            self._get_cash_conversion_references()
-        )
+        (
+            origin_account_currency,
+            account_destination_currency,
+        ) = self._get_cash_conversion_references()
         resume = {
             "origin_account": self._origin_account.resume(),
             "account_destination": self._account_destination.resume(),

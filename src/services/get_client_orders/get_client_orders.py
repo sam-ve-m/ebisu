@@ -1,7 +1,9 @@
 from typing import List
 
 from src.domain.enums.order_tifs import OrderTifs
-from src.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
+from src.domain.validators.exchange_info.client_orders_validator import (
+    GetClientOrderModel,
+)
 from src.services.get_client_orders.strategies import order_region
 from src.domain.time_formatter.time_formatter import str_to_timestamp
 from src.domain.enums.region import Region
@@ -9,7 +11,6 @@ from src.domain.currency_map.country_to_currency.map import country_to_currency
 
 
 class GetOrders:
-
     @staticmethod
     def decimal_128_converter(user_trade: dict, field: str) -> float:
         value = user_trade.get(field)
@@ -48,7 +49,9 @@ class GetOrders:
                 (accumulated_quantity if accumulated_quantity else float(0.0))
                 * GetOrders.decimal_128_converter(user_trade, "AVGPX")
             ),
-            "quantity_filled": (accumulated_quantity if accumulated_quantity else float(0.0)),
+            "quantity_filled": (
+                accumulated_quantity if accumulated_quantity else float(0.0)
+            ),
             "quantity_leaves": user_trade.get("LEAVESQTY"),
             "quantity_last": user_trade.get("LASTQTY"),
             "text": user_trade.get("TEXT"),
@@ -73,7 +76,9 @@ class GetOrders:
         return accounts
 
     @classmethod
-    def get_service_response(cls, client_order: GetClientOrderModel, jwt_data: dict) -> List[dict]:
+    def get_service_response(
+        cls, client_order: GetClientOrderModel, jwt_data: dict
+    ) -> List[dict]:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
 

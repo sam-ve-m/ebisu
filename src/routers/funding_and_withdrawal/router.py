@@ -38,10 +38,14 @@ class FundingAndWithdrawalRouter:
         jwt_data = await FundingAndWithdrawalRouter.get_jwt_data_and_validate_electronica_signature(
             request=request
         )
-        money_flow_between_user_accounts_request_data = {"x-thebes-answer": jwt_data}
+        money_flow_between_user_accounts_request_data = {
+            "x-thebes-answer": jwt_data,
+        }
         money_flow_between_user_accounts_request_data.update(user_money_flow.dict())
-        get_user_bank_accounts_response = await FundingAndWithdrawalService.money_flow_between_user_dtvm_accounts(
-            money_flow_between_user_accounts_request_data
+        get_user_bank_accounts_response = (
+            await FundingAndWithdrawalService.money_flow_between_user_dtvm_accounts(
+                money_flow_between_user_accounts_request_data
+            )
         )
         return get_user_bank_accounts_response
 
@@ -57,9 +61,13 @@ class FundingAndWithdrawalRouter:
             request=request
         )
 
-        money_flow_between_user_accounts_request_data = {"x-thebes-answer": jwt_data}
+        money_flow_between_user_accounts_request_data = {
+            "x-thebes-answer": jwt_data,
+        }
         money_flow_between_user_accounts_request_data.update(user_money_flow.dict())
-        get_user_bank_accounts_response = await FundingAndWithdrawalService.money_flow_between_user_dtvm_accounts(
-            money_flow_between_user_accounts_request_data
+        get_user_bank_accounts_response = (
+            await FundingAndWithdrawalService.money_flow_between_user_dtvm_accounts(
+                money_flow_between_user_accounts_request_data
+            )
         )
         return get_user_bank_accounts_response

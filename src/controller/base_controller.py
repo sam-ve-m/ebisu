@@ -43,7 +43,8 @@ class BaseController(IController, ABC):
 
         except ForbiddenError as e:
             error_response = await BaseController.compile_error_response(
-                status_code=status.HTTP_403_FORBIDDEN, message="Error 403: Forbiden"
+                status_code=status.HTTP_403_FORBIDDEN,
+                message="Error 403: Forbiden",
             )
             return error_response
 

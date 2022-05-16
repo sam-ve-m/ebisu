@@ -124,6 +124,8 @@ class UserBankAccountRepository(MongoDbBaseRepository):
                 "unique_id": unique_id,
                 "bank_accounts": {"$elemMatch": {"id": bank_account_id}},
             },
-            new={"bank_accounts.$.status": UserBankAccountStatus.DISABLED.value},
+            new={
+                "bank_accounts.$.status": UserBankAccountStatus.DISABLED.value,
+            },
         )
         return user_bank_account_was_soft_deleted
