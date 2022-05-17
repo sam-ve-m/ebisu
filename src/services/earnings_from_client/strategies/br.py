@@ -16,11 +16,13 @@ class GetBrEarningsDetails:
                 FROM CORRWIN.TCFMOVI_ACAO MA
                 LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
                 WHERE COD_CLI = ('{cod_client}') 
-                AND DATA_MVTO >= sysdate + 1 
+                
                 AND DATA_MVTO <> TO_DATE('31-DEC-9999', 'DD-MM-YYYY')
                 OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY
                 """
         return query
+
+# AND DATA_MVTO >= sysdate + 1
 
     @staticmethod
     def build_query_record_date_earnings(

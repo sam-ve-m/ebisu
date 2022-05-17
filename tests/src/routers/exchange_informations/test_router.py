@@ -10,6 +10,7 @@ from src.domain.validators.exchange_info.client_orders_validator import (
 )
 from src.domain.validators.exchange_info.earnings_validator import GetEarningsModel
 from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
+from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.domain.validators.exchange_info.get_statement_validator import (
     GetStatementModel,
 )
@@ -22,6 +23,7 @@ from src.domain.validators.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
 )
 from src.routers.exchange_informations.router import ExchangeRouter
+from src.services.earnings_from_client.get_earnings_from_client import EarningsFromClient
 from src.services.get_balance.service import GetBalance
 from src.exceptions.exceptions import UnauthorizedError
 from src.services.get_client_orders.get_client_orders import GetOrders
@@ -301,7 +303,7 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_get_client_orders_r
 
     with pytest.raises(UnauthorizedError):
         await ExchangeRouter.get_client_orders(
-            request=MagicMock(scope=scope_stub_2),
+            request=MagicMock(scope=scope_stub),
             client_order=GetClientOrderModel(
                 **{
                     "region": Region.BR.value,
@@ -409,4 +411,59 @@ async def test_when_sending_wrong_params_to_earnings_router_then_raise_validatio
             earnings=GetEarningsModel(
                 **{"symbol": None, "limit": 1, "offset": 0, "timestamp": None}
             )
+        )
+
+
+# client earnings router
+earnings_response_stub = {"payable_earnings": [10000.0, 25000.0], "record_date_earnings": [20000.0]}
+
+@pytest.mark.asyncio
+@patch.object(JwtService, 'get_thebes_answer_from_request', return_value=payload_data_dummy)
+@patch.object(EarningsFromClient, 'get_service_response', return_value=earnings_response_stub)
+async def test_when_sending_right_params_then_return_the_expected_values(
+        mock_get_thebes_answer_from_request, mock_get_service_response):
+    response = await ExchangeRouter.get_earnings_from_client(
+        request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
+        earnings_client=EarningsClientModel(
+            **{
+                "cod_client": 111,
+                "region": Region.BR.value,
+                "limit": 2,
+                "offset": 0,
+            }
+        ),
+    )
+    assert response == earnings_response_stub
+
+
+@pytest.mark.asyncio
+async def test_when_sending_wrong_params_to_earnings_client_router_then_raise_validation_error():
+
+    with pytest.raises(ValidationError):
+        await ExchangeRouter.get_earnings_from_client(
+            earnings_client=EarningsClientModel(
+                **{
+                    "cod_client": None,
+                    "region": None,
+                    "limit": 2,
+                    "offset": 0,
+                }
+            )
+        )
+
+
+@pytest.mark.asyncio
+async def test_when_sending_the_wrong_payload_jwt_invalid_to_earnings_client_router_then_raise_unauthorized_error():
+
+    with pytest.raises(UnauthorizedError):
+        await ExchangeRouter.get_earnings_from_client(
+            request=MagicMock(scope=scope_stub),
+            earnings_client=EarningsClientModel(
+                **{
+                "cod_client": 111,
+                "region": Region.BR.value,
+                "limit": 2,
+                "offset": 0,
+            }
+            ),
         )

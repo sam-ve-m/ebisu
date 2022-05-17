@@ -2,24 +2,18 @@
 from fastapi import Request, APIRouter, Depends
 
 # Internal Libs
-from src.domain.validators.exchange_info.client_orders_validator import (
-    GetClientOrderModel,
-)
+
+# MODELS
+from src.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
 from src.domain.validators.exchange_info.earnings_validator import GetEarningsModel
 from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
-from src.domain.validators.exchange_info.get_statement_validator import (
-    GetStatementModel,
-)
-from src.domain.validators.exchange_info.list_broker_note_validator import (
-    ListBrokerNoteModel,
-)
-from src.domain.validators.exchange_info.list_client_order_validator import (
-    ListClientOrderModel,
-)
-from src.services.earnings_from_client.get_earnings_from_client import (
-    EarningsFromClient,
-)
+from src.domain.validators.exchange_info.get_statement_validator import GetStatementModel
+from src.domain.validators.exchange_info.list_broker_note_validator import ListBrokerNoteModel
+from src.domain.validators.exchange_info.list_client_order_validator import ListClientOrderModel
+
+# SERVICE IMPORTS
+from src.services.earnings_from_client.get_earnings_from_client import EarningsFromClient
 from src.services.get_balance.service import GetBalance
 from src.services.get_client_orders.get_client_orders import GetOrders
 from src.services.get_earnings.get_client_earnings import EarningsService
@@ -82,7 +76,7 @@ class ExchangeRouter:
 
     @staticmethod
     @__exchange_router.get("/list_client_orders", tags=["Client Orders"])
-    async def get_client_orders(
+    async def list_client_orders(
         request: Request, list_client_orders: ListClientOrderModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)

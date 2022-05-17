@@ -21,7 +21,7 @@ jwt_decompiled_stub = {
     },
 }
 jwt_data = {"CLIENT_JWT_NAME": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"}
-bank_number = "7029"
+bank_number = "001"
 response_stub = {"agency": "0001", "bank": bank_number, "account": "000000014-6"}
 
 

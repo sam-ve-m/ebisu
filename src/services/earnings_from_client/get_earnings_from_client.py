@@ -1,4 +1,4 @@
-# EXTERNAL LIBS
+# INTERNAL LIBS
 from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.repositories.earnings.repository import EarningsClientRepository
@@ -12,12 +12,13 @@ class EarningsFromClient:
     def get_account_by_region(portfolios: dict, region: str) -> str:
 
         accounts_by_region = {
-            Region.BR.value: ["bovespa_account", "bmf_account"],
-            Region.US.value: ["dw_id", "dw_account"],
+            Region.BR.value: "bmf_account",
+            Region.US.value: "dw_account",
         }
+        fields = accounts_by_region[region]
 
-        field = accounts_by_region[region]
-        return portfolios.get(field)
+        accounts = portfolios.get(fields)
+        return accounts
 
     @classmethod
     def normalize_earnings_data(cls, client_earnings: dict) -> dict:
@@ -35,16 +36,10 @@ class EarningsFromClient:
         return normalized_data
 
     @classmethod
-    def get_service_response(
-        cls, earnings_client: EarningsClientModel, jwt_data: dict
-    ) -> dict:
+    def payable_earnings_data_response(cls, earnings_client: EarningsClientModel, accounts: str, open_earnings):
 
-        region = earnings_client.region.value
-        open_earnings = earnings_client_region[region]
-
-        # query result of EXPECTED earnings values (with the date informed)
         query_payable_values = open_earnings.build_query_payable_earnings(
-            cod_client=earnings_client.cod_client,
+            cod_client=accounts,
             limit=earnings_client.limit,
             offset=earnings_client.offset,
         )
@@ -57,10 +52,13 @@ class EarningsFromClient:
             EarningsFromClient.normalize_earnings_data(earnings_res)
             for earnings_res in payable_earnings_request
         ]
+        return earnings_payable_values
 
-        # query result of EXPECTED earnings values (31-12-9999)
+    @classmethod
+    def record_date_earnings_response(cls, earnings_client: EarningsClientModel, accounts: str, open_earnings):
+
         query_record_date_values = open_earnings.build_query_record_date_earnings(
-            cod_client=earnings_client.cod_client,
+            cod_client=accounts,
             limit=earnings_client.limit,
             offset=earnings_client.offset,
         )
@@ -73,6 +71,36 @@ class EarningsFromClient:
             EarningsFromClient.normalize_earnings_data(earnings_response)
             for earnings_response in record_date_earnings_request
         ]
+        return earnings_record_date_values
+
+
+    @classmethod
+    def get_service_response(
+        cls, earnings_client: EarningsClientModel, jwt_data: dict) -> dict:
+
+        user = jwt_data.get("user", {})
+        portfolios = user.get("portfolios", {})
+
+        region = earnings_client.region.value
+        region_portfolios = portfolios.get(region.lower(), {})
+
+        accounts = cls.get_account_by_region(region_portfolios, region)
+
+        region = earnings_client.region.value
+        open_earnings = earnings_client_region[region]
+
+        # query result of FUTURE VALUES CONFIRMED earnings (with the date informed)
+        earnings_payable_values = EarningsFromClient.payable_earnings_data_response(
+            open_earnings=open_earnings,
+            earnings_client=earnings_client,
+            accounts=accounts)
+
+        # query result of NOT YET CONFIRMED earnings (31-12-9999)
+        earnings_record_date_values = EarningsFromClient.record_date_earnings_response(
+            open_earnings=open_earnings,
+            earnings_client=earnings_client,
+            accounts=accounts
+        )
 
         response = {
             "payable_earnings": earnings_payable_values,

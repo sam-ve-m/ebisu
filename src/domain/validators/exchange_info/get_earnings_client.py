@@ -3,7 +3,6 @@ from src.domain.enums.region import Region
 
 
 class EarningsClientModel(BaseModel):
-    cod_client: int
     region: Region
     limit: int
     offset: int
