@@ -87,3 +87,14 @@ class UserBankAccountsRouter:
             request
         )
         return bank_transfer_account_response
+
+    @staticmethod
+    @__bank_account_router.get("/stock_portfolio_list", tags=["Stock Portfolio"])
+    async def list_stock_portfolios(
+            request: Request, stock_portfolios: StockPortfolios = Depends()
+    ):
+        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        response = StockPortfoliosList.get_service_response(
+            stock_portfolios=stock_portfolios, jwt_data=jwt_data
+        )
+        return earnings_client_response
