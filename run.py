@@ -5,7 +5,7 @@ import uvicorn
 
 # Internal Libs
 from etria_logger import GLADSHEIM_LOGGING_CONFIG
-from api.routers.base_router import BaseRouter
+from src.routers.base_router import BaseRouter
 
 app = BaseRouter.register_routers()
 

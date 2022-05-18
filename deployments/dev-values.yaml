@@ -132,15 +132,15 @@ containers:
     - name: DW_APP_KEY
       value: "93d6184b-4692-4058-b32d-82624be89cb1"
     - name: DW_USER
-      value: "bo.lionx.api"
+      value: "bo.lionx.src"
     - name: DW_PASSWORD
       value: "passw0rd"
     - name: DW_AUTHENTICATION_URL
-      value: "https://bo-api.drivewealth.io/back-office/auth"
+      value: "https://bo-src.drivewealth.io/back-office/auth"
     - name: DW_BALANCE_URL
-      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
+      value: "https://bo-src.drivewealth.io/back-office/accounts/{}/summary/money"
     - name: DW_GET_ALL_TRANSACTIONS_URL
-      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
+      value: "https://bo-src.drivewealth.io/back-office/accounts/{}/transactions"
     - name: AWS_ACCESS_KEY_ID
       value: "AKIATZVFXI25USQWCS5O"
     - name: AWS_SECRET_ACCESS_KEY
@@ -196,11 +196,11 @@ containers:
     - name: MEPHO_DW_APP_KEY
       value: "93d6184b-4692-4058-b32d-82624be89cb1"
     - name: MEPHO_DW_USER
-      value: "bo.lionx.api"
+      value: "bo.lionx.src"
     - name: MEPHO_DW_PASSWORD
       value: "passw0rd"
     - name: MEPHO_DW_AUTHENTICATION_URL
-      value: "https://bo-api.drivewealth.io/back-office/auth"
+      value: "https://bo-src.drivewealth.io/back-office/auth"
     - name: MEPHO_REDIS_HOST
       value: "redis://bnd:jkl321pqr@172.30.11.235:6379"
     - name: MEPHO_REDIS_DB
