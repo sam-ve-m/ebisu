@@ -7,7 +7,7 @@ class StockPortfoliosRepository(MongoDbBaseRepository):
     database = config("MONGODB_DATABASE_NAME")
     collection = config("MONGODB_USER_COLLECTION")
 
-    # TODO - FILTER THE PORTFOLIO BY THE ACTIVE OR INACTIVE STATUS
+    # TODO - FILTER PORTFOLIO BY THE ACTIVE OR INACTIVE STATUS
 
     @classmethod
     async def get_stock_portfolios_accounts(cls, unique_id: str):
@@ -21,7 +21,10 @@ class StockPortfoliosRepository(MongoDbBaseRepository):
 
         if stock_portfolios_response is None:
 
-            response = {"stock_portfolios": []}
+            response = {
+                    "default": {},
+                    "vnc_portfolios": {}
+        }
             return response
 
         default_portfolios = stock_portfolios_response.get("portfolios").get("default")
