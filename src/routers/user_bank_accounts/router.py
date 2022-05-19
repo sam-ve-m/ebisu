@@ -15,6 +15,7 @@ from src.domain.validators.user_account.bank_account import (
 from src.services.bank_account.service import UserBankAccountService
 from src.services.bank_transfer.service import BankTransferService
 from src.services.stock_portfolios_list.service import StockPortfoliosList
+from src.domain.validators.stock_portfolios.validators import StockPortfoliosModel
 
 
 class UserBankAccountsRouter:
@@ -92,11 +93,11 @@ class UserBankAccountsRouter:
     @staticmethod
     @__bank_account_router.get("/user/stock_portfolio_list", tags=["Stock Portfolio"])
     async def list_stock_portfolios(
-            request: Request
+            request: Request, portfolios_list: StockPortfoliosModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         jwt_data = {"x-thebes-answer": jwt_data}
         response = await StockPortfoliosList.get_stock_portfolios_response(
-            jwt_data
+            jwt_data, portfolios_list=portfolios_list
         )
         return response

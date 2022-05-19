@@ -1,8 +1,6 @@
 # Standard Libs
 from fastapi import Request, APIRouter, Depends
 
-# Internal Libs
-
 # MODELS
 from src.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
 from src.domain.validators.exchange_info.earnings_validator import GetEarningsModel
