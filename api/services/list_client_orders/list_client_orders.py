@@ -3,7 +3,9 @@ from typing import List
 from fastapi import Query
 
 from api.domain.enums.region import Region
-from api.domain.validators.exchange_info.list_client_order_validator import ListClientOrderModel
+from api.domain.validators.exchange_info.list_client_order_validator import (
+    ListClientOrderModel,
+)
 from api.repositories.companies_data.repository import CompanyInformationRepository
 from api.services.list_client_orders.strategies import order_region
 from api.domain.time_formatter.time_formatter import str_to_timestamp
@@ -68,9 +70,7 @@ class ListOrders:
 
     @classmethod
     async def get_service_response(
-        cls,
-        jwt_data: dict,
-        list_client_orders: ListClientOrderModel
+        cls, jwt_data: dict, list_client_orders: ListClientOrderModel
     ) -> List[dict]:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
@@ -91,7 +91,9 @@ class ListOrders:
         )
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
         data = [
-            await ListOrders.normalize_open_order(user_open_order, list_client_orders.region)
+            await ListOrders.normalize_open_order(
+                user_open_order, list_client_orders.region
+            )
             for user_open_order in user_open_orders
         ]
         return data

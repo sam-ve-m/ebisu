@@ -1,5 +1,7 @@
-# STANDARD LIBS
+# Standard Libs
 from fastapi import Request, APIRouter, Depends
+
+# Internal Libs
 
 # MODELS
 from src.domain.validators.exchange_info.client_orders_validator import (
@@ -7,6 +9,7 @@ from src.domain.validators.exchange_info.client_orders_validator import (
 )
 from src.domain.validators.exchange_info.earnings_validator import GetEarningsModel
 from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
+from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.domain.validators.exchange_info.get_statement_validator import (
     GetStatementModel,
 )
@@ -17,7 +20,10 @@ from src.domain.validators.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
 )
 
-# SERVICES
+# SERVICE IMPORTS
+from src.services.earnings_from_client.get_earnings_from_client import (
+    EarningsFromClient,
+)
 from src.services.get_balance.service import GetBalance
 from src.services.get_client_orders.get_client_orders import GetOrders
 from src.services.get_earnings.get_client_earnings import EarningsService
@@ -44,6 +50,7 @@ class ExchangeRouter:
         )
         return balance_response
 
+    # still not working due to AWS has no correlated route yet
     @staticmethod
     @__exchange_router.get("/list_broker_note", tags=["Broker Note"])
     async def get_broker_note(
@@ -95,3 +102,14 @@ class ExchangeRouter:
             earnings=earnings
         )
         return earnings_response
+
+    @staticmethod
+    @__exchange_router.get("/earnings_client", tags=["Earnings"])
+    async def get_earnings_from_client(
+        request: Request, earnings_client: EarningsClientModel = Depends()
+    ):
+        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        earnings_client_response = EarningsFromClient.get_service_response(
+            earnings_client=earnings_client, jwt_data=jwt_data
+        )
+        return earnings_client_response
