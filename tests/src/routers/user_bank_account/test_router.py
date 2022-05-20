@@ -252,7 +252,7 @@ async def test_when_sending_an_invalid_param_of_model_to_delete_account_then_rai
 async def test_when_getting_the_stock_portfolios_with_a_valid_jwt_then_return_the_portfolios(
     mock_get_thebes_answer_from_request, mock_get_user_bank_accounts
 ):
-    response = await UserBankAccountsRouter.list_stock_portfolios(
+    response = await UserBankAccountsRouter.stock_portfolios_list(
         request=MagicMock(
             scope=scope_correct_stub, headers=MagicMock(raw=x_thebes_bank_tuple)
         )
@@ -265,7 +265,7 @@ async def test_when_getting_the_stock_portfolios_with_a_valid_jwt_then_return_th
 async def test_when_sending_an_invalid_jwt_to_stock_portfolios_then_raise_unauthorized_error():
 
     with pytest.raises(UnauthorizedError):
-        await UserBankAccountsRouter.list_stock_portfolios(
+        await UserBankAccountsRouter.stock_portfolios_list(
             request=MagicMock(
                 scope=scope_wrong_stub, headers=MagicMock(raw=[scope_stub])
             )

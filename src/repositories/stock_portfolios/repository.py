@@ -19,9 +19,6 @@ class StockPortfoliosRepository(MongoDbBaseRepository):
             }
         )
 
-        default_portfolios = stock_portfolios_response.get("portfolios").get("default")
-        vnc_portfolios = stock_portfolios_response.get("portfolios").get("vnc")
-
         if stock_portfolios_response is None:
             response = {
                 "default": {},
@@ -29,10 +26,7 @@ class StockPortfoliosRepository(MongoDbBaseRepository):
             }
             return response
 
-        stock_portfolios = {
-            "default": default_portfolios,
-            "vnc_portfolios": vnc_portfolios
-        }
+        stock_portfolios = stock_portfolios_response.get("portfolios")
 
         return stock_portfolios
 
@@ -56,13 +50,7 @@ class StockPortfoliosRepository(MongoDbBaseRepository):
             }
             return response
 
-        default_portfolios = stock_portfolios_response.get("portfolios").get("default")
-        vnc_portfolios = stock_portfolios_response.get("portfolios").get("vnc")
-
-        stock_portfolios_response = {
-            "default": default_portfolios,
-            "vnc_portfolios": vnc_portfolios
-        }
+        stock_portfolios_response = stock_portfolios_response.get("portfolios")
 
         return stock_portfolios_response
 
