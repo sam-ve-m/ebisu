@@ -6,6 +6,7 @@ from unittest.mock import patch, MagicMock
 from src.services.bank_transfer.service import BankTransferService
 from tests.src.stubs.router_bank_accounts_stubs.stubs import x_thebes_bank_tuple
 
+
 # stub
 jwt_decompiled_stub = {
     "exp": 1678209788,
@@ -24,6 +25,8 @@ jwt_data = {"CLIENT_JWT_NAME": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"}
 bank_number = "001"
 response_stub = {"agency": "0001", "bank": bank_number, "account": "000000014-6"}
 
+from src.infrastructures.env_config import config
+
 
 @pytest.mark.asyncio
 @patch(
@@ -34,7 +37,7 @@ response_stub = {"agency": "0001", "bank": bank_number, "account": "000000014-6"
     "src.services.jwt.service.verify_jwt_token_by_string",
     return_value=jwt_decompiled_stub,
 )
-@patch("src.infrastructures.env_config.config", return_value=bank_number)
+@patch("decouple.Config.__call__", return_value=bank_number)
 async def test_when_sending_the_right_jwt_then_return_the_bank_account_datas_from_jwt(
     mock_config_env_return,
     mock_jwt_validator_and_decompile,

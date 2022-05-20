@@ -36,16 +36,21 @@ class EarningsFromClient:
         return normalized_data
 
     @classmethod
-    def payable_earnings_data_response(cls, earnings_client: EarningsClientModel, accounts: str, open_earnings):
+    def payable_earnings_data_response(
+        cls, earnings_client: EarningsClientModel, accounts: str, open_earnings
+    ):
 
         query_payable_values = open_earnings.build_query_payable_earnings(
             cod_client=accounts,
             limit=earnings_client.limit,
             offset=earnings_client.offset,
+            earnings_types=earnings_client.earnings_types,
         )
 
-        payable_earnings_request = open_earnings.oracle_earnings_client_singleton_instance.get_data(
-            sql=query_payable_values
+        payable_earnings_request = (
+            open_earnings.oracle_earnings_client_singleton_instance.get_data(
+                sql=query_payable_values
+            )
         )
 
         earnings_payable_values = [
@@ -55,16 +60,21 @@ class EarningsFromClient:
         return earnings_payable_values
 
     @classmethod
-    def record_date_earnings_response(cls, earnings_client: EarningsClientModel, accounts: str, open_earnings):
+    def record_date_earnings_response(
+        cls, earnings_client: EarningsClientModel, accounts: str, open_earnings
+    ):
 
         query_record_date_values = open_earnings.build_query_record_date_earnings(
             cod_client=accounts,
             limit=earnings_client.limit,
             offset=earnings_client.offset,
+            earnings_types=earnings_client.earnings_types,
         )
 
-        record_date_earnings_request = open_earnings.oracle_earnings_client_singleton_instance.get_data(
-            sql=query_record_date_values
+        record_date_earnings_request = (
+            open_earnings.oracle_earnings_client_singleton_instance.get_data(
+                sql=query_record_date_values
+            )
         )
 
         earnings_record_date_values = [
@@ -73,10 +83,10 @@ class EarningsFromClient:
         ]
         return earnings_record_date_values
 
-
     @classmethod
     def get_service_response(
-        cls, earnings_client: EarningsClientModel, jwt_data: dict) -> dict:
+        cls, earnings_client: EarningsClientModel, jwt_data: dict
+    ) -> dict:
 
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
@@ -93,13 +103,14 @@ class EarningsFromClient:
         earnings_payable_values = EarningsFromClient.payable_earnings_data_response(
             open_earnings=open_earnings,
             earnings_client=earnings_client,
-            accounts=accounts)
+            accounts=accounts,
+        )
 
         # query result of NOT YET CONFIRMED earnings (31-12-9999)
         earnings_record_date_values = EarningsFromClient.record_date_earnings_response(
             open_earnings=open_earnings,
             earnings_client=earnings_client,
-            accounts=accounts
+            accounts=accounts,
         )
 
         response = {

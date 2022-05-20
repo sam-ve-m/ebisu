@@ -6,18 +6,12 @@ from src.domain.enums.currency import Currency
 
 
 class AccountTransfer:
-
-    def __init__(
-        self,
-        account_number: str,
-        country: Region,
-        user_portfolios: dict
-    ):
+    def __init__(self, account_number: str, country: Region, user_portfolios: dict):
         self._account_number = account_number
         self._country = country
         self._user_portfolios = user_portfolios
-        self._default_accounts =  list()
-        self._vnc_accounts =  list()
+        self._default_accounts = list()
+        self._vnc_accounts = list()
         self._extract_accounts()
         self._currency = self._get_currency_by_country()
         self.__is_owned_by_user = None
@@ -25,7 +19,10 @@ class AccountTransfer:
 
     def _extract_accounts(self):
         country = self._country.value.lower()
-        for accounts_classification, accounts_by_region in self._user_portfolios.items():
+        for (
+            accounts_classification,
+            accounts_by_region,
+        ) in self._user_portfolios.items():
             if accounts_representation := accounts_by_region.get(country):
                 if accounts_classification == "default":
                     self._default_accounts += accounts_representation.values()
@@ -59,5 +56,5 @@ class AccountTransfer:
         return {
             "account_number": self._account_number,
             "country": self._country,
-            "currency":  self._currency
+            "currency": self._currency,
         }
