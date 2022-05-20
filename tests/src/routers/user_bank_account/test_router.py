@@ -16,13 +16,14 @@ from src.services.bank_account.service import UserBankAccountService
 from src.services.jwt.service_jwt import JwtService
 
 # stubs
+from src.services.stock_portfolios_list.service import StockPortfoliosList
 from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
 from tests.src.stubs.router_exchange_infos.stubs import scope_stub
 from tests.src.stubs.bank_account_stubs.stub_get_account import (
     get_accounts_dummy,
     jwt_data_to_create_account,
     jwt_with_bank_account_to_update,
-    jwt_with_bank_account_to_delete,
+    jwt_with_bank_account_to_delete, stock_portfolios_response_dummy,
 )
 from tests.src.stubs.router_bank_accounts_stubs.stubs import (
     scope_wrong_stub,
@@ -237,4 +238,35 @@ async def test_when_sending_an_invalid_param_of_model_to_delete_account_then_rai
                 scope=scope_correct_stub, headers=MagicMock(raw=x_thebes_bank_tuple)
             ),
             delete_bank_account=None,
+        )
+
+
+# user stock portfolio list
+@pytest.mark.asyncio
+@patch.object(
+    JwtService, "get_thebes_answer_from_request", return_value=payload_data_dummy
+)
+@patch.object(
+    StockPortfoliosList, "get_stock_portfolios_response", return_value=stock_portfolios_response_dummy
+)
+async def test_when_getting_the_stock_portfolios_with_a_valid_jwt_then_return_the_portfolios(
+    mock_get_thebes_answer_from_request, mock_get_user_bank_accounts
+):
+    response = await UserBankAccountsRouter.stock_portfolios_list(
+        request=MagicMock(
+            scope=scope_correct_stub, headers=MagicMock(raw=x_thebes_bank_tuple)
+        )
+    )
+    assert response == stock_portfolios_response_dummy
+    assert isinstance(response, dict)
+
+
+@pytest.mark.asyncio
+async def test_when_sending_an_invalid_jwt_to_stock_portfolios_then_raise_unauthorized_error():
+
+    with pytest.raises(UnauthorizedError):
+        await UserBankAccountsRouter.stock_portfolios_list(
+            request=MagicMock(
+                scope=scope_wrong_stub, headers=MagicMock(raw=[scope_stub])
+            )
         )
