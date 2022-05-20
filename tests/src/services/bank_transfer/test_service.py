@@ -26,6 +26,8 @@ bank_number = "001"
 response_stub = {"agency": "0001", "bank": bank_number, "account": "000000014-6"}
 
 from src.infrastructures.env_config import config
+
+
 @pytest.mark.asyncio
 @patch(
     "src.services.jwt.service.jwt_validator_and_decompile",
