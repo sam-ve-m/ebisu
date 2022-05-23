@@ -426,7 +426,6 @@ async def test_when_sending_right_params_then_return_the_expected_values(
         request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
         earnings_client=EarningsClientModel(
             **{
-                "cod_client": 111,
                 "region": Region.BR.value,
                 "limit": 2,
                 "offset": 0,
@@ -454,16 +453,14 @@ async def test_when_sending_wrong_params_to_earnings_client_router_then_raise_va
 
 @pytest.mark.asyncio
 async def test_when_sending_the_wrong_payload_jwt_invalid_to_earnings_client_router_then_raise_unauthorized_error():
-
     with pytest.raises(UnauthorizedError):
         await ExchangeRouter.get_earnings_from_client(
             request=MagicMock(scope=scope_stub),
             earnings_client=EarningsClientModel(
-                **{
-                "cod_client": 111,
-                "region": Region.BR.value,
-                "limit": 2,
-                "offset": 0,
-            }
+                    **{
+                    "region": Region.BR.value,
+                    "limit": 2,
+                    "offset": 0,
+                }
             ),
         )

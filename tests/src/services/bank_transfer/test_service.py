@@ -5,6 +5,7 @@ from unittest.mock import patch, MagicMock
 # External Libs
 from src.services.bank_transfer.service import BankTransferService
 from tests.src.stubs.router_bank_accounts_stubs.stubs import x_thebes_bank_tuple
+from decouple import Config
 
 # stub
 jwt_decompiled_stub = {
@@ -34,7 +35,7 @@ response_stub = {"agency": "0001", "bank": bank_number, "account": "000000014-6"
     "src.services.jwt.service.verify_jwt_token_by_string",
     return_value=jwt_decompiled_stub,
 )
-@patch("src.infrastructures.env_config.config", return_value=bank_number)
+@patch("decouple.Config.__call__", return_value=bank_number)
 async def test_when_sending_the_right_jwt_then_return_the_bank_account_datas_from_jwt(
     mock_config_env_return,
     mock_jwt_validator_and_decompile,
