@@ -10,12 +10,10 @@ response_bank_code = {"code": "070", "description": "BANCO REGIONAL DE BRASILIA"
 
 
 def test_when_sending_right_params_to_normalize_bank_code_then_return_normalized_data():
-
     response = GetBankCode.normalize_bank_code(
         bank_code_list=bank_code_list_stub
     )
-
-    assert response == [{"code": "070", "description": "BANCO REGIONAL DE BRASILIA"}]
+    assert response == {"code": "070", "description": "BANCO REGIONAL DE BRASILIA"}
 
 
 @patch.object(StatementsRepository, 'get_data', return_value=bank_code_list_stub)
