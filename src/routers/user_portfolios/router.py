@@ -15,7 +15,7 @@ class UserPortfoliosRouter:
         return UserPortfoliosRouter.__user_portfolios_router
 
     @staticmethod
-    @__user_portfolios_router.get("/user/user_portfolios_list", tags=["Stock Portfolio"])
+    @__user_portfolios_router.get("/user_portfolios_list", tags=["Stock Portfolio"])
     async def user_portfolios_list(
             request: Request, user_portfolios: UserPortfoliosModel = Depends()
     ):
