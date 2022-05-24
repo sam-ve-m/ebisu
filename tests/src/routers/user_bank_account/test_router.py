@@ -13,6 +13,7 @@ from src.domain.validators.user_account.bank_account import (
 from src.exceptions.exceptions import UnauthorizedError
 from src.routers.user_bank_accounts.router import UserBankAccountsRouter
 from src.services.bank_account.service import UserBankAccountService
+from src.services.get_bank_code.service import GetBankCode
 from src.services.jwt.service_jwt import JwtService
 
 # stubs
@@ -270,3 +271,15 @@ async def test_when_sending_an_invalid_jwt_to_stock_portfolios_then_raise_unauth
                 scope=scope_wrong_stub, headers=MagicMock(raw=[scope_stub])
             )
         )
+
+
+response_bank_code = [{"code": "070", "description": "BANCO REGIONAL DE BRASILIA"}]
+
+# bank code and description
+@patch.object(GetBankCode, 'get_service_response', return_value=response_bank_code)
+def test_bank_code_and_description_router_then_return_the_bank_code_list(
+        mock_get_service_response
+):
+    response = UserBankAccountsRouter.bank_code_and_description()
+    assert response == response_bank_code
+    assert isinstance(response, list)

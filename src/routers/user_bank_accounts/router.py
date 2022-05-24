@@ -4,6 +4,7 @@ from fastapi import Request, APIRouter, Depends
 # INTERNAL LIBS
 from nidavellir import Sindri
 from src.core.interfaces.bank_transfer.interface import IBankTransfer
+from src.services.get_bank_code.service import GetBankCode
 from src.services.jwt.service_jwt import JwtService
 from src.domain.validators.user_account.bank_account import (
     CreateUserBankAccount,
@@ -87,3 +88,11 @@ class UserBankAccountsRouter:
             request
         )
         return bank_transfer_account_response
+
+
+    @staticmethod
+    @__bank_account_router.get("/bank_code", tags=["Bank Code"])
+    def bank_code_and_description():
+
+        response = GetBankCode.get_service_response()
+        return response
