@@ -23,7 +23,9 @@ from src.domain.validators.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
 )
 from src.routers.exchange_informations.router import ExchangeRouter
-from src.services.earnings_from_client.get_earnings_from_client import EarningsFromClient
+from src.services.earnings_from_client.get_earnings_from_client import (
+    EarningsFromClient,
+)
 from src.services.get_balance.service import GetBalance
 from src.exceptions.exceptions import UnauthorizedError
 from src.services.get_client_orders.get_client_orders import GetOrders
@@ -415,13 +417,22 @@ async def test_when_sending_wrong_params_to_earnings_router_then_raise_validatio
 
 
 # client earnings router
-earnings_response_stub = {"payable_earnings": [10000.0, 25000.0], "record_date_earnings": [20000.0]}
+earnings_response_stub = {
+    "payable_earnings": [10000.0, 25000.0],
+    "record_date_earnings": [20000.0],
+}
+
 
 @pytest.mark.asyncio
-@patch.object(JwtService, 'get_thebes_answer_from_request', return_value=payload_data_dummy)
-@patch.object(EarningsFromClient, 'get_service_response', return_value=earnings_response_stub)
+@patch.object(
+    JwtService, "get_thebes_answer_from_request", return_value=payload_data_dummy
+)
+@patch.object(
+    EarningsFromClient, "get_service_response", return_value=earnings_response_stub
+)
 async def test_when_sending_right_params_then_return_the_expected_values(
-        mock_get_thebes_answer_from_request, mock_get_service_response):
+    mock_get_thebes_answer_from_request, mock_get_service_response
+):
     response = await ExchangeRouter.get_earnings_from_client(
         request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
         earnings_client=EarningsClientModel(
@@ -457,7 +468,7 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_earnings_client_rou
         await ExchangeRouter.get_earnings_from_client(
             request=MagicMock(scope=scope_stub),
             earnings_client=EarningsClientModel(
-                    **{
+                **{
                     "region": Region.BR.value,
                     "limit": 2,
                     "offset": 0,

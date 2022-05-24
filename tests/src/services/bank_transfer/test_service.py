@@ -7,6 +7,7 @@ from src.services.bank_transfer.service import BankTransferService
 from tests.src.stubs.router_bank_accounts_stubs.stubs import x_thebes_bank_tuple
 from decouple import Config
 
+
 # stub
 jwt_decompiled_stub = {
     "exp": 1678209788,
@@ -24,6 +25,8 @@ jwt_decompiled_stub = {
 jwt_data = {"CLIENT_JWT_NAME": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"}
 bank_number = "001"
 response_stub = {"agency": "0001", "bank": bank_number, "account": "000000014-6"}
+
+from src.infrastructures.env_config import config
 
 
 @pytest.mark.asyncio
