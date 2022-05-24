@@ -105,7 +105,7 @@ class UserBankAccountService:
             )
         )
         if not bank_code_exists:
-            raise BadRequestError("bank_code.this_is_not_a_valid_bank_code")
+            raise BadRequestError("bank_code.invalid_bank_code")
 
         update_bank_account_response = {
             "message": "Updated",

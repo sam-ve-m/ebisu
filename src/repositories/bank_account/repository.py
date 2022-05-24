@@ -103,8 +103,8 @@ class UserBankAccountRepository(MongoDbBaseRepository):
 
             valid_codes.append(valid)
 
-        if bank_code in valid_codes:
-            return True
+        has_valid_bank_code = bank_code in valid_codes
+        return has_valid_bank_code
 
     @classmethod
     async def update_registered_user_bank_accounts(
