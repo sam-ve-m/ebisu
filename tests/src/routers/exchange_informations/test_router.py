@@ -8,7 +8,6 @@ from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
-from src.domain.validators.exchange_info.earnings_validator import GetEarningsModel
 from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.domain.validators.exchange_info.get_statement_validator import (
@@ -27,14 +26,12 @@ from src.services.earnings_from_client.get_earnings_from_client import EarningsF
 from src.services.get_balance.service import GetBalance
 from src.exceptions.exceptions import UnauthorizedError
 from src.services.get_client_orders.get_client_orders import GetOrders
-from src.services.get_earnings.get_client_earnings import EarningsService
 from src.services.get_statement.get_statement import GetStatement
 from src.services.jwt.service_jwt import JwtService
 from src.services.list_broker_note.list_broker_note import ListBrokerNote
 from src.services.list_client_orders.list_client_orders import ListOrders
 
 # stubs
-from tests.src.stubs.project_stubs.stub_earnings import earnings_dummy_response
 from tests.src.stubs.project_stubs.stub_get_client_orders import (
     client_order_response_dummy,
 )
@@ -366,51 +363,6 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_list_client_orders_
                     "order_status": "FILLED",
                 }
             ),
-        )
-
-
-# earnings router
-@pytest.mark.asyncio
-@patch.object(
-    EarningsService, "get_service_response", return_value=earnings_dummy_response
-)
-async def test_when_sending_the_right_params_to_earnings_router_then_return_the_expected(
-    mock_get_service_response,
-):
-
-    response = await ExchangeRouter.get_br_earnings(
-        earnings=GetEarningsModel(
-            **{"symbol": "PETR4", "limit": 1, "offset": 0, "timestamp": 1646757399000}
-        )
-    )
-
-    assert response == earnings_dummy_response
-    assert response[0].get("price") == 299
-
-
-@pytest.mark.asyncio
-@patch.object(EarningsService, "get_service_response", return_value=[])
-async def test_when_sending_the_right_params_to_earnings_router_then_return_empty_list(
-    mock_get_service_response,
-):
-
-    response = await ExchangeRouter.get_br_earnings(
-        earnings=GetEarningsModel(
-            **{"symbol": "VALE3", "limit": 1, "offset": 0, "timestamp": 1234566857}
-        )
-    )
-
-    assert response == []
-
-
-@pytest.mark.asyncio
-async def test_when_sending_wrong_params_to_earnings_router_then_raise_validation_error():
-
-    with pytest.raises(ValidationError):
-        await ExchangeRouter.get_br_earnings(
-            earnings=GetEarningsModel(
-                **{"symbol": None, "limit": 1, "offset": 0, "timestamp": None}
-            )
         )
 
 

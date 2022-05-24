@@ -84,14 +84,6 @@ class ExchangeRouter:
         return list_client_orders_response
 
     @staticmethod
-    @__exchange_router.get("/earnings", tags=["Earnings"])
-    async def get_br_earnings(earnings: GetEarningsModel = Depends()):
-        earnings_response = await EarningsService.get_service_response(
-            earnings=earnings
-        )
-        return earnings_response
-
-    @staticmethod
     @__exchange_router.get("/earnings_client", tags=["Earnings"])
     async def get_earnings_from_client(
         request: Request, earnings_client: EarningsClientModel = Depends()
