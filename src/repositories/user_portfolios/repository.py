@@ -104,7 +104,8 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             stock_portfolios_response.get("portfolios").get(f"{classification_type}").get(f"{region_portfolios}")
 
         stock_portfolios_response = {
-            f"{region_portfolios}": portfolio_result,
-        }
+            f"{classification_type}":
+                {f"{region_portfolios}": portfolio_result,
+        }}
 
         return stock_portfolios_response

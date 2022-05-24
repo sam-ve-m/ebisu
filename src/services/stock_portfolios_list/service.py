@@ -83,7 +83,7 @@ class UserPortfoliosList:
             map_requisition_body.get((bool(user_portfolios.region), bool(user_portfolios.portfolio_classification)))
 
         map_response = await map_key(
-                portfolios_list=user_portfolios,
+                user_portfolios=user_portfolios,
                 portfolios_repository=portfolios_repository,
                 unique_id=unique_id)
 
