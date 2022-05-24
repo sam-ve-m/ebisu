@@ -468,7 +468,7 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_earnings_client_rou
         await ExchangeRouter.get_earnings_from_client(
             request=MagicMock(scope=scope_stub),
             earnings_client=EarningsClientModel(
-                    **{
+                **{
                     "region": Region.BR.value,
                     "limit": 2,
                     "offset": 0,

@@ -3,9 +3,9 @@ import pytest
 from unittest.mock import patch
 
 # EXTERNAL LIBS
-from src.domain.validators.stock_portfolios.validators import StockPortfoliosModel
-from src.repositories.stock_portfolios.repository import StockPortfoliosRepository
-from src.services.stock_portfolios_list.service import StockPortfoliosList
+from src.domain.validators.stock_portfolios.validators import UserPortfoliosModel
+from src.repositories.user_portfolios.repository import UserPortfoliosRepository
+from src.services.stock_portfolios_list.service import UserPortfoliosList
 from tests.src.stubs.bank_account_stubs.stub_get_account import stock_portfolios_response_dummy, jwt_data_dummy
 
 
@@ -32,26 +32,27 @@ unique_id_stub = "40db7fee-6d60-4d73-824f-1bf87edc4491"
 
 
 @pytest.mark.asyncio
-@patch.object(StockPortfoliosRepository, 'get_all_portfolios_list', return_value=all_portfolios_stub)
+@patch.object(UserPortfoliosRepository, 'get_all_portfolios_list', return_value=all_portfolios_stub)
 async def test_when_sending_the_right_params_to_get_all_stock_portfolios_list_function_then_return_the_expected(
         mock_get_all_portfolios_list
 ):
 
-    response = await StockPortfoliosList.get_all_stock_portfolios_list(
-        unique_id=unique_id_stub, portfolios_repository=StockPortfoliosRepository
+    response = await UserPortfoliosList.get_all_stock_portfolios_list(
+        unique_id=unique_id_stub,
+        portfolios_repository=UserPortfoliosRepository
     )
     assert response == all_portfolios_stub
 
 
 @pytest.mark.asyncio
-@patch.object(StockPortfoliosRepository, 'get_portfolios_by_type', return_value=classification_type_stub)
+@patch.object(UserPortfoliosRepository, 'get_portfolios_by_type', return_value=classification_type_stub)
 async def test_when_get_portfolios_by_type_of_classification_params_are_correct_then_return_the_expected(
         mock_get_portfolios_by_type
 ):
-    response = await StockPortfoliosList.get_portfolios_by_type_of_classification(
-        portfolios_repository=StockPortfoliosRepository,
+    response = await UserPortfoliosList.get_portfolios_by_type_of_classification(
+        portfolios_repository=UserPortfoliosRepository,
         unique_id=unique_id_stub,
-        portfolios_list=StockPortfoliosModel(**{
+        user_portfolios=UserPortfoliosModel(**{
             "portfolio_classification": "VNC"
         })
     )
@@ -59,14 +60,14 @@ async def test_when_get_portfolios_by_type_of_classification_params_are_correct_
 
 
 @pytest.mark.asyncio
-@patch.object(StockPortfoliosRepository, 'get_portfolios_by_region', return_value=portfolios_by_region_stub)
+@patch.object(UserPortfoliosRepository, 'get_portfolios_by_region', return_value=portfolios_by_region_stub)
 async def test_when_sending_params_to_get_portfolios_by_region_br_or_us_then_return_expected(
         mock_get_portfolios_by_region
 ):
-    response = await StockPortfoliosList.get_portfolios_by_region_br_or_us(
-        portfolios_repository=StockPortfoliosRepository,
+    response = await UserPortfoliosList.get_portfolios_by_region_br_or_us(
+        portfolios_repository=UserPortfoliosRepository,
         unique_id=unique_id_stub,
-        portfolios_list=StockPortfoliosModel(**{
+        user_portfolios=UserPortfoliosModel(**{
             "region": "BR"
         })
     )
@@ -74,16 +75,16 @@ async def test_when_sending_params_to_get_portfolios_by_region_br_or_us_then_ret
 
 
 @pytest.mark.asyncio
-@patch.object(StockPortfoliosRepository,
+@patch.object(UserPortfoliosRepository,
               'get_portfolios_by_type_and_region',
               return_value=port_class_and_region_stub)
 async def test_when_sending_right_params_to_get_portfolios_by_type_classification_and_region_then_return_the_expected(
         mock_get_portfolios_by_type_classification_and_region
 ):
-    response = await StockPortfoliosList.get_portfolios_by_type_classification_and_region(
-        portfolios_repository=StockPortfoliosRepository,
+    response = await UserPortfoliosList.get_portfolios_by_type_classification_and_region(
+        portfolios_repository=UserPortfoliosRepository,
         unique_id=unique_id_stub,
-        portfolios_list=StockPortfoliosModel(**{
+        user_portfolios=UserPortfoliosModel(**{
             "region": "BR",
             "portfolio_classification": "VNC"
         })
@@ -92,29 +93,29 @@ async def test_when_sending_right_params_to_get_portfolios_by_type_classificatio
 
 
 @pytest.mark.asyncio
-@patch.object(StockPortfoliosList, "get_all_stock_portfolios_list", return_value=stock_portfolios_response_dummy)
+@patch.object(UserPortfoliosList, "get_all_stock_portfolios_list", return_value=stock_portfolios_response_dummy)
 async def test_when_sending_the_right_params_to_stock_portfolios_service_then_return_the_expected(
         mock_get_stock_portfolios_accounts
 ):
-    response = await StockPortfoliosList.get_stock_portfolios_response(
+    response = await UserPortfoliosList.get_user_portfolios_response(
         jwt_data=jwt_data_dummy,
-        portfolios_repository=StockPortfoliosRepository,
-        portfolios_list=StockPortfoliosModel(**{})
+        portfolios_repository=UserPortfoliosRepository,
+        user_portfolios=UserPortfoliosModel(**{})
     )
     assert response == stock_portfolios_response_dummy
 
 
 @pytest.mark.asyncio
 @patch.object(
-    StockPortfoliosList, "get_all_stock_portfolios_list", return_value={"default": {}, "vnc_portfolios": {}}
+    UserPortfoliosList, "get_all_stock_portfolios_list", return_value={"default": {}, "vnc_portfolios": {}}
 )
 async def test_when_sending_the_right_params_to_portfolios_service_then_return_the_an_empty_list(
         mock_get_stock_portfolios_accounts
 ):
-    response = await StockPortfoliosList.get_stock_portfolios_response(
+    response = await UserPortfoliosList.get_user_portfolios_response(
         jwt_data=jwt_data_dummy,
-        portfolios_repository=StockPortfoliosRepository,
-        portfolios_list=StockPortfoliosModel(**{})
+        portfolios_repository=UserPortfoliosRepository,
+        user_portfolios=UserPortfoliosModel(**{})
     )
     empty_portfolio = {"default": {}, "vnc_portfolios": {}}
 

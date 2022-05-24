@@ -9,6 +9,6 @@ from src.domain.enums.portfolios_classification import PortfolioClassification
 from src.domain.enums.region import Region
 
 
-class StockPortfoliosModel(BaseModel):
+class UserPortfoliosModel(BaseModel):
     region: Optional[Region] = Query(default=None)
     portfolio_classification: Optional[PortfolioClassification] = Query(default=None)

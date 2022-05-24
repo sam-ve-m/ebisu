@@ -1,14 +1,14 @@
 #INTERNAL LIBS
-from src.domain.validators.stock_portfolios.validators import StockPortfoliosModel
-from src.repositories.stock_portfolios.repository import StockPortfoliosRepository
+from src.domain.validators.stock_portfolios.validators import UserPortfoliosModel
+from src.repositories.user_portfolios.repository import UserPortfoliosRepository
 
 
-class StockPortfoliosList:
+class UserPortfoliosList:
 
     @classmethod
     async def get_all_stock_portfolios_list(cls,
                                             unique_id: str,
-                                            portfolios_repository: StockPortfoliosRepository,
+                                            portfolios_repository: UserPortfoliosRepository,
                                             **kwargs):
 
         stock_portfolios_response = await portfolios_repository.get_all_portfolios_list(
@@ -18,13 +18,13 @@ class StockPortfoliosList:
 
     @classmethod
     async def get_portfolios_by_type_of_classification(cls,
-                                                    portfolios_repository: StockPortfoliosRepository,
+                                                    portfolios_repository: UserPortfoliosRepository,
                                                     unique_id: str,
-                                                    portfolios_list = StockPortfoliosModel,
+                                                    user_portfolios = UserPortfoliosModel,
                                                     **kwargs
                                                     ):
 
-        portfolio_classification = portfolios_list.portfolio_classification.value
+        portfolio_classification = user_portfolios.portfolio_classification.value
         stock_portfolios_response = await portfolios_repository.get_portfolios_by_type(
             unique_id=unique_id,
             portfolio_classification=portfolio_classification
@@ -33,12 +33,12 @@ class StockPortfoliosList:
 
     @classmethod
     async def get_portfolios_by_region_br_or_us(cls,
-                                                portfolios_repository: StockPortfoliosRepository,
+                                                portfolios_repository: UserPortfoliosRepository,
                                                 unique_id: str,
-                                                portfolios_list = StockPortfoliosModel,
+                                                user_portfolios = UserPortfoliosModel,
                                                 **kwargs):
 
-        portfolios_region = portfolios_list.region.value
+        portfolios_region = user_portfolios.region.value
 
         stock_portfolios_response = await portfolios_repository.get_portfolios_by_region(
             unique_id=unique_id,
@@ -48,13 +48,13 @@ class StockPortfoliosList:
 
     @classmethod
     async def get_portfolios_by_type_classification_and_region(cls,
-                                                               portfolios_repository: StockPortfoliosRepository,
+                                                               portfolios_repository: UserPortfoliosRepository,
                                                                unique_id: str,
-                                                               portfolios_list = StockPortfoliosModel,
+                                                               user_portfolios = UserPortfoliosModel,
                                                                **kwargs):
 
-        portfolios_region = portfolios_list.region.value
-        portfolio_classification = portfolios_list.portfolio_classification.value
+        portfolios_region = user_portfolios.region.value
+        portfolio_classification = user_portfolios.portfolio_classification.value
 
         stock_portfolios_response = await portfolios_repository.get_portfolios_by_type_and_region(
             unique_id=unique_id,
@@ -64,26 +64,26 @@ class StockPortfoliosList:
         return stock_portfolios_response
 
     @classmethod
-    async def get_stock_portfolios_response(cls,
+    async def get_user_portfolios_response(cls,
                                             jwt_data: dict,
-                                            portfolios_list = StockPortfoliosModel,
-                                            portfolios_repository=StockPortfoliosRepository):
+                                            user_portfolios = UserPortfoliosModel,
+                                            portfolios_repository=UserPortfoliosRepository):
 
         thebes_answer = jwt_data.get("x-thebes-answer")
         unique_id = thebes_answer["user"]["unique_id"]
 
         map_requisition_body = {
-            (False, False): StockPortfoliosList.get_all_stock_portfolios_list,
-            (True, False): StockPortfoliosList.get_portfolios_by_region_br_or_us,
-            (False, True): StockPortfoliosList.get_portfolios_by_type_of_classification,
-            (True, True): StockPortfoliosList.get_portfolios_by_type_classification_and_region,
+            (False, False): UserPortfoliosList.get_all_stock_portfolios_list,
+            (True, False): UserPortfoliosList.get_portfolios_by_region_br_or_us,
+            (False, True): UserPortfoliosList.get_portfolios_by_type_of_classification,
+            (True, True): UserPortfoliosList.get_portfolios_by_type_classification_and_region,
         }
 
         map_key = \
-            map_requisition_body.get((bool(portfolios_list.region), bool(portfolios_list.portfolio_classification)))
+            map_requisition_body.get((bool(user_portfolios.region), bool(user_portfolios.portfolio_classification)))
 
         map_response = await map_key(
-                portfolios_list=portfolios_list,
+                portfolios_list=user_portfolios,
                 portfolios_repository=portfolios_repository,
                 unique_id=unique_id)
 
