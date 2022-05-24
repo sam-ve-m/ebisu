@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 # EXTERNAL LIBS
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
-from src.repositories.stock_portfolios.repository import StockPortfoliosRepository
+from src.repositories.user_portfolios.repository import StockPortfoliosRepository
 
 
 unique_id_stub = "40db7fee-6d60-4d73-824f-1bf87edc4491"
