@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 # EXTERNAL LIBS
 from src.domain.validators.stock_portfolios.validators import StockPortfoliosModel
-from src.repositories.stock_portfolios.repository import StockPortfoliosRepository
+from src.repositories.user_portfolios.repository import StockPortfoliosRepository
 from src.services.stock_portfolios_list.service import StockPortfoliosList
 from tests.src.stubs.bank_account_stubs.stub_get_account import stock_portfolios_response_dummy, jwt_data_dummy
 

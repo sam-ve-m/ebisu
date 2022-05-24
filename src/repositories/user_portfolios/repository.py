@@ -3,7 +3,7 @@ from src.infrastructures.env_config import config
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 
 
-class StockPortfoliosRepository(MongoDbBaseRepository):
+class UserPortfoliosRepository(MongoDbBaseRepository):
     database = config("MONGODB_DATABASE_NAME")
     collection = config("MONGODB_USER_COLLECTION")
 
