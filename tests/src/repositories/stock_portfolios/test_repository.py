@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 # EXTERNAL LIBS
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
-from src.repositories.user_portfolios.repository import StockPortfoliosRepository
+from src.repositories.user_portfolios.repository import UserPortfoliosRepository
 
 
 unique_id_stub = "40db7fee-6d60-4d73-824f-1bf87edc4491"
@@ -28,7 +28,7 @@ find_one_by_type_and_region = {"br": [{"bovespa_account": "000000071-5","bmf_acc
 async def test_when_sending_the_right_params_to_get_all_portfolios_list_then_return_the_expected(
         mock_find_one
 ):
-    response = await StockPortfoliosRepository.get_all_portfolios_list(
+    response = await UserPortfoliosRepository.get_all_portfolios_list(
         unique_id=unique_id_stub
     )
     assert response == find_one_response_stub.get("portfolios")
@@ -40,7 +40,7 @@ async def test_when_sending_the_right_params_to_get_all_portfolios_list_then_ret
 async def test_when_sending_the_right_params_to_get_all_portfolios_list_then_return_the_expected_for_no_data(
         mock_find_one
 ):
-    response = await StockPortfoliosRepository.get_all_portfolios_list(
+    response = await UserPortfoliosRepository.get_all_portfolios_list(
         unique_id=unique_id_stub
     )
     assert response == {"default": {}, "vnc_portfolios": {}}
@@ -51,7 +51,7 @@ async def test_when_sending_the_right_params_to_get_all_portfolios_list_then_ret
 async def test_when_sending_the_right_params_to_get_portfolios_by_region_then_return_the_expected(
         mock_find_one
 ):
-    response = await StockPortfoliosRepository.get_portfolios_by_region(
+    response = await UserPortfoliosRepository.get_portfolios_by_region(
         unique_id=unique_id_stub, region="BR"
     )
 
@@ -63,7 +63,7 @@ async def test_when_sending_the_right_params_to_get_portfolios_by_region_then_re
 async def test_when_sending_the_right_params_to_get_portfolios_by_region_then_return_no_data_which_is_the_expected(
             mock_find_one
 ):
-    response = await StockPortfoliosRepository.get_portfolios_by_region(
+    response = await UserPortfoliosRepository.get_portfolios_by_region(
         unique_id=unique_id_stub, region="BR"
     )
 
@@ -75,7 +75,7 @@ async def test_when_sending_the_right_params_to_get_portfolios_by_region_then_re
 async def test_when_sending_the_right_params_to_get_portfolios_by_type_then_return_the_expected(
             mock_find_one
 ):
-    response = await StockPortfoliosRepository.get_portfolios_by_type(
+    response = await UserPortfoliosRepository.get_portfolios_by_type(
         unique_id=unique_id_stub, portfolio_classification="VNC"
     )
 
@@ -87,7 +87,7 @@ async def test_when_sending_the_right_params_to_get_portfolios_by_type_then_retu
 async def test_when_sending_the_right_params_to_portfolios_by_type_then_return_no_data_response(
         mock_find_one
 ):
-    response = await StockPortfoliosRepository.get_portfolios_by_type(
+    response = await UserPortfoliosRepository.get_portfolios_by_type(
         unique_id=unique_id_stub, portfolio_classification="VNC"
     )
 
@@ -99,7 +99,7 @@ async def test_when_sending_the_right_params_to_portfolios_by_type_then_return_n
 async def test_when_sending_the_right_params_to_portfolios_by_type_and_region_then_return_no_data_response(
         mock_find_one
 ):
-    response = await StockPortfoliosRepository.get_portfolios_by_type_and_region(
+    response = await UserPortfoliosRepository.get_portfolios_by_type_and_region(
         unique_id=unique_id_stub, portfolio_classification="VNC", region="BR"
     )
     assert response == {"vnc": {}}
@@ -110,7 +110,7 @@ async def test_when_sending_the_right_params_to_portfolios_by_type_and_region_th
 async def test_when_sending_the_right_params_to_type_and_region_then_return_the_expected(
 mock_find_one
 ):
-    response = await StockPortfoliosRepository.get_portfolios_by_type_and_region(
+    response = await UserPortfoliosRepository.get_portfolios_by_type_and_region(
         unique_id=unique_id_stub, portfolio_classification="VNC", region="BR"
     )
     assert response == find_one_by_type_and_region
