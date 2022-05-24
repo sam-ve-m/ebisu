@@ -1,7 +1,9 @@
+# STANDARD LIBS
 from datetime import datetime
 from typing import List
 import pytz
 
+# INTERNAL LIBS
 from src.services.get_statement.dw_connection import DWTransport
 from src.domain.time_formatter.time_formatter import (
     str_to_timestamp_statement,
