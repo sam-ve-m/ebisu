@@ -5,7 +5,6 @@ from fastapi import Request, APIRouter, Depends
 from src.domain.validators.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
-from src.domain.validators.exchange_info.earnings_validator import GetEarningsModel
 from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.domain.validators.exchange_info.get_statement_validator import (
@@ -24,7 +23,6 @@ from src.services.earnings_from_client.get_earnings_from_client import (
 )
 from src.services.get_balance.service import GetBalance
 from src.services.get_client_orders.get_client_orders import GetOrders
-from src.services.get_earnings.get_client_earnings import EarningsService
 from src.services.get_statement.get_statement import GetStatement
 from src.services.jwt.service_jwt import JwtService
 from src.services.list_broker_note.list_broker_note import ListBrokerNote
@@ -92,14 +90,6 @@ class ExchangeRouter:
             list_client_orders=list_client_orders, jwt_data=jwt_data
         )
         return list_client_orders_response
-
-    @staticmethod
-    @__exchange_router.get("/earnings", tags=["Earnings"])
-    async def get_br_earnings(earnings: GetEarningsModel = Depends()):
-        earnings_response = await EarningsService.get_service_response(
-            earnings=earnings
-        )
-        return earnings_response
 
     @staticmethod
     @__exchange_router.get("/earnings_client", tags=["Earnings"])

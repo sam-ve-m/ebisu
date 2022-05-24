@@ -230,19 +230,18 @@ user_from_client_2_stub = {
     "account_name": "corrente",
 }
 
-stock_portfolios_response_dummy = {"default": {
-        "br": {
-            "bovespa_account": "000000014-6",
-            "bmf_account": "14"
-        },
+stock_portfolios_response_dummy = {
+    "default": {
+        "br": {"bovespa_account": "000000014-6", "bmf_account": "14"},
         "us": {
             "dw_id": "89c69304-018a-40b7-be5b-2121c16e109e",
-            "dw_account": "89c69304-018a-40b7-be5b-2121c16e109e.1651525277006"
-        }
+            "dw_account": "89c69304-018a-40b7-be5b-2121c16e109e.1651525277006",
+        },
     },
-    "vnc_portfolios": {"br": [
-            {
-                "bovespa_account": "000000071-5",
-                "bmf_account": "71"
-            },{"bovespa_account": "000000018-9",
-                "bmf_account": "18"}]}}
+    "vnc_portfolios": {
+        "br": [
+            {"bovespa_account": "000000071-5", "bmf_account": "71"},
+            {"bovespa_account": "000000018-9", "bmf_account": "18"},
+        ]
+    },
+}
