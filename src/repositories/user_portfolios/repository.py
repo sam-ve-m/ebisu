@@ -13,17 +13,11 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
     async def get_all_portfolios_list(cls, unique_id: str):
 
         stock_portfolios_response = await cls.find_one(
-            query={"unique_id": unique_id},
-            project={
-                "portfolios": 1, "_id": 0
-            }
+            query={"unique_id": unique_id}, project={"portfolios": 1, "_id": 0}
         )
 
         if stock_portfolios_response is None:
-            response = {
-                "default": {},
-                "vnc_portfolios": {}
-            }
+            response = {"default": {}, "vnc_portfolios": {}}
             return response
 
         stock_portfolios = stock_portfolios_response.get("portfolios")
@@ -39,15 +33,12 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             project={
                 f"portfolios.vnc.{region_portfolios}": 1,
                 f"portfolios.default.{region_portfolios}": 1,
-                "_id": 0
-            }
+                "_id": 0,
+            },
         )
 
         if stock_portfolios_response is None:
-            response = {
-                "default": {},
-                "vnc_portfolios": {}
-            }
+            response = {"default": {}, "vnc_portfolios": {}}
             return response
 
         stock_portfolios_response = stock_portfolios_response.get("portfolios")
@@ -55,24 +46,23 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
         return stock_portfolios_response
 
     @classmethod
-    async def get_portfolios_by_type(cls, unique_id: str, portfolio_classification: str):
+    async def get_portfolios_by_type(
+        cls, unique_id: str, portfolio_classification: str
+    ):
         classification_type = portfolio_classification.lower()
 
         stock_portfolios_response = await cls.find_one(
             query={"unique_id": unique_id},
-            project={
-                f"portfolios.{classification_type}": 1,
-                "_id": 0
-            }
+            project={f"portfolios.{classification_type}": 1, "_id": 0},
         )
 
         if stock_portfolios_response is None:
-            response = {
-                f"{classification_type}": {}
-            }
+            response = {f"{classification_type}": {}}
             return response
 
-        portfolio_result = stock_portfolios_response.get("portfolios").get(f"{classification_type}")
+        portfolio_result = stock_portfolios_response.get("portfolios").get(
+            f"{classification_type}"
+        )
 
         stock_portfolios_response = {
             f"{classification_type}": portfolio_result,
@@ -81,7 +71,9 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
         return stock_portfolios_response
 
     @classmethod
-    async def get_portfolios_by_type_and_region(cls, unique_id: str, portfolio_classification: str, region: str):
+    async def get_portfolios_by_type_and_region(
+        cls, unique_id: str, portfolio_classification: str, region: str
+    ):
         classification_type = portfolio_classification.lower()
         region_portfolios = region.lower()
 
@@ -90,22 +82,24 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             project={
                 f"portfolios.{classification_type}": 1,
                 f"{region_portfolios}": 1,
-                "_id": 0
-            }
+                "_id": 0,
+            },
         )
 
         if stock_portfolios_response is None:
-            response = {
-                f"{classification_type}": {}
-            }
+            response = {f"{classification_type}": {}}
             return response
 
-        portfolio_result = \
-            stock_portfolios_response.get("portfolios").get(f"{classification_type}").get(f"{region_portfolios}")
+        portfolio_result = (
+            stock_portfolios_response.get("portfolios")
+            .get(f"{classification_type}")
+            .get(f"{region_portfolios}")
+        )
 
         stock_portfolios_response = {
-            f"{classification_type}":
-                {f"{region_portfolios}": portfolio_result,
-        }}
+            f"{classification_type}": {
+                f"{region_portfolios}": portfolio_result,
+            }
+        }
 
         return stock_portfolios_response

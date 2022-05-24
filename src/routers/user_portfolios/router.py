@@ -17,7 +17,7 @@ class UserPortfoliosRouter:
     @staticmethod
     @__user_portfolios_router.get("/user_portfolios_list", tags=["Stock Portfolio"])
     async def user_portfolios_list(
-            request: Request, user_portfolios: UserPortfoliosModel = Depends()
+        request: Request, user_portfolios: UserPortfoliosModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         jwt_data = {"x-thebes-answer": jwt_data}

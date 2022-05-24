@@ -21,8 +21,7 @@ class GetBankCode:
         bank_code_result = cls.oracle_singleton_instance.get_data(sql=query)
 
         bank_info_result = [
-            GetBankCode.normalize_bank_code(result)
-            for result in bank_code_result
+            GetBankCode.normalize_bank_code(result) for result in bank_code_result
         ]
 
         return bank_info_result
