@@ -19,8 +19,12 @@ from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
 @patch.object(
     UserBankAccountRepository, "update_registered_user_bank_accounts", return_value=True
 )
+@patch.object(
+UserBankAccountRepository, 'bank_code_from_client_exists', return_value=True
+)
 async def test_update_user_when_sending_the_right_params_then_return_the_duly_updated_message(
-    mock_get_registered_user_bank_accounts, mock_update_registered_user_bank_accounts
+    mock_get_registered_user_bank_accounts, mock_update_registered_user_bank_accounts,
+        mock_bank_code_from_client_exists
 ):
 
     response = await UserBankAccountService.update_user_bank_account(
@@ -33,6 +37,28 @@ async def test_update_user_when_sending_the_right_params_then_return_the_duly_up
     assert response == updating_message
     assert isinstance(response, dict)
     assert response.get("message") == "Updated"
+
+
+@pytest.mark.asyncio
+@patch.object(
+    UserBankAccountRepository, "user_bank_account_id_exists", return_value=True
+)
+@patch.object(
+    UserBankAccountRepository, "update_registered_user_bank_accounts", return_value=True
+)
+@patch.object(
+UserBankAccountRepository, 'bank_code_from_client_exists', return_value=False
+)
+async def test_update_user_when_sending_an_invalid_bank_code_then_return_the_bad_request_response(
+    mock_get_registered_user_bank_accounts,
+    mock_update_registered_user_bank_accounts,
+    mock_bank_code_from_client_exists
+):
+    with pytest.raises(BadRequestError):
+        await UserBankAccountService.update_user_bank_account(
+            jwt_data=jwt_with_bank_account_to_update,
+            bank_account_repository=UserBankAccountRepository,
+        )
 
 
 @pytest.mark.asyncio

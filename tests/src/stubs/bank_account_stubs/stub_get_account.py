@@ -70,7 +70,7 @@ jwt_with_bank_account_to_update = {
         },
     },
     "bank_account": {
-        "bank": "6484976383936",
+        "bank": "070",
         "account_type": "903984",
         "agency": "008956",
         "account_number": "000000020-6",
@@ -125,7 +125,7 @@ jwt_with_bank_account_to_create = {
         },
     },
     "bank_account": {
-        "bank": "26544382992763",
+        "bank": "070",
         "account_type": "8478674",
         "agency": "6255373",
         "account_number": "72655343-2",
