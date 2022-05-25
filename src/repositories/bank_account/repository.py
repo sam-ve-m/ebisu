@@ -2,6 +2,7 @@ from src.domain.user_bank_account.status.enum import UserBankAccountStatus
 from src.infrastructures.env_config import config
 
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
+from src.services.get_bank_code.service import GetBankCode
 
 
 class UserBankAccountRepository(MongoDbBaseRepository):
@@ -88,6 +89,21 @@ class UserBankAccountRepository(MongoDbBaseRepository):
         )
         user_bank_account_id_exists = bool(user_bank_account)
         return user_bank_account_id_exists
+
+    @classmethod
+    def bank_code_from_client_exists(
+            cls, bank: str) -> bool:
+        bank_codes = GetBankCode.get_service_response()
+
+        valid_codes = []
+
+        for code in bank_codes:
+            valid = code.get("code")
+
+            valid_codes.append(valid)
+
+        has_valid_bank_code = bank in valid_codes
+        return has_valid_bank_code
 
     @classmethod
     async def update_registered_user_bank_accounts(

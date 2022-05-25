@@ -10,7 +10,7 @@ from src.domain.validators.user_account.bank_account import (
     UpdateUserBankAccounts,
     DeleteUsersBankAccount,
 )
-from src.exceptions.exceptions import UnauthorizedError
+from src.exceptions.exceptions import UnauthorizedError, BadRequestError
 from src.routers.user_bank_accounts.router import UserBankAccountsRouter
 from src.routers.user_portfolios.router import UserPortfoliosRouter
 from src.services.bank_account.service import UserBankAccountService
@@ -119,9 +119,9 @@ async def test_when_getting_the_bank_account_with_a_valid_jwt_then_return_the_ba
 
 
 @pytest.mark.asyncio
-async def test_when_sending_an_invalid_jwt_to_create_account_then_raise_unauthorized_error():
+async def test_when_sending_an_invalid_jwt_to_create_account_then_raise_bad_request_error():
 
-    with pytest.raises(UnauthorizedError):
+    with pytest.raises(BadRequestError):
         await UserBankAccountsRouter.create_user_bank_accounts(
             request=MagicMock(
                 scope=scope_correct_stub, headers=MagicMock(raw=[scope_stub])
@@ -170,9 +170,9 @@ async def test_when_getting_the_bank_account_with_a_valid_jwt_then_return_the_ba
 
 
 @pytest.mark.asyncio
-async def test_when_sending_an_invalid_jwt_to_update_account_then_raise_unauthorized_error():
+async def test_when_sending_an_invalid_jwt_to_update_account_then_raise_bad_request_error():
 
-    with pytest.raises(UnauthorizedError):
+    with pytest.raises(BadRequestError):
         await UserBankAccountsRouter.update_bank_account(
             request=MagicMock(
                 scope=scope_correct_stub, headers=MagicMock(raw=[scope_stub])

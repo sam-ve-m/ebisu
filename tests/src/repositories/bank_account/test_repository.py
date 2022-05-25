@@ -5,6 +5,7 @@ from unittest.mock import patch
 # INTERNAL LIBS
 from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
+from src.services.get_bank_code.service import GetBankCode
 from tests.src.stubs.bank_account_stubs.stub_get_account import (
     find_all_response_dummy,
     find_one_response_dummy,
@@ -17,6 +18,15 @@ from tests.src.stubs.bank_account_stubs.stub_get_account import (
 # stubs
 account_repository_id_stub = "40db7fee-6d60-4d73-824f-1bf87edc4491"
 bank_account_repository_stub = {"bank_account": "648498574893"}
+
+bank_codes_valid_stub = [{"code": "070", "description": "BANCO REGIONAL DE BRASILIA"},
+    {"code": "097", "description": "BEP - BANCO DO ESTADO DO PARANA S/A"}]
+
+create_bank_account_stub = {"bank": "070", "account_type": "090948747654", "agency": "8776262563",
+    "account_number": "9938373-2", "account_name": "corrente", "cpf":"58038116020"}
+
+create_bank_account_invalid_stub = {"bank": "77265353572973", "account_type": "090948747654", "agency": "8776262563",
+    "account_number": "9938373-2", "account_name": "corrente", "cpf":"58038116020"}
 
 
 @pytest.mark.asyncio
@@ -199,4 +209,24 @@ async def test_when_sending_the_right_params_to_delete_registered_bank_account_t
         bank_account=find_one_response_with_cpf_dummy,
     )
 
+    assert response == False
+
+
+@patch.object(GetBankCode, 'get_service_response', return_value=bank_codes_valid_stub)
+def test_when_sending_right_params_to_bank_code_from_client_exists_then_return_true(
+        mock_get_service_response
+):
+    response = UserBankAccountRepository.bank_code_from_client_exists(
+        bank="070"
+    )
+    assert response == True
+
+
+@patch.object(GetBankCode, 'get_service_response', return_value=bank_codes_valid_stub)
+def test_when_sending_invalid_params_to_bank_code_from_client_exists_then_return_true(
+        mock_get_service_response
+):
+    response = UserBankAccountRepository.bank_code_from_client_exists(
+        bank="123456"
+    )
     assert response == False

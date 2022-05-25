@@ -2,7 +2,6 @@ from enum import Enum
 
 from fastapi import Query
 from pydantic import BaseModel, Extra
-from src.domain.enums.region import Region
 
 
 class BrokerNoteMarket(Enum):
