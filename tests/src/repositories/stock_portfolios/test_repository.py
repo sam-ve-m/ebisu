@@ -113,4 +113,4 @@ mock_find_one
     response = await UserPortfoliosRepository.get_portfolios_by_type_and_region(
         unique_id=unique_id_stub, portfolio_classification="VNC", region="BR"
     )
-    assert response == find_one_by_type_and_region
+    assert response == {'vnc': find_one_by_type_and_region}

@@ -93,6 +93,11 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             }
         )
 
+        if stock_portfolios_response is None:
+            response = {
+                f"{classification_type}": {}
+            }
+            return response
 
         portfolio_result = \
             stock_portfolios_response.get("portfolios").get(f"{classification_type}").get(f"{region_portfolios}")
@@ -103,6 +108,3 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
         }}
 
         return stock_portfolios_response
-
-
-
