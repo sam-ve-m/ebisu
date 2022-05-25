@@ -88,7 +88,6 @@ class UserBankAccountsRouter:
         )
         return bank_transfer_account_response
 
-
     @staticmethod
     @__bank_account_router.get("/bank_code", tags=["Bank Code"])
     def bank_code_and_description():

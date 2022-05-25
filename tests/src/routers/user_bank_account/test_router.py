@@ -25,7 +25,8 @@ from tests.src.stubs.bank_account_stubs.stub_get_account import (
     get_accounts_dummy,
     jwt_data_to_create_account,
     jwt_with_bank_account_to_update,
-    jwt_with_bank_account_to_delete, stock_portfolios_response_dummy,
+    jwt_with_bank_account_to_delete,
+    stock_portfolios_response_dummy,
 )
 from tests.src.stubs.router_bank_accounts_stubs.stubs import (
     scope_wrong_stub,
@@ -249,7 +250,9 @@ async def test_when_sending_an_invalid_param_of_model_to_delete_account_then_rai
     JwtService, "get_thebes_answer_from_request", return_value=payload_data_dummy
 )
 @patch.object(
-    UserPortfoliosList, "get_user_portfolios_response", return_value=stock_portfolios_response_dummy
+    UserPortfoliosList,
+    "get_user_portfolios_response",
+    return_value=stock_portfolios_response_dummy,
 )
 async def test_when_getting_the_stock_portfolios_with_a_valid_jwt_then_return_the_portfolios(
     mock_get_thebes_answer_from_request, mock_get_user_bank_accounts
@@ -277,9 +280,9 @@ async def test_when_sending_an_invalid_jwt_to_stock_portfolios_then_raise_unauth
 response_bank_code = [{"code": "070", "description": "BANCO REGIONAL DE BRASILIA"}]
 
 # bank code and description
-@patch.object(GetBankCode, 'get_service_response', return_value=response_bank_code)
+@patch.object(GetBankCode, "get_service_response", return_value=response_bank_code)
 def test_bank_code_and_description_router_then_return_the_bank_code_list(
-        mock_get_service_response
+    mock_get_service_response,
 ):
     response = UserBankAccountsRouter.bank_code_and_description()
     assert response == response_bank_code
