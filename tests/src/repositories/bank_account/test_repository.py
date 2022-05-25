@@ -211,23 +211,22 @@ async def test_when_sending_the_right_params_to_delete_registered_bank_account_t
 
     assert response == False
 
-@pytest.mark.asyncio
+
 @patch.object(GetBankCode, 'get_service_response', return_value=bank_codes_valid_stub)
-async def test_when_sending_right_params_to_bank_code_from_client_exists_then_return_true(
-        mock_bank_codes_valid_stub
+def test_when_sending_right_params_to_bank_code_from_client_exists_then_return_true(
+        mock_get_service_response
 ):
-    response = await UserBankAccountRepository.bank_code_from_client_exists(
-        bank_account=create_bank_account_stub
+    response = UserBankAccountRepository.bank_code_from_client_exists(
+        bank="070"
     )
     assert response == True
 
 
-@pytest.mark.asyncio
 @patch.object(GetBankCode, 'get_service_response', return_value=bank_codes_valid_stub)
-async def test_when_sending_right_params_to_bank_code_from_client_exists_then_return_true(
-        mock_bank_codes_valid_stub
+def test_when_sending_invalid_params_to_bank_code_from_client_exists_then_return_true(
+        mock_get_service_response
 ):
-    response = await UserBankAccountRepository.bank_code_from_client_exists(
-        bank_account=create_bank_account_invalid_stub
+    response = UserBankAccountRepository.bank_code_from_client_exists(
+        bank="123456"
     )
     assert response == False

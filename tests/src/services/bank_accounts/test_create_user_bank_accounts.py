@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 # INTERNAL LIBS
 from tests.src.stubs.bank_account_stubs.stub_get_account import (
-    jwt_with_bank_account_to_create,
+    jwt_with_bank_account_to_create, jwt_with_bank_account_to_create_invalid,
 )
 from src.services.bank_account.service import UserBankAccountService
 from src.repositories.bank_account.repository import UserBankAccountRepository
@@ -38,33 +38,6 @@ async def test_create_user_when_sending_the_right_params_then_return_the_duly_de
     )
     assert response == {"message": "Created"}
     assert isinstance(response, dict)
-
-
-@pytest.mark.asyncio
-@pytest.mark.asyncio
-@patch.object(
-    UserBankAccountRepository, "is_user_bank_account_from_client", return_value=True
-)
-@patch.object(
-    UserBankAccountRepository,
-    "existing_user_bank_account_and_is_activated",
-    return_value=False,
-)
-@patch.object(
-    UserBankAccountRepository, "save_registered_user_bank_accounts", return_value=True
-)
-@patch.object(
-UserBankAccountRepository, 'bank_code_from_client_exists', return_value=False
-)
-async def test_when_sending_an_invalid_bank_code_number_then_return_the_expected_error(
-        mock_is_user_bank_account_from_client, mock_existing_user_bank_account_and_is_activated,
-        mock_save_registered_user_bank_accounts, mock_bank_code_from_client_exists
-):
-    with pytest.raises(BadRequestError):
-        await UserBankAccountService.create_user_bank_accounts(
-        bank_account_repository=UserBankAccountRepository,
-        jwt_data=jwt_with_bank_account_to_create,
-    )
 
 
 @pytest.mark.asyncio
