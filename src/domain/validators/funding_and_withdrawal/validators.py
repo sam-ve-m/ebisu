@@ -1,5 +1,4 @@
 from pydantic import BaseModel, constr, confloat, root_validator
-
 from src.domain.enums.region import Region
 
 

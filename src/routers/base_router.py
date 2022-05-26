@@ -21,6 +21,7 @@ from src.exceptions.exceptions import (
 from src.routers.exchange_informations.router import ExchangeRouter
 from src.routers.user_bank_accounts.router import UserBankAccountsRouter
 from src.routers.funding_and_withdrawal.router import FundingAndWithdrawalRouter
+from src.routers.user_exchange_operation.router import UserExchangeOperationsRouter
 from src.routers.user_portfolios.router import UserPortfoliosRouter
 
 
@@ -56,11 +57,18 @@ class BaseRouter:
         return BaseRouter.app
 
     @staticmethod
+    def __register_user_exchange_operations():
+        user_exchange_operations_router = UserExchangeOperationsRouter.get_user_account_router()
+        BaseRouter.app.include_router(user_exchange_operations_router)
+        return BaseRouter.app
+
+    @staticmethod
     def register_routers():
         BaseRouter.__register_router_exchange()
         BaseRouter.__register_router_account()
         BaseRouter.__register_funding_and_withdrawal()
         BaseRouter.__register_user_portfolios()
+        BaseRouter.__register_user_exchange_operations()
 
         return BaseRouter.app
 

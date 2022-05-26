@@ -1,11 +1,10 @@
 from fastapi import Request, APIRouter
 
 from src.domain.validators.funding_and_withdrawal.validators import (
-    UserMoneyFlow,
     UserMoneyFloSameExchange,
     UserMoneyFloDifferentExchange,
 )
-from src.services.bank_account.service import UserBankAccountService
+from src.repositories.exchange_operations.repository import UserExchangeOperationsRepository
 from src.services.funding_and_withdrawal.service import FundingAndWithdrawalService
 from src.services.jwt.service_jwt import JwtService
 from src.domain.exception.model import InvalidElectronicaSignature
@@ -47,6 +46,10 @@ class FundingAndWithdrawalRouter:
                 money_flow_between_user_accounts_request_data
             )
         )
+        await UserExchangeOperationsRepository.save_user_exchange_operations(
+            jwt_data=jwt_data,
+            resume=get_user_bank_accounts_response)
+
         return get_user_bank_accounts_response
 
     @staticmethod
