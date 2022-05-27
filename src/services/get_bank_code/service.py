@@ -14,6 +14,17 @@ class GetBankCode:
         return normalize_data
 
     @classmethod
+    def get_bank_code_from_database(cls, bank: str):
+
+        query = f"""
+        SELECT CD_BANCO FROM CORRWIN.TSCBANCO WHERE CD_BANCO = ('{bank}')
+        """
+
+        bank_code_result = cls.oracle_singleton_instance.get_data(sql=query)
+
+        return bank_code_result
+
+    @classmethod
     def get_service_response(cls):
 
         query = f"""SELECT CD_BANCO, NM_BANCO FROM CORRWIN.TSCBANCO"""
