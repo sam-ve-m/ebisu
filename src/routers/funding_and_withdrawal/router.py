@@ -75,4 +75,5 @@ class FundingAndWithdrawalRouter:
         await UserExchangeOperationsRepository.save_user_exchange_operations(
             jwt_data=jwt_data,
             resume=get_user_bank_accounts_response)
+
         return get_user_bank_accounts_response

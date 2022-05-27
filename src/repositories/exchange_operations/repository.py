@@ -6,6 +6,7 @@ import pytest
 from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 from src.infrastructures.env_config import config
+from tests.src.stubs.project_stubs.stub_data import payload_data_resume, resume_obj
 
 
 class UserExchangeOperationsRepository(MongoDbBaseRepository):
@@ -26,6 +27,7 @@ class UserExchangeOperationsRepository(MongoDbBaseRepository):
         )
 
         extra_data = {
+                "unique_id": unique_id,
                 "date": datetime.now(),
                 "contract": "1111",
                 "ref_int": 1234,
@@ -50,3 +52,10 @@ class UserExchangeOperationsRepository(MongoDbBaseRepository):
         exchange_data_was_dully_inserted = await cls.insert(user_info_result)
 
         return exchange_data_was_dully_inserted
+
+# @pytest.mark.asyncio
+# def test_when_sending_right_params_then_return_the_expected():
+#     response = UserExchangeOperationsRepository.save_user_exchange_operations(
+#         jwt_data=payload_data_resume, resume=resume_obj
+#     )
+#     return response
