@@ -6,7 +6,6 @@ import pytest
 from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 from src.infrastructures.env_config import config
-from tests.src.stubs.project_stubs.stub_data import payload_data_resume, resume_obj
 
 
 class UserExchangeOperationsRepository(MongoDbBaseRepository):
@@ -22,7 +21,7 @@ class UserExchangeOperationsRepository(MongoDbBaseRepository):
         user = jwt_data.get("user")
         unique_id = user.get("unique_id")
 
-        user_info_result = await UserBankAccountRepository.find_cpf_and_name_from_user(
+        user_info_result = await UserBankAccountRepository.get_cpf_and_name_from_user(
             unique_id=unique_id
         )
 
@@ -51,9 +50,3 @@ class UserExchangeOperationsRepository(MongoDbBaseRepository):
         exchange_data_was_dully_inserted = await cls.insert(user_info_result)
 
         return exchange_data_was_dully_inserted
-
-# @pytest.mark.asyncio
-# async def test_when_registering_operations_on_database():
-#     response = await UserExchangeOperationsRepository.save_user_exchange_operations(
-#         jwt_data=payload_data_resume, resume=resume_obj)
-#     return response

@@ -230,3 +230,18 @@ def test_when_sending_invalid_params_to_bank_code_from_client_exists_then_return
         bank="123456"
     )
     assert response == False
+
+
+find_one_stub = {
+    "name": "Teste Teste",
+    "identifier_document": {"cpf": "40340423410"}
+}
+
+# test get_cpf_and_name_from_user
+@pytest.mark.asyncio
+@patch.object(MongoDbBaseRepository, "find_one", return_value=find_one_stub)
+async def test_when_sending_right_params_then_return_the_expected(mock_find_one):
+    response = await UserBankAccountRepository.get_cpf_and_name_from_user(
+        unique_id="1384f391-ceb6-444b-b649-db55cbcc0f9f"
+    )
+    assert response == {'cpf': '40340423410', 'name': 'Teste Teste'}

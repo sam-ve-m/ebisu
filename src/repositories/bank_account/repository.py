@@ -143,7 +143,7 @@ class UserBankAccountRepository(MongoDbBaseRepository):
         return user_bank_account_was_soft_deleted
 
     @classmethod
-    async def find_cpf_and_name_from_user(
+    async def get_cpf_and_name_from_user(
             cls, unique_id: str):
 
         user_account_details = await cls.find_one(
@@ -158,11 +158,3 @@ class UserBankAccountRepository(MongoDbBaseRepository):
         }
 
         return user_details
-
-# @pytest.mark.asyncio
-# async def test_when_registering_operations_on_database():
-#     response = await UserBankAccountRepository.find_cpf_and_name_from_user(
-#         unique_id="978ce263-e18f-4520-9d87-9bf4f70528d9"
-#     )
-#     print(response)
-#     return response
