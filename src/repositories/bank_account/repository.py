@@ -6,6 +6,8 @@ from src.infrastructures.env_config import config
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 from src.services.get_bank_code.service import GetBankCode
 
+import pytest
+
 
 class UserBankAccountRepository(MongoDbBaseRepository):
     database = config("MONGODB_DATABASE_NAME")
@@ -145,16 +147,22 @@ class UserBankAccountRepository(MongoDbBaseRepository):
             cls, unique_id: str):
 
         user_account_details = await cls.find_one(
-            query={"unique_id": unique_id}
+            query={"unique_id": unique_id}, project={"name": 1, "identifier_document": 1}
         )
-
-        print("details", user_account_details)
 
         user_name = user_account_details.get("name")
         user_cpf = user_account_details.get("identifier_document").get("cpf")
 
         user_details = {
-            user_name, user_cpf
+            "name": user_name, "cpf": user_cpf
         }
 
         return user_details
+
+# @pytest.mark.asyncio
+# async def test_when_registering_operations_on_database():
+#     response = await UserBankAccountRepository.find_cpf_and_name_from_user(
+#         unique_id="978ce263-e18f-4520-9d87-9bf4f70528d9"
+#     )
+#     print(response)
+#     return response

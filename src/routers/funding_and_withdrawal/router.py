@@ -63,7 +63,6 @@ class FundingAndWithdrawalRouter:
         jwt_data = await FundingAndWithdrawalRouter.get_jwt_data_and_validate_electronica_signature(
             request=request
         )
-
         money_flow_between_user_accounts_request_data = {
             "x-thebes-answer": jwt_data,
         }
@@ -73,4 +72,7 @@ class FundingAndWithdrawalRouter:
                 money_flow_between_user_accounts_request_data
             )
         )
+        await UserExchangeOperationsRepository.save_user_exchange_operations(
+            jwt_data=jwt_data,
+            resume=get_user_bank_accounts_response)
         return get_user_bank_accounts_response
