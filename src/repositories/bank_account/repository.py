@@ -93,17 +93,9 @@ class UserBankAccountRepository(MongoDbBaseRepository):
     @classmethod
     def bank_code_from_client_exists(
             cls, bank: str) -> bool:
-        bank_codes = GetBankCode.get_service_response()
+        bank_code_result = GetBankCode.get_bank_code_from_database(bank=bank)
 
-        valid_codes = []
-
-        for code in bank_codes:
-            valid = code.get("code")
-
-            valid_codes.append(valid)
-
-        has_valid_bank_code = bank in valid_codes
-        return has_valid_bank_code
+        return bool(bank_code_result)
 
     @classmethod
     async def update_registered_user_bank_accounts(
