@@ -166,9 +166,3 @@ class UserBankAccountRepository(MongoDbBaseRepository):
         }
 
         return user_details
-
-
-if __name__ == '__main__':
-    user = asyncio.run(UserBankAccountRepository.find_cpf_and_name_from_user(
-        unique_id="40db7fee-6d60-4d73-824f-1bf87edc4491"))
-    print("user", user)
