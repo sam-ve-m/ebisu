@@ -4,9 +4,6 @@ from src.domain.user_bank_account.status.enum import UserBankAccountStatus
 from src.infrastructures.env_config import config
 
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
-from src.services.get_bank_code.service import GetBankCode
-
-import pytest
 
 
 class UserBankAccountRepository(MongoDbBaseRepository):
@@ -95,13 +92,6 @@ class UserBankAccountRepository(MongoDbBaseRepository):
         return user_bank_account_id_exists
 
     @classmethod
-    def bank_code_from_client_exists(
-            cls, bank: str) -> bool:
-        bank_code_result = GetBankCode.get_bank_code_from_database(bank=bank)
-
-        return bool(bank_code_result)
-
-    @classmethod
     async def update_registered_user_bank_accounts(
         cls, unique_id: str, bank_account: dict
     ):
@@ -150,11 +140,7 @@ class UserBankAccountRepository(MongoDbBaseRepository):
             query={"unique_id": unique_id}, project={"name": 1, "identifier_document": 1}
         )
 
-        user_name = user_account_details.get("name")
-        user_cpf = user_account_details.get("identifier_document").get("cpf")
+        name = user_account_details.get("name")
+        cpf = user_account_details.get("identifier_document").get("cpf")
 
-        user_details = {
-            "name": user_name, "cpf": user_cpf
-        }
-
-        return user_details
+        return name, cpf
