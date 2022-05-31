@@ -201,11 +201,15 @@ payload_data_resume = {
         "status": "SUCCESS",
     },}
 
-resume_obj = {"origin_account": "1234567",
-            "account_destination": "98765432",
-            "value": 1234.8,
-            "cash_conversion": "BRL>USD",
-            "tax": 4.87,
-            "spread": "2.98",
-            "convert_value": 10234.0,
-            "due_date": "20/09/1998",}
+resume_obj = {
+
+    "origin_account": "1234567",
+    "account_destination": "98765432",
+    "value": 1234.8,
+    "cash_conversion": "BRL>USD",
+    "tax": 4.87,
+    "spread": "2.98",
+    "convert_value": 10234.0,
+    "due_date": "20/09/1998"
+
+}

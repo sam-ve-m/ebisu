@@ -1,8 +1,6 @@
-import asyncio
-
+# EXTERNAL LIBS
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
 from src.infrastructures.env_config import config
-
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 
 

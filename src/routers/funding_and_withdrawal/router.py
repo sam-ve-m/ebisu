@@ -4,7 +4,7 @@ from src.domain.validators.funding_and_withdrawal.validators import (
     UserMoneyFloSameExchange,
     UserMoneyFloDifferentExchange,
 )
-from src.repositories.exchange_operations.repository import UserExchangeOperationsRepository
+from src.services.exchange_operations.services import ExchangeOperationsService
 from src.services.funding_and_withdrawal.service import FundingAndWithdrawalService
 from src.services.jwt.service_jwt import JwtService
 from src.domain.exception.model import InvalidElectronicaSignature
@@ -16,10 +16,12 @@ class FundingAndWithdrawalRouter:
 
     @staticmethod
     def get_user_account_router():
+
         return FundingAndWithdrawalRouter.__funding_and_withdrawal_router
 
     @staticmethod
     async def get_jwt_data_and_validate_electronica_signature(request: Request):
+
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         valid_electronica_signature = await JwtService.validate_electronic_signature(
             request, user_data=jwt_data["user"]
@@ -34,6 +36,7 @@ class FundingAndWithdrawalRouter:
         tags=["User Funding And Withdrawal"],
     )
     async def add_funding(request: Request, user_money_flow: UserMoneyFloSameExchange):
+
         jwt_data = await FundingAndWithdrawalRouter.get_jwt_data_and_validate_electronica_signature(
             request=request
         )
@@ -46,7 +49,8 @@ class FundingAndWithdrawalRouter:
                 money_flow_between_user_accounts_request_data
             )
         )
-        await UserExchangeOperationsRepository.save_user_exchange_operations(
+
+        await ExchangeOperationsService.get_service_response_to_save_exchange_operations(
             jwt_data=jwt_data,
             resume=get_user_bank_accounts_response)
 
@@ -60,6 +64,7 @@ class FundingAndWithdrawalRouter:
     async def add_funding(
         request: Request, user_money_flow: UserMoneyFloDifferentExchange
     ):
+
         jwt_data = await FundingAndWithdrawalRouter.get_jwt_data_and_validate_electronica_signature(
             request=request
         )
@@ -72,7 +77,8 @@ class FundingAndWithdrawalRouter:
                 money_flow_between_user_accounts_request_data
             )
         )
-        await UserExchangeOperationsRepository.save_user_exchange_operations(
+
+        await ExchangeOperationsService.get_service_response_to_save_exchange_operations(
             jwt_data=jwt_data,
             resume=get_user_bank_accounts_response)
 
