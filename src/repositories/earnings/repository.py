@@ -7,4 +7,4 @@ class EarningsClientRepository(OracleBaseRepository):
     user = config("ORACLE_BASE_USER")
     password = config("ORACLE_BASE_PASSWORD")
     base_dns = config("ORACLE_BASE_DSN")
-    port = config("ORACLE_PORT_EARNINGS_CLIENT")
+    port = config("ORACLE_BASE_PORT")

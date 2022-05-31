@@ -19,3 +19,4 @@ class OracleInfrastructure(IInfrastructure):
                 message=f"OracleInfrastructure::get_connection:: Error on getting the oracle connection, {exception}",
                 error=exception,
             )
+            raise exception
