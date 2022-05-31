@@ -24,7 +24,7 @@ from src.exceptions.exceptions import BadRequestError, InternalServerError
     UserBankAccountRepository, "save_registered_user_bank_accounts", return_value=True
 )
 @patch.object(
-UserBankAccountRepository, 'bank_code_from_client_exists', return_value=True
+UserBankAccountService, 'bank_code_from_client_exists', return_value=True
 )
 async def test_create_user_when_sending_the_right_params_then_return_the_duly_deleted_message(
     mock_user_bank_account_from_client,
@@ -50,7 +50,7 @@ async def test_create_user_when_sending_the_right_params_then_return_the_duly_de
     return_value=True,
 )
 @patch.object(
-UserBankAccountRepository, 'bank_code_from_client_exists', return_value=True
+UserBankAccountService, 'bank_code_from_client_exists', return_value=True
 )
 async def test_create_user_when_sending_the_right_params_but_account_is_from_user_and_account_is_already_activated(
     mock_user_bank_account_from_client,
@@ -78,7 +78,7 @@ async def test_create_user_when_sending_the_right_params_but_account_is_from_use
     UserBankAccountRepository, "save_registered_user_bank_accounts", return_value=True
 )
 @patch.object(
-UserBankAccountRepository, 'bank_code_from_client_exists', return_value=True
+UserBankAccountService, 'bank_code_from_client_exists', return_value=True
 )
 async def test_create_user_when_sending_the_right_params_and_bank_account_is_not_activated_and_account_is_not_from_client(
     mock_user_bank_account_from_client,
@@ -107,7 +107,7 @@ async def test_create_user_when_sending_the_right_params_and_bank_account_is_not
     UserBankAccountRepository, "save_registered_user_bank_accounts", return_value=False
 )
 @patch.object(
-UserBankAccountRepository, 'bank_code_from_client_exists', return_value=True
+UserBankAccountService, 'bank_code_from_client_exists', return_value=True
 )
 async def test_create_user_when_sending_the_right_params_but_account_is_activated_and_saved(
     mock_user_bank_account_from_client,
