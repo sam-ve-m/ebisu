@@ -3,8 +3,8 @@ from src.repositories.base_repositories.oracle.repository import OracleBaseRepos
 
 
 class StatementsRepository(OracleBaseRepository):
-    service = config("ORACLE_SERVICE_STATEMENT")
-    user = config("ORACLE_USER_STATEMENT")
-    password = config("ORACLE_PASSWORD_STATEMENT")
-    base_dns = config("ORACLE_BASE_DSN_STATEMENT")
-    port = config("ORACLE_PORT_STATEMENT")
+    service = config("ORACLE_BASE_SERVICE_BR")
+    user = config("ORACLE_BASE_USER")
+    password = config("ORACLE_BASE_PASSWORD")
+    base_dns = config("ORACLE_BASE_DSN")
+    port = config("ORACLE_BASE_PORT")
