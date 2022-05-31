@@ -180,3 +180,36 @@ payload_data_us_gringa_dummy = {
         "client_profile": "investor",
     },
 }
+
+
+payload_data_resume = {
+    "exp": 1678209788,
+    "created_at": 1646673788.442139,
+    "scope": {
+        "view_type": "default",
+        "user_level": "client",
+        "features": ["default", "realtime"],
+    }, "user": {
+        "unique_id": "978ce263-e18f-4520-9d87-9bf4f70528d9",
+        "nick_name": "RAST3",
+        "portfolios": {
+            "br": {"bovespa_account": "000000014-6", "bmf_account": "14"},
+            "us": {"_": None},
+        },"client_has_br_trade_allowed": False,
+        "client_has_us_trade_allowed": False,
+        "client_profile": "investor",
+        "status": "SUCCESS",
+    },}
+
+resume_obj = {
+
+    "origin_account": "1234567",
+    "account_destination": "98765432",
+    "value": 1234.8,
+    "cash_conversion": "BRL>USD",
+    "tax": 4.87,
+    "spread": "2.98",
+    "convert_value": 10234.0,
+    "due_date": "20/09/1998"
+
+}

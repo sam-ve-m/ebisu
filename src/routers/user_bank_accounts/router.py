@@ -9,8 +9,7 @@ from src.services.jwt.service_jwt import JwtService
 from src.domain.validators.user_account.bank_account import (
     CreateUserBankAccount,
     UpdateUserBankAccounts,
-    DeleteUsersBankAccount,
-)
+    DeleteUsersBankAccount)
 
 # SERVICES
 from src.services.bank_account.service import UserBankAccountService

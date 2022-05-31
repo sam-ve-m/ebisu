@@ -1,6 +1,6 @@
+# EXTERNAL LIBS
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
 from src.infrastructures.env_config import config
-
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 
 
@@ -129,3 +129,16 @@ class UserBankAccountRepository(MongoDbBaseRepository):
             },
         )
         return user_bank_account_was_soft_deleted
+
+    @classmethod
+    async def get_cpf_and_name_from_user(
+            cls, unique_id: str):
+
+        user_account_details = await cls.find_one(
+            query={"unique_id": unique_id}, project={"name": 1, "identifier_document": 1}
+        )
+
+        name = user_account_details.get("name")
+        cpf = user_account_details.get("identifier_document").get("cpf")
+
+        return name, cpf
