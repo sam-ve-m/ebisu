@@ -14,7 +14,7 @@ class ExchangeOperationsService:
             cls, jwt_data: dict, resume: dict):
 
         name, cpf = await UserBankAccountRepository.get_cpf_and_name_from_user(
-            unique_id=jwt_data.get("user").user.get("unique_id")
+            unique_id=jwt_data.get("user").get("unique_id")
         )
 
         exchange_operations_dto = ExchangeOperationsDtoBuilder.build(
