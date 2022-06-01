@@ -3,28 +3,18 @@ from datetime import datetime
 
 
 class ExchangeOperationsModel:
-    def __init__(self,
-                 unique_id: str,
-                 name: str,
-                 cpf: str,
-                 value: float,
-                 cash_conversion: float,
-                 spread,
-                 tax: float,
-                 convert_value: float,
-                 due_date: datetime,
-                 ):
+    def __init__(self, exchange_operations_dto: dict):
 
-        self.unique_id = unique_id
-        self.name = name
-        self.cpf = cpf
+        self.unique_id = exchange_operations_dto.get("unique_id")
+        self.name = exchange_operations_dto.get("name")
+        self.cpf = exchange_operations_dto.get("cpf")
         self.date = datetime.utcnow()
-        self.value = value
-        self.cash_conversion = cash_conversion
-        self.spread = spread
-        self.tax = tax
-        self.convert_value = convert_value
-        self.due_date = due_date
+        self.value = exchange_operations_dto.get("value")
+        self.cash_conversion = exchange_operations_dto.get("cash_conversion")
+        self.spread = exchange_operations_dto.get("spread")
+        self.tax = exchange_operations_dto.get("tax")
+        self.convert_value = exchange_operations_dto.get("convert_value")
+        self.due_date = exchange_operations_dto.get("due_date")
 
     def get_exchange_operations_template(self) -> dict:
 
