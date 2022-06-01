@@ -5,57 +5,8 @@ from unittest.mock import patch
 # EXTERNAL LIBS
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 from src.repositories.user_portfolios.repository import UserPortfoliosRepository
-
-
-unique_id_stub = "40db7fee-6d60-4d73-824f-1bf87edc4491"
-
-find_one_response_stub = {
-    "portfolios": {
-        "default": {
-            "br": {"bovespa_account": "000000014-6", "bmf_account": "14"},
-            "us": {
-                "dw_id": "89c69304-018a-40b7-be5b-2121c16e109e",
-                "dw_account": "89c69304-018a-40b7-be5b-2121c16e109e.1651525277006",
-            },
-        },
-        "vnc": {
-            "br": [
-                {"bovespa_account": "000000071-5", "bmf_account": "71"},
-                {"bovespa_account": "000000018-9", "bmf_account": "18"},
-            ]
-        },
-    }
-}
-
-find_one_by_region_stub = {
-    "portfolios": {
-        "default": {"br": {"bovespa_account": "000000014-6", "bmf_account": "14"}},
-        "vnc": {
-            "br": [
-                {"bovespa_account": "000000071-5", "bmf_account": "71"},
-                {"bovespa_account": "000000018-9", "bmf_account": "18"},
-            ]
-        },
-    }
-}
-
-find_one_by_type_stub = {
-    "portfolios": {
-        "vnc": {
-            "br": [
-                {"bovespa_account": "000000071-5", "bmf_account": "71"},
-                {"bovespa_account": "000000018-9", "bmf_account": "18"},
-            ]
-        }
-    }
-}
-
-find_one_by_type_and_region = {
-    "br": [
-        {"bovespa_account": "000000071-5", "bmf_account": "71"},
-        {"bovespa_account": "000000018-9", "bmf_account": "18"},
-    ]
-}
+from tests.src.repositories.stock_portfolios.stub import find_one_response_stub, unique_id_stub, \
+    find_one_by_region_stub, find_one_by_type_stub, find_one_by_type_and_region
 
 
 @pytest.mark.asyncio
@@ -148,4 +99,4 @@ async def test_when_sending_the_right_params_to_type_and_region_then_return_the_
     response = await UserPortfoliosRepository.get_portfolios_by_type_and_region(
         unique_id=unique_id_stub, portfolio_classification="VNC", region="BR"
     )
-    assert response == {"vnc": find_one_by_type_and_region}
+    assert response == {'vnc': find_one_by_type_and_region}
