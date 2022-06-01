@@ -1,6 +1,7 @@
 # Internal Lib
 from typing import List
 
+from src.domain.enums.order_status import OrderStatus
 from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
@@ -20,7 +21,7 @@ class ListOrders:
         if isinstance(data, str):
             data = data.upper()
             list_data = data.split("|")
-        return list_data
+        return [OrderStatus[status] for status in list_data]
 
     @staticmethod
     def decimal_128_converter(user_trade: dict, field: str) -> float:

@@ -31,7 +31,7 @@ class GetBrOrders:
             filter_order_status = ""
             return filter_order_status
 
-        order_status = [status for status in order_status]
+        order_status = [status.value for status in order_status]
         if len(order_status) > 1:
             filter_order_status = "AND B.ORDSTATUS in " + str(tuple(order_status))
         else:
