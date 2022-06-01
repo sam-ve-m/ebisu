@@ -6,7 +6,7 @@ image:
   repository: nexus.sigame.com.br
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: latest
+  tag: 1.2.0
 
 ports:
   protocol: TCP
@@ -14,7 +14,6 @@ ports:
 
 containers:
   env:
-
     # ebisu
     - name: ORACLE_BASE_USER
       value: "UEBISDB001"
@@ -54,30 +53,24 @@ containers:
       value: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
     - name: FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB
       value: "2"
-    - name: BIFROST_KAFKA
-      value: "172.30.19.32:9092"
-    - name: TRANSFERS_BETWEEN_SINACOR_AND_DRIVE_WEALTH_TOPIC
-      value: "transfers_between_sinacor_and_drive_wealth"
-    - name: TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC
-      value: "transfers_between_drive_wealth_and_sinacor"
     - name: AWS_ACCESS_KEY_ID
       value: "AKIATZVFXI25USQWCS5O"
     - name: AWS_SECRET_ACCESS_KEY
       value: "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"
     - name: REGION_NAME
-      value: sa-east-1
+      value: "sa-east-1"
     - name: AWS_FILE_BUCKET_NAME
-      value: brokerage-note-and-bank-statement
+      value: "brokerage-note-and-bank-statement"
     - name: JWT_FILE_BUCKET_NAME
-      value: heimdall_rsa
+      value: "heimdall_rsa"
     - name: BUCKET_NAME_KEY
-      value: auth-gateway-keys-uat
+      value: "auth-gateway-keys-uat"
     - name: REDIS_HOST_URL
       value: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
     - name: REDIS_CACHE_DB
-      value: 1
+      value: "1"
     - name: BANK_CODE
-      value: 001
+      value: "001"
     # Mist
     - name: MIST_REDIS_HOST
       value: "172.30.11.235"
