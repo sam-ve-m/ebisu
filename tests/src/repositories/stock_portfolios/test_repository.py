@@ -32,8 +32,10 @@ async def test_when_sending_the_right_params_to_get_all_portfolios_list_then_ret
     assert response == {"default": {}, "vnc_portfolios": {}}
 
 
+find_one_region_stub = {'portfolios': {'default': {'br': {'bovespa_account': '000000014-6', 'bmf_account': '14'}}, 'vnc': {'br': [{'bovespa_account': '000000071-5', 'bmf_account': '71'}, {'bovespa_account': '000000018-9', 'bmf_account': '18'}]}}}
+
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=find_one_by_region_stub)
+@patch.object(MongoDbBaseRepository, "find_one", return_value=find_one_region_stub)
 async def test_when_sending_the_right_params_to_get_portfolios_by_region_then_return_the_expected(
     mock_find_one,
 ):
@@ -41,11 +43,13 @@ async def test_when_sending_the_right_params_to_get_portfolios_by_region_then_re
         unique_id=unique_id_stub, region="BR"
     )
 
-    assert response == find_one_by_region_stub.get("portfolios")
+    assert response == ""
 
+
+response_portfolios_stub = {"vnc":{"us": None}}
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=None)
+@patch.object(MongoDbBaseRepository, "find_one", return_value=response_portfolios_stub)
 async def test_when_sending_the_right_params_to_get_portfolios_by_region_then_return_no_data_which_is_the_expected(
     mock_find_one,
 ):

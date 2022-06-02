@@ -6,10 +6,10 @@ from etria_logger import Gladsheim
 # EXTERNAL LIBS
 from src.repositories.files.repository import FileRepository
 from src.domain.validators.exchange_info.list_broker_note_validator import (
-                    ListBrokerNoteModel,
-                    BrokerNoteMarket,
-                    BrokerNoteRegion,
-                )
+    ListBrokerNoteModel,
+    BrokerNoteMarket,
+    BrokerNoteRegion,
+)
 
 
 class ListBrokerNote:
@@ -236,7 +236,6 @@ class ListBrokerNote:
             month_broker_notes_directories=list_directories,
         )
         return us_file_path
-
 
     @staticmethod
     def get_service_response(jwt_data: dict, broker_note: ListBrokerNoteModel):

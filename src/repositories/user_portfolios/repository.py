@@ -37,7 +37,9 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             },
         )
 
-        if stock_portfolios_response is None:
+        region_response = stock_portfolios_response.get("portfolios").get(region_portfolios)
+
+        if region_response is None:
             response = {"default": {}, "vnc_portfolios": {}}
             return response
 
@@ -56,7 +58,9 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             project={f"portfolios.{classification_type}": 1, "_id": 0},
         )
 
-        if stock_portfolios_response is None:
+        classification_response = stock_portfolios_response.get("portfolios").get(classification_type)
+
+        if classification_response is None:
             response = {f"{classification_type}": {}}
             return response
 
@@ -85,7 +89,9 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             }
         )
 
-        if stock_portfolios_response is None:
+        portfolios_response = stock_portfolios_response.get(classification_type, {}).get(region_portfolios)
+
+        if portfolios_response is None:
             response = {f"{classification_type}": {}}
             return response
 
