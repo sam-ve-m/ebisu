@@ -97,21 +97,24 @@ class EarningsFromClient:
         accounts = cls.get_account_by_region(region_portfolios, region)
 
         region = earnings_client.region.value
-        open_earnings = earnings_client_region[region]
+        open_earnings = earnings_client_region.get(region)
 
-        # query result of FUTURE VALUES CONFIRMED earnings (with the date informed)
-        earnings_payable_values = EarningsFromClient.payable_earnings_data_response(
-            open_earnings=open_earnings,
-            earnings_client=earnings_client,
-            accounts=accounts,
-        )
+        earnings_payable_values = []
+        earnings_record_date_values = []
+        if open_earnings:
+            # query result of FUTURE VALUES CONFIRMED earnings (with the date informed)
+            earnings_payable_values = EarningsFromClient.payable_earnings_data_response(
+                open_earnings=open_earnings,
+                earnings_client=earnings_client,
+                accounts=accounts,
+            )
 
-        # query result of NOT YET CONFIRMED earnings (31-12-9999)
-        earnings_record_date_values = EarningsFromClient.record_date_earnings_response(
-            open_earnings=open_earnings,
-            earnings_client=earnings_client,
-            accounts=accounts,
-        )
+            # query result of NOT YET CONFIRMED earnings (31-12-9999)
+            earnings_record_date_values = EarningsFromClient.record_date_earnings_response(
+                open_earnings=open_earnings,
+                earnings_client=earnings_client,
+                accounts=accounts,
+            )
 
         response = {
             "payable_earnings": earnings_payable_values,

@@ -88,15 +88,14 @@ class UserPortfoliosList:
                 True,
             ): UserPortfoliosList.get_portfolios_by_type_classification_and_region,
         }
-
-        map_key = map_requisition_body.get(
-            (
-                bool(user_portfolios.region),
-                bool(user_portfolios.portfolio_classification),
-            )
+        map_key = (
+            bool(user_portfolios.region),
+            bool(user_portfolios.portfolio_classification),
         )
 
-        map_response = await map_key(
+        response_builder = map_requisition_body.get(map_key)
+
+        map_response = await response_builder(
             user_portfolios=user_portfolios,
             portfolios_repository=portfolios_repository,
             unique_id=unique_id,
