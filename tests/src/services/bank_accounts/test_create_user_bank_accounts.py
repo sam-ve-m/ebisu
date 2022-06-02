@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 # INTERNAL LIBS
 from tests.src.stubs.bank_account_stubs.stub_get_account import (
-    jwt_with_bank_account_to_create,
+    jwt_with_bank_account_to_create, jwt_with_bank_account_to_create_invalid,
 )
 from src.services.bank_account.service import UserBankAccountService
 from src.repositories.bank_account.repository import UserBankAccountRepository
@@ -23,10 +23,14 @@ from src.exceptions.exceptions import BadRequestError, InternalServerError
 @patch.object(
     UserBankAccountRepository, "save_registered_user_bank_accounts", return_value=True
 )
+@patch.object(
+UserBankAccountService, 'bank_code_from_client_exists', return_value=True
+)
 async def test_create_user_when_sending_the_right_params_then_return_the_duly_deleted_message(
     mock_user_bank_account_from_client,
     mock_existing_user_bank_account_and_is_activated,
     mock_save_registered_user_bank_accounts,
+    mock_bank_code_from_client_exists
 ):
     response = await UserBankAccountService.create_user_bank_accounts(
         bank_account_repository=UserBankAccountRepository,
@@ -45,8 +49,13 @@ async def test_create_user_when_sending_the_right_params_then_return_the_duly_de
     "existing_user_bank_account_and_is_activated",
     return_value=True,
 )
+@patch.object(
+UserBankAccountService, 'bank_code_from_client_exists', return_value=True
+)
 async def test_create_user_when_sending_the_right_params_but_account_is_from_user_and_account_is_already_activated(
-    mock_user_bank_account_from_client, mock_existing_user_bank_account_and_is_activated
+    mock_user_bank_account_from_client,
+    mock_existing_user_bank_account_and_is_activated,
+    mock_bank_code_from_client_exists
 ):
 
     with pytest.raises(BadRequestError):
@@ -68,10 +77,14 @@ async def test_create_user_when_sending_the_right_params_but_account_is_from_use
 @patch.object(
     UserBankAccountRepository, "save_registered_user_bank_accounts", return_value=True
 )
+@patch.object(
+UserBankAccountService, 'bank_code_from_client_exists', return_value=True
+)
 async def test_create_user_when_sending_the_right_params_and_bank_account_is_not_activated_and_account_is_not_from_client(
     mock_user_bank_account_from_client,
     mock_existing_user_bank_account_and_is_activated,
-    save_registered_user_bank_accounts,
+    mock_save_registered_user_bank_accounts,
+    mock_bank_code_from_client_exists
 ):
 
     with pytest.raises(BadRequestError):
@@ -93,10 +106,14 @@ async def test_create_user_when_sending_the_right_params_and_bank_account_is_not
 @patch.object(
     UserBankAccountRepository, "save_registered_user_bank_accounts", return_value=False
 )
+@patch.object(
+UserBankAccountService, 'bank_code_from_client_exists', return_value=True
+)
 async def test_create_user_when_sending_the_right_params_but_account_is_activated_and_saved(
     mock_user_bank_account_from_client,
     mock_existing_user_bank_account_and_is_activated,
     mock_save_registered_user_bank_accounts,
+    mock_bank_code_from_client_exists
 ):
 
     with pytest.raises(InternalServerError):

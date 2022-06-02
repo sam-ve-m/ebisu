@@ -5,6 +5,7 @@ from uuid import uuid4
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
 from src.exceptions.exceptions import BadRequestError, InternalServerError
 from src.repositories.bank_account.repository import UserBankAccountRepository
+from src.services.get_bank_code.service import GetBankCode
 
 
 class UserBankAccountService:
@@ -74,6 +75,7 @@ class UserBankAccountService:
         unique_id = thebes_answer["user"]["unique_id"]
         bank_account = jwt_data["bank_account"]
         bank_account_id = bank_account["id"]
+
         user_bank_account_id_exists = (
             await bank_account_repository.user_bank_account_id_exists(
                 unique_id=unique_id, bank_account_id=bank_account_id
@@ -125,3 +127,10 @@ class UserBankAccountService:
         }
 
         return delete_bank_account_response
+
+    @classmethod
+    def bank_code_from_client_exists(
+            cls, bank: str) -> bool:
+        bank_code_result = GetBankCode.get_bank_code_from_database(bank=bank)
+
+        return bool(bank_code_result)

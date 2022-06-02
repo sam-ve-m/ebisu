@@ -3,8 +3,8 @@ from src.repositories.base_repositories.oracle.repository import OracleBaseRepos
 
 
 class EarningsClientRepository(OracleBaseRepository):
-    service = config("ORACLE_SERVICE_EARNINGS_CLIENT")
-    user = config("ORACLE_USER_EARNINGS_CLIENT")
-    password = config("ORACLE_PASSWORD_EARNINGS_CLIENT")
-    base_dns = config("ORACLE_BASE_DNS_EARNINGS_CLIENT")
-    port = config("ORACLE_PORT_EARNINGS_CLIENT")
+    service = config("ORACLE_BASE_SERVICE_BR")
+    user = config("ORACLE_BASE_USER")
+    password = config("ORACLE_BASE_PASSWORD")
+    base_dns = config("ORACLE_BASE_DSN")
+    port = config("ORACLE_BASE_PORT")

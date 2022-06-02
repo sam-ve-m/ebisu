@@ -3,8 +3,8 @@ from src.repositories.base_repositories.oracle.repository import OracleBaseRepos
 
 
 class BrOrdersRepository(OracleBaseRepository):
-    service = config("ORACLE_SERVICE_BR")
-    user = config("ORACLE_USER_ORDERS")
-    password = config("ORACLE_PASSWORD_ORDERS")
-    base_dns = config("ORACLE_BASE_DSN_ORDERS")
-    port = config("ORACLE_PORT_ORDERS")
+    service = config("ORACLE_BASE_SERVICE_BR")
+    user = config("ORACLE_BASE_USER")
+    password = config("ORACLE_BASE_PASSWORD")
+    base_dns = config("ORACLE_BASE_DSN")
+    port = config("ORACLE_BASE_PORT")

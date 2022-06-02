@@ -14,7 +14,7 @@ from src.exceptions.exceptions import (
     InvalidAccountsOwnership,
     UnableToProcessMoneyFlow,
     NotMappedCurrency,
-    InvalidElectronicaSignature,
+    InvalidElectronicaSignature, UnauthorizedError,
 )
 
 # ROUTERS
@@ -155,6 +155,15 @@ class BaseRouter:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 content=json.dumps(
                     {"request_status": False, "status": 10, "msg": e.args[0]}
+                ),
+            )
+
+        except UnauthorizedError as e:
+            Gladsheim.error(erro=e)
+            return Response(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                content=json.dumps(
+                    {"request_status": False, "status": 2, "msg": e.args[0]}
                 ),
             )
 
