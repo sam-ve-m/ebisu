@@ -37,9 +37,10 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             },
         )
 
-        region_response = stock_portfolios_response.get("portfolios").get(region_portfolios)
+        region_default = stock_portfolios_response.get("portfolios", {}).get("default", {}).get(region_portfolios)
+        region_vnc = stock_portfolios_response.get("portfolios", {}).get("vnc", {}).get(region_portfolios)
 
-        if region_response is None:
+        if not region_default and region_vnc:
             response = {"default": {}, "vnc_portfolios": {}}
             return response
 
@@ -89,7 +90,7 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             }
         )
 
-        portfolios_response = stock_portfolios_response.get(classification_type, {}).get(region_portfolios)
+        portfolios_response = stock_portfolios_response.get("portfolios").get(classification_type, {}).get(region_portfolios)
 
         if portfolios_response is None:
             response = {f"{classification_type}": {}}

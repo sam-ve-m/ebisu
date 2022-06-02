@@ -8,8 +8,7 @@ from src.repositories.files.repository import FileRepository
 from src.domain.validators.exchange_info.list_broker_note_validator import (
     ListBrokerNoteModel,
     BrokerNoteMarket,
-    BrokerNoteRegion,
-)
+    BrokerNoteRegion)
 
 
 class ListBrokerNote:
@@ -17,96 +16,79 @@ class ListBrokerNote:
     FileRepository = FileRepository
 
     @staticmethod
-    def get_bovespa_files_data_of_br_region(jwt_data: dict, broker_note: ListBrokerNoteModel):
+    def get_broker_file_notes(account: str, region, market, broker_note: ListBrokerNoteModel):
+        file_path = ListBrokerNote.generate_path(account=account, region=region, broker_note=broker_note)
 
-        portfolios = jwt_data.get("user", {}).get("portfolios", {})
-        br_portfolios = portfolios.get("br", {})
+        month_broker_notes_directories = (ListBrokerNote.FileRepository.list_all_directories_in_path(
+            file_path=file_path))
+        bovespa_files_data = ListBrokerNote.get_broker_file_notes(
+            market=market,
+            region=region,
+            month_broker_notes_directories=month_broker_notes_directories)
 
-        bovespa_file_path = ListBrokerNote.generate_path(
-            account=br_portfolios.get("bovespa_account"),
-            region=broker_note.region,
-            broker_note=broker_note,
-        )
-        month_broker_notes_directories = (
-            ListBrokerNote.FileRepository.list_all_directories_in_path(
-                file_path=bovespa_file_path
-            )
-        )
-        bovespa_files_data = ListBrokerNote.get_month_broker_notes(
-            market=BrokerNoteMarket.BOVESPA,
-            region=BrokerNoteRegion.BR,
-            month_broker_notes_directories=month_broker_notes_directories,
-        )
         return bovespa_files_data
 
     @staticmethod
-    def get_bmf_files_data_of_br_region(jwt_data: dict, broker_note: ListBrokerNoteModel):
+    def get_bovespa_files_data_of_br_region(jwt_data: dict, broker_note: ListBrokerNoteModel):
+        account = jwt_data.get("user", {}).get("portfolios", {}).get("br", {}).get("bovespa_account")
 
-        portfolios = jwt_data.get("user", {}).get("portfolios", {})
-        br_portfolios = portfolios.get("br", {})
-
-        bmf_file_path = ListBrokerNote.generate_path(
-            account=br_portfolios.get("bmf_account"),
-            region=broker_note.region,
+        bovespa_response = ListBrokerNote.get_month_broker_notes(
+            account=account,
             broker_note=broker_note,
+            market=BrokerNoteMarket.BOVESPA,
+            region=BrokerNoteRegion.BR
         )
-        month_broker_notes_directories = (
-            ListBrokerNote.FileRepository.list_all_directories_in_path(
-                file_path=bmf_file_path
-            )
-        )
-        bmf_files_data = ListBrokerNote.get_month_broker_notes(
-            market=BrokerNoteMarket.BMF,
-            region=BrokerNoteRegion.BR,
-            month_broker_notes_directories=month_broker_notes_directories,
-        )
-        return bmf_files_data
+        return bovespa_response
 
     @staticmethod
-    def get_dw_files_data_of_us_region(jwt_data: dict, broker_note: ListBrokerNoteModel):
+    def get_bmf_files_data_of_br_region(jwt_data: dict, broker_note: ListBrokerNoteModel):
+        account = jwt_data.get("user", {}).get("portfolios", {}).get("br", {}).get("bmf_account")
 
-        portfolios = jwt_data.get("user", {}).get("portfolios", {})
-        us_portfolios = portfolios.get("us", {})
-
-        us_file_path = ListBrokerNote.generate_path(
-            account=us_portfolios.get("dw_account"),
-            region=broker_note.region,
+        bmf_response = ListBrokerNote.get_broker_file_notes(
+            account=account,
             broker_note=broker_note,
+            market=BrokerNoteMarket.BMF,
+            region=BrokerNoteRegion.BR,
         )
-        list_directories = (
-            ListBrokerNote.FileRepository.list_all_directories_in_path(
-                file_path=us_file_path
-            )
-        )
-        us_files_data = ListBrokerNote.get_month_broker_notes(
+        return bmf_response
+
+    @staticmethod
+    def get_us_market_files_data_and_us_region(jwt_data: dict, broker_note: ListBrokerNoteModel):
+        account = jwt_data.get("user", {}).get("portfolios", {}).get("us", {}).get("dw_account")
+
+        us_response = ListBrokerNote.get_broker_file_notes(
+            account=account,
+            broker_note=broker_note,
             market=BrokerNoteMarket.US,
             region=BrokerNoteRegion.US,
-            month_broker_notes_directories=list_directories,
         )
-        return us_files_data
+        return us_response
+
+    @staticmethod
+    def get_us_market_files_data_of_all_regions(jwt_data: dict, broker_note: ListBrokerNoteModel):
+        account = jwt_data.get("user", {}).get("portfolios", {}).get("us", {}).get("dw_account")
+
+        us_all_response = ListBrokerNote.get_broker_file_notes(
+            account=account,
+            broker_note=broker_note,
+            market=BrokerNoteMarket.US,
+            region=BrokerNoteRegion.ALL,
+        )
+        return us_all_response
 
     @staticmethod
     def get_all_market_files_of_all_regions(jwt_data: dict, broker_note: ListBrokerNoteModel):
 
-        portfolios = jwt_data.get("user", {}).get("portfolios", {})
-        br_portfolios = portfolios.get("br", {})
-        us_portfolios = portfolios.get("us", {})
-
-        us_file_path = ListBrokerNote.generate_path(
-            account=us_portfolios.get("dw_account"),
-            region=BrokerNoteRegion.US,
-            broker_note=broker_note,
-        )
-        bmf_file_path = ListBrokerNote.generate_path(
-            account=br_portfolios.get("bmf_account"),
-            region=BrokerNoteRegion.BR,
-            broker_note=broker_note,
-        )
-        bovespa_file_path = ListBrokerNote.generate_path(
-            account=br_portfolios.get("bovespa_account"),
-            region=BrokerNoteRegion.BR,
-            broker_note=broker_note,
-        )
+        generate_path = list(map(ListBrokerNote.generate_path, *zip((
+                jwt_data.get("user", {}).get("portfolios", {}).get("us", {}).get("dw_account"),
+                BrokerNoteRegion.US,
+                broker_note,),(
+                jwt_data.get("user", {}).get("portfolios", {}).get("br", {}).get("bmf_account"),
+                BrokerNoteRegion.BR,
+                broker_note,
+            ),(jwt_data.get("user", {}).get("portfolios", {}).get("br", {}).get("bovespa_account"),
+                BrokerNoteRegion.BR,
+                broker_note,)))
 
         month_broker_notes_directories = (
             ListBrokerNote.FileRepository.list_all_directories_in_path(
@@ -147,43 +129,16 @@ class ListBrokerNote:
 
         return all_broker_note_from_all_markets
 
-
-    @staticmethod
-    def get_us_market_files_data_and_us_region(jwt_data: dict, broker_note: ListBrokerNoteModel):
-
-        portfolios = jwt_data.get("user", {}).get("portfolios", {})
-        us_portfolios = portfolios.get("us", {})
-
-        us_file_path = ListBrokerNote.generate_path(
-            account=us_portfolios.get("dw_account"),
-            region=BrokerNoteRegion.US,
-            broker_note=broker_note,
-        )
-        list_directories = (
-            ListBrokerNote.FileRepository.list_all_directories_in_path(
-                file_path=us_file_path
-            )
-        )
-        us_files_data = ListBrokerNote.get_month_broker_notes(
-            market=BrokerNoteMarket.US,
-            region=BrokerNoteRegion.US,
-            month_broker_notes_directories=list_directories,
-        )
-        return us_files_data
-
     @staticmethod
     def get_all_market_files_of_br_regions(jwt_data: dict, broker_note: ListBrokerNoteModel):
 
-        portfolios = jwt_data.get("user", {}).get("portfolios", {})
-        br_portfolios = portfolios.get("br", {})
-
         bmf_file_path = ListBrokerNote.generate_path(
-            account=br_portfolios.get("bmf_account"),
+            account=jwt_data.get("user", {}).get("portfolios", {}).get("br", {}).get("bmf_account"),
             region=BrokerNoteRegion.BR,
             broker_note=broker_note,
         )
         bovespa_file_path = ListBrokerNote.generate_path(
-            account=br_portfolios.get("bovespa_account"),
+            account=jwt_data.get("user", {}).get("portfolios", {}).get("br", {}).get("bovespa_account"),
             region=BrokerNoteRegion.BR,
             broker_note=broker_note,
         )
@@ -215,40 +170,17 @@ class ListBrokerNote:
         return all_broker_note_from_all_markets
 
     @staticmethod
-    def get_us_market_files_of_all_regions(jwt_data: dict, broker_note: ListBrokerNoteModel):
-
-        portfolios = jwt_data.get("user", {}).get("portfolios", {})
-        us_portfolios = portfolios.get("us", {})
-
-        us_file_path = ListBrokerNote.generate_path(
-            account=us_portfolios.get("dw_account"),
-            region=BrokerNoteRegion.US,
-            broker_note=broker_note,
-        )
-        list_directories = (
-            ListBrokerNote.FileRepository.list_all_directories_in_path(
-                file_path=us_file_path
-            )
-        )
-        us_file_path = ListBrokerNote.get_month_broker_notes(
-            market=BrokerNoteMarket.US,
-            region=BrokerNoteRegion.ALL,
-            month_broker_notes_directories=list_directories,
-        )
-        return us_file_path
-
-    @staticmethod
     def get_service_response(jwt_data: dict, broker_note: ListBrokerNoteModel):
 
-        map_keys = (broker_note.market.value, broker_note.region.value)
+        map_keys = (broker_note.market, broker_note.region)
 
         broker_note_response = {
-            ("bovespa", "BR") : ListBrokerNote.get_bovespa_files_data_of_br_region,
-            ("bmf", "BR") :  ListBrokerNote.get_bmf_files_data_of_br_region,
-            ("US", "US") : ListBrokerNote.get_dw_files_data_of_us_region,
-            ("ALL", "BR") : ListBrokerNote.get_all_market_files_of_br_regions,
-            ("US", "ALL") : ListBrokerNote.get_us_market_files_of_all_regions,
-
+            (BrokerNoteMarket.BOVESPA, BrokerNoteRegion.BR) : ListBrokerNote.get_bovespa_files_data_of_br_region,
+            (BrokerNoteMarket.BMF, BrokerNoteRegion.BR) :  ListBrokerNote.get_bmf_files_data_of_br_region,
+            (BrokerNoteMarket.US, BrokerNoteRegion.US) : ListBrokerNote.get_us_market_files_data_and_us_region,
+            (BrokerNoteMarket.ALL, BrokerNoteRegion.BR) : ListBrokerNote.get_all_market_files_of_br_regions,
+            (BrokerNoteMarket.US, BrokerNoteRegion.ALL) : ListBrokerNote.get_us_market_files_data_of_all_regions,
+            (BrokerNoteMarket.ALL, BrokerNoteRegion.ALL): ListBrokerNote.get_all_market_files_of_all_regions
         }.get(map_keys, [])(jwt_data=jwt_data, broker_note=broker_note)
 
         return broker_note_response
