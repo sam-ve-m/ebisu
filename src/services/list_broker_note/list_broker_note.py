@@ -16,12 +16,12 @@ class ListBrokerNote:
     FileRepository = FileRepository
 
     @staticmethod
-    def get_broker_file_notes(account: str, region, market, broker_note: ListBrokerNoteModel):
+    def get_broker_file_notes(account: str, region: BrokerNoteRegion, market: BrokerNoteMarket, broker_note: ListBrokerNoteModel):
         file_path = ListBrokerNote.generate_path(account=account, region=region, broker_note=broker_note)
 
         month_broker_notes_directories = (ListBrokerNote.FileRepository.list_all_directories_in_path(
             file_path=file_path))
-        bovespa_files_data = ListBrokerNote.get_broker_file_notes(
+        bovespa_files_data = ListBrokerNote.get_month_broker_notes(
             market=market,
             region=region,
             month_broker_notes_directories=month_broker_notes_directories)
@@ -32,7 +32,7 @@ class ListBrokerNote:
     def get_bovespa_files_data_of_br_region(jwt_data: dict, broker_note: ListBrokerNoteModel):
         account = jwt_data.get("user", {}).get("portfolios", {}).get("br", {}).get("bovespa_account")
 
-        bovespa_response = ListBrokerNote.get_month_broker_notes(
+        bovespa_response = ListBrokerNote.get_broker_file_notes(
             account=account,
             broker_note=broker_note,
             market=BrokerNoteMarket.BOVESPA,
@@ -78,21 +78,22 @@ class ListBrokerNote:
 
     @staticmethod
     def get_all_market_files_of_all_regions(jwt_data: dict, broker_note: ListBrokerNoteModel):
+        br_account = jwt_data.get("user", {}).get("portfolios", {}).get("br", {})
 
-        generate_path = list(map(ListBrokerNote.generate_path, *zip((
-                jwt_data.get("user", {}).get("portfolios", {}).get("us", {}).get("dw_account"),
-                BrokerNoteRegion.US,
-                broker_note,),(
-                jwt_data.get("user", {}).get("portfolios", {}).get("br", {}).get("bmf_account"),
-                BrokerNoteRegion.BR,
-                broker_note,
-            ),(jwt_data.get("user", {}).get("portfolios", {}).get("br", {}).get("bovespa_account"),
-                BrokerNoteRegion.BR,
-                broker_note,)))
+        dw_path, bmf_path, bovespa_path = map(ListBrokerNote.generate_path, *zip(
+                (jwt_data.get("user", {}).get("portfolios", {}).get("us", {}).get("dw_account"),
+                        BrokerNoteRegion.US,
+                        broker_note,),
+                (br_account.get("bmf_account"),
+                        BrokerNoteRegion.BR,
+                        broker_note,),
+                (br_account.get("bovespa_account"),
+                        BrokerNoteRegion.BR,
+                        broker_note,)))
 
         month_broker_notes_directories = (
             ListBrokerNote.FileRepository.list_all_directories_in_path(
-                file_path=bovespa_file_path
+                file_path=bovespa_path
             )
         )
         bovespa_files_data = ListBrokerNote.get_month_broker_notes(
@@ -103,7 +104,7 @@ class ListBrokerNote:
 
         month_broker_notes_directories = (
             ListBrokerNote.FileRepository.list_all_directories_in_path(
-                file_path=bmf_file_path
+                file_path=bmf_path
             )
         )
         bmf_files_data = ListBrokerNote.get_month_broker_notes(
@@ -114,7 +115,7 @@ class ListBrokerNote:
 
         list_directories = (
             ListBrokerNote.FileRepository.list_all_directories_in_path(
-                file_path=us_file_path
+                file_path=dw_path
             )
         )
         us_files_data = ListBrokerNote.get_month_broker_notes(
@@ -131,21 +132,19 @@ class ListBrokerNote:
 
     @staticmethod
     def get_all_market_files_of_br_regions(jwt_data: dict, broker_note: ListBrokerNoteModel):
+        br_account = jwt_data.get("user", {}).get("portfolios", {}).get("br", {})
 
-        bmf_file_path = ListBrokerNote.generate_path(
-            account=jwt_data.get("user", {}).get("portfolios", {}).get("br", {}).get("bmf_account"),
-            region=BrokerNoteRegion.BR,
-            broker_note=broker_note,
-        )
-        bovespa_file_path = ListBrokerNote.generate_path(
-            account=jwt_data.get("user", {}).get("portfolios", {}).get("br", {}).get("bovespa_account"),
-            region=BrokerNoteRegion.BR,
-            broker_note=broker_note,
-        )
+        bmf_path, bovespa_path = map(ListBrokerNote.generate_path, *zip(
+            (br_account.get("bmf_account"),
+                    BrokerNoteRegion.BR,
+                    broker_note,),
+            (br_account.get("bovespa_account"),
+                    BrokerNoteRegion.BR,
+                    broker_note,)))
 
         month_broker_notes_directories = (
             ListBrokerNote.FileRepository.list_all_directories_in_path(
-                file_path=bovespa_file_path
+                file_path=bovespa_path
             )
         )
         bovespa_files_data = ListBrokerNote.get_month_broker_notes(
@@ -156,7 +155,7 @@ class ListBrokerNote:
 
         month_broker_notes_directories = (
             ListBrokerNote.FileRepository.list_all_directories_in_path(
-                file_path=bmf_file_path
+                file_path=bmf_path
             )
         )
         bmf_files_data = ListBrokerNote.get_month_broker_notes(
@@ -203,16 +202,12 @@ class ListBrokerNote:
                     broker_note_link = FileRepository.generate_file_link(
                         file_path=directory.get("Key"), url_link_expire_seconds=900
                     )
-
-                    broker_note = {
-                        "market": market.value,
-                        "region": region.value,
-                        "day": broker_note_day,
-                        "broker_note_link": broker_note_link,
-                    }
-
-                    broker_notes.append(broker_note)
-
+                    broker_notes.append({
+                            "market": market.value,
+                            "region": region.value,
+                            "day": broker_note_day,
+                            "broker_note_link": broker_note_link,
+                        })
                 except Exception as err:
                     raise Gladsheim.error(
                         message=f"get_broker_note_file_name::directory_name:: No directory found, {err}",
