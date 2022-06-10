@@ -71,13 +71,13 @@ class Statement:
 
     @staticmethod
     async def get_dw_statement(
-        dw_account: str, start_date: float, end_date: float, offset: int, limit: int
+        dw_account: str, offset: int, limit: int
     ) -> dict:
-        start_date = Statement.from_timestamp_to_utc_isoformat_us(start_date)
-        end_date = Statement.from_timestamp_to_utc_isoformat_us(end_date)
+        # start_date = Statement.from_timestamp_to_utc_isoformat_us(start_date)
+        # end_date = Statement.from_timestamp_to_utc_isoformat_us(end_date)
 
         raw_statement = await Statement.dw.get_transactions(
-            dw_account, start=start_date, end=end_date, limit=limit
+            dw_account, limit=limit, offset=offset
         )
         raw_balance = await Statement.dw.get_balances(dw_account)
         # TODO INTERNAL SERVER ERROR
