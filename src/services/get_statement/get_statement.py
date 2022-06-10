@@ -33,20 +33,22 @@ class GetStatement:
 
         start_date = Statement.from_timestamp_to_utc_isoformat_br(statement.start_date)
         end_date = Statement.from_timestamp_to_utc_isoformat_br(statement.end_date)
-        query = f"""SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO 
-                   FROM CORRWIN.TCCMOVTO 
-                   WHERE CD_CLIENTE = {bmf_account} 
-                   AND DT_LANCAMENTO >= TO_DATE('{start_date}', 'yyyy-MM-dd')
-                   AND DT_LANCAMENTO <= TO_DATE('{end_date}', 'yyyy-MM-dd')                   
-                   ORDER BY NR_LANCAMENTO
-                   OFFSET {statement.offset} rows
-                   fetch first {statement.limit} row only
-                   """
-        statement = GetStatement.oracle_singleton_instance.get_data(sql=query)
-        query = (
-            f"SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = {bmf_account}"
+
+        query = StatementsRepository.build_query_statement(
+            start_date=start_date,
+            end_date=end_date,
+            bmf_account=bmf_account,
+            offset=statement.offset,
+            limit=statement.limit
         )
-        balance = GetStatement.oracle_singleton_instance.get_data(sql=query)
+
+        statement = GetStatement.oracle_singleton_instance.get_data(sql=query)
+
+        query_client = StatementsRepository.build_query_statement_client(
+            bmf_account=bmf_account
+        )
+
+        balance = GetStatement.oracle_singleton_instance.get_data(sql=query_client)
 
         data_balance = {
             "balance": balance.pop().get("VL_TOTAL"),
