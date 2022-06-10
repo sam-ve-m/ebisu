@@ -2,6 +2,16 @@ replicaCount: 1
 name: ebisu
 namespace: homolog
 
+image:
+  repository: nexus.sigame.com.br
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: latest
+
+ports:
+  protocol: TCP
+  containerPort: 8000
+
 containers:
   - name: ebisu
     image: nexus.sigame.com.br/ebisu:1.1.3
