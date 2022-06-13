@@ -11,14 +11,14 @@ class StatementsRepository(OracleBaseRepository):
     port = config("ORACLE_BASE_PORT")
 
     @staticmethod
-    def build_query_all_br(
-            bmf_account: str,
+    def build_general_query(
+            additional_clause: str,
             offset: int,
-            limit: int
+            limit: int,
     ):
         query = f"""SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO 
-                   FROM CORRWIN.TCCMOVTO 
-                   WHERE CD_CLIENTE = {bmf_account}                 
+                   FROM CORRWIN.TCCMOVTO
+                   {additional_clause}              
                    ORDER BY NR_LANCAMENTO
                    OFFSET {offset} rows
                    fetch first {limit} row only
@@ -29,7 +29,7 @@ class StatementsRepository(OracleBaseRepository):
         return statement
 
     @staticmethod
-    def build_query_statement_client(
+    def build_query_balance(
             bmf_account: str
     ):
         query = (
@@ -39,21 +39,3 @@ class StatementsRepository(OracleBaseRepository):
         balance = StatementsRepository.get_data(sql=query)
 
         return balance
-
-    @staticmethod
-    def build_query_future(
-            bmf_account: str,
-            offset: int,
-            limit: int
-    ):
-        query = f"""SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO 
-                   FROM CORRWIN.TCCMOVTO 
-                   WHERE CD_CLIENTE = {bmf_account} AND
-                   DT_LANCAMENTO > sysdate + 1                 
-                   ORDER BY NR_LANCAMENTO
-                   OFFSET {offset} rows
-                   fetch first {limit} row only
-                """
-
-        statement_future = StatementsRepository.get_data(sql=query)
-        return statement_future

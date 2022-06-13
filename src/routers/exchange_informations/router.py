@@ -62,7 +62,7 @@ class ExchangeRouter:
         request: Request, statement: GetStatementModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        bank_statement_response = await GetStatement.get_service_response(
+        bank_statement_response = GetStatement.get_service_response(
             statement=statement, jwt_data=jwt_data
         )
         return bank_statement_response

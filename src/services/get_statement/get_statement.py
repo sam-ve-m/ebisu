@@ -8,26 +8,34 @@ from src.services.statement.service import Statement
 
 
 class GetStatement:
+
     oracle_singleton_instance = StatementsRepository
 
     @classmethod
-    def get_all_br_statement(cls, jwt_data: dict, statement: GetStatementModel):
-
-        br_portfolios = jwt_data.get("user", {}).user.get("portfolios", {}).get("br", {})
+    def get_account(cls, jwt_data: dict):
+        br_portfolios = jwt_data.get("user", {}).get("portfolios", {}).get("br", {})
         bmf_account = br_portfolios.get("bmf_account")
 
-        statement = StatementsRepository.build_query_all_br(
-            bmf_account=bmf_account,
+        return bmf_account
+
+    @classmethod
+    def get_complete_br_statement(cls, jwt_data: dict, statement: GetStatementModel):
+        bmf_account = cls.get_account(jwt_data=jwt_data)
+
+        additional_clause = f""" WHERE CD_CLIENTE = {bmf_account} """
+
+        complete_statement = StatementsRepository.build_general_query(
             offset=statement.offset,
-            limit=statement.limit
+            limit=statement.limit,
+            additional_clause=additional_clause
         )
 
-        balance = StatementsRepository.build_query_statement_client(bmf_account=bmf_account)
+        balance = StatementsRepository.build_query_balance(bmf_account=bmf_account)
 
         data_balance = {
             "balance": balance.pop().get("VL_TOTAL"),
             "statements": [
-                Statement.normalize_statement(transc) for transc in statement
+                Statement.normalize_statement(transc) for transc in complete_statement
             ],}
 
         if not data_balance:
@@ -36,20 +44,18 @@ class GetStatement:
         return data_balance
 
     @classmethod
-    async def get_future_br_statement(cls, jwt_data: dict, statement: GetStatementModel):
-        br_portfolios = jwt_data.get("user", {}).user.get("portfolios", {}).get("br", {})
-        bmf_account = br_portfolios.get("bmf_account")
+    def get_future_br_statement(cls, jwt_data: dict, statement: GetStatementModel):
+        bmf_account = cls.get_account(jwt_data=jwt_data)
 
-        future_statement = StatementsRepository.build_query_future(
-            bmf_account=bmf_account,
+        additional_clause = f"""WHERE CD_CLIENTE = {bmf_account} AND DT_LANCAMENTO > sysdate + 1"""
+
+        future_statement = StatementsRepository.build_general_query(
             offset=statement.offset,
-            limit=statement.limit
+            limit=statement.limit,
+            additional_clause=additional_clause
         )
 
-        balance = StatementsRepository.build_query_statement_client(bmf_account=bmf_account)
-
         data_balance = {
-            "balance": balance.pop().get("VL_TOTAL"),
             "statements": [
                 Statement.normalize_statement(transc) for transc in future_statement
             ], }
@@ -59,9 +65,52 @@ class GetStatement:
 
         return data_balance
 
+    @classmethod
+    def get_outflows_br_statement(cls, jwt_data: dict, statement: GetStatementModel):
+        bmf_account = cls.get_account(jwt_data=jwt_data)
+
+        additional_clause = f""" WHERE CD_CLIENTE = {bmf_account} AND VL_LANCAMENTO < 0 """
+
+        outflows_statement = StatementsRepository.build_general_query(
+            offset=statement.offset,
+            limit=statement.limit,
+            additional_clause=additional_clause
+        )
+
+        data_balance = {
+            "statements": [
+                Statement.normalize_statement(transc) for transc in outflows_statement
+            ], }
+
+        if not data_balance:
+            return {}
+
+        return data_balance
 
     @classmethod
-    async def get_all_us_statement(cls, jwt_data: dict, statement: GetStatementModel):
+    def get_inflows_br_statement(cls, jwt_data: dict, statement: GetStatementModel):
+        bmf_account = cls.get_account(jwt_data=jwt_data)
+
+        additional_clause = f""" WHERE CD_CLIENTE = {bmf_account} AND VL_LANCAMENTO > 0 """
+
+        inflows_statement = StatementsRepository.build_general_query(
+            offset=statement.offset,
+            limit=statement.limit,
+            additional_clause=additional_clause
+        )
+
+        data_balance = {
+            "statements": [
+                Statement.normalize_statement(transc) for transc in inflows_statement
+            ], }
+
+        if not data_balance:
+            return {}
+
+        return data_balance
+
+    @classmethod
+    async def get_complete_us_statement(cls, jwt_data: dict, statement: GetStatementModel):
 
         us_portfolios = jwt_data.get("user", {}).user.get("portfolios", {}).get("us", {})
         dw_account = us_portfolios.get("dw_account")
@@ -82,9 +131,11 @@ class GetStatement:
         map_keys = (statement.region, statement.statement_type)
 
         statement_response = {
-            (Region.BR, StatementType.ALL) : GetStatement.get_all_br_statement,
+            (Region.BR, StatementType.ALL) : GetStatement.get_complete_br_statement,
             (Region.BR, StatementType.FUTURE): GetStatement.get_future_br_statement,
-            (Region.US, StatementType.ALL): GetStatement.get_all_us_statement,
+            (Region.BR, StatementType.OUTFLOWS): GetStatement.get_outflows_br_statement,
+            (Region.BR, StatementType.INFLOWS): GetStatement.get_inflows_br_statement,
+            (Region.US, StatementType.ALL): GetStatement.get_complete_us_statement,
         }.get(map_keys, {})(jwt_data=jwt_data, statement=statement)
 
         return statement_response

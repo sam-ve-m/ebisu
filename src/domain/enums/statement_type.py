@@ -4,6 +4,6 @@ from enum import Enum
 
 class StatementType(Enum):
     ALL = "ALL"
-    ENTRY = "ENTRANCE"
-    EXIT = "EXIT"
+    INFLOWS = "INFLOWS"
+    OUTFLOWS = "OUTFLOWS"
     FUTURE = "FUTURE"
