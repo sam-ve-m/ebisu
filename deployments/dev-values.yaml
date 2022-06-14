@@ -13,167 +13,212 @@ ports:
   containerPort: 8000
 
 containers:
-  env:
-    # ebisu
-    - name: ORACLE_BASE_USER
-      value: "UEBISDB001"
-    - name: ORACLE_BASE_PASSWORD
-      value: "Eb3gq7$8k7z!Sc@"
-    - name: ORACLE_BASE_DSN
-      value: "172.30.10.227"
-    - name: ORACLE_BASE_PORT
-      value: "1521"
-    - name: ORACLE_BASE_SERVICE_US
-      value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
-    - name: ORACLE_BASE_SERVICE_BR
-      value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
-    - name: MONGO_CONNECTION_URL
-      value: "mongodb://ebisu:dslKJdm312@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
-    - name: MONGODB_DATABASE_NAME
-      value: "lionx"
-    - name: MONGODB_USER_COLLECTION
-      value: "users"
-    - name: MONGODB_JWT_COLLECTION
-      value: "jwts"
-    - name: MONGO_DATABASE_POSEIDON
-      value: "poseidon"
-    - name: MONGO_COLLECTION_IZANAMI
-      value: "izanami"
-    - name: MONGODB_SNAPSHOT_DATABASE
-      value: "ebisu"
-    - name: MONGODB_SNAPSHOT_COLLECTION
-      value: "exchange_user_snapshot"
-    - name: DW_AUTHENTICATION_URL
-      value: "https://bo-api.drivewealth.io/back-office/auth"
-    - name: DW_BALANCE_URL
-      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
-    - name: DW_GET_ALL_TRANSACTIONS_URL
-      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
-    - name: FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL
-      value: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
-    - name: FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB
-      value: "2"
-    - name: AWS_ACCESS_KEY_ID
-      value: "AKIATZVFXI25USQWCS5O"
-    - name: AWS_SECRET_ACCESS_KEY
-      value: "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"
-    - name: REGION_NAME
-      value: "sa-east-1"
-    - name: AWS_FILE_BUCKET_NAME
-      value: "brokerage-note-and-bank-statement-dev"
-    - name: JWT_FILE_BUCKET_NAME
-      value: "heimdall_rsa"
-    - name: BUCKET_NAME_KEY
-      value: "auth-gateway-keys-uat"
-    - name: REDIS_HOST_URL
-      value: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
-    - name: REDIS_CACHE_DB
-      value: "1"
-    - name: BANK_CODE
-      value: "001"
-    # Mist
-    - name: MIST_REDIS_HOST
-      value: "172.30.11.235"
-    - name: MIST_REDIS_PORT
-      value: "6379"
-    - name: MIST_REDIS_DB
-      value: "1"
-    - name: MIST_REDIS_USER
-      value: "bnd"
-    - name: MIST_REDIS_PASSWORD
-      value: "jkl321pqr"
-    - name: MIST_AWS_ACCESS_KEY_ID
-      value: "AKIATZVFXI25USQWCS5O"
-    - name: MIST_AWS_SECRET_ACCESS_KEY
-      value: "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"
-    - name: MIST_REGION_NAME
-      value: "sa-east-1"
-    - name: MIST_BUCKET_NAME_KEY
-      value: "auth-gateway-keys-dev"
-    - name: MIST_JWT_FILE_BUCKET_NAME
-      value: "mist_rsa"
-    - name: MIST_ELECTRONIC_SIGNATURE_FILE_BUCKET_NAME
-      value: "eletronic-signature-key"
-    - name: MIST_JWT_REQUIRED_FIELDS
-      value: "[]"
-    - name: MIST_MONGODB_CONNECTION
-      value: "mongodb://bnd:jkl321pqr@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=MongoDB%20Compass&ssl=false"
-    - name: MIST_AUTH_DATABASE_MONGO_CONNECTION
-      value: "mongodb"
-    - name: MIST_AUTH_DATABASE_HOST
-      value: "172.30.10.75"
-    - name: MIST_AUTH_DATABASE_PORT
-      value: "41000"
-    - name: MIST_AUTH_DATABASE_USER
-      value: "bnd"
-    - name: MIST_AUTH_DATABASE_PASSWORD
-      value: "jkl321pqr"
-    - name: MIST_ELECTRONIC_SIGNATURE_MAX_ATTEMPTS
-      value: "5"
-    - name: MIST_ENCRYPT_KEY
-      value: "c_-e_-e_-e_-i_-i"
-    - name: MIST_FILE_BUCKET_NAME
-      value: "mist_rsa"
-    - name: MIST_AUTH_DATABASE_NAME
-      value: "lionx"
-    - name: MIST_AUTH_DATABASE_USER_COLLECTION
-      value: "users"
-    # Heimdal
-    - name: HEIMDALL_FILE_BUCKET_NAME
-      value: "heimdall_rsa"
-    - name: HEIMDALL_AWS_ACCESS_KEY_ID
-      value: "AKIATZVFXI25USQWCS5O"
-    - name: HEIMDALL_AWS_SECRET_ACCESS_KEY
-      value: "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"
-    - name: HEIMDALL_REGION_NAME
-      value: "sa-east-1"
-    - name: HEIMDALL_BUCKET_NAME_KEY
-      value: "auth-gateway-keys-dev"
-    - name: HEIMDALL_AWS_BUCKET_USERS_FILES
-      value: "dtvm-users-files-dev"
-    - name: HEIMDALL_AWS_BUCKET_TERMS
-      value: "dtvm-terms-dev"
-    - name: HEIMDALL_JWT_REQUIRED_FIELDS
-      value: "['email']"
-    - name: HEIMDALL_REDIS_HOST
-      value: "172.30.11.235"
-    - name: HEIMDALL_REDIS_PORT
-      value: "6379"
-    - name: HEIMDALL_REDIS_DB
-      value: "1"
-    - name: HEIMDALL_REDIS_USER
-      value: "bnd"
-    - name: HEIMDALL_REDIS_PASSWORD
-      value: "jkl321pqr"
-    # Mepho DW transport
-    - name: MEPHO_DW_APP_KEY
-      value: "93d6184b-4692-4058-b32d-82624be89cb1"
-    - name: MEPHO_DW_USER
-      value: "bo.lionx.src"
-    - name: MEPHO_DW_PASSWORD
-      value: "passw0rd"
-    - name: MEPHO_DW_AUTHENTICATION_URL
-      value: "https://bo-src.drivewealth.io/back-office/auth"
-    - name: MEPHO_REDIS_HOST
-      value: "redis://bnd:jkl321pqr@172.30.11.235:6379"
-    - name: MEPHO_REDIS_DB
-      value: "1"
-    # bifrost
-    - name: BIFROST_KAFKA
-      value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
-    - name: TRANSFERS_BETWEEN_SINACOR_AND_DRIVE_WEALTH_TOPIC
-      value: "ebisu-bifrost.transfers-between-sinacor-and-drive-wealth"
-    - name: TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC
-      value: "ebisu-bifrost.transfers-between-drive-wealth-and-sinacor"
-    - name: TRANSFERS_BETWEEN_SINACOR_AND_SINACOR
-      value: "ebisu-bifrost.transfers-between-sinacor-and-sinacor"
-    - name: TRANSFERS_BETWEEN_SINACOR_AND_EXTERNAL_BANK
-      value: "ebisu-bifrost.transfers-between-sinacor-and-external-bank"
-    # etria
-    - name: ETRIA_LOG_LEVEL
-      value: "INFO"
-    - name: ROOT_LOG_LEVEL
-      value: "WARNING"
+  - name: ebisu
+    image: nexus.sigame.com.br/ebisu:1.1.3
+    ports:
+      - containerPort: 8000
+    env:
+      - name: ETRIA_LOG_LEVEL
+        value: "INFO"
+      - name: ROOT_LOG_LEVEL
+        value: "WARNING"
+      #oracle orders
+      - name: ORACLE_USER_ORDERS
+        value: "uordedb001"
+      - name: ORACLE_PASSWORD_ORDERS
+        value: "uordedb001"
+      - name: ORACLE_BASE_DSN_ORDERS
+        value: "172.30.10.227"
+      - name: ORACLE_PORT_ORDERS
+        value: "1521"
+      - name: ORACLE_SERVICE_US
+        value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
+      - name: ORACLE_SERVICE_BR
+        value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
+        #oracle statements
+      - name: ORACLE_BASE_DSN_STATEMENT
+        value: "172.30.10.227"
+      - name: ORACLE_USER_STATEMENT
+        value: "uordedb001"
+      - name: ORACLE_PASSWORD_STATEMENT
+        value: "uordedb001"
+      - name: ORACLE_SERVICE_STATEMENT
+        value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
+      - name: ORACLE_ENCODING_STATEMENT
+        value: "UTF-8"
+      - name: ORACLE_PORT_STATEMENT
+        value: "1521"
+        #oracle earnings
+      - name: ORACLE_BASE_DNS_EARNINGS
+        value: "172.30.10.227"
+      - name: ORACLE_PORT_EARNINGS
+        value: "1521"
+      - name: ORACLE_SERVICE_EARNINGS
+        value: "opdbdev.subpriv.vcndev.oraclevcn.com"
+      - name: ORACLE_ENCODING_STATEMENT
+        value: "UTF-8"
+      - name: ORACLE_USER_EARNINGS
+        value: "udataedb001"
+      - name: ORACLE_PASSWORD_EARNINGS
+        value: "1DbCt$4UdAe0"
+      - name: MONGO_CONNECTION_URL
+        value: "mongodb://bnd:jkl321pqr@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
+      - name: MONGODB_DATABASE_NAME
+        value: "lionx"
+      - name: MONGODB_USER_COLLECTION
+        value: "users"
+      - name: MONGODB_JWT_COLLECTION
+        value: "jwts"
+      - name: MONGODB_USER
+        value: "bnd"
+      - name: MONGODB_PASSWORD
+        value: "jkl321pqr"
+      - name: MONGODB_HOST
+        value: "lnxbrspmongodb05-dev.subpriv.vcndev.oraclevcn.com"
+      - name: MONGODB_PORT
+        value: "41000"
+      - name: MONGODB_CONNECTION
+        value: "mongodb"
+      - name: MONGO_DATABASE_POSEIDON
+        value: "poseidon"
+      - name: MONGO_COLLECTION_IZANAMI
+        value: "izanami"
+      - name: MIST_REDIS_HOST
+        value: "172.30.11.235"
+      - name: MIST_REDIS_PORT
+        value: "6379"
+      - name: MIST_REDIS_DB
+        value: "1"
+      - name: MIST_REDIS_USER
+        value: "bnd"
+      - name: MIST_REDIS_PASSWORD
+        value: "jkl321pqr"
+      - name: MIST_AWS_ACCESS_KEY_ID
+        value: "AKIATZVFXI25USQWCS5O"
+      - name: MIST_AWS_SECRET_ACCESS_KEY
+        value: "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"
+      - name: MIST_REGION_NAME
+        value: "sa-east-1"
+      - name: MIST_BUCKET_NAME_KEY
+        value: "auth-gateway-keys-dev"
+      - name: MIST_JWT_FILE_BUCKET_NAME
+        value: "mist_rsa"
+      - name: MIST_ELECTRONIC_SIGNATURE_FILE_BUCKET_NAME
+        value: "eletronic-signature-key"
+      - name: MIST_JWT_REQUIRED_FIELDS
+        value: "[]"
+      - name: MIST_MONGODB_CONNECTION
+        value: "mongodb://bnd:jkl321pqr@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=MongoDB%20Compass&ssl=false"
+      - name: MIST_AUTH_DATABASE_MONGO_CONNECTION
+        value: "mongodb"
+      - name: MIST_AUTH_DATABASE_HOST
+        value: "172.30.10.75"
+      - name: MIST_AUTH_DATABASE_PORT
+        value: "41000"
+      - name: MIST_AUTH_DATABASE_USER
+        value: "bnd"
+      - name: MIST_AUTH_DATABASE_PASSWORD
+        value: "jkl321pqr"
+      - name: MIST_ELECTRONIC_SIGNATURE_MAX_ATTEMPTS
+        value: "5"
+      - name: MIST_ENCRYPT_KEY
+        value: "c_-e_-e_-e_-i_-i"
+      - name: MIST_FILE_BUCKET_NAME
+        value: "mist_rsa"
+      - name: MIST_AUTH_DATABASE_NAME
+        value: "lionx"
+      - name: MIST_AUTH_DATABASE_USER_COLLECTION
+        value: "users"
+      - name: JWT_FILE_BUCKET_NAME
+        value: "heimdall_rsa"
+      - name: BUCKET_NAME_KEY
+        value: "auth-gateway-keys-dev"
+      - name: DW_APP_KEY
+        value: "93d6184b-4692-4058-b32d-82624be89cb1"
+      - name: DW_USER
+        value: "bo.lionx.api"
+      - name: DW_PASSWORD
+        value: "passw0rd"
+      - name: DW_AUTHENTICATION_URL
+        value: "https://bo-api.drivewealth.io/back-office/auth"
+      - name: DW_BALANCE_URL
+        value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
+      - name: DW_GET_ALL_TRANSACTIONS_URL
+        value: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
+      - name: AWS_ACCESS_KEY_ID
+        value: "AKIATZVFXI25USQWCS5O"
+      - name: AWS_SECRET_ACCESS_KEY
+        value: "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"
+      - name: REGION_NAME
+        value: "sa-east-1"
+      - name: AWS_FILE_BUCKET_NAME
+        value: "brokerage-note-and-bank-statement-dev"
+      - name: BUCKET_NAME_KEY
+        value: "auth-gateway-keys-dev"
+      - name: AWS_BUCKET_USERS_FILES
+        value: "dtvm-users-files-dev"
+      - name: AWS_BUCKET_USERS_SELF
+        value: "dtvm-user-selfie-dev"
+      - name: AWS_BUCKET_TERMS
+        value: "dtvm-terms-dev"
+      - name: FILE_BUCKET_NAME
+        value: "heimdall_rsa"
+      - name: JWT_REQUIRED_FIELDS
+        value: '["email"]'
+      - name: HEIMDALL_FILE_BUCKET_NAME
+        value: "heimdall_rsa"
+      - name: HEIMDALL_AWS_ACCESS_KEY_ID
+        value: "AKIATZVFXI25USQWCS5O"
+      - name: HEIMDALL_AWS_SECRET_ACCESS_KEY
+        value: "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"
+      - name: HEIMDALL_REGION_NAME
+        value: "sa-east-1"
+      - name: HEIMDALL_BUCKET_NAME_KEY
+        value: "auth-gateway-keys-dev"
+      - name: HEIMDALL_AWS_BUCKET_USERS_FILES
+        value: "dtvm-users-files-dev"
+      - name: HEIMDALL_AWS_BUCKET_TERMS
+        value: "dtvm-terms-dev"
+      - name: HEIMDALL_JWT_REQUIRED_FIELDS
+        value: "['email']"
+      - name: HEIMDALL_REDIS_HOST
+        value: "172.30.11.235"
+      - name: HEIMDALL_REDIS_PORT
+        value: "6379"
+      - name: HEIMDALL_REDIS_DB
+        value: "1"
+      - name: HEIMDALL_REDIS_USER
+        value: "bnd"
+      - name: HEIMDALL_REDIS_PASSWORD
+        value: "jkl321pqr"
+      - name: FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL
+        value: "redis://bnd:jkl321pqr@172.30.11.235:6379"
+      - name: FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB
+        value: "2"
+      - name: BIFROST_KAFKA
+        value: "172.30.10.105:9092"
+      - name: MEPHO_DW_APP_KEY
+        value: "93d6184b-4692-4058-b32d-82624be89cb1"
+      - name: MEPHO_DW_USER
+        value: "bo.lionx.api"
+      - name: MEPHO_DW_PASSWORD
+        value: "passw0rd"
+      - name: MEPHO_DW_AUTHENTICATION_URL
+        value: "https://bo-api.drivewealth.io/back-office/auth"
+      - name: MEPHO_REDIS_HOST
+        value: "redis://bnd:jkl321pqr@172.30.11.235:6379"
+      - name: MEPHO_REDIS_DB
+        value: "1"
+      - name: REDIS_HOST_URL
+        value: "redis://bnd:jkl321pqr@lnxbrspkeydbdb01-dev.subpriv.vcndev.oraclevcn.com:6379"
+      - name: REDIS_CACHE_DB
+        value: "1"
+      - name: REDIS_PORTFOLIO_DB
+        value: "0"
+      - name: TRANSFERS_BETWEEN_SINACOR_AND_DRIVE_WEALTH_TOPIC
+        value: "transfers_between_sinacor_and_drive_wealth"
+      - name: TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC
+        value: "transfers_between_drive_wealth_and_sinacor"
 
 service:
   name: ebisu-service
