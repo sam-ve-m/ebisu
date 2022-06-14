@@ -160,11 +160,15 @@ containers:
       value: "1"
     # bifrost
     - name: BIFROST_KAFKA
-      value: "172.30.10.105:9092"
+      value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
     - name: TRANSFERS_BETWEEN_SINACOR_AND_DRIVE_WEALTH_TOPIC
-      value: "transfers_between_sinacor_and_drive_wealth"
+      value: "ebisu-bifrost.transfers-between-sinacor-and-drive-wealth"
     - name: TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC
-      value: "transfers_between_drive_wealth_and_sinacor"
+      value: "ebisu-bifrost.transfers-between-drive-wealth-and-sinacor"
+    - name: TRANSFERS_BETWEEN_SINACOR_AND_SINACOR
+      value: "ebisu-bifrost.transfers-between-sinacor-and-sinacor"
+    - name: TRANSFERS_BETWEEN_SINACOR_AND_EXTERNAL_BANK
+      value: "ebisu-bifrost.transfers-between-sinacor-and-external-bank"
     # etria
     - name: ETRIA_LOG_LEVEL
       value: "INFO"
