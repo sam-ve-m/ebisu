@@ -36,7 +36,7 @@ class DWTransport:
 
     async def get_balances(self, account: str) -> List[dict]:
         if not account:
-            return []
+            return {}
         url = config("DW_BALANCE_URL")
 
         url_formatted = url.format(account)
