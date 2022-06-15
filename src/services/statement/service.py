@@ -4,6 +4,8 @@ from typing import List
 import pytz
 
 # INTERNAL LIBS
+from bson import timestamp
+
 from src.services.get_statement.dw_connection import DWTransport
 from src.domain.time_formatter.time_formatter import (
     str_to_timestamp_statement,
@@ -71,13 +73,14 @@ class Statement:
 
     @staticmethod
     async def get_dw_statement(
-        dw_account: str, offset: int, limit: int
+        dw_account: str, offset: int, limit: int, start_date: timestamp, end_date: timestamp
     ) -> dict:
-        # start_date = Statement.from_timestamp_to_utc_isoformat_us(start_date)
-        # end_date = Statement.from_timestamp_to_utc_isoformat_us(end_date)
+
+        start_date = Statement.from_timestamp_to_utc_isoformat_us(start_date)
+        end_date = Statement.from_timestamp_to_utc_isoformat_us(end_date)
 
         raw_statement = await Statement.dw.get_transactions(
-            dw_account, limit=limit, offset=offset
+            dw_account, limit=limit, offset=offset, start_date=start_date, end_date=end_date
         )
         raw_balance = await Statement.dw.get_balances(dw_account)
         # TODO INTERNAL SERVER ERROR
