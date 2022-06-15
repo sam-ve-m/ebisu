@@ -30,6 +30,7 @@ RUN touch /opt/envs/mepho.lionx.com.br/.env
 
 COPY . .
 
+RUN apt-get update --fix-missing
 RUN apt-get -y install wkhtmltopdf
 
 ENV PATH=/root/.local:$PATH

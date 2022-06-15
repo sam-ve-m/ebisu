@@ -216,9 +216,13 @@ containers:
       - name: REDIS_PORTFOLIO_DB
         value: "0"
       - name: TRANSFERS_BETWEEN_SINACOR_AND_DRIVE_WEALTH_TOPIC
-        value: "transfers_between_sinacor_and_drive_wealth"
+        value: "ebisu-bifrost.transfers-between-sinacor-and-drive-wealth"
       - name: TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC
-        value: "transfers_between_driv  e_wealth_and_sinacor"
+        value: "ebisu-bifrost.transfers-between-drive-wealth-and-sinacor"
+      - name: TRANSFERS_BETWEEN_SINACOR_AND_SINACOR
+        value: "ebisu-bifrost.transfers-between-sinacor-and-sinacor"
+      - name: TRANSFERS_BETWEEN_SINACOR_AND_EXTERNAL_BANK
+        value: "ebisu-bifrost.transfers-between-sinacor-and-external-bank"
 
 service:
   name: ebisu-service
