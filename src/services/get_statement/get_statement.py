@@ -11,10 +11,22 @@ from src.services.statement.service import Statement
 
 class GetStatement:
 
-    oracle_singleton_instance = StatementsRepository
-
     @classmethod
-    async def get_account(cls, jwt_data: dict):
+    async def get_service_response(cls, jwt_data: dict, statement: GetStatementModel) -> dict:
+        map_keys = (statement.region, statement.statement_type)
+
+        statement_response = {
+            (Region.BR, StatementType.ALL): GetStatement.get_complete_br_statement,
+            (Region.BR, StatementType.FUTURE): GetStatement.get_future_br_statement,
+            (Region.BR, StatementType.OUTFLOWS): GetStatement.get_outflows_br_statement,
+            (Region.BR, StatementType.INFLOWS): GetStatement.get_inflows_br_statement,
+            (Region.US, StatementType.ALL): GetStatement.get_complete_us_statement,
+        }.get(map_keys, {})(jwt_data=jwt_data, statement=statement)
+
+        return await statement_response
+
+    @staticmethod
+    async def extract_bmf_account(jwt_data: dict) -> str:
         br_portfolios = jwt_data.get("user", {}).get("portfolios", {}).get("br", {})
         bmf_account = br_portfolios.get("bmf_account")
 
@@ -22,18 +34,17 @@ class GetStatement:
 
     @classmethod
     async def get_complete_br_statement(cls, jwt_data: dict, statement: GetStatementModel):
-        bmf_account = cls.get_account(jwt_data=jwt_data)
+        bmf_account = GetStatement.extract_bmf_account(jwt_data=jwt_data)
 
-        # todo - retirar futuros
-        additional_clause = f""" WHERE CD_CLIENTE = {bmf_account} """
-
-        complete_statement = StatementsRepository.build_general_query(
+        complete_statement = StatementsRepository.list_paginated_complete_account_statement(
             offset=statement.offset,
             limit=statement.limit,
-            additional_clause=additional_clause
+            bmf_account=bmf_account
         )
 
-        balance = StatementsRepository.build_query_balance(bmf_account=bmf_account)
+        balance = StatementsRepository.get_account_balance(
+            bmf_account=bmf_account
+        )
 
         data_balance = {
             "balance": balance.pop().get("VL_TOTAL"),
@@ -46,9 +57,10 @@ class GetStatement:
 
         return data_balance
 
+
     @classmethod
     async def get_future_br_statement(cls, jwt_data: dict, statement: GetStatementModel):
-        bmf_account = cls.get_account(jwt_data=jwt_data)
+        bmf_account = cls.extract_bmf_account(jwt_data=jwt_data)
 
         additional_clause = f"""WHERE CD_CLIENTE = {bmf_account} AND DT_LANCAMENTO > sysdate + 1"""
 
@@ -70,7 +82,7 @@ class GetStatement:
 
     @classmethod
     async def get_outflows_br_statement(cls, jwt_data: dict, statement: GetStatementModel):
-        bmf_account = cls.get_account(jwt_data=jwt_data)
+        bmf_account = cls.extract_bmf_account(jwt_data=jwt_data)
 
         additional_clause = f""" WHERE CD_CLIENTE = {bmf_account} AND VL_LANCAMENTO < 0 """
 
@@ -92,7 +104,7 @@ class GetStatement:
 
     @classmethod
     async def get_inflows_br_statement(cls, jwt_data: dict, statement: GetStatementModel):
-        bmf_account = cls.get_account(jwt_data=jwt_data)
+        bmf_account = cls.extract_bmf_account(jwt_data=jwt_data)
 
         additional_clause = f""" WHERE CD_CLIENTE = {bmf_account} AND VL_LANCAMENTO > 0 """
 
@@ -134,20 +146,6 @@ class GetStatement:
 
         return us_statement
 
-    @classmethod
-    async def get_service_response(cls, jwt_data: dict, statement: GetStatementModel) -> dict:
-
-        map_keys = (statement.region, statement.statement_type)
-
-        statement_response = {
-            (Region.BR, StatementType.ALL) : GetStatement.get_complete_br_statement,
-            (Region.BR, StatementType.FUTURE): GetStatement.get_future_br_statement,
-            (Region.BR, StatementType.OUTFLOWS): GetStatement.get_outflows_br_statement,
-            (Region.BR, StatementType.INFLOWS): GetStatement.get_inflows_br_statement,
-            (Region.US, StatementType.ALL): GetStatement.get_complete_us_statement,
-        }.get(map_keys, {})(jwt_data=jwt_data, statement=statement)
-
-        return await statement_response
 
     # (Region.US, StatementType.FUTURE): GetStatement.get_future_us_statement,
     # (Region.US, StatementType.OUTFLOWS): GetStatement.get_outflows_us_statement,

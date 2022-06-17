@@ -11,31 +11,27 @@ class StatementsRepository(OracleBaseRepository):
     port = config("ORACLE_BASE_PORT")
 
     @staticmethod
-    def build_general_query(
-            additional_clause: str,
-            offset: int,
-            limit: int,
+    def list_paginated_complete_account_statement(
+        offset: int,
+        limit: int,
+        bmf_account: str
     ):
-        query = f"""SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO 
-                   FROM CORRWIN.TCCMOVTO
-                   {additional_clause}              
-                   ORDER BY NR_LANCAMENTO
-                   OFFSET {offset} rows
-                   fetch first {limit} row only
-                """
+        complete_statement_query = f"""SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO 
+                    FROM CORRWIN.TCCMOVTO
+                    WHERE CD_CLIENTE = {bmf_account}          
+                    ORDER BY NR_LANCAMENTO
+                    OFFSET {offset} rows
+                    fetch first {limit} row only"""
 
-        statement = StatementsRepository.get_data(sql=query)
-
+        statement = StatementsRepository.get_data(
+            sql=complete_statement_query
+        )
         return statement
 
     @staticmethod
-    def build_query_balance(
-            bmf_account: str
-    ):
-        query = (
-            f"SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = {bmf_account}"
+    def get_account_balance(bmf_account: str):
+        balance_query = f"SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = {bmf_account}"
+        balance = StatementsRepository.get_data(
+            sql=balance_query
         )
-
-        balance = StatementsRepository.get_data(sql=query)
-
         return balance

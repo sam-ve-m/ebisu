@@ -40,16 +40,11 @@ class Statement:
             )
         return statements
 
-    @staticmethod
-    def normalize_splited_date_to_string(day: int, month: int, year: int):
-        received_date = datetime(year, month, day)
-        date = received_date.date()
-        return date
-
-    @staticmethod
-    def normalize_balance_us(client_balance: dict) -> dict:
-        balance = client_balance.get("dict_body").get("cash").get("cashBalance")
-        return balance
+    # @staticmethod
+    # def normalize_splited_date_to_string(day: int, month: int, year: int):
+    #     received_date = datetime(year, month, day)
+    #     date = received_date.date()
+    #     return date
 
     @staticmethod
     def from_timestamp_to_utc_isoformat_us(timestamp: float):
@@ -72,6 +67,11 @@ class Statement:
         us_portfolios = portfolios.get("us", {})
         dw_account_response = us_portfolios.get("dw_account")
         return dw_account_response
+
+    @staticmethod
+    def normalize_balance_us(client_balance: dict) -> dict:
+        balance = client_balance.get("dict_body").get("cash").get("cashBalance")
+        return balance
 
     @staticmethod
     async def get_dw_statement(
