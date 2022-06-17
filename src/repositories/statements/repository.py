@@ -1,3 +1,8 @@
+from typing import List
+
+from src.domain.statement.model.balance.model import Balance
+from src.domain.statement.model.region_date_format.enum import RegionDateFormat
+from src.domain.statement.model.transaction.model import Transaction
 from src.infrastructures.env_config import config
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 
@@ -10,28 +15,107 @@ class StatementsRepository(OracleBaseRepository):
     base_dns = config("ORACLE_BASE_DSN")
     port = config("ORACLE_BASE_PORT")
 
+    base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO FROM CORRWIN.TCCMOVTO {0} ORDER BY NR_LANCAMENTO OFFSET {1} rows fetch first {2} row only"
+    balance_query = "SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = {0}"
+
     @staticmethod
-    def list_paginated_complete_account_statement(
+    def __list_paginated_account_transactions(
+        where_clause: str,
+        offset: int,
+        limit: int,
+    ):
+        complete_transaction_query = StatementsRepository.base_query.format(where_clause, offset, limit)
+
+        transactions = StatementsRepository.get_data(
+            sql=complete_transaction_query
+        )
+
+        transactions_model = [
+            Transaction(
+                date=transaction.get("DT_LANCAMENTO"),
+                description=transaction.get("DS_LANCAMENTO"),
+                value=transaction.get("VL_LANCAMENTO"),
+                region_date_format=RegionDateFormat.BR_DATE_FORMAT
+            )
+            for transaction in transactions
+        ]
+
+        return transactions_model
+
+    @staticmethod
+    def list_paginated_complete_account_transactions(
         offset: int,
         limit: int,
         bmf_account: str
-    ):
-        complete_statement_query = f"""SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO 
-                    FROM CORRWIN.TCCMOVTO
-                    WHERE CD_CLIENTE = {bmf_account}          
-                    ORDER BY NR_LANCAMENTO
-                    OFFSET {offset} rows
-                    fetch first {limit} row only"""
+    ) -> List[Transaction]:
+        where_clause = f"WHERE CD_CLIENTE = {bmf_account}"
 
-        statement = StatementsRepository.get_data(
-            sql=complete_statement_query
+        transactions_model = StatementsRepository.__list_paginated_account_transactions(
+            where_clause=where_clause,
+            offset=offset,
+            limit=limit
         )
-        return statement
+
+        return transactions_model
 
     @staticmethod
-    def get_account_balance(bmf_account: str):
-        balance_query = f"SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = {bmf_account}"
-        balance = StatementsRepository.get_data(
-            sql=balance_query
+    def list_paginated_future_account_transactions(
+        offset: int,
+        limit: int,
+        bmf_account: str
+    ) -> List[Transaction]:
+        where_clause = f"WHERE CD_CLIENTE = {bmf_account} AND DT_LANCAMENTO > sysdate + 1"
+
+        transactions_model = StatementsRepository.__list_paginated_account_transactions(
+            where_clause=where_clause,
+            offset=offset,
+            limit=limit
         )
-        return balance
+
+        return transactions_model
+
+    @staticmethod
+    def list_paginated_outflow_account_transactions(
+            offset: int,
+            limit: int,
+            bmf_account: str
+    ) -> List[Transaction]:
+        where_clause = f"WHERE CD_CLIENTE = {bmf_account} AND VL_LANCAMENTO < 0"
+
+        transactions_model = StatementsRepository.__list_paginated_account_transactions(
+            where_clause=where_clause,
+            offset=offset,
+            limit=limit
+        )
+
+        return transactions_model
+
+    @staticmethod
+    def list_paginated_inflow_account_transactions(
+            offset: int,
+            limit: int,
+            bmf_account: str
+    ) -> List[Transaction]:
+        where_clause = f"WHERE CD_CLIENTE = {bmf_account} AND VL_LANCAMENTO > 0 "
+
+        transactions_model = StatementsRepository.__list_paginated_account_transactions(
+            where_clause=where_clause,
+            offset=offset,
+            limit=limit
+        )
+
+        return transactions_model
+
+    @staticmethod
+    def get_account_balance(bmf_account: str) -> Balance:
+        balance = StatementsRepository.get_data(
+            sql=StatementsRepository.balance_query.format(bmf_account)
+        )
+
+        balance = balance[0].get("VL_TOTAL") if bool(balance) else 0.0
+
+        balance_model = Balance(
+            value=balance
+        )
+
+        return balance_model
