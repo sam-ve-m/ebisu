@@ -81,8 +81,8 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             query={"unique_id": unique_id},
             project={
                 f"portfolios.{classification_type}.{region_portfolios}": 1,
-                "_id": 0
-            }
+                "_id": 0,
+            },
         )
 
         if stock_portfolios_response is None:
@@ -96,8 +96,9 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
         )
 
         stock_portfolios_response = {
-            f"{classification_type}":
-                {f"{region_portfolios}": portfolio_result,
-        }}
+            f"{classification_type}": {
+                f"{region_portfolios}": portfolio_result,
+            }
+        }
 
         return stock_portfolios_response

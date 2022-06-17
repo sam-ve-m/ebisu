@@ -110,10 +110,12 @@ class EarningsFromClient:
             )
 
             # query result of NOT YET CONFIRMED earnings (31-12-9999)
-            earnings_record_date_values = EarningsFromClient.record_date_earnings_response(
-                open_earnings=open_earnings,
-                earnings_client=earnings_client,
-                accounts=accounts,
+            earnings_record_date_values = (
+                EarningsFromClient.record_date_earnings_response(
+                    open_earnings=open_earnings,
+                    earnings_client=earnings_client,
+                    accounts=accounts,
+                )
             )
 
         response = {

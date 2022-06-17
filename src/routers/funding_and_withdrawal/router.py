@@ -51,8 +51,8 @@ class FundingAndWithdrawalRouter:
         )
 
         await ExchangeOperationsService.get_service_response_to_save_exchange_operations(
-            jwt_data=jwt_data,
-            resume=get_user_bank_accounts_response)
+            jwt_data=jwt_data, resume=get_user_bank_accounts_response
+        )
 
         return get_user_bank_accounts_response
 
@@ -79,7 +79,7 @@ class FundingAndWithdrawalRouter:
         )
 
         await ExchangeOperationsService.get_service_response_to_save_exchange_operations(
-            jwt_data=jwt_data,
-            resume=get_user_bank_accounts_response)
+            jwt_data=jwt_data, resume=get_user_bank_accounts_response
+        )
 
         return get_user_bank_accounts_response

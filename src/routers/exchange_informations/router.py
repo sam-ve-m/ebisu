@@ -2,8 +2,13 @@
 from fastapi import Request, APIRouter, Depends
 
 # MODELS
-from src.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
+from src.domain.validators.exchange_info.client_orders_validator import (
+    GetClientOrderModel,
+)
 from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
+from src.domain.validators.exchange_info.get_closure_steps_validator import (
+    ClosureStepsModel,
+)
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.domain.validators.exchange_info.get_statement_validator import (
     GetStatementModel,
@@ -16,6 +21,7 @@ from src.domain.validators.exchange_info.list_client_order_validator import (
 )
 
 # SERVICE IMPORTS
+from src.services.closure_steps.service import ClosureSteps
 from src.services.earnings_from_client.get_earnings_from_client import (
     EarningsFromClient,
 )
@@ -99,3 +105,14 @@ class ExchangeRouter:
             earnings_client=earnings_client, jwt_data=jwt_data
         )
         return earnings_client_response
+
+    @staticmethod
+    @__exchange_router.get("/closure_steps", tags=["AccountClosure"])
+    async def get_closure_steps(
+        request: Request, closure_steps: ClosureStepsModel = Depends()
+    ):
+        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        closure_steps_response = await ClosureSteps.get_service_response(
+            closure_steps=closure_steps, jwt_data=jwt_data
+        )
+        return closure_steps_response

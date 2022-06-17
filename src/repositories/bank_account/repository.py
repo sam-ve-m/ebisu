@@ -131,11 +131,11 @@ class UserBankAccountRepository(MongoDbBaseRepository):
         return user_bank_account_was_soft_deleted
 
     @classmethod
-    async def get_cpf_and_name_from_user(
-            cls, unique_id: str):
+    async def get_cpf_and_name_from_user(cls, unique_id: str):
 
         user_account_details = await cls.find_one(
-            query={"unique_id": unique_id}, project={"name": 1, "identifier_document": 1}
+            query={"unique_id": unique_id},
+            project={"name": 1, "identifier_document": 1},
         )
 
         name = user_account_details.get("name")

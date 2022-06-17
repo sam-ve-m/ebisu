@@ -129,8 +129,7 @@ class UserBankAccountService:
         return delete_bank_account_response
 
     @classmethod
-    def bank_code_from_client_exists(
-            cls, bank: str) -> bool:
+    def bank_code_from_client_exists(cls, bank: str) -> bool:
         bank_code_result = GetBankCode.get_bank_code_from_database(bank=bank)
 
         return bool(bank_code_result)

@@ -7,8 +7,11 @@ from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 from src.services.bank_account.service import UserBankAccountService
 from src.services.get_bank_code.service import GetBankCode
-from tests.src.repositories.bank_account.stubs import account_repository_id_stub, bank_account_repository_stub, \
-    bank_codes_valid_stub
+from tests.src.repositories.bank_account.stubs import (
+    account_repository_id_stub,
+    bank_account_repository_stub,
+    bank_codes_valid_stub,
+)
 from tests.src.stubs.bank_account_stubs.stub_get_account import (
     find_all_response_dummy,
     find_one_response_dummy,
@@ -201,31 +204,24 @@ async def test_when_sending_the_right_params_to_delete_registered_bank_account_t
     assert response == False
 
 
-@patch.object(GetBankCode, 'get_service_response', return_value=bank_codes_valid_stub)
+@patch.object(GetBankCode, "get_service_response", return_value=bank_codes_valid_stub)
 def test_when_sending_right_params_to_bank_code_from_client_exists_then_return_true(
-        mock_get_service_response
+    mock_get_service_response,
 ):
 
-    response = UserBankAccountService.bank_code_from_client_exists(
-        bank="070"
-    )
+    response = UserBankAccountService.bank_code_from_client_exists(bank="070")
     assert response == True
 
 
-@patch.object(GetBankCode, 'get_service_response', return_value=bank_codes_valid_stub)
+@patch.object(GetBankCode, "get_service_response", return_value=bank_codes_valid_stub)
 def test_when_sending_invalid_params_to_bank_code_from_client_exists_then_return_true(
-        mock_get_service_response
+    mock_get_service_response,
 ):
-    response = UserBankAccountService.bank_code_from_client_exists(
-        bank="123456"
-    )
+    response = UserBankAccountService.bank_code_from_client_exists(bank="123456")
     assert response == False
 
 
-find_one_stub = {
-    "name": "Teste Teste",
-    "identifier_document": {"cpf": "40340423410"}
-}
+find_one_stub = {"name": "Teste Teste", "identifier_document": {"cpf": "40340423410"}}
 
 # test get_cpf_and_name_from_user
 @pytest.mark.asyncio
@@ -234,4 +230,4 @@ async def test_when_sending_right_params_then_return_the_expected(mock_find_one)
     response = await UserBankAccountRepository.get_cpf_and_name_from_user(
         unique_id="1384f391-ceb6-444b-b649-db55cbcc0f9f"
     )
-    assert response == ('Teste Teste', '40340423410')
+    assert response == ("Teste Teste", "40340423410")

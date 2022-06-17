@@ -5,8 +5,13 @@ from unittest.mock import patch
 # EXTERNAL LIBS
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 from src.repositories.user_portfolios.repository import UserPortfoliosRepository
-from tests.src.repositories.stock_portfolios.stub import find_one_response_stub, unique_id_stub, \
-    find_one_by_region_stub, find_one_by_type_stub, find_one_by_type_and_region
+from tests.src.repositories.stock_portfolios.stub import (
+    find_one_response_stub,
+    unique_id_stub,
+    find_one_by_region_stub,
+    find_one_by_type_stub,
+    find_one_by_type_and_region,
+)
 
 
 @pytest.mark.asyncio
@@ -99,4 +104,4 @@ async def test_when_sending_the_right_params_to_type_and_region_then_return_the_
     response = await UserPortfoliosRepository.get_portfolios_by_type_and_region(
         unique_id=unique_id_stub, portfolio_classification="VNC", region="BR"
     )
-    assert response == {'vnc': find_one_by_type_and_region}
+    assert response == {"vnc": find_one_by_type_and_region}
