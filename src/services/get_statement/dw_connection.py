@@ -18,7 +18,7 @@ class DWTransport:
         self.expire_at = None
 
     async def get_transactions(
-        self, account: str, limit: int, offset: int, start_date, end_date
+        self, account: str, limit: int, offset, start_date, end_date
     ) -> List[dict]:
         if not account:
             return []

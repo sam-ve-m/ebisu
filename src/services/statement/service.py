@@ -53,8 +53,10 @@ class Statement:
 
     @staticmethod
     def from_timestamp_to_utc_isoformat_us(timestamp: float):
-        format_date = datetime.fromtimestamp(timestamp / 1000, tz=pytz.utc).isoformat()
-        return format_date
+        format_date = datetime.fromtimestamp(timestamp / 1000, tz=pytz.utc)
+        US_DATE_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
+        execution_date_time = datetime.strftime(format_date, US_DATE_TIME_FORMAT)
+        return execution_date_time
 
     @staticmethod
     def from_timestamp_to_utc_isoformat_br(timestamp: float):
@@ -73,14 +75,15 @@ class Statement:
 
     @staticmethod
     async def get_dw_statement(
-        dw_account: str, offset: int, limit: int, start_date: timestamp, end_date: timestamp
+        dw_account: str, offset, limit: int, start_date, end_date
     ) -> dict:
 
         start_date = Statement.from_timestamp_to_utc_isoformat_us(start_date)
         end_date = Statement.from_timestamp_to_utc_isoformat_us(end_date)
+        offset_date = Statement.from_timestamp_to_utc_isoformat_us(offset)
 
         raw_statement = await Statement.dw.get_transactions(
-            dw_account, limit=limit, offset=offset, start_date=start_date, end_date=end_date
+            dw_account, limit=limit, offset=offset_date, start_date=start_date, end_date=end_date
         )
         raw_balance = await Statement.dw.get_balances(dw_account)
         # TODO INTERNAL SERVER ERROR

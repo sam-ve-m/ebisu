@@ -148,7 +148,7 @@ class GetStatement:
         }.get(map_keys, {})(jwt_data=jwt_data, statement=statement)
 
         return await statement_response
-    #
+
     # (Region.US, StatementType.FUTURE): GetStatement.get_future_us_statement,
     # (Region.US, StatementType.OUTFLOWS): GetStatement.get_outflows_us_statement,
     # (Region.US, StatementType.INFLOWS): GetStatement.get_inflows_us_statement
