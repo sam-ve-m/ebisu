@@ -11,7 +11,7 @@ from src.domain.validators.exchange_info.client_orders_validator import (
 from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.domain.validators.exchange_info.get_statement_validator import (
-    GetStatementModel,
+    GetBrStatementModel,
 )
 from src.domain.validators.exchange_info.list_broker_note_validator import (
     BrokerNoteRegion,
@@ -207,7 +207,7 @@ async def test_when_sending_the_right_params_to_bank_statement_then_return_the_e
 ):
     response_statement = await ExchangeRouter.get_bank_statement(
         request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
-        statement=GetStatementModel(
+        statement=GetBrStatementModel(
             **{
                 "region": BrokerNoteRegion.BR.value,
                 "limit": 1,
@@ -229,7 +229,7 @@ async def test_when_sending_wrong_params_of_get_statement_model_then_raise_valid
             request=MagicMock(
                 scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)
             ),
-            statement=GetStatementModel(
+            statement=GetBrStatementModel(
                 **{
                     "region": None,
                     "limit": 1,
@@ -247,7 +247,7 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_get_statement_route
     with pytest.raises(UnauthorizedError):
         await ExchangeRouter.get_bank_statement(
             request=MagicMock(scope=scope_stub_2),
-            statement=GetStatementModel(
+            statement=GetBrStatementModel(
                 **{
                     "region": BrokerNoteRegion.BR.value,
                     "limit": 1,

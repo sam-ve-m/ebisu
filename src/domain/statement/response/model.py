@@ -8,6 +8,7 @@ from src.domain.statement.model.transaction.model import Transaction
 class BalanceResponse(BaseModel):
     value: float
 
+
 class TransactionResponse(BaseModel):
     date: int
     description: str
