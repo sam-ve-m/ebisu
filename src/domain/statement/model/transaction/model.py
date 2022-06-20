@@ -14,7 +14,7 @@ class Transaction:
 
     def __get_date_in_time_stamp(self):
         date_strptime = time.strptime(str(self.date), self.region_date_format.value)
-        return time.mktime(date_strptime)
+        return time.mktime(date_strptime) * 1000
 
     def __repr__(self):
         transaction = {

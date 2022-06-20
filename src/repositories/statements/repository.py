@@ -24,7 +24,7 @@ class StatementsRepository(OracleBaseRepository):
         offset: int,
         limit: int,
     ):
-        complete_transaction_query = StatementsRepository.base_query.format(where_clause, offset, limit)
+        complete_transaction_query = StatementsRepository.base_query.format(where_clause, offset * 10, limit)
 
         transactions = StatementsRepository.get_data(
             sql=complete_transaction_query
