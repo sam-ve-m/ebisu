@@ -1,60 +1,80 @@
+from datetime import datetime
+
 from src.domain.enums.region import Region
+from src.domain.enums.statement_type import StatementType
+from src.domain.statement.response.model import StatementModelToResponse, StatementResponse
 from src.domain.validators.exchange_info.get_statement_validator import (
-    GetStatementModel,
+    GetBrStatementModel,
 )
 from src.repositories.statements.repository import StatementsRepository
 from src.services.statement.service import Statement
 
 
 class GetStatement:
-    oracle_singleton_instance = StatementsRepository
 
-    @classmethod
-    async def get_service_response(
-        cls, jwt_data: dict, statement: GetStatementModel
-    ) -> dict:
-        user = jwt_data.get("user", {})
-        portfolios = user.get("portfolios", {})
-        br_portfolios = portfolios.get("br", {})
-        us_portfolios = portfolios.get("us", {})
-
-        dw_account = us_portfolios.get("dw_account")
+    @staticmethod
+    def __extract_bmf_account(jwt_data: dict) -> str:
+        br_portfolios = jwt_data.get("user", {}).get("portfolios", {}).get("br", {})
         bmf_account = br_portfolios.get("bmf_account")
 
-        if statement.region == Region.US:
-            us_statement = await Statement.get_dw_statement(
-                dw_account=dw_account,
-                start_date=statement.start_date,
-                end_date=statement.end_date,
-                offset=statement.offset,
-                limit=statement.limit,
-            )
-            return us_statement
+        return bmf_account
 
-        start_date = Statement.from_timestamp_to_utc_isoformat_br(statement.start_date)
-        end_date = Statement.from_timestamp_to_utc_isoformat_br(statement.end_date)
-        query = f"""SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO 
-                   FROM CORRWIN.TCCMOVTO 
-                   WHERE CD_CLIENTE = {bmf_account} 
-                   AND DT_LANCAMENTO >= TO_DATE('{start_date}', 'yyyy-MM-dd')
-                   AND DT_LANCAMENTO <= TO_DATE('{end_date}', 'yyyy-MM-dd')                   
-                   ORDER BY NR_LANCAMENTO
-                   OFFSET {statement.offset} rows
-                   fetch first {statement.limit} row only
-                   """
-        statement = GetStatement.oracle_singleton_instance.get_data(sql=query)
-        query = (
-            f"SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = {bmf_account}"
+    @classmethod
+    async def get_br_bank_statement(cls, jwt_data: dict, statement: GetBrStatementModel) -> StatementResponse:
+
+        list_statement_repository = {
+            StatementType.ALL: StatementsRepository.list_paginated_complete_account_transactions,
+            StatementType.FUTURE: StatementsRepository.list_paginated_future_account_transactions,
+            StatementType.OUTFLOWS: StatementsRepository.list_paginated_outflow_account_transactions,
+            StatementType.INFLOWS: StatementsRepository.list_paginated_inflow_account_transactions,
+        }.get(statement.statement_type)
+
+        bmf_account = GetStatement.__extract_bmf_account(jwt_data=jwt_data)
+
+        balance = StatementsRepository.get_account_balance(
+            bmf_account=bmf_account
         )
-        balance = GetStatement.oracle_singleton_instance.get_data(sql=query)
 
-        data_balance = {
-            "balance": balance.pop().get("VL_TOTAL"),
-            "statements": [
-                Statement.normalize_statement(transc) for transc in statement
-            ],
-        }
-        if not data_balance:
+        transactions = list_statement_repository(
+            offset=statement.offset,
+            limit=statement.limit,
+            bmf_account=bmf_account
+        )
+
+        statement_response = StatementModelToResponse.statement_response(
+            balance=balance,
+            transactions=transactions
+        )
+
+        return statement_response
+
+    @staticmethod
+    def __extract_dw_account(jwt_data: dict) -> str:
+        # us_portfolios = jwt_data.get("user", {}).user.get("portfolios", {}).get("us", {})
+        # dw_account = us_portfolios.get("dw_account")
+        dw_account = "89c69304-018a-40b7-be5b-2121c16e109e.1651525277006"
+
+        return dw_account
+
+    @classmethod
+    async def get_us_bank_statement(cls, jwt_data: dict, statement: GetBrStatementModel):
+        dw_account = GetStatement.__extract_dw_account(
+            jwt_data=jwt_data
+        )
+
+        # TODO: Pegar do Mongo DB
+        start_date = 1609542250000
+        end_date = datetime.now().timestamp() * 1000
+
+        us_statement = await Statement.get_dw_statement(
+            dw_account=dw_account,
+            offset=statement.offset,
+            limit=statement.limit,
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        if not us_statement:
             return {}
 
-        return data_balance
+        return us_statement
