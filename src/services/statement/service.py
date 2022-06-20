@@ -4,6 +4,8 @@ from typing import List
 import pytz
 
 # INTERNAL LIBS
+from bson import timestamp
+
 from src.services.get_statement.dw_connection import DWTransport
 from src.domain.time_formatter.time_formatter import (
     str_to_timestamp_statement,
@@ -38,21 +40,18 @@ class Statement:
             )
         return statements
 
-    @staticmethod
-    def normalize_splited_date_to_string(day: int, month: int, year: int):
-        received_date = datetime(year, month, day)
-        date = received_date.date()
-        return date
-
-    @staticmethod
-    def normalize_balance_us(client_balance: dict) -> dict:
-        balance = client_balance.get("dict_body").get("cash").get("cashBalance")
-        return balance
+    # @staticmethod
+    # def normalize_splited_date_to_string(day: int, month: int, year: int):
+    #     received_date = datetime(year, month, day)
+    #     date = received_date.date()
+    #     return date
 
     @staticmethod
     def from_timestamp_to_utc_isoformat_us(timestamp: float):
-        format_date = datetime.fromtimestamp(timestamp / 1000, tz=pytz.utc).isoformat()
-        return format_date
+        format_date = datetime.fromtimestamp(timestamp / 1000, tz=pytz.utc)
+        US_DATE_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
+        execution_date_time = datetime.strftime(format_date, US_DATE_TIME_FORMAT)
+        return execution_date_time
 
     @staticmethod
     def from_timestamp_to_utc_isoformat_br(timestamp: float):
@@ -70,14 +69,21 @@ class Statement:
         return dw_account_response
 
     @staticmethod
+    def normalize_balance_us(client_balance: dict) -> dict:
+        balance = client_balance.get("dict_body").get("cash").get("cashBalance")
+        return balance
+
+    @staticmethod
     async def get_dw_statement(
-        dw_account: str, start_date: float, end_date: float, offset: int, limit: int
+        dw_account: str, offset, limit: int, start_date, end_date
     ) -> dict:
+
         start_date = Statement.from_timestamp_to_utc_isoformat_us(start_date)
         end_date = Statement.from_timestamp_to_utc_isoformat_us(end_date)
+        offset_date = Statement.from_timestamp_to_utc_isoformat_us(offset)
 
         raw_statement = await Statement.dw.get_transactions(
-            dw_account, start=start_date, end=end_date, limit=limit
+            dw_account, limit=limit, offset=offset_date, start_date=start_date, end_date=end_date
         )
         raw_balance = await Statement.dw.get_balances(dw_account)
         # TODO INTERNAL SERVER ERROR

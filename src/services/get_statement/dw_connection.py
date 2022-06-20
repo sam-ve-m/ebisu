@@ -18,12 +18,12 @@ class DWTransport:
         self.expire_at = None
 
     async def get_transactions(
-        self, account: str, start: str, end: str, limit: int
+        self, account: str, limit: int, offset, start_date, end_date
     ) -> List[dict]:
         if not account:
             return []
         url = config("DW_GET_ALL_TRANSACTIONS_URL")
-        query_params = {"from": start, "to": end, "offset": start, "limit": limit}
+        query_params = {"offset": offset, "limit": limit, "from": start_date, "to": end_date}
         if not limit:
             del query_params["limit"]
 

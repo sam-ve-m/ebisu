@@ -6,7 +6,7 @@ from unittest import mock
 # Internal Libs
 from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.get_statement_validator import (
-    GetStatementModel,
+    GetBrStatementModel,
 )
 from src.services.get_statement.get_statement import GetStatement
 from src.services.statement.service import Statement
@@ -33,7 +33,7 @@ from tests.src.stubs.project_stubs.stub_get_statement import (
 async def test_when_jwt_and_params_are_valid_then_return_the_expected_response(
     mock_get_data,
 ):
-    statement_response = await GetStatement.get_service_response(
+    statement_response = await GetStatement.get_br_bank_statement(
         jwt_data=payload_data_dummy, statement=statement_valid_params
     )
     assert statement_response == dummy_bank_statement_response
@@ -50,7 +50,7 @@ async def test_when_jwt_and_params_are_valid_then_return_the_expected_response(
 async def test_when_region_and_timestamp_are_invalid_then_return_an_empty_dict_which_is_the_expected_value(
     mock_get_data,
 ):
-    statement_response = await GetStatement.get_service_response(
+    statement_response = await GetStatement.get_br_bank_statement(
         jwt_data=payload_data_dummy, statement=statement_params
     )
     assert statement_response == {"balance": None, "statements": []}
@@ -61,9 +61,9 @@ async def test_when_region_and_timestamp_are_invalid_then_return_an_empty_dict_w
 async def test_when_dw_statement_function_us_then_return_expected_which_is_the_statement_as_response(
     mock_get_dw_statement,
 ):
-    statement_response = await GetStatement.get_service_response(
+    statement_response = await GetStatement.get_br_bank_statement(
         jwt_data=payload_data_us_gringa_dummy,
-        statement=GetStatementModel(
+        statement=GetBrStatementModel(
             **{
                 "region": Region.US,
                 "limit": 1,
@@ -96,7 +96,7 @@ async def test_when_sending_an_invalid_query_then_return_an_empty_dict_expected(
 @pytest.mark.asyncio
 async def test_get_service_response_when_the_params_are_not_valid_then_raise_error_as_expected():
     with pytest.raises(AttributeError) as err:
-        await GetStatement.get_service_response(
+        await GetStatement.get_br_bank_statement(
             jwt_data="", statement=statement_invalid_params_us
         )
         assert err == "'str' object has no attribute 'get'"
@@ -105,7 +105,7 @@ async def test_get_service_response_when_the_params_are_not_valid_then_raise_err
 @pytest.mark.asyncio
 async def test_get_service_response_when_the_statement_params_are_not_valid_then_raise_error_as_expected():
     with pytest.raises(AttributeError) as err:
-        await GetStatement.get_service_response(
+        await GetStatement.get_br_bank_statement(
             jwt_data=payload_data_dummy, statement=""
         )
         assert err == "AttributeError: 'str' object has no attribute 'region'"
