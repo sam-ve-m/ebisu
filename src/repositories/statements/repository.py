@@ -1,8 +1,8 @@
 from typing import List
 
-from src.domain.statement.model.balance.model import Balance
-from src.domain.statement.model.region_date_format.enum import RegionDateFormat
-from src.domain.statement.model.transaction.model import Transaction
+from src.domain.statement.br.model.balance.model import Balance
+from src.domain.statement.br.model.region_date_format.enum import RegionDateFormat
+from src.domain.statement.br.model.transaction.model import Transaction
 from src.infrastructures.env_config import config
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 

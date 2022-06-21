@@ -1,13 +1,15 @@
 from datetime import datetime
 
-from src.domain.enums.region import Region
 from src.domain.enums.statement_type import StatementType
-from src.domain.statement.response.model import StatementModelToResponse, StatementResponse
+from src.domain.statement.br.response.model import StatementModelToResponse, StatementResponse
+from src.domain.statement.us.request.model import TransactionRequest
 from src.domain.validators.exchange_info.get_statement_validator import (
-    GetBrStatementModel,
+    GetBrStatementModel, GetUsStatementModel,
 )
 from src.repositories.statements.repository import StatementsRepository
+from src.repositories.user_portfolios.repository import UserPortfoliosRepository
 from src.services.statement.service import Statement
+from src.transport.drive_wealth.statement.transport import DwStatementTransport
 
 
 class GetStatement:
@@ -49,32 +51,70 @@ class GetStatement:
         return statement_response
 
     @staticmethod
-    def __extract_dw_account(jwt_data: dict) -> str:
-        # us_portfolios = jwt_data.get("user", {}).user.get("portfolios", {}).get("us", {})
-        # dw_account = us_portfolios.get("dw_account")
-        dw_account = "89c69304-018a-40b7-be5b-2121c16e109e.1651525277006"
+    def __extract_identifier_data_from_jwt(jwt_data: dict) -> str:
+        user = jwt_data.get("user", {})
+        dw_account = user.get("portfolios", {}).get("us", {}).get("dw_account")
 
-        return dw_account
+        unique_id = user.get("unique_id")
 
-    @classmethod
-    async def get_us_bank_statement(cls, jwt_data: dict, statement: GetBrStatementModel):
-        dw_account = GetStatement.__extract_dw_account(
+        return unique_id, dw_account
+
+    @staticmethod
+    async def __get_range_date_bank_statement(unique_id: str, requested_offset: int):
+        from_date = await UserPortfoliosRepository.get_default_portfolio_created_at_by_region(
+            unique_id=unique_id,
+            region="US"
+        )
+
+        to_date = datetime.now().timestamp() * 1000
+
+        if requested_offset is None:
+            requested_offset = from_date
+
+        return from_date, to_date, requested_offset
+
+    @staticmethod
+    async def get_us_bank_statement(jwt_data: dict, statement: GetUsStatementModel):
+        unique_id, dw_account = GetStatement.__extract_identifier_data_from_jwt(
             jwt_data=jwt_data
         )
 
-        # TODO: Pegar do Mongo DB
-        start_date = 1609542250000
-        end_date = datetime.now().timestamp() * 1000
+        from_date, to_date, offset = await GetStatement.__get_range_date_bank_statement(
+            unique_id=unique_id,
+            requested_offset=statement.offset
+        )
 
         us_statement = await Statement.get_dw_statement(
             dw_account=dw_account,
-            offset=statement.offset,
+            from_date=from_date,
+            to_date=to_date,
+            offset=offset,
             limit=statement.limit,
-            start_date=start_date,
-            end_date=end_date,
         )
 
-        if not us_statement:
-            return {}
+        statements = us_statement.get("statements")
+
+        last_transaction = statements[-1]
+
+        date = last_transaction.get("date")
+
+        us_statement.update({"offset": date})
+
+        # if not us_statement:
+        #     return {}
 
         return us_statement
+
+    @staticmethod
+    async def get_dw_statement(
+        transaction_request: TransactionRequest
+    ) -> dict:
+
+        raw_transactions = await DwStatementTransport.get_transactions(
+            dw_account, limit=limit, offset=offset_date, from_date=from_date, to_date=to_date
+        )
+        raw_balance = await DwStatementTransport.get_balances(dw_account)
+        # TODO INTERNAL SERVER ERROR
+        balance = Statement.normalize_balance_us(*raw_balance)
+        statement = Statement.normalize_statement_us(*raw_transactions)
+        return {"balance": balance, "statements": statement}

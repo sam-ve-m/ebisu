@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 from src.domain.enums.statement_type import StatementType
 
@@ -10,5 +12,5 @@ class GetBrStatementModel(BaseModel):
 
 class GetUsStatementModel(BaseModel):
     statement_type: StatementType
-    limit: float
-    offset: int
+    limit: int
+    offset: Optional[int]

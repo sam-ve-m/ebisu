@@ -1,8 +1,8 @@
 from typing import List
 from pydantic import BaseModel
 
-from src.domain.statement.model.balance.model import Balance
-from src.domain.statement.model.transaction.model import Transaction
+from src.domain.statement.br.model.balance.model import Balance
+from src.domain.statement.br.model.transaction.model import Transaction
 
 
 class BalanceResponse(BaseModel):
@@ -18,11 +18,6 @@ class TransactionResponse(BaseModel):
 class StatementResponse(BaseModel):
     balance: BalanceResponse
     transactions: List[TransactionResponse]
-
-
-class Paginated(BaseModel):
-    statement: StatementResponse
-    next_date: int
 
 
 class StatementModelToResponse:

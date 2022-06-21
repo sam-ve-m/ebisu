@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import time
 from datetime import datetime
 
-from src.domain.statement.model.region_date_format.enum import RegionDateFormat
+from src.domain.statement.br.model.region_date_format.enum import RegionDateFormat
 
 
 @dataclass(init=True)

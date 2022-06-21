@@ -7,45 +7,43 @@ from aiohttp import ClientResponse
 
 from mepho import DWApiTransport
 
+from src.domain.statement.us.request.model import TransactionRequest
 from src.infrastructures.env_config import config
 
 
-class DWTransport:
+class DwStatementTransport:
     session = None
 
-    def __init__(self):
-        self.token = None
-        self.expire_at = None
-
+    @staticmethod
     async def get_transactions(
-        self, account: str, limit: int, offset, start_date, end_date
+        transaction_request: TransactionRequest
     ) -> List[dict]:
-        if not account:
-            return []
         url = config("DW_GET_ALL_TRANSACTIONS_URL")
-        query_params = {"offset": offset, "limit": limit, "from": start_date, "to": end_date}
-        if not limit:
-            del query_params["limit"]
 
+        query_params = transaction_request.get_query_params()
+        account = transaction_request.get_account()
         url_formatted = url.format(account)
+
         response = await DWApiTransport.execute_get(
-            url=url_formatted, query_params=query_params
+            url=url_formatted,
+            query_params=query_params
         )
-        response = await self._response_body_in_json_and_account_id(response=response)
+        response = await DwStatementTransport.__response_body_in_json_and_account_id(response=response)
         return response
 
-    async def get_balances(self, account: str) -> List[dict]:
+    @staticmethod
+    async def get_balances(account: str) -> List[dict]:
         if not account:
             return {}
         url = config("DW_BALANCE_URL")
 
         url_formatted = url.format(account)
         response = await DWApiTransport.execute_get(url=url_formatted, query_params={})
-        response = await self._response_body_in_json_and_account_id(response=response)
+        response = await DwStatementTransport.__response_body_in_json_and_account_id(response=response)
         return response
 
     @staticmethod
-    async def _response_body_in_json_and_account_id(
+    async def __response_body_in_json_and_account_id(
         response: ClientResponse,
     ) -> List[dict]:
         bodies = list()
