@@ -46,7 +46,7 @@ class Statement:
 
     @staticmethod
     def normalize_balance_us(client_balance: dict) -> dict:
-        balance = client_balance.get("dict_body").get("cash").get("cashBalance")
+        balance = client_balance.get("dict_body", {}).get("cash", {}).get("cashBalance", 0)
         return balance
 
     @staticmethod
