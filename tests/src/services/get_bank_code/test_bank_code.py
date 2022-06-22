@@ -21,7 +21,7 @@ def test_get_bank_code_from_database_when_sending_right_params_then_return_expec
         mock_get_all_bank_codes_from_database
 ):
     response = GetBankCode.get_bank_code_from_database(bank="070")
-    assert response == list(bank_code_list_stub)
+    assert response == [{'CD_BANCO': '070', 'NM_BANCO': 'BANCO REGIONAL DE BRASILIA'}]
     assert isinstance(response, list)
 
 
