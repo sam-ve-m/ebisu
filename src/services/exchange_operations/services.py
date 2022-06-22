@@ -1,6 +1,6 @@
 # EXTERNAL LIBS
-from src.domain.model.exchange_operations.dto import ExchangeOperationsDtoBuilder
-from src.domain.model.exchange_operations.model import ExchangeOperationsModel
+from src.domain.models.exchange_operations.dto import ExchangeOperationsDtoBuilder
+from src.domain.models.exchange_operations.model import ExchangeOperationsModel
 from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.repositories.exchange_operations.repository import UserExchangeOperationsRepository
 

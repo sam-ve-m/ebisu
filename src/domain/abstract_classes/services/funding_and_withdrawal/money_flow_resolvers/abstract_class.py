@@ -1,11 +1,12 @@
 from abc import abstractmethod
 from datetime import datetime
 from typing import Tuple
+
+from src.core.interfaces.domain.models.internal.account_transfer.interface import IAccountTransfer
 from src.domain.enums.currency import Currency
 from src.core.interfaces.services.funding_and_withdrawal.money_flow_resolvers.interface import (
     IBaseMoneyFlowResolver,
 )
-from src.domain.model.internal.account_transfer.model import AccountTransfer
 from src.repositories.funding_and_withdrawal.queue.repository import (
     FundingAndWithdrawalRepository,
 )
@@ -15,8 +16,8 @@ from src.exceptions.exceptions import UnableToProcessMoneyFlow
 class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
     def __init__(
         self,
-        origin_account: AccountTransfer,
-        account_destination: AccountTransfer,
+        origin_account: IAccountTransfer,
+        account_destination: IAccountTransfer,
         value: float,
     ):
         self._origin_account = origin_account
@@ -69,15 +70,10 @@ class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
             raise UnableToProcessMoneyFlow()
 
     async def _build_resume(self) -> dict:
-        (
-            origin_account_currency,
-            account_destination_currency,
-        ) = self._get_cash_conversion_references()
         resume = {
-            "origin_account": self._origin_account.resume(),
-            "account_destination": self._account_destination.resume(),
+            "origin_account": await self._origin_account.resume(),
+            "account_destination": await self._account_destination.resume(),
             "value": self._value,
-            "cash_conversion": f"{origin_account_currency.value}>{account_destination_currency.value}",
             "tax": self._tax,
             "spread": self._spread,
             "convert_value": self._converted_value,

@@ -90,6 +90,18 @@ class UserBankAccountRepository(MongoDbBaseRepository):
         return user_bank_account_id_exists
 
     @classmethod
+    async def get_user_bank_account_by_id(
+        cls, unique_id: str, bank_account_id: str
+    ) -> dict:
+        user_bank_account = await cls.find_one(
+            query={
+                "unique_id": unique_id,
+                "bank_accounts": {"$elemMatch": {"id": bank_account_id}},
+            }
+        )
+        return user_bank_account
+
+    @classmethod
     async def update_registered_user_bank_accounts(
         cls, unique_id: str, bank_account: dict
     ):
@@ -131,8 +143,7 @@ class UserBankAccountRepository(MongoDbBaseRepository):
         return user_bank_account_was_soft_deleted
 
     @classmethod
-    async def get_cpf_and_name_from_user(
-            cls, unique_id: str):
+    async def get_cpf_and_name_from_user(cls, unique_id: str):
 
         user_account_details = await cls.find_one(
             query={"unique_id": unique_id}, project={"name": 1, "identifier_document": 1}

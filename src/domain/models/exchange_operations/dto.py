@@ -1,4 +1,5 @@
 from typing import TypedDict, Optional
+from dataclasses import dataclass
 
 
 class ExchangeOperationsDto(TypedDict):
