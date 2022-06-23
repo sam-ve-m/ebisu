@@ -15,12 +15,13 @@ def test_when_sending_right_params_to_normalize_bank_code_then_return_normalized
     assert response == {"code": "070", "description": "BANCO REGIONAL DE BRASILIA"}
 
 
-@patch.object(BankCodeRepository, "get_all_bank_codes_from_database", return_value=bank_code_list_stub)
+@patch.object(BankCodeRepository, "get_bank_code_from_database", return_value=[
+    {'CD_BANCO': '070', 'NM_BANCO': "BANCO REGIONAL DE BRASILIA"}])
 def test_get_bank_code_from_database_when_sending_right_params_then_return_expected(
         mock_get_all_bank_codes_from_database
 ):
     response = GetBankCode.get_bank_code_from_database(bank="070")
-    assert response == [{'CD_BANCO': '070'}]
+    assert response == [{'CD_BANCO': '070', 'NM_BANCO': 'BANCO REGIONAL DE BRASILIA'}]
     assert isinstance(response, list)
 
 
