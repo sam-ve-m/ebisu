@@ -1,35 +1,24 @@
-from datetime import datetime
-
-import pytz
-
-from src.domain.statement.br.model.region_date_format.enum import RegionDateFormat
+from src.domain.date_formatters.region.timestamp.model import RegionTimeStamp
 
 
 class QueryParams:
     def __init__(
         self,
-        from_date: int,
-        to_date: int,
-        offset: int,
-        limit: int,
-        region_date_format: RegionDateFormat
+        from_date: RegionTimeStamp,
+        to_date: RegionTimeStamp,
+        offset: RegionTimeStamp,
+        limit: int
     ):
         self.__from_date = from_date
-        self.__to_date = self.__get_us_string_datetime_from_timestamp(to_date, region_date_format)
-        self.__offset = self.__get_us_string_datetime_from_timestamp(offset, region_date_format)
-        self.__limit = self.__get_us_string_datetime_from_timestamp(limit, region_date_format)
-
-    @staticmethod
-    def __get_us_string_datetime_from_timestamp(timestamp: int, region_date_forma: RegionDateFormat):
-        format_date = datetime.fromtimestamp(timestamp / 1000, tz=pytz.utc)
-        us_string_datetime = datetime.strftime(format_date, region_date_forma.value)
-        return us_string_datetime
+        self.__to_date = to_date
+        self.__offset = offset
+        self.__limit = limit
 
     def get_query_string_dict(self):
         query_string_dict = {
-            "from": self.__from_date,
-            "to": self.__to_date,
-            "offset": self.__offset,
+            "from": self.__from_date.get_region_string_datetime_from_timestamp(),
+            "to": self.__to_date.get_region_string_datetime_from_timestamp(),
+            "offset": self.__offset.get_region_string_datetime_from_timestamp(),
             "limit": self.__limit,
         }
 

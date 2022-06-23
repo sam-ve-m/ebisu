@@ -4,10 +4,9 @@ from fastapi import Request, APIRouter, Depends
 # MODELS
 from src.domain.statement.br.response.model import StatementResponse
 from src.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
-from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.domain.validators.exchange_info.get_statement_validator import (
-    GetBrStatementModel, GetUsStatementModel,
+    GetBrStatement, GetUsStatement,
 )
 from src.domain.validators.exchange_info.list_broker_note_validator import (
     ListBrokerNoteModel,
@@ -20,9 +19,8 @@ from src.domain.validators.exchange_info.list_client_order_validator import (
 from src.services.earnings_from_client.get_earnings_from_client import (
     EarningsFromClient,
 )
-from src.services.get_balance.service import GetBalance
 from src.services.get_client_orders.get_client_orders import GetOrders
-from src.services.get_statement.get_statement import GetStatement
+from src.services.statement.get_statement import GetStatement
 from src.services.jwt.service_jwt import JwtService
 from src.services.list_broker_note.list_broker_note import ListBrokerNote
 from src.services.list_client_orders.list_client_orders import ListOrders
@@ -35,15 +33,6 @@ class ExchangeRouter:
     @staticmethod
     def get_exchange_router():
         return ExchangeRouter.__exchange_router
-
-    @staticmethod
-    @__exchange_router.get("/balance", tags=["Balance"])
-    async def get_balance(request: Request, balance: GetBalanceModel = Depends()):
-        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        balance_response = await GetBalance.get_service_response(
-            balance=balance, jwt_data=jwt_data
-        )
-        return balance_response
 
     # still not working due to AWS has no correlated route yet
     @staticmethod
@@ -60,7 +49,7 @@ class ExchangeRouter:
     @staticmethod
     @__exchange_router.get("/br_bank_statement", response_model=StatementResponse, tags=["Bank Statement"])
     async def get_bank_statement(
-        request: Request, statement: GetBrStatementModel = Depends()
+        request: Request, statement: GetBrStatement = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         bank_statement_response = await GetStatement.get_br_bank_statement(
@@ -72,7 +61,7 @@ class ExchangeRouter:
     @staticmethod
     @__exchange_router.get("/us_bank_statement", tags=["Bank Statement"])
     async def get_bank_statement(
-        request: Request, statement: GetUsStatementModel = Depends()
+        request: Request, statement: GetUsStatement = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         bank_statement_response = await GetStatement.get_us_bank_statement(
