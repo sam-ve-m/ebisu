@@ -1,5 +1,5 @@
 from src.core.interfaces.domain.models.internal.account_transfer.interface import IAccountTransfer
-from src.domain.models.transfer.account.fingerprit import Fingerprint, IsPrimaryAccount
+from src.domain.models.account import Fingerprint, IsPrimaryAccount
 from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.domain.enums.region import Region
 from src.domain.exception.model import InvalidAccountsOwnership
@@ -28,11 +28,12 @@ class BankAccount(IAccountTransfer):
             raise InvalidAccountsOwnership()
         return self
 
-    def _validate_that_is_primary_account(self) -> IsPrimaryAccount:
+    @staticmethod
+    def _validate_that_is_primary_account() -> IsPrimaryAccount:
         return IsPrimaryAccount(False)
 
     def get_fingerprint(self) -> Fingerprint:
-        fingerprint = Fingerprint(self._country, self.__is_primary_account)
+        fingerprint = (self._country, self.__is_primary_account)
         return fingerprint
 
     def _get_currency_by_country(self) -> Currency:

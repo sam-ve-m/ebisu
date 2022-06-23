@@ -12,8 +12,8 @@ class UserMoneyFlowSameExchange(BaseModel):
     account_destination: AccountCashFlow
     value: confloat()
 
-    @root_validator
-    def validate_oring_account(cls, values):
+    @root_validator(pre=True)
+    def validate_country(cls, values):
         if (
             values["origin_account"]["country"]
             != values["account_destination"]["country"]
@@ -27,8 +27,8 @@ class UserMoneyFlowDifferentExchange(BaseModel):
     account_destination: AccountCashFlow
     value: confloat()
 
-    @root_validator
-    def validate_oring_account(cls, values):
+    @root_validator(pre=True)
+    def validate_country(cls, values):
         if (
             values["origin_account"]["country"]
             == values["account_destination"]["country"]

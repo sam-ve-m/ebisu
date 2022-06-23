@@ -5,7 +5,7 @@ from src.domain.validators.funding_and_withdrawal.validators import (
     UserMoneyFlowDifferentExchange, UserMoneyFlowToExternalBank,
 )
 from src.services.exchange_operations.services import ExchangeOperationsService
-from src.services.funding_and_withdrawal.service import FundingAndWithdrawalService
+from src.services.funding_and_withdrawal import FundingAndWithdrawalService
 from src.services.jwt.service_jwt import JwtService
 from src.domain.exception.model import InvalidElectronicaSignature
 

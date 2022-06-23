@@ -1,24 +1,21 @@
-import asyncio
 from typing import Type, Union
 
-from src.domain.models.transfer.account.fingerprit import Fingerprint, IsPrimaryAccount
+from src.domain.models.account import Fingerprint, IsPrimaryAccount
 from src.domain.abstract_classes.services.funding_and_withdrawal.money_flow_resolvers.abstract_class import (
     MoneyFlowResolverAbstract,
 )
 from src.domain.enums.region import Region
 from src.domain.exception.model import MoneyFlowResolverNoFoundError
-from src.domain.models.transfer.account import ExchangeAccount, BankAccount
+from src.domain.models.account import ExchangeAccount, BankAccount
 from src.domain.validators.funding_and_withdrawal.validators import UserMoneyFlowSameExchange, \
     UserMoneyFlowDifferentExchange, UserMoneyFlowToExternalBank
-from src.services.funding_and_withdrawal.money_flow_resolvers.transfers_between_drive_wealth_and_sinacor import (
-    TransfersBetweenDriveWealthAndSinacor,
-)
-from src.services.funding_and_withdrawal.money_flow_resolvers.transfers_between_sinacor_and_drive_wealth import (
-    TransfersBetweenSinacorAndDriveWealth,
-)
 from nidavellir import Sindri
 
-from src.services.funding_and_withdrawal.money_flow_resolvers.transfers_to_external_bank import TransferToExternalBank
+from src.services.funding_and_withdrawal.money_flow_resolvers import (
+    TransferToExternalBank,
+    TransfersBetweenDriveWealthAndSinacor,
+    TransfersBetweenSinacorAndDriveWealth
+)
 
 
 class FundingAndWithdrawalService:
@@ -103,10 +100,10 @@ class FundingAndWithdrawalService:
             account_destination_fingerprint,
         )
 
-        br_primary_account = Fingerprint(Region.BR, IsPrimaryAccount(True))
-        br_account = Fingerprint(Region.BR, IsPrimaryAccount(False))
-        us_primary_account = Fingerprint(Region.US, IsPrimaryAccount(True))
-        us_account = Fingerprint(Region.US, IsPrimaryAccount(False))
+        br_primary_account = (Region.BR, IsPrimaryAccount(True))
+        br_account = (Region.BR, IsPrimaryAccount(False))
+        us_primary_account = (Region.US, IsPrimaryAccount(True))
+        us_account = (Region.US, IsPrimaryAccount(False))
 
         money_flow_resolver_map = {
             # (br_primary_account, br_account): cls.transfers_between_sinacor_accounts,

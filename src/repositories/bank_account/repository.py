@@ -97,9 +97,22 @@ class UserBankAccountRepository(MongoDbBaseRepository):
             query={
                 "unique_id": unique_id,
                 "bank_accounts": {"$elemMatch": {"id": bank_account_id}},
+            },
+            project={
+                "_id": 0,
+                "bank_accounts": {
+                    "$filter": {
+                        "input": "$bank_accounts",
+                        "as": "item",
+                        "cond": {"$eq": ["$$item.id", bank_account_id]},
+                    }
+                }
             }
         )
-        return user_bank_account
+        bank_account = user_bank_account["bank_accounts"].pop(0)
+        bank_account.pop("id")
+        bank_account.pop("status")
+        return bank_account
 
     @classmethod
     async def update_registered_user_bank_accounts(
