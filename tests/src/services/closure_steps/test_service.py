@@ -130,17 +130,17 @@ async def test_verify_positions_when_client_dont_have_positions(
 
 
 @mark.asyncio
-@patch.object(EarningsFromClient, "get_service_response")
+@patch.object(EarningsFromClient, "get_future_earnings")
 async def test_verify_earnings_when_client_have_earnings(earnings_service_mock):
-    earnings_service_mock.return_value = {"payable_earnings": [1, 2, 3]}
+    earnings_service_mock.return_value = {"future_earnings": [1, 2, 3]}
     result = await ClosureSteps._verify_earnings(Region.BR.value, jwt_data_dummy)
     assert result is False
 
 
 @mark.asyncio
-@patch.object(EarningsFromClient, "get_service_response")
+@patch.object(EarningsFromClient, "get_future_earnings")
 async def test_verify_earnings_when_client_dont_have_earnings(earnings_service_mock):
-    earnings_service_mock.return_value = {"payable_earnings": []}
+    earnings_service_mock.return_value = {"future_earnings": []}
     result = await ClosureSteps._verify_earnings(Region.BR.value, jwt_data_dummy)
     assert result is True
 

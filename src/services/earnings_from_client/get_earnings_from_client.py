@@ -84,6 +84,62 @@ class EarningsFromClient:
         return earnings_record_date_values
 
     @classmethod
+    def future_earnings_response(
+        cls, earnings_client: EarningsClientModel, accounts: str, open_earnings
+    ):
+
+        query_record_date_values = open_earnings.build_query_future_earnings(
+            cod_client=accounts,
+            limit=earnings_client.limit,
+            offset=earnings_client.offset,
+            earnings_types=earnings_client.earnings_types,
+        )
+
+        record_date_earnings_request = (
+            open_earnings.oracle_earnings_client_singleton_instance.get_data(
+                sql=query_record_date_values
+            )
+        )
+
+        earnings_record_date_values = [
+            EarningsFromClient.normalize_earnings_data(earnings_response)
+            for earnings_response in record_date_earnings_request
+        ]
+        return earnings_record_date_values
+
+    @classmethod
+    def get_future_earnings(
+            cls, earnings_client: EarningsClientModel, jwt_data: dict
+    ) -> dict:
+        user = jwt_data.get("user", {})
+        portfolios = user.get("portfolios", {})
+
+        region = earnings_client.region.value
+        region_portfolios = portfolios.get(region.lower(), {})
+
+        accounts = cls.get_account_by_region(region_portfolios, region)
+
+        region = earnings_client.region.value
+        open_earnings = earnings_client_region.get(region)
+        earnings_future_values = []
+
+        if open_earnings:
+            # query result of future earnings
+            earnings_future_values = (
+                EarningsFromClient.record_date_earnings_response(
+                    open_earnings=open_earnings,
+                    earnings_client=earnings_client,
+                    accounts=accounts,
+                )
+            )
+
+        response = {
+            "future_earnings": earnings_future_values
+        }
+
+        return response
+
+    @classmethod
     def get_service_response(
         cls, earnings_client: EarningsClientModel, jwt_data: dict
     ) -> dict:
@@ -101,6 +157,7 @@ class EarningsFromClient:
 
         earnings_payable_values = []
         earnings_record_date_values = []
+
         if open_earnings:
             # query result of FUTURE VALUES CONFIRMED earnings (with the date informed)
             earnings_payable_values = EarningsFromClient.payable_earnings_data_response(

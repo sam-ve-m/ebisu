@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 # External Libs
@@ -59,6 +60,32 @@ class GetBrEarningsDetails:
             OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY
         """
 
+        return query
+
+    @staticmethod
+    def build_query_future_earnings(
+        cod_client: int,
+        limit: int,
+        offset: int,
+        earnings_types: List[EarningsTypes] = None,
+    ) -> str:
+
+        now_time = datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S')
+
+        earnings_types_where_clause = (
+            GetBrEarningsDetails.build_earnings_types_where_clause(earnings_types)
+        )
+
+        query = f"""
+            SELECT MA.COD_CLI, MA.DESC_HIST_MVTO, TM.DESC_RESU_TIPO_MVTO, 
+            MA.COD_NEG, MA.QTDE_MVTO, MA.PREC_LQDO, MA.DATA_MVTO                
+            FROM CORRWIN.TCFMOVI_ACAO MA
+            LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
+            WHERE COD_CLI = ('{cod_client}') 
+            {earnings_types_where_clause}
+            AND DATA_MVTO > TO_DATE('{now_time}', 'DD-MM-YYYY HH24:MI:SS')
+            OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY
+        """
         return query
 
     @staticmethod
