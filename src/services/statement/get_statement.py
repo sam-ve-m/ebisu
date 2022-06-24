@@ -107,7 +107,7 @@ class GetStatement:
         return statement_response
 
     @staticmethod
-    def __extract_identifier_data_from_jwt(jwt_data: dict) -> str:
+    def __extract_identifier_data_from_jwt(jwt_data: dict):
         user = jwt_data.get("user", {})
         account = user.get("portfolios", {}).get("us", {}).get("dw_account")
 

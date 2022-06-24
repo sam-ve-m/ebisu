@@ -98,7 +98,7 @@ class ExchangeRouter:
         request: Request, earnings_client: EarningsClientModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        earnings_client_response = EarningsFromClient.get_service_response(
+        earnings_client_response = await EarningsFromClient.get_service_response(
             earnings_client=earnings_client, jwt_data=jwt_data
         )
         return earnings_client_response
