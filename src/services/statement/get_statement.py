@@ -1,20 +1,20 @@
+# STANDARD IMPORTS
 from datetime import datetime, timedelta
 from typing import Tuple
 
+# PROJECT IMPORTS
 from src.domain.date_formatters.region.timestamp.model import RegionTimeStamp
 from src.domain.enums.statement_type import StatementType
-from src.domain.statement.base.model.region_date_format.enum import RegionDateFormat
+from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.statement.br.response.model import (
     StatementModelToResponse as BrStatementModelToResponse,
     StatementResponse as BrStatementResponse
 )
-
 from src.domain.statement.us.request.model import TransactionRequest, QueryParams
 from src.domain.statement.us.response.model import (
     StatementModelToResponse as UsStatementModelToResponse,
     StatementResponse as UsStatementResponse
 )
-
 from src.domain.validators.exchange_info.get_statement_validator import (
     GetBrStatement, GetUsStatement,
 )

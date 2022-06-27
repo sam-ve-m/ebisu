@@ -1,5 +1,8 @@
+# STANDARD IMPORTS
 from pydantic import BaseModel, Extra, validator, constr
 from typing import Optional
+
+# PROJECT IMPORTS
 from src.domain.enums.earnings_types import EarningsTypes
 from src.domain.enums.region import Region
 

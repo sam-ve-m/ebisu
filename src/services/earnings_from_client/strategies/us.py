@@ -1,12 +1,12 @@
 # STANDARD LIBS
 from datetime import datetime, timedelta
 from typing import List
-import pytz
 
 # PROJECT IMPORTS
 from src.domain.statement.us.request.model import TransactionRequest, QueryParams
-from src.services.earnings_from_client.strategies.earnings_client_example import dw_earnings_example
+from src.transport.drive_wealth.earnings.transport import DwEarningsTransport
 from src.transport.drive_wealth.statement.transport import DwStatementTransport
+from tests.src.services.earnings_from_client.stub_earnings import dw_earnings_example
 
 
 class GetUsEarningsDetails:
@@ -34,6 +34,23 @@ class GetUsEarningsDetails:
         return earnings_us
 
     @staticmethod
+    def get_paid_and_payable_earnings(earnings_response: list):
+
+        for earnings in earnings_response:
+            transaction_date = earnings.get("transaction date")
+            convert_to_date_time = datetime.strptime(transaction_date, '%Y-%m-%dT%H:%M:%S.%fZ')
+            earnings.update({"transaction date": convert_to_date_time})
+
+        yesterday_date = datetime.now() - timedelta(1)
+
+        paid_earnings_client = \
+            [key for key in earnings_response if key.get("transaction date") < yesterday_date]
+        payable_earnings_client = \
+            [key for key in earnings_response if key.get("transaction date") > yesterday_date]
+
+        return paid_earnings_client, payable_earnings_client
+
+    @staticmethod
     async def get_dw_us_earnings(
             dw_account: str, offset, limit: int, start_date, end_date
     ):
@@ -46,23 +63,13 @@ class GetUsEarningsDetails:
                                      limit=limit
                                      ))
 
-        raw_earnings = await GetUsEarningsDetails.dw.get_transactions(
+        raw_earnings = await DwEarningsTransport.get_earnings(
             transaction_request=transaction_request
         )
 
-        earnings_response = GetUsEarningsDetails.normalize_earnings_us(*dw_earnings_example)
-
-        yesterday_date = datetime.strftime(datetime.now() - timedelta(1), '%Y-%m-%d')  # 2022-06-23
-
-        paid_earnings_client = {key for key in earnings_response if key.get("transaction date") < yesterday_date}
-        payable_earnings_client = {key for key in earnings_response if key.get("transaction date") > yesterday_date}
-
-        if not earnings_response:
-            empty_earnings = {
-                "paid_earnings_client": [],
-                "payable_earnings_client": []
-            }
-            return empty_earnings
+        paid_earnings_client, payable_earnings_client = GetUsEarningsDetails.get_paid_and_payable_earnings(
+            earnings_response=raw_earnings
+        )
 
         earnings_normalized_response = {
             "paid_earnings_client": paid_earnings_client,

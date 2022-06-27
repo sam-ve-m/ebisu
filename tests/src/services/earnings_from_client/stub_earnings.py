@@ -239,7 +239,7 @@ dw_earnings_example = [
                 "wlpAmount": 0,
                 "wlpFinTranTypeID": "e8ff5103-ad40-4ed9-b2ee-fd96826bf935"
             },
-            {
+{
                 "accountAmount": 1,
                 "accountBalance": 1,
                 "accountType": "LIVE",
@@ -272,41 +272,7 @@ dw_earnings_example = [
                 "tranWhen": "2019-06-03T15:12:00.345Z",
                 "wlpAmount": 0,
                 "wlpFinTranTypeID": "e8ff5103-ad40-4ed9-b2ee-fd96826bf935"
-                        },
-{
-                "accountAmount": 1,
-                "accountBalance": 1,
-                "accountType": "LIVE",
-                "comment": "SPHD dividend, $0.1511/share",
-                "dividend": {
-                    "type": "CASH",
-                    "amountPerShare": 5.50,
-                    "taxCode": "FULLY_TAXABLE"
-                },
-                "dnb": False,
-                "finTranID": "GF.b1aa5537-0d7c-4d30-810e-4f0fe4fa6ce4",
-                "finTranTypeID": "DIV",
-                "feeSec": 0,
-                "feeTaf": 0,
-                "feeBase": 0,
-                "feeXtraShares": 0,
-                "feeExchange": 0,
-                "fillQty": 0,
-                "fillPx": 0,
-                "instrument": {
-                    "id": "9563a550-9f3b-47aa-b570-f18435f218d2",
-                    "symbol": "AAPL",
-                    "name": "PowerShares S&P 500 High Div Low Vol ETF"
-                },
-                "orderID": "0",
-                "sendCommissionToInteliclear": False,
-                "systemAmount": 0,
-                "tranAmount": -2.68,
-                "tranSource": "INTE",
-                "tranWhen": "2022-10-04T15:12:00.345Z",
-                "wlpAmount": 0,
-                "wlpFinTranTypeID": "e8ff5103-ad40-4ed9-b2ee-fd96826bf935"
-                        },
+            },
 {
                 "accountAmount": 1,
                 "accountBalance": 1,
@@ -337,11 +303,44 @@ dw_earnings_example = [
                 "systemAmount": 0,
                 "tranAmount": -2.68,
                 "tranSource": "INTE",
-                "tranWhen": "2022-07-25T15:12:00.345Z",
+                "tranWhen": "2022-07-03T15:12:00.345Z",
                 "wlpAmount": 0,
                 "wlpFinTranTypeID": "e8ff5103-ad40-4ed9-b2ee-fd96826bf935"
-                        },
-
+            },
+{
+                "accountAmount": 1,
+                "accountBalance": 1,
+                "accountType": "LIVE",
+                "comment": "SPHD dividend, $0.1511/share",
+                "dividend": {
+                    "type": "CASH",
+                    "amountPerShare": 5.50,
+                    "taxCode": "FULLY_TAXABLE"
+                },
+                "dnb": False,
+                "finTranID": "GF.b1aa5537-0d7c-4d30-810e-4f0fe4fa6ce4",
+                "finTranTypeID": "DIV",
+                "feeSec": 0,
+                "feeTaf": 0,
+                "feeBase": 0,
+                "feeXtraShares": 0,
+                "feeExchange": 0,
+                "fillQty": 0,
+                "fillPx": 0,
+                "instrument": {
+                    "id": "9563a550-9f3b-47aa-b570-f18435f218d2",
+                    "symbol": "APPL3",
+                    "name": "PowerShares S&P 500 High Div Low Vol ETF"
+                },
+                "orderID": "0",
+                "sendCommissionToInteliclear": False,
+                "systemAmount": 0,
+                "tranAmount": -2.68,
+                "tranSource": "INTE",
+                "tranWhen": "2022-10-04T15:12:00.345Z",
+                "wlpAmount": 0,
+                "wlpFinTranTypeID": "e8ff5103-ad40-4ed9-b2ee-fd96826bf935"
+            }
         ]
     }
 ]

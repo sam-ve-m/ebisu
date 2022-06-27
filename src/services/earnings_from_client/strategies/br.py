@@ -12,12 +12,12 @@ class GetBrEarningsDetails:
 
     @staticmethod
     def build_query_payable_earnings(
-        cod_client: int,
+        cod_client: str,
         limit: int,
         offset: int,
         earnings_types: List[EarningsTypes] = None,
-    ) -> str:
-        # query to find the earnings of a specific client but not including the date 31-12-9999
+    ) -> list:
+        # query to find the earning of a specific client but not including the date 31-12-9999
         earnings_types_where_clause = (
             GetBrEarningsDetails.build_earnings_types_where_clause(earnings_types)
         )
@@ -33,16 +33,22 @@ class GetBrEarningsDetails:
             AND DATA_MVTO >= sysdate + 1
             OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY
         """
-        return query
+        payable_earnings_response = (
+            EarningsClientRepository.get_data(
+                sql=query
+            )
+        )
+
+        return payable_earnings_response
 
     @staticmethod
     def build_query_paid_earnings(
-            cod_client: int,
+            cod_client: str,
             limit: int,
             offset: int,
             earnings_types: List[EarningsTypes] = None
-    ) -> str:
-        # query to find all already paid earnings
+    ) -> list:
+        # query to find all already paid earning
         earnings_types_where_clause = (
             GetBrEarningsDetails.build_earnings_types_where_clause(earnings_types)
         )
@@ -57,15 +63,22 @@ class GetBrEarningsDetails:
                     AND DATA_MVTO <= sysdate 
                     OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY
                 """
-        return query
+
+        paid_earnings_response = (
+            EarningsClientRepository.get_data(
+                sql=query
+            )
+        )
+
+        return paid_earnings_response
 
     @staticmethod
     def build_query_record_date_earnings(
-        cod_client: int,
+        cod_client: str,
         limit: int,
         offset: int,
         earnings_types: List[EarningsTypes] = None,
-    ) -> str:
+    ) -> list:
         # query to find record date == 31-12-9999 (to be paid with no date specified)
 
         earnings_types_where_clause = (
@@ -83,7 +96,13 @@ class GetBrEarningsDetails:
             OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY
         """
 
-        return query
+        record_date_earnings_response = (
+            EarningsClientRepository.get_data(
+                sql=query
+            )
+        )
+
+        return record_date_earnings_response
 
     @staticmethod
     def build_earnings_types_where_clause(earnings_types: List[EarningsTypes]):

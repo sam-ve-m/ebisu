@@ -4,13 +4,13 @@ from typing import Tuple
 
 # PROJECT IMPORTS
 from src.domain.date_formatters.region.timestamp.model import RegionTimeStamp
-from src.domain.statement.base.model.region_date_format.enum import RegionDateFormat
+from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.repositories.earnings.repository import EarningsClientRepository
 from src.repositories.user_portfolios.repository import UserPortfoliosRepository
-from src.services.earnings_from_client.strategies import earnings_client_region, GetBrEarningsDetails, \
-    GetUsEarningsDetails
+from src.services.earnings_from_client.strategies.br import GetBrEarningsDetails
+from src.services.earnings_from_client.strategies.us import GetUsEarningsDetails
 
 
 class EarningsFromClient:
@@ -45,77 +45,59 @@ class EarningsFromClient:
 
     @classmethod
     def paid_earnings_data_response(
-            cls, earnings_client: EarningsClientModel, accounts: str, open_earnings):
+            cls, earnings_client: EarningsClientModel, accounts: str):
 
-        query_paid_values = open_earnings.build_query_paid_earnings(
+        paid_earnings_response = GetBrEarningsDetails.build_query_paid_earnings(
             cod_client=accounts,
             limit=earnings_client.limit,
             offset=earnings_client.offset,
             earnings_types=earnings_client.earnings_types,
         )
 
-        paid_earnings_request = (
-            open_earnings.oracle_earnings_client_singleton_instance.get_data(
-                sql=query_paid_values
-            )
-        )
-
         earnings_paid_values = [
             GetBrEarningsDetails.normalize_earnings_data(earnings_res)
-            for earnings_res in paid_earnings_request
+            for earnings_res in paid_earnings_response
         ]
         return earnings_paid_values
 
     @classmethod
     def payable_earnings_data_response(
-        cls, earnings_client: EarningsClientModel, accounts: str, open_earnings
+        cls, earnings_client: EarningsClientModel, accounts: str
     ):
 
-        query_payable_values = open_earnings.build_query_payable_earnings(
+        payable_earnings_response = GetBrEarningsDetails.build_query_payable_earnings(
             cod_client=accounts,
             limit=earnings_client.limit,
             offset=earnings_client.offset,
             earnings_types=earnings_client.earnings_types,
         )
 
-        payable_earnings_request = (
-            open_earnings.oracle_earnings_client_singleton_instance.get_data(
-                sql=query_payable_values
-            )
-        )
-
         earnings_payable_values = [
             GetBrEarningsDetails.normalize_earnings_data(earnings_res)
-            for earnings_res in payable_earnings_request
+            for earnings_res in payable_earnings_response
         ]
         return earnings_payable_values
 
     @classmethod
     def record_date_earnings_response(
-        cls, earnings_client: EarningsClientModel, accounts: str, open_earnings
+        cls, earnings_client: EarningsClientModel, accounts: str
     ):
 
-        query_record_date_values = open_earnings.build_query_record_date_earnings(
+        record_date_earnings_response = GetBrEarningsDetails.build_query_record_date_earnings(
             cod_client=accounts,
             limit=earnings_client.limit,
             offset=earnings_client.offset,
             earnings_types=earnings_client.earnings_types,
         )
 
-        record_date_earnings_request = (
-            open_earnings.oracle_earnings_client_singleton_instance.get_data(
-                sql=query_record_date_values
-            )
-        )
-
-        earnings_record_date_values = [
+        record_date_earnings_values = [
             GetBrEarningsDetails.normalize_earnings_data(earnings_response)
-            for earnings_response in record_date_earnings_request
+            for earnings_response in record_date_earnings_response
         ]
-        return earnings_record_date_values
+        return record_date_earnings_values
 
     @classmethod
-    def get_earnings_client_br_account(cls, earnings_client: EarningsClientModel, jwt_data: dict):
+    async def get_earnings_client_br_account(cls, earnings_client: EarningsClientModel, jwt_data: dict):
 
         portfolios = jwt_data.get("user", {}).get("portfolios", {})
 
@@ -124,30 +106,17 @@ class EarningsFromClient:
 
         accounts = cls.__extract_account(region_portfolios, region)
 
-        region = earnings_client.region.value
-        open_earnings = earnings_client_region.get(region)
-
-        earnings_paid_values = []
-        earnings_payable_values = []
-        earnings_record_date_values = []
-
-        if open_earnings:
-            earnings_paid_values = EarningsFromClient.paid_earnings_data_response(
-                open_earnings=open_earnings,
+        earnings_paid_values = EarningsFromClient.paid_earnings_data_response(
                 earnings_client=earnings_client,
                 accounts=accounts
             )
 
-            # query result of FUTURE VALUES CONFIRMED earnings (with the date informed)
-            earnings_payable_values = EarningsFromClient.payable_earnings_data_response(
-                open_earnings=open_earnings,
+        earnings_payable_values = EarningsFromClient.payable_earnings_data_response(
                 earnings_client=earnings_client,
                 accounts=accounts,
             )
 
-            # query result of NOT YET CONFIRMED earnings (31-12-9999)
-            earnings_record_date_values = EarningsFromClient.record_date_earnings_response(
-                open_earnings=open_earnings,
+        earnings_record_date_values = EarningsFromClient.record_date_earnings_response(
                 earnings_client=earnings_client,
                 accounts=accounts,
             )
@@ -165,11 +134,6 @@ class EarningsFromClient:
         # us_portfolios = jwt_data.get("user", {}).get("portfolios", {}).get("us", {})
         # dw_account = us_portfolios.get("dw_account")
         dw_account = "89c69304-018a-40b7-be5b-2121c16e109e.1651525277006"
-        unique_id = jwt_data.get("user", {}).get("unique_id")
-
-        # creation_date = await UserRepository.get_user_account_creation_date(unique_id=unique_id)
-        # start_date = creation_date.timestamp() * 1000
-        # end_date = datetime.now().timestamp() * 1000
 
         unique_id, account = EarningsFromClient.__extract_identifier_data_from_jwt(
             jwt_data=jwt_data
