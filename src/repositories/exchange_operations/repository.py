@@ -8,9 +8,7 @@ class UserExchangeOperationsRepository(MongoDbBaseRepository):
     collection = config("MONGODB_SNAPSHOT_COLLECTION")
 
     @classmethod
-    async def save_user_exchange_operations(
-            cls,
-            exchange_template: dict) -> bool:
+    async def save_user_exchange_operations(cls, exchange_template: dict) -> bool:
 
         exchange_data_was_dully_inserted = await cls.insert(exchange_template)
 

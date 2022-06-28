@@ -11,4 +11,3 @@ class Balance:
         }
 
         return balance
-

@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 
-from src.core.interfaces.domain.models.internal.account_transfer.interface import IAccountTransfer
+from src.core.interfaces.domain.models.internal.account_transfer.interface import (
+    IAccountTransfer,
+)
 from src.repositories.funding_and_withdrawal.queue.repository import (
     FundingAndWithdrawalRepository,
 )

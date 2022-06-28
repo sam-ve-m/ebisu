@@ -26,15 +26,17 @@ class Paginated(BaseModel):
 
 
 class StatementModelToResponse:
-
     @staticmethod
     def statement_response(balance: Balance, transactions: List[Transaction]):
         balance_response = BalanceResponse(**balance.__repr__())
-        transactions_response = [TransactionResponse(**transaction.__repr__()) for transaction in transactions]
+        transactions_response = [
+            TransactionResponse(**transaction.__repr__())
+            for transaction in transactions
+        ]
 
         statement_dict = {
             "balance": balance_response,
-            "transactions": transactions_response
+            "transactions": transactions_response,
         }
 
         statement_response = StatementResponse(**statement_dict)

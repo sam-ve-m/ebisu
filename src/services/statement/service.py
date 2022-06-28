@@ -83,7 +83,11 @@ class Statement:
         offset_date = Statement.from_timestamp_to_utc_isoformat_us(offset)
 
         raw_statement = await Statement.dw.get_transactions(
-            dw_account, limit=limit, offset=offset_date, start_date=start_date, end_date=end_date
+            dw_account,
+            limit=limit,
+            offset=offset_date,
+            start_date=start_date,
+            end_date=end_date,
         )
         raw_balance = await Statement.dw.get_balances(dw_account)
         # TODO INTERNAL SERVER ERROR

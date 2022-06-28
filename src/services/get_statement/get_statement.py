@@ -2,7 +2,10 @@ from datetime import datetime
 
 from src.domain.enums.region import Region
 from src.domain.enums.statement_type import StatementType
-from src.domain.statement.response.model import StatementModelToResponse, StatementResponse
+from src.domain.statement.response.model import (
+    StatementModelToResponse,
+    StatementResponse,
+)
 from src.domain.validators.exchange_info.get_statement_validator import (
     GetBrStatementModel,
 )
@@ -11,7 +14,6 @@ from src.services.statement.service import Statement
 
 
 class GetStatement:
-
     @staticmethod
     def __extract_bmf_account(jwt_data: dict) -> str:
         br_portfolios = jwt_data.get("user", {}).get("portfolios", {}).get("br", {})
@@ -20,7 +22,9 @@ class GetStatement:
         return bmf_account
 
     @classmethod
-    async def get_br_bank_statement(cls, jwt_data: dict, statement: GetBrStatementModel) -> StatementResponse:
+    async def get_br_bank_statement(
+        cls, jwt_data: dict, statement: GetBrStatementModel
+    ) -> StatementResponse:
 
         list_statement_repository = {
             StatementType.ALL: StatementsRepository.list_paginated_complete_account_transactions,
@@ -31,19 +35,14 @@ class GetStatement:
 
         bmf_account = GetStatement.__extract_bmf_account(jwt_data=jwt_data)
 
-        balance = StatementsRepository.get_account_balance(
-            bmf_account=bmf_account
-        )
+        balance = StatementsRepository.get_account_balance(bmf_account=bmf_account)
 
         transactions = list_statement_repository(
-            offset=statement.offset,
-            limit=statement.limit,
-            bmf_account=bmf_account
+            offset=statement.offset, limit=statement.limit, bmf_account=bmf_account
         )
 
         statement_response = StatementModelToResponse.statement_response(
-            balance=balance,
-            transactions=transactions
+            balance=balance, transactions=transactions
         )
 
         return statement_response
@@ -57,10 +56,10 @@ class GetStatement:
         return dw_account
 
     @classmethod
-    async def get_us_bank_statement(cls, jwt_data: dict, statement: GetBrStatementModel):
-        dw_account = GetStatement.__extract_dw_account(
-            jwt_data=jwt_data
-        )
+    async def get_us_bank_statement(
+        cls, jwt_data: dict, statement: GetBrStatementModel
+    ):
+        dw_account = GetStatement.__extract_dw_account(jwt_data=jwt_data)
 
         # TODO: Pegar do Mongo DB
         start_date = 1609542250000

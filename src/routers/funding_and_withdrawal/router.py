@@ -2,7 +2,8 @@ from fastapi import Request, APIRouter
 
 from src.domain.validators.funding_and_withdrawal.validators import (
     UserMoneyFlowSameExchange,
-    UserMoneyFlowDifferentExchange, UserMoneyFlowToExternalBank,
+    UserMoneyFlowDifferentExchange,
+    UserMoneyFlowToExternalBank,
 )
 from src.services.exchange_operations.services import ExchangeOperationsService
 from src.services.funding_and_withdrawal import FundingAndWithdrawalService
@@ -42,15 +43,14 @@ class FundingAndWithdrawalRouter:
         )
         get_user_bank_accounts_response = (
             await FundingAndWithdrawalService.money_flow_between_user_dtvm_accounts(
-                money_flow=user_money_flow,
-                jwt_data=jwt_data
+                money_flow=user_money_flow, jwt_data=jwt_data
             )
         )
 
         # ADD TRANSACTION TYPE AND SPECIFY
         await ExchangeOperationsService.get_service_response_to_save_exchange_operations(
-            jwt_data=jwt_data,
-            resume=get_user_bank_accounts_response)
+            jwt_data=jwt_data, resume=get_user_bank_accounts_response
+        )
 
         return get_user_bank_accounts_response
 
@@ -68,18 +68,16 @@ class FundingAndWithdrawalRouter:
         )
         get_user_bank_accounts_response = (
             await FundingAndWithdrawalService.money_flow_between_user_dtvm_accounts(
-                money_flow=user_money_flow,
-                jwt_data=jwt_data
+                money_flow=user_money_flow, jwt_data=jwt_data
             )
         )
 
         # ADD TRANSACTION TYPE AND SPECIFY
         await ExchangeOperationsService.get_service_response_to_save_exchange_operations(
-            jwt_data=jwt_data,
-            resume=get_user_bank_accounts_response)
+            jwt_data=jwt_data, resume=get_user_bank_accounts_response
+        )
 
         return get_user_bank_accounts_response
-
 
     @staticmethod
     @__funding_and_withdrawal_router.post(
@@ -95,14 +93,13 @@ class FundingAndWithdrawalRouter:
         )
         get_user_bank_accounts_response = (
             await FundingAndWithdrawalService.withdrawal_to_external_bank(
-                money_flow=user_withdrawal,
-                jwt_data=jwt_data
+                money_flow=user_withdrawal, jwt_data=jwt_data
             )
         )
 
         # ADD TRANSACTION TYPE AND SPECIFY
         await ExchangeOperationsService.get_service_response_to_save_exchange_operations(
-            jwt_data=jwt_data,
-            resume=get_user_bank_accounts_response)
+            jwt_data=jwt_data, resume=get_user_bank_accounts_response
+        )
 
         return get_user_bank_accounts_response

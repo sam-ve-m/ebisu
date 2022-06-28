@@ -1,5 +1,7 @@
-from src.core.interfaces.domain.models.internal.account_transfer.interface import IAccountTransfer
-from src.domain.models.account import Fingerprint, IsPrimaryAccount
+from src.core.interfaces.domain.models.internal.account_transfer.interface import (
+    IAccountTransfer,
+)
+from src.domain.models.account.fingerprit import Fingerprint, IsPrimaryAccount
 from src.domain.enums.region import Region
 from src.domain.exception.model import InvalidAccountsOwnership
 from src.domain.currency_map.country_to_currency.map import country_to_currency
@@ -21,12 +23,12 @@ class ExchangeAccount(IAccountTransfer):
 
     async def _extract_accounts(self):
         country = self._country.value.lower()
-        user_portfolios = await UserRepository.get_user_portfolios(unique_id=self._user_unique_id)
+        user_portfolios = await UserRepository.get_user_portfolios(
+            unique_id=self._user_unique_id
+        )
 
         def filter_accounts_representation(values):
-            results = list(
-                filter(lambda x: isinstance(x, str), values)
-            )
+            results = list(filter(lambda x: isinstance(x, str), values))
             return results
 
         for (
@@ -35,10 +37,14 @@ class ExchangeAccount(IAccountTransfer):
         ) in user_portfolios.items():
             if accounts_representation := accounts_by_region.get(country):
                 if accounts_classification == "default":
-                    self._default_accounts += filter_accounts_representation(accounts_representation.values())
+                    self._default_accounts += filter_accounts_representation(
+                        accounts_representation.values()
+                    )
                 elif accounts_classification == "vnc":
                     for account_struct in accounts_representation:
-                        self._vnc_accounts += filter_accounts_representation(account_struct.values())
+                        self._vnc_accounts += filter_accounts_representation(
+                            account_struct.values()
+                        )
 
     async def validate_accounts_ownership(self):
         await self._extract_accounts()
@@ -54,7 +60,9 @@ class ExchangeAccount(IAccountTransfer):
         return fingerprint
 
     def _validate_that_is_primary_account(self) -> IsPrimaryAccount:
-        is_primary_account = IsPrimaryAccount(self._account_number in self._default_accounts)
+        is_primary_account = IsPrimaryAccount(
+            self._account_number in self._default_accounts
+        )
         return is_primary_account
 
     def _get_currency_by_country(self) -> Currency:

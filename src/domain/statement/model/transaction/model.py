@@ -20,7 +20,7 @@ class Transaction:
         transaction = {
             "date": self.__get_date_in_time_stamp(),
             "description": self.description,
-            "value": self.value
+            "value": self.value,
         }
 
         return transaction

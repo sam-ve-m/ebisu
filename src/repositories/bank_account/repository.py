@@ -106,8 +106,8 @@ class UserBankAccountRepository(MongoDbBaseRepository):
                         "as": "item",
                         "cond": {"$eq": ["$$item.id", bank_account_id]},
                     }
-                }
-            }
+                },
+            },
         )
         bank_account = user_bank_account["bank_accounts"].pop(0)
         bank_account.pop("id")
@@ -159,7 +159,8 @@ class UserBankAccountRepository(MongoDbBaseRepository):
     async def get_cpf_and_name_from_user(cls, unique_id: str):
 
         user_account_details = await cls.find_one(
-            query={"unique_id": unique_id}, project={"name": 1, "identifier_document": 1}
+            query={"unique_id": unique_id},
+            project={"name": 1, "identifier_document": 1},
         )
 
         name = user_account_details.get("name")

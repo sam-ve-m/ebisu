@@ -1,5 +1,7 @@
-from src.core.interfaces.domain.models.internal.account_transfer.interface import IAccountTransfer
-from src.domain.models.account import Fingerprint, IsPrimaryAccount
+from src.core.interfaces.domain.models.internal.account_transfer.interface import (
+    IAccountTransfer,
+)
+from src.domain.models.account.fingerprit import Fingerprint, IsPrimaryAccount
 from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.domain.enums.region import Region
 from src.domain.exception.model import InvalidAccountsOwnership
@@ -46,10 +48,8 @@ class BankAccount(IAccountTransfer):
         return self._currency
 
     async def resume(self):
-        account_details = (
-            await UserBankAccountRepository.get_user_bank_account_by_id(
-                unique_id=self._user_unique_id, bank_account_id=self._bank_account_id
-            )
+        account_details = await UserBankAccountRepository.get_user_bank_account_by_id(
+            unique_id=self._user_unique_id, bank_account_id=self._bank_account_id
         )
         return {
             "account_details": account_details,

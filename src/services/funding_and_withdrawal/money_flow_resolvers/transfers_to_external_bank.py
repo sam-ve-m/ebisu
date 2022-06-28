@@ -9,7 +9,6 @@ from src.infrastructures.env_config import config
 
 
 class TransferToExternalBank(MoneyFlowResolverAbstract):
-
     async def _get_spread(self) -> float:
         return 0
 
@@ -25,4 +24,3 @@ class TransferToExternalBank(MoneyFlowResolverAbstract):
 
     def _get_topic_name(self) -> str:
         return config("TRANSFERS_BETWEEN_SINACOR_AND_EXTERNAL_BANK")
-

@@ -15,7 +15,6 @@ class ExchangeOperationsDto(TypedDict):
 
 
 class ExchangeOperationsDtoBuilder:
-
     @staticmethod
     def build(jwt_data: dict, resume: dict, name: str, cpf: str) -> dict:
         user = jwt_data.get("user")
@@ -29,6 +28,6 @@ class ExchangeOperationsDtoBuilder:
             "spread": resume.get("spread"),
             "tax": resume.get("tax"),
             "convert_value": resume.get("convert_value"),
-            "due_date": resume.get("due_date")
+            "due_date": resume.get("due_date"),
         }
         return exchange_operations_dto

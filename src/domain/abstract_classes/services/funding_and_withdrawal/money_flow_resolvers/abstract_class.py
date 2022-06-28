@@ -2,7 +2,9 @@ from abc import abstractmethod
 from datetime import datetime
 from typing import Tuple
 
-from src.core.interfaces.domain.models.internal.account_transfer.interface import IAccountTransfer
+from src.core.interfaces.domain.models.internal.account_transfer.interface import (
+    IAccountTransfer,
+)
 from src.domain.enums.currency import Currency
 from src.core.interfaces.services.funding_and_withdrawal.money_flow_resolvers.interface import (
     IBaseMoneyFlowResolver,
@@ -70,9 +72,11 @@ class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
             raise UnableToProcessMoneyFlow()
 
     async def _build_resume(self) -> dict:
+        cash_conversion = ">".join([currency.value for currency in self._cash_conversion])
         resume = {
             "origin_account": await self._origin_account.resume(),
             "account_destination": await self._account_destination.resume(),
+            "cash_conversion": cash_conversion,
             "value": self._value,
             "tax": self._tax,
             "spread": self._spread,

@@ -23,7 +23,12 @@ class DWTransport:
         if not account:
             return []
         url = config("DW_GET_ALL_TRANSACTIONS_URL")
-        query_params = {"offset": offset, "limit": limit, "from": start_date, "to": end_date}
+        query_params = {
+            "offset": offset,
+            "limit": limit,
+            "from": start_date,
+            "to": end_date,
+        }
         if not limit:
             del query_params["limit"]
 

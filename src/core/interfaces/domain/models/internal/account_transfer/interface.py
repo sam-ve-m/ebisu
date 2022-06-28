@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
 
 from src.domain.enums.currency import Currency
-from src.domain.models.account import Fingerprint
+from src.domain.models.account.fingerprit import Fingerprint
 
 
 class IAccountTransfer(ABC):
-
     @abstractmethod
     async def validate_accounts_ownership(self):
         """This method must raise a InvalidAccountsOwnership in case of error"""
