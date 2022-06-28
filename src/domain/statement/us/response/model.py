@@ -1,7 +1,8 @@
+# STANDARD IMPORTS
 from typing import List, Union
-
 from pydantic import BaseModel
 
+# PROJECT IMPORTS
 from src.domain.statement.base.response.model import TransactionResponse
 from src.domain.statement.base.model.transaction.model import Transaction
 

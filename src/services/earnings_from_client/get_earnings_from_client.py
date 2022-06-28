@@ -10,7 +10,9 @@ from src.domain.validators.exchange_info.get_earnings_client import EarningsClie
 from src.repositories.earnings.repository import EarningsClientRepository
 from src.repositories.user_portfolios.repository import UserPortfoliosRepository
 from src.services.earnings_from_client.strategies.br import GetBrEarningsDetails
-from src.services.earnings_from_client.strategies.us import GetUsEarningsDetails
+from src.domain.earning.us.response.model import EarningsRecordResponse, EarningsModelToResponse
+from src.transport.drive_wealth.earnings.transport import DwEarningsTransport
+from src.domain.statement.us.request.model import TransactionRequest, QueryParams
 
 
 class EarningsFromClient:
@@ -130,7 +132,9 @@ class EarningsFromClient:
         return response
 
     @classmethod
-    async def get_earnings_client_us_account(cls, jwt_data: dict, earnings_client: EarningsClientModel):
+    async def get_earnings_client_us_account(
+            cls, jwt_data: dict, earnings_client: EarningsClientModel
+    ) -> EarningsRecordResponse:
         # us_portfolios = jwt_data.get("user", {}).get("portfolios", {}).get("us", {})
         # dw_account = us_portfolios.get("dw_account")
         dw_account = "89c69304-018a-40b7-be5b-2121c16e109e.1651525277006"
@@ -144,18 +148,29 @@ class EarningsFromClient:
             requested_offset=earnings_client.offset
         )
 
-        us_dividend = await GetUsEarningsDetails.get_dw_us_earnings(
-            dw_account=dw_account,
-            offset=offset,
-            limit=earnings_client.limit,
-            start_date=from_date,
-            end_date=to_date,
+        transaction_request = TransactionRequest(
+            account=dw_account,
+            query_params=QueryParams(
+                from_date=from_date,
+                to_date=to_date,
+                offset=offset,
+                limit=earnings_client.limit
+            )
         )
 
-        if not us_dividend:
-            return {}
+        earnings_paid_transactions = await DwEarningsTransport.get_us_paid_earnings(
+            transaction_request=transaction_request
+        )
 
-        return us_dividend
+        earnings_payable_transactions = await DwEarningsTransport.get_us_payable_earnings(
+            transaction_request=transaction_request
+        )
+
+        earnings_paid_response = EarningsModelToResponse.earnings_response(
+            earnings_paid_transactions, earnings_payable_transactions
+        )
+
+        return earnings_paid_response
 
     @classmethod
     async def get_service_response(

@@ -14,8 +14,12 @@ class Earning:
     tax_code: str
     date: RegionStringDateTime
 
+    def get_date_in_time_stamp(self):
+        timestamp = self.date.get_date_in_time_stamp()
+        return timestamp
+
     def __repr__(self):
-        transaction = {
+        earning_transaction = {
             "symbol": self.symbol,
             "name": self.name,
             "amount_per_share": self.amount_per_share,
@@ -24,4 +28,4 @@ class Earning:
             "date": self.date.get_date_in_time_stamp(),
         }
 
-        return transaction
+        return earning_transaction
