@@ -76,6 +76,7 @@ class ExchangeAccount(IAccountTransfer):
 
     async def resume(self):
         return {
+            "user_unique_id ": self._user_unique_id,
             "account_number": self._account_number,
             "country": self._country,
             "currency": self._currency,

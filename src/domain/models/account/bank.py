@@ -48,11 +48,8 @@ class BankAccount(IAccountTransfer):
         return self._currency
 
     async def resume(self):
-        account_details = await UserBankAccountRepository.get_user_bank_account_by_id(
-            unique_id=self._user_unique_id, bank_account_id=self._bank_account_id
-        )
         return {
-            "account_details": account_details,
+            "user_unique_id ": self._user_unique_id,
             "account_number": self._bank_account_id,
             "country": self._country,
             "currency": self._currency,
