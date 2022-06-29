@@ -158,19 +158,15 @@ class EarningsFromClient:
             )
         )
 
-        earnings_paid_transactions = await DwEarningsTransport.get_us_paid_earnings(
+        earnings_us_transactions = await DwEarningsTransport.get_us_transaction_earnings(
             transaction_request=transaction_request
         )
 
-        earnings_payable_transactions = await DwEarningsTransport.get_us_payable_earnings(
-            transaction_request=transaction_request
+        earnings_us_transactions_response = EarningsModelToResponse.earnings_response(
+            earnings_us_transactions
         )
 
-        earnings_paid_response = EarningsModelToResponse.earnings_response(
-            earnings_paid_transactions, earnings_payable_transactions
-        )
-
-        return earnings_paid_response
+        return earnings_us_transactions_response
 
     @classmethod
     async def get_service_response(

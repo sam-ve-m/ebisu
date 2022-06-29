@@ -38,20 +38,7 @@ class DwEarningsTransport:
         return earning_model
 
     @staticmethod
-    async def get_us_paid_earnings(
-            transaction_request: TransactionRequest
-    ) -> List[Earning]:
-        transactions = await DwEarningsTransport.__get_transactions(
-            transaction_request=transaction_request
-        )
-
-        earnings_model = [
-            DwEarningsTransport.__build_earning_model(transaction=transaction)
-            for transaction in transactions]
-        return earnings_model
-
-    @staticmethod
-    async def get_us_payable_earnings(
+    async def get_us_transaction_earnings(
             transaction_request: TransactionRequest
     ) -> List[Earning]:
         transactions = await DwEarningsTransport.__get_transactions(

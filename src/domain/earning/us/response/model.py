@@ -1,10 +1,11 @@
 # STANDARD IMPORTS
+from datetime import datetime, timedelta
 from typing import List
 from pydantic import BaseModel
 
 # PROJECT IMPORTS
+from src.domain.earning.base.model.earning.model import Earning
 from src.domain.earning.base.response.model import EarningsTransactionResponse
-from src.domain.statement.base.model.transaction.model import Transaction
 
 
 class EarningsRecordResponse(BaseModel):
@@ -14,12 +15,34 @@ class EarningsRecordResponse(BaseModel):
 class EarningsModelToResponse:
 
     @staticmethod
-    def statement_response(transactions: List[Transaction]):
-        earnings_transactions_response = [
-            EarningsTransactionResponse(**transaction.__repr__()) for transaction in transactions]
+    def get_yesterday_date_in_timestamp():
+        today = datetime.utcnow()
+        yesterday = today - timedelta(days=1)
+        yesterday_in_timestamp = datetime.timestamp(yesterday) * 1000
+        return yesterday_in_timestamp
+
+    @staticmethod
+    def earnings_response(
+            earnings_us_transactions: List[Earning]):
+
+        yesterday_date = EarningsModelToResponse.get_yesterday_date_in_timestamp()
+
+        paid_transactions = [
+            EarningsTransactionResponse(
+                **earning_paid_transaction.__repr__())
+            for earning_paid_transaction in earnings_us_transactions
+            if earning_paid_transaction.date.get_date_in_time_stamp() < yesterday_date
+        ]
+        payable_transactions = [
+            EarningsTransactionResponse(
+                **earning_payable_transaction.__repr__())
+            for earning_payable_transaction in earnings_us_transactions
+            if earning_payable_transaction.date.get_date_in_time_stamp() < yesterday_date
+        ]
 
         earnings_dict = {
-            "earnings_transactions": earnings_transactions_response,
+            "paid": paid_transactions,
+            "payable": payable_transactions
         }
 
         earnings_response = EarningsRecordResponse(**earnings_dict)
