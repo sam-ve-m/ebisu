@@ -5,7 +5,6 @@ from typing import Tuple
 # PROJECT IMPORTS
 from src.domain.date_formatters.region.timestamp.model import RegionTimeStamp
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
-# from src.domain.earning.br.request.model import QueryBrParams, TransactionBrRequest
 from src.domain.earning.br.response.model import BrEarningsModelToResponse
 from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
@@ -14,37 +13,11 @@ from src.repositories.user_portfolios.repository import UserPortfoliosRepository
 from src.domain.earning.us.response.model import EarningsRecordResponse, EarningsModelToResponse
 from src.transport.drive_wealth.earnings.transport import DwEarningsTransport
 from src.domain.statement.us.request.model import TransactionRequest, QueryParams
+# from src.domain.earning.br.request.model import QueryBrParams, TransactionBrRequest
 
 
 class EarningsFromClient:
     oracle_earnings_client_singleton_instance = EarningsClientRepository
-
-    @staticmethod
-    def __extract_account(portfolios: dict, region: str) -> str:
-        accounts_by_region = {
-            Region.BR.value: "bmf_account",
-            Region.US.value: "dw_account",
-        }
-        fields = accounts_by_region[region]
-
-        account = portfolios.get(fields)
-        return account
-
-    @staticmethod
-    def __get_offset(requested_offset: int, from_date: int):
-        if requested_offset is None:
-            requested_offset = from_date
-
-        return requested_offset
-
-    @staticmethod
-    def __extract_identifier_data_from_jwt(jwt_data: dict):
-        user = jwt_data.get("user", {})
-        account = user.get("portfolios", {}).get("us", {}).get("dw_account")
-
-        unique_id = user.get("unique_id")
-
-        return unique_id, account
 
     @classmethod
     async def get_earnings_client_br_account(cls, earnings_client: EarningsClientModel, jwt_data: dict):
@@ -164,3 +137,30 @@ class EarningsFromClient:
         )
 
         return from_date, to_date, requested_offset
+
+    @staticmethod
+    def __extract_account(portfolios: dict, region: str) -> str:
+        accounts_by_region = {
+            Region.BR.value: "bmf_account",
+            Region.US.value: "dw_account",
+        }
+        fields = accounts_by_region[region]
+
+        account = portfolios.get(fields)
+        return account
+
+    @staticmethod
+    def __get_offset(requested_offset: int, from_date: int):
+        if requested_offset is None:
+            requested_offset = from_date
+
+        return requested_offset
+
+    @staticmethod
+    def __extract_identifier_data_from_jwt(jwt_data: dict):
+        user = jwt_data.get("user", {})
+        account = user.get("portfolios", {}).get("us", {}).get("dw_account")
+
+        unique_id = user.get("unique_id")
+
+        return unique_id, account

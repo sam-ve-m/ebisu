@@ -25,9 +25,8 @@ class EarningsBrRecord:
     @staticmethod
     def __build_br_earning_model(earning_transaction: dict) -> EarningBr:
         earning_model = EarningBr(
-            symbol=earning_transaction.get("COD_CLI"),
             trade_history=earning_transaction.get("DESC_HIST_MVTO"),
-            trade_type=earning_transaction.get("DESC_RESU_TIPO_MOVTO"),
+            trade_type=earning_transaction.get("DESC_RESU_TIPO_MOVTO", "NOT INFORMED"),
             trade_code=earning_transaction.get("COD_NEG"),
             transaction_amount=earning_transaction.get("QTDE_MVTO"),
             net_price=earning_transaction.get("PREC_LQDO"),
@@ -51,7 +50,7 @@ class EarningsBrRecord:
         )
 
         query = f"""
-            SELECT MA.COD_CLI, MA.DESC_HIST_MVTO, TM.DESC_RESU_TIPO_MVTO, 
+            SELECT MA.DESC_HIST_MVTO, TM.DESC_RESU_TIPO_MVTO, 
             MA.COD_NEG, MA.QTDE_MVTO, MA.PREC_LQDO, MA.DATA_MVTO                
             FROM CORRWIN.TCFMOVI_ACAO MA
             LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
@@ -85,7 +84,7 @@ class EarningsBrRecord:
             EarningsBrRecord.build_earnings_types_where_clause(earnings_types)
         )
         query = f"""
-                    SELECT MA.COD_CLI, MA.DESC_HIST_MVTO, TM.DESC_RESU_TIPO_MVTO, 
+                    SELECT MA.DESC_HIST_MVTO, TM.DESC_RESU_TIPO_MVTO, 
                     MA.COD_NEG, MA.QTDE_MVTO, MA.PREC_LQDO, MA.DATA_MVTO                
                     FROM CORRWIN.TCFMOVI_ACAO MA
                     LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
@@ -122,7 +121,7 @@ class EarningsBrRecord:
         )
 
         query = f"""
-            SELECT MA.COD_CLI, MA.DESC_HIST_MVTO, TM.DESC_RESU_TIPO_MVTO, 
+            SELECT MA.DESC_HIST_MVTO, TM.DESC_RESU_TIPO_MVTO, 
             MA.COD_NEG, MA.QTDE_MVTO, MA.PREC_LQDO, MA.DATA_MVTO                
             FROM CORRWIN.TCFMOVI_ACAO MA
             LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
