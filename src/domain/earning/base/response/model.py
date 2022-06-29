@@ -2,11 +2,8 @@
 from datetime import datetime
 from pydantic import BaseModel
 
-# PROJECT IMPORTS
-from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
 
-
-class EarningsRecordResponse(BaseModel):
+class EarningsTransactionResponse(BaseModel):
     symbol: str
     name: str
     amount_per_share: float
