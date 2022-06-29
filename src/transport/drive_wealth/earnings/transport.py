@@ -12,7 +12,6 @@ from src.domain.earning.base.model.earning.model import Earning
 from src.domain.statement.us.request.model import TransactionRequest
 from src.infrastructures.env_config import config
 from src.transport.drive_wealth.statement.transport import DwStatementTransport
-from tests.src.services.earnings_from_client.stub_earnings import dw_earnings_example
 
 
 class DwEarningsTransport:
@@ -21,15 +20,15 @@ class DwEarningsTransport:
     balance_url = config("DW_BALANCE_URL")
 
     @staticmethod
-    def __build_earning_model(transaction: dict) -> Earning:
+    def __build_earning_model(earning_transaction: dict) -> Earning:
         earning_model = Earning(
-            symbol=transaction.get("instrument", {}).get("symbol"),
-            name=transaction.get("instrument", {}).get("name"),
-            amount_per_share=transaction.get("dividend", {}).get("amountPerShare"),
-            type=transaction.get("dividend", {}).get("type"),
-            tax_code=transaction.get("dividend", {}).get("taxCode"),
+            symbol=earning_transaction.get("instrument", {}).get("symbol"),
+            name=earning_transaction.get("instrument", {}).get("name"),
+            amount_per_share=earning_transaction.get("dividend", {}).get("amountPerShare"),
+            type=earning_transaction.get("dividend", {}).get("type"),
+            tax_code=earning_transaction.get("dividend", {}).get("taxCode"),
             date=RegionStringDateTime(
-                date=transaction.get("tranWhen"),
+                date=earning_transaction.get("tranWhen"),
                 region_date_format=RegionDateFormat.US_DATE_FORMAT
             )
         )
@@ -40,12 +39,12 @@ class DwEarningsTransport:
     async def get_us_transaction_earnings(
             transaction_request: TransactionRequest
     ) -> List[Earning]:
-        transactions = await DwEarningsTransport.__get_transactions(
+        earnings_transactions = await DwEarningsTransport.__get_transactions(
             transaction_request=transaction_request
         )
         earnings_model = [
-            DwEarningsTransport.__build_earning_model(transaction=transaction)
-            for transaction in transactions if transaction.get("dividend")]
+            DwEarningsTransport.__build_earning_model(earning_transaction=earning_transaction)
+            for earning_transaction in earnings_transactions if earning_transaction.get("dividend")]
 
         return earnings_model
 

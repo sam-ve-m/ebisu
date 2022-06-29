@@ -5,11 +5,11 @@ from typing import Tuple
 # PROJECT IMPORTS
 from src.domain.date_formatters.region.timestamp.model import RegionTimeStamp
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
+from src.domain.earning.br.request.model import QueryBrParams, TransactionBrRequest
 from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
-from src.repositories.earnings.repository import EarningsClientRepository
+from src.repositories.earnings.repository import EarningsClientRepository, EarningsBrRecord
 from src.repositories.user_portfolios.repository import UserPortfoliosRepository
-from src.services.earnings_from_client.strategies.br import GetBrEarningsDetails
 from src.domain.earning.us.response.model import EarningsRecordResponse, EarningsModelToResponse
 from src.transport.drive_wealth.earnings.transport import DwEarningsTransport
 from src.domain.statement.us.request.model import TransactionRequest, QueryParams
@@ -46,82 +46,22 @@ class EarningsFromClient:
         return unique_id, account
 
     @classmethod
-    def paid_earnings_data_response(
-            cls, earnings_client: EarningsClientModel, accounts: str):
-
-        paid_earnings_response = GetBrEarningsDetails.build_query_paid_earnings(
-            cod_client=accounts,
-            limit=earnings_client.limit,
-            offset=earnings_client.offset,
-            earnings_types=earnings_client.earnings_types,
-        )
-
-        earnings_paid_values = [
-            GetBrEarningsDetails.normalize_earnings_data(earnings_res)
-            for earnings_res in paid_earnings_response
-        ]
-        return earnings_paid_values
-
-    @classmethod
-    def payable_earnings_data_response(
-        cls, earnings_client: EarningsClientModel, accounts: str
-    ):
-
-        payable_earnings_response = GetBrEarningsDetails.build_query_payable_earnings(
-            cod_client=accounts,
-            limit=earnings_client.limit,
-            offset=earnings_client.offset,
-            earnings_types=earnings_client.earnings_types,
-        )
-
-        earnings_payable_values = [
-            GetBrEarningsDetails.normalize_earnings_data(earnings_res)
-            for earnings_res in payable_earnings_response
-        ]
-        return earnings_payable_values
-
-    @classmethod
-    def record_date_earnings_response(
-        cls, earnings_client: EarningsClientModel, accounts: str
-    ):
-
-        record_date_earnings_response = GetBrEarningsDetails.build_query_record_date_earnings(
-            cod_client=accounts,
-            limit=earnings_client.limit,
-            offset=earnings_client.offset,
-            earnings_types=earnings_client.earnings_types,
-        )
-
-        record_date_earnings_values = [
-            GetBrEarningsDetails.normalize_earnings_data(earnings_response)
-            for earnings_response in record_date_earnings_response
-        ]
-        return record_date_earnings_values
-
-    @classmethod
     async def get_earnings_client_br_account(cls, earnings_client: EarningsClientModel, jwt_data: dict):
 
         portfolios = jwt_data.get("user", {}).get("portfolios", {})
+        earnings_region = earnings_client.region.value
+        region_portfolios = portfolios.get(earnings_region.lower(), {})
 
-        region = earnings_client.region.value
-        region_portfolios = portfolios.get(region.lower(), {})
+        accounts = cls.__extract_account(region_portfolios, earnings_client.region.value)
 
-        accounts = cls.__extract_account(region_portfolios, region)
-
-        earnings_paid_values = EarningsFromClient.paid_earnings_data_response(
-                earnings_client=earnings_client,
-                accounts=accounts
+        transaction_request = TransactionBrRequest(
+            accounts=accounts,
+            query_params=QueryBrParams(
+                region=earnings_region,
+                offset=earnings_client.offset,
+                limit=earnings_client.limit
             )
-
-        earnings_payable_values = EarningsFromClient.payable_earnings_data_response(
-                earnings_client=earnings_client,
-                accounts=accounts,
-            )
-
-        earnings_record_date_values = EarningsFromClient.record_date_earnings_response(
-                earnings_client=earnings_client,
-                accounts=accounts,
-            )
+        )
 
         response = {
             "paid_earnings": earnings_paid_values,
