@@ -1,7 +1,6 @@
 # STANDARD IMPORTS
 import json
 from typing import List
-from datetime import datetime, timedelta
 
 # EXTERNAL IMPORTS
 from mepho import DWApiTransport
@@ -9,7 +8,6 @@ from mepho import DWApiTransport
 # PROJECT IMPORTS
 from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
-from src.domain.date_formatters.region.timestamp.model import RegionTimeStamp
 from src.domain.earning.base.model.earning.model import Earning
 from src.domain.statement.us.request.model import TransactionRequest
 from src.infrastructures.env_config import config
@@ -45,10 +43,10 @@ class DwEarningsTransport:
         transactions = await DwEarningsTransport.__get_transactions(
             transaction_request=transaction_request
         )
-
         earnings_model = [
             DwEarningsTransport.__build_earning_model(transaction=transaction)
-            for transaction in dw_earnings_example]
+            for transaction in transactions if transaction.get("dividend")]
+
         return earnings_model
 
     @staticmethod
@@ -67,10 +65,3 @@ class DwEarningsTransport:
         body = await response.text()
         transactions = json.loads(body)
         return transactions
-
-    @staticmethod
-    def __get_yesterday_date() -> RegionTimeStamp:
-        yesterday_date = datetime.now() - timedelta(1)
-        raw_yesterday_date = int(yesterday_date.timestamp() * 1000)
-        converted_date = RegionTimeStamp(timestamp=raw_yesterday_date, region_date_format=RegionDateFormat.US_DATE_FORMAT)
-        return converted_date

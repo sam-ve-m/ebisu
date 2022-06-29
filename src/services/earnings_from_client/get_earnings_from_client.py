@@ -163,9 +163,8 @@ class EarningsFromClient:
         )
 
         earnings_us_transactions_response = EarningsModelToResponse.earnings_response(
-            earnings_us_transactions
-        )
-
+                earnings_us_transactions
+            )
         return earnings_us_transactions_response
 
     @classmethod
