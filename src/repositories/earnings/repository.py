@@ -5,6 +5,7 @@ from typing import List
 from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.earning.base.model.earning.model_br import EarningBr
+from src.domain.earning.br.request.model import TransactionBrRequest
 from src.infrastructures.env_config import config
 from src.domain.enums.earnings_types import EarningsTypes
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
@@ -38,8 +39,8 @@ class EarningsBrRecord:
         return earning_model
 
     @staticmethod
-    def build_query_payable_earnings(
-            cod_client: str,
+    def get_br_payable_earnings(
+            accounts: str,
             limit: int,
             offset: int,
             earnings_types: List[EarningsTypes] = None,
@@ -54,7 +55,7 @@ class EarningsBrRecord:
             MA.COD_NEG, MA.QTDE_MVTO, MA.PREC_LQDO, MA.DATA_MVTO                
             FROM CORRWIN.TCFMOVI_ACAO MA
             LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
-            WHERE COD_CLI = ('{cod_client}') 
+            WHERE COD_CLI = ('{accounts}') 
             {earnings_types_where_clause}
             AND DATA_MVTO <> TO_DATE('31-DEC-9999', 'DD-MM-YYYY')
             AND DATA_MVTO >= sysdate + 1
@@ -73,8 +74,8 @@ class EarningsBrRecord:
         return earning_model
 
     @staticmethod
-    def build_query_paid_earnings(
-            cod_client: str,
+    def get_br_paid_earnings(
+            accounts: str,
             limit: int,
             offset: int,
             earnings_types: List[EarningsTypes] = None
@@ -88,7 +89,7 @@ class EarningsBrRecord:
                     MA.COD_NEG, MA.QTDE_MVTO, MA.PREC_LQDO, MA.DATA_MVTO                
                     FROM CORRWIN.TCFMOVI_ACAO MA
                     LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
-                    WHERE COD_CLI = ('{cod_client}') 
+                    WHERE COD_CLI = ('{accounts}') 
                     {earnings_types_where_clause}
                     AND DATA_MVTO <> TO_DATE('31-DEC-9999', 'DD-MM-YYYY')
                     AND DATA_MVTO <= sysdate 
@@ -108,8 +109,8 @@ class EarningsBrRecord:
         return earning_model
 
     @staticmethod
-    def build_query_record_date_earnings(
-            cod_client: str,
+    def get_br_record_date_earnings(
+            accounts: str,
             limit: int,
             offset: int,
             earnings_types: List[EarningsTypes] = None,
@@ -125,7 +126,7 @@ class EarningsBrRecord:
             MA.COD_NEG, MA.QTDE_MVTO, MA.PREC_LQDO, MA.DATA_MVTO                
             FROM CORRWIN.TCFMOVI_ACAO MA
             LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
-            WHERE COD_CLI = ('{cod_client}') 
+            WHERE COD_CLI = ('{accounts}') 
             {earnings_types_where_clause}
             AND DATA_MVTO = TO_DATE('31-DEC-9999', 'DD-MM-YYYY')
             OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY

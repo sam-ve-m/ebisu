@@ -15,5 +15,6 @@ class EarningsRecordResponse(BaseModel):
     payable: List[EarningsTransactionBrResponse]
     record_date: List[EarningsTransactionBrResponse]
 
-class BrEarningsModelToResponse:
 
+class BrEarningsModelToResponse:
+    pass

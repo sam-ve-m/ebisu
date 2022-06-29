@@ -54,22 +54,38 @@ class EarningsFromClient:
 
         accounts = cls.__extract_account(region_portfolios, earnings_client.region.value)
 
-        transaction_request = TransactionBrRequest(
+        payable_transactions = EarningsBrRecord.get_br_payable_earnings(
             accounts=accounts,
-            query_params=QueryBrParams(
-                region=earnings_region,
-                offset=earnings_client.offset,
-                limit=earnings_client.limit
-            )
+            limit=earnings_client.limit,
+            offset=earnings_client.offset,
+            earnings_types=earnings_client.earnings_types
         )
 
-        response = {
-            "paid_earnings": earnings_paid_values,
-            "payable_earnings": earnings_payable_values,
-            "record_date_earnings": earnings_record_date_values,
-        }
+        paid_transactions = EarningsBrRecord.get_br_paid_earnings(
+            accounts=accounts,
+            limit=earnings_client.limit,
+            offset=earnings_client.offset,
+            earnings_types=earnings_client.earnings_types
+        )
 
-        return response
+        record_transactions = EarningsBrRecord.get_br_record_date_earnings(
+            accounts=accounts,
+            limit=earnings_client.limit,
+            offset=earnings_client.offset,
+            earnings_types=earnings_client.earnings_types
+        )
+
+        earnings_us_transactions_response = EarningsModelToResponse.earnings_response(
+            earnings_us_transactions
+        )
+
+        return earnings_us_transactions_response
+
+        # response = {
+        #     "paid_earnings": earnings_paid_values,
+        #     "payable_earnings": earnings_payable_values,
+        #     "record_date_earnings": earnings_record_date_values,
+        # }
 
     @classmethod
     async def get_earnings_client_us_account(
@@ -105,6 +121,7 @@ class EarningsFromClient:
         earnings_us_transactions_response = EarningsModelToResponse.earnings_response(
                 earnings_us_transactions
             )
+
         return earnings_us_transactions_response
 
     @classmethod
