@@ -3,12 +3,9 @@ from typing import List
 from pydantic import BaseModel
 
 # PROJECT IMPORTS
+from src.domain.earning.base.model.earning.model_br import EarningBr
 from src.domain.earning.base.response.model import EarningsTransactionBrResponse
 
-
-# "paid_earnings": earnings_paid_values,
-# "payable_earnings": earnings_payable_values,
-# "record_date_earnings": earnings_record_date_values,
 
 class EarningsRecordResponse(BaseModel):
     paid: List[EarningsTransactionBrResponse]
@@ -17,4 +14,38 @@ class EarningsRecordResponse(BaseModel):
 
 
 class BrEarningsModelToResponse:
-    pass
+
+    @staticmethod
+    def earnings_response(
+            payable_transactions: List[EarningBr],
+            paid_transactions: List[EarningBr],
+            record_transactions: List[EarningBr],
+    ):
+
+        payable = [
+            EarningsTransactionBrResponse(
+                **earning_payable_transaction.__repr__())
+            for earning_payable_transaction in payable_transactions
+        ]
+
+        paid = [
+            EarningsTransactionBrResponse(
+                **earning_paid_transaction.__repr__())
+            for earning_paid_transaction in paid_transactions
+        ]
+
+        record_date = [
+            EarningsTransactionBrResponse(
+                **earning_paid_transaction.__repr__())
+            for earning_paid_transaction in record_transactions
+        ]
+
+        earnings_dict = {
+            "paid": paid,
+            "payable": payable,
+            "record_date": record_date
+        }
+
+        earnings_response = EarningsRecordResponse(**earnings_dict)
+
+        return earnings_response

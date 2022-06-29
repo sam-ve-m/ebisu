@@ -5,7 +5,8 @@ from typing import Tuple
 # PROJECT IMPORTS
 from src.domain.date_formatters.region.timestamp.model import RegionTimeStamp
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
-from src.domain.earning.br.request.model import QueryBrParams, TransactionBrRequest
+# from src.domain.earning.br.request.model import QueryBrParams, TransactionBrRequest
+from src.domain.earning.br.response.model import BrEarningsModelToResponse
 from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.repositories.earnings.repository import EarningsClientRepository, EarningsBrRecord
@@ -26,8 +27,8 @@ class EarningsFromClient:
         }
         fields = accounts_by_region[region]
 
-        accounts = portfolios.get(fields)
-        return accounts
+        account = portfolios.get(fields)
+        return account
 
     @staticmethod
     def __get_offset(requested_offset: int, from_date: int):
@@ -52,40 +53,34 @@ class EarningsFromClient:
         earnings_region = earnings_client.region.value
         region_portfolios = portfolios.get(earnings_region.lower(), {})
 
-        accounts = cls.__extract_account(region_portfolios, earnings_client.region.value)
+        account = cls.__extract_account(region_portfolios, earnings_client.region.value)
 
         payable_transactions = EarningsBrRecord.get_br_payable_earnings(
-            accounts=accounts,
+            account=account,
             limit=earnings_client.limit,
             offset=earnings_client.offset,
             earnings_types=earnings_client.earnings_types
         )
 
         paid_transactions = EarningsBrRecord.get_br_paid_earnings(
-            accounts=accounts,
+            account=account,
             limit=earnings_client.limit,
             offset=earnings_client.offset,
             earnings_types=earnings_client.earnings_types
         )
 
         record_transactions = EarningsBrRecord.get_br_record_date_earnings(
-            accounts=accounts,
+            account=account,
             limit=earnings_client.limit,
             offset=earnings_client.offset,
             earnings_types=earnings_client.earnings_types
         )
 
-        earnings_us_transactions_response = EarningsModelToResponse.earnings_response(
-            earnings_us_transactions
+        earnings_us_transactions_response = BrEarningsModelToResponse.earnings_response(
+            payable_transactions, paid_transactions, record_transactions
         )
 
         return earnings_us_transactions_response
-
-        # response = {
-        #     "paid_earnings": earnings_paid_values,
-        #     "payable_earnings": earnings_payable_values,
-        #     "record_date_earnings": earnings_record_date_values,
-        # }
 
     @classmethod
     async def get_earnings_client_us_account(

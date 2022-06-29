@@ -1,4 +1,6 @@
 # STANDARD IMPORTS
+import datetime
+
 from pydantic import BaseModel
 
 
@@ -14,7 +16,7 @@ class EarningsTransactionResponse(BaseModel):
 class EarningsTransactionBrResponse(BaseModel):
     symbol: str
     trade_history: str
-    trade_type: float
+    trade_type: str
     trade_code: str
     transaction_amount: str
     net_price: float
