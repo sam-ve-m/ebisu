@@ -25,7 +25,7 @@ class Earning:
             "amount_per_share": self.amount_per_share,
             "type": self.type,
             "tax_code": self.tax_code,
-            "date": self.date,
+            "date": self.date.get_date_in_time_stamp(),
         }
 
         return earning_transaction

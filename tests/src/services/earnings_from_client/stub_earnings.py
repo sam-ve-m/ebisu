@@ -1,6 +1,4 @@
 dw_earnings_example = [
-    {
-        "dict_body": [
             {
                 "accountAmount": 1,
                 "accountBalance": 1,
@@ -342,5 +340,3 @@ dw_earnings_example = [
                 "wlpFinTranTypeID": "e8ff5103-ad40-4ed9-b2ee-fd96826bf935"
             }
         ]
-    }
-]

@@ -1,5 +1,4 @@
 # STANDARD IMPORTS
-from datetime import datetime
 from pydantic import BaseModel
 
 

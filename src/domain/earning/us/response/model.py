@@ -9,7 +9,8 @@ from src.domain.earning.base.response.model import EarningsTransactionResponse
 
 
 class EarningsRecordResponse(BaseModel):
-    transactions: List[EarningsTransactionResponse]
+    paid: List[EarningsTransactionResponse]
+    payable: List[EarningsTransactionResponse]
 
 
 class EarningsModelToResponse:
@@ -23,26 +24,26 @@ class EarningsModelToResponse:
 
     @staticmethod
     def earnings_response(
-            earnings_us_transactions: List[Earning]):
+            earnings_transactions: List[Earning]):
 
         yesterday_date = EarningsModelToResponse.get_yesterday_date_in_timestamp()
 
-        paid_transactions = [
+        paid = [
             EarningsTransactionResponse(
                 **earning_paid_transaction.__repr__())
-            for earning_paid_transaction in earnings_us_transactions
-            if earning_paid_transaction.date.get_date_in_time_stamp() < yesterday_date
+            for earning_paid_transaction in earnings_transactions
+            if earning_paid_transaction.date.get_date_in_time_stamp() <= yesterday_date
         ]
-        payable_transactions = [
+        payable = [
             EarningsTransactionResponse(
                 **earning_payable_transaction.__repr__())
-            for earning_payable_transaction in earnings_us_transactions
-            if earning_payable_transaction.date.get_date_in_time_stamp() < yesterday_date
+            for earning_payable_transaction in earnings_transactions
+            if earning_payable_transaction.date.get_date_in_time_stamp() > yesterday_date
         ]
 
         earnings_dict = {
-            "paid": paid_transactions,
-            "payable": payable_transactions
+            "paid": paid,
+            "payable": payable
         }
 
         earnings_response = EarningsRecordResponse(**earnings_dict)
