@@ -17,4 +17,5 @@ class RegionStringDateTime:
 
     def get_date_in_time_stamp(self):
         date_strptime = datetime.strptime(str(self.__date), self.__region_date_format.value)
-        return date_strptime.timestamp() * 1000
+        date_in_timestamp = int(date_strptime.timestamp() * 1000)
+        return date_in_timestamp

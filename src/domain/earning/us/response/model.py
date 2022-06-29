@@ -18,7 +18,7 @@ class EarningsModelToResponse:
     def get_yesterday_date_in_timestamp():
         today = datetime.utcnow()
         yesterday = today - timedelta(days=1)
-        yesterday_in_timestamp = datetime.timestamp(yesterday) * 1000
+        yesterday_in_timestamp = int(datetime.timestamp(yesterday) * 1000)
         return yesterday_in_timestamp
 
     @staticmethod
