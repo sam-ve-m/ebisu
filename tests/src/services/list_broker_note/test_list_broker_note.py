@@ -67,32 +67,6 @@ def test_when_params_are_valid_for_us_market_then_get_broker_note_link_as_expect
 
 
 @patch.object(
-    ListBrokerNote, "generate_path", return_value="'LXPD000001/US/broker_note/2022/4/'"
-)
-@patch.object(FileRepository, "generate_file_link", return_value=None)
-@patch.object(ListBrokerNote, "get_broker_note_file_name", return_value=5)
-@patch.object(ListBrokerNote, "get_month_broker_notes", return_value=[])
-@patch.object(FileRepository, "list_all_directories_in_path", return_value=directories)
-def test_when_params_are_valid_for_the_markets_then_return_a_empty_list(
-    mock_list_all_directories_in_path,
-    mock_get_month_broker_notes,
-    mock_get_broker_note_file_name,
-    mock_generate_file_link,
-    mock_generate_path,
-):
-
-    response = ListBrokerNote.get_service_response(
-        broker_note=MagicMock(
-            region=BrokerNoteRegion.US, market=BrokerNoteMarket.BMF, year=2022, month=4
-        ),
-        jwt_data=payload_data_us_gringa_dummy,
-    )
-
-    assert response == []
-    assert isinstance(response, list)
-
-
-@patch.object(
     ListBrokerNote, "generate_path", return_value="'000000014-6/BR/broker_note/2022/4/'"
 )
 @patch.object(FileRepository, "generate_file_link", return_value=broker_note_link_dummy)

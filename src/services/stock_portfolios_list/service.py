@@ -83,10 +83,7 @@ class UserPortfoliosList:
             (False, False): UserPortfoliosList.get_all_stock_portfolios_list,
             (True, False): UserPortfoliosList.get_portfolios_by_region_br_or_us,
             (False, True): UserPortfoliosList.get_portfolios_by_type_of_classification,
-            (
-                True,
-                True,
-            ): UserPortfoliosList.get_portfolios_by_type_classification_and_region,
+            (True, True): UserPortfoliosList.get_portfolios_by_type_classification_and_region,
         }
         map_key = (
             bool(user_portfolios.region),

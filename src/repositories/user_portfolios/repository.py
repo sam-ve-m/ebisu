@@ -10,6 +10,23 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
     # TODO - FILTER PORTFOLIO BY THE ACTIVE OR INACTIVE STATUS
 
     @classmethod
+    async def get_default_portfolio_created_at_by_region(cls, unique_id: str, region: str):
+        region_portfolios = region.lower()
+
+        portfolio_created_at = await cls.find_one(
+            query={"unique_id": unique_id},
+            project={
+                f"portfolios.default.{region_portfolios}.created_at": 1,
+                "_id": 0,
+            },
+        )
+
+        created_at = portfolio_created_at.get("portfolios", {}).get("default", {}).get(region_portfolios, {}).get("created_at")
+
+        timestamp_created_at = created_at.timestamp() * 1000
+        return timestamp_created_at
+
+    @classmethod
     async def get_all_portfolios_list(cls, unique_id: str):
 
         stock_portfolios_response = await cls.find_one(
@@ -37,7 +54,10 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             },
         )
 
-        if stock_portfolios_response is None:
+        region_default = stock_portfolios_response.get("portfolios", {}).get("default", {}).get(region_portfolios)
+        region_vnc = stock_portfolios_response.get("portfolios", {}).get("vnc", {}).get(region_portfolios)
+
+        if not region_default and region_vnc:
             response = {"default": {}, "vnc_portfolios": {}}
             return response
 
@@ -56,7 +76,9 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             project={f"portfolios.{classification_type}": 1, "_id": 0},
         )
 
-        if stock_portfolios_response is None:
+        classification_response = stock_portfolios_response.get("portfolios").get(classification_type)
+
+        if classification_response is None:
             response = {f"{classification_type}": {}}
             return response
 
@@ -85,7 +107,9 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             }
         )
 
-        if stock_portfolios_response is None:
+        portfolios_response = stock_portfolios_response.get("portfolios").get(classification_type, {}).get(region_portfolios)
+
+        if portfolios_response is None:
             response = {f"{classification_type}": {}}
             return response
 
