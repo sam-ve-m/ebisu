@@ -23,7 +23,7 @@ class EarningsBrRecord:
     oracle_earnings_client_singleton_instance = EarningsClientRepository
 
     @staticmethod
-    def __build_br_earning_model(earning_transaction: dict) -> EarningBr:
+    def build_br_earning_model(earning_transaction: dict) -> EarningBr:
         earning_model = EarningBr(
             trade_history=earning_transaction.get("DESC_HIST_MVTO"),
             trade_type=earning_transaction.get("DESC_RESU_TIPO_MOVTO", "NOT INFORMED"),
@@ -67,7 +67,7 @@ class EarningsBrRecord:
         )
 
         earning_model = [
-            EarningsBrRecord.__build_br_earning_model(earning_transaction=earning_transaction)
+            EarningsBrRecord.build_br_earning_model(earning_transaction=earning_transaction)
             for earning_transaction in payable_earnings_transactions
         ]
         return earning_model
@@ -102,7 +102,7 @@ class EarningsBrRecord:
         )
 
         earning_model = [
-            EarningsBrRecord.__build_br_earning_model(earning_transaction=earning_transaction)
+            EarningsBrRecord.build_br_earning_model(earning_transaction=earning_transaction)
             for earning_transaction in paid_earnings_transactions
         ]
         return earning_model
@@ -138,7 +138,7 @@ class EarningsBrRecord:
         )
 
         earning_model = [
-            EarningsBrRecord.__build_br_earning_model(earning_transaction=earning_transaction)
+            EarningsBrRecord.build_br_earning_model(earning_transaction=earning_transaction)
             for earning_transaction in record_date_earnings_transactions
         ]
         return earning_model
