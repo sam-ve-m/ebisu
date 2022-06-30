@@ -1,120 +1,48 @@
 # STANDARD LIBS
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 # external imports
 from pydantic import ValidationError
 
-from src.exceptions.exceptions import UnauthorizedError
+from src.domain.earning.br.response.model import BrEarningsModelToResponse
+from src.repositories.earnings.repository import EarningsBrRecord
+from src.services.earnings_from_client.earnings_stub import get_br_payable_earnings_stub, \
+    get_br_record_date_earnings_stub, get_br_paid_earnings_stub, get_earnings_response_stub
 from src.services.earnings_from_client.get_earnings_from_client import (
     EarningsFromClient,
 )
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
-from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
-
-# stubs
-from tests.src.stubs.router_exchange_infos.stubs import scope_stub
-
-earnings_response_stub = {
-    "payable_earnings": [
-        {
-            "client_code": 111,
-            "trade_history": "LC03C00006TRANSFERENCIA CRÃ‰DITO",
-            "trade_type": None,
-            "trade_code": "ALPA4",
-            "transaction_amount": 300.0,
-            "net_price": 0.0,
-            "transaction_date": "2022-05-02T00:00:00",
-        }
-    ],
-    "record_date_earnings": [
-        {
-            "client_code": 111,
-            "trade_history": "LC03D00005TRANSFERENCIA DÃ‰BITO",
-            "trade_type": None,
-            "trade_code": "ALPA4",
-            "transaction_amount": -300.0,
-            "net_price": 0.0,
-            "transaction_date": "9999-12-31T00:00:00",
-        }
-    ],
-}
-
-earnings_client_response_stub = {
-    "payable_earnings": [
-        {
-            "client_code": 111,
-            "net_price": 0.0,
-            "trade_code": "ALPA4",
-            "trade_history": "LC03C00006TRANSFERENCIA CRÉDITO",
-            "trade_type": None,
-            "transaction_amount": 300.0,
-            "transaction_date": "2022-05-10",
-        }
-    ],
-    "record_date_earnings": [],
-}
-
-client_earnings_stub = [
-    {
-        "COD_CLI": 111,
-        "DESC_HIST_MVTO": "LC03C00006TRANSFERENCIA CRÉDITO",
-        "DESC_RESU_TIPO_MVTO": "TRANSFERENCIA",
-        "COD_NEG": "ALPA4",
-        "QTDE_MVTO": 300.0,
-        "PREC_LQDO": 0.0,
-        "DATA_MVTO": "2022-05-10",
-    }
-]
-client_earnings_2_stub = {}
-normalize_param_stub = {
-    "COD_CLI": 111,
-    "DESC_HIST_MVTO": "LC03C00006TRANSFERENCIA CRÉDITO",
-    "DESC_RESU_TIPO_MVTO": "TRANSFERENCIA",
-    "COD_NEG": "ALPA4",
-    "QTDE_MVTO": 300.0,
-    "PREC_LQDO": 0.0,
-    "DATA_MVTO": "2022-05-10",
-}
-normalized_stub = {
-    "client_code": 111,
-    "trade_history": "LC03C00006TRANSFERENCIA CRÉDITO",
-    "trade_type": None,
-    "trade_code": "ALPA4",
-    "transaction_amount": 300.0,
-    "net_price": 0.0,
-    "transaction_date": "2022-05-10",
-}
 
 
-# class Iterable:
-#     def __iter__(self):
-#         return self
-#
-#
-# @patch.object(
-#     GetBrEarningsDetails, "build_query_payable_earnings", return_value=MagicMock
-# )
-# @patch.object(
-#     GetBrEarningsDetails, "build_query_record_date_earnings", return_value=MagicMock
-# )
-# @patch.object(OracleBaseRepository, "get_data", side_effect=[client_earnings_stub, {}])
-# def test_when_sending_the_right_params_to_earnings_client_get_response_then_return_the_expected(
-#         mock_get_data,
-#         mock_build_query_record_date_earnings,
-#         mock_build_query_payable_earnings,
-# ):
-#     Iterable.__next__ = mock_get_data
-#
-#     response = EarningsFromClient.get_service_response(
-#         earnings_client=EarningsClientModel(
-#             **{"region": "BR", "limit": 2, "offset": 0}
-#         ),
-#         jwt_data=payload_data_dummy,
-#     )
-#
-#     assert response == earnings_client_response_stub
+@pytest.mark.asyncio
+@patch.object(EarningsBrRecord, "get_br_payable_earnings", return_value=get_br_payable_earnings_stub)
+@patch.object(EarningsBrRecord, "get_br_paid_earnings", return_value=get_br_paid_earnings_stub)
+@patch.object(EarningsBrRecord, "get_br_record_date_earnings", return_value=get_br_record_date_earnings_stub)
+@patch.object(BrEarningsModelToResponse, "earnings_response", return_value=get_earnings_response_stub)
+async def test_get_earnings_client_br_account_when_sending_right_params_then_return_the_expected(
+        mock_get_br_payable_earnings,
+        mock_get_br_paid_earnings,
+        mock_get_br_record_date_earnings,
+        mock_earnings_response
+):
+    response = await EarningsFromClient.get_earnings_client_br_account(
+        jwt_data=payload_data_dummy, earnings_client=EarningsClientModel(
+            **{"region": "BR", "limit": 2, "offset": 0}
+        )
+    )
+    assert response == get_earnings_response_stub
+    assert isinstance(response, list)
+
+
+async def test_get_earnings_client_br_account_when_sending_wrong_params_then_return_error():
+    with pytest.raises(AttributeError):
+        await EarningsFromClient.get_earnings_client_br_account(
+            jwt_data=payload_data_dummy, earnings_client=EarningsClientModel(
+                **{"region": None, "limit": None, "offset": 0}
+            )
+        )
 
 
 def test_earnings_from_client_response_when_the_params_are_not_valid_then_raise_error_as_expected():
