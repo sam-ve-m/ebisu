@@ -20,7 +20,7 @@ class DwEarningsTransport:
     balance_url = config("DW_BALANCE_URL")
 
     @staticmethod
-    def build_earning_model(earning_transaction: dict) -> Earning:
+    def __build_earning_model(earning_transaction: dict) -> Earning:
         earning_model = Earning(
             symbol=earning_transaction.get("instrument", {}).get("symbol"),
             name=earning_transaction.get("instrument", {}).get("name"),
@@ -43,7 +43,7 @@ class DwEarningsTransport:
             transaction_request=transaction_request
         )
         earnings_model = [
-            DwEarningsTransport.build_earning_model(earning_transaction=earning_transaction)
+            DwEarningsTransport.__build_earning_model(earning_transaction=earning_transaction)
             for earning_transaction in earnings_transactions if earning_transaction.get("dividend")]
 
         return earnings_model
