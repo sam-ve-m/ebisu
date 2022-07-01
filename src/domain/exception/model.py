@@ -58,3 +58,8 @@ class NotMappedCurrency(Exception):
 class InvalidElectronicaSignature(Exception):
     def __init__(self, msg="Invalid electronica signature", *args, **kwargs):
         super().__init__(msg, *args, **kwargs)
+
+
+class FailToSaveAuditingTrail(Exception):
+    def __init__(self, msg="Fail to save auditing trail", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
