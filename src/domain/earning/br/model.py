@@ -7,12 +7,11 @@ from src.domain.date_formatters.region.date_time.model import RegionStringDateTi
 
 @dataclass(init=True)
 class EarningBr:
-    trade_history: str
-    trade_type: str
-    trade_code: str
-    transaction_amount: float
-    net_price: float
+    share_quantity: float
+    symbol: str
     date: RegionStringDateTime
+    description: str
+    amount_per_share: float
 
     def get_date_in_time_stamp(self):
         timestamp = self.date.get_date_in_time_stamp()
@@ -20,12 +19,11 @@ class EarningBr:
 
     def __repr__(self):
         earning_transaction = {
-            "trade_history": self.trade_history,
-            "trade_type": self.trade_type,
-            "trade_code": self.trade_code,
-            "transaction_amount": self.transaction_amount,
-            "net_price": self.net_price,
+            "share_quantity": self.share_quantity,
+            "symbol": self.symbol,
             "date": self.date.get_date_in_time_stamp(),
+            "description": self.description,
+            "amount_per_share": self.amount_per_share
         }
 
         return earning_transaction

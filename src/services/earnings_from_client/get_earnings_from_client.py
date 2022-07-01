@@ -12,15 +12,18 @@ from src.repositories.earnings.repository import EarningsClientRepository, Earni
 from src.repositories.user_portfolios.repository import UserPortfoliosRepository
 from src.domain.earning.us.response.model import EarningsRecordResponse, EarningsModelToResponse
 from src.transport.drive_wealth.earnings.transport import DwEarningsTransport
-from src.domain.statement.us.request.model import TransactionRequest, QueryParams
-# from src.domain.earning.br.request.model import QueryBrParams, TransactionBrRequest
+from src.domain.earning.us.request.model import TransactionRequest, QueryParams
 
 
 class EarningsFromClient:
     oracle_earnings_client_singleton_instance = EarningsClientRepository
 
     @classmethod
-    async def get_earnings_client_br_account(cls, earnings_client: EarningsClientModel, jwt_data: dict):
+    async def get_earnings_client_br_account(
+            cls,
+            earnings_client: EarningsClientModel,
+            jwt_data: dict
+    ) -> EarningsRecordResponse:
 
         portfolios = jwt_data.get("user", {}).get("portfolios", {})
         earnings_region = earnings_client.region.value
@@ -31,29 +34,26 @@ class EarningsFromClient:
         payable_transactions = EarningsBrRecord.get_br_payable_earnings(
             account=account,
             limit=earnings_client.limit,
-            offset=earnings_client.offset,
             earnings_types=earnings_client.earnings_types
         )
 
         paid_transactions = EarningsBrRecord.get_br_paid_earnings(
             account=account,
             limit=earnings_client.limit,
-            offset=earnings_client.offset,
             earnings_types=earnings_client.earnings_types
         )
 
         record_transactions = EarningsBrRecord.get_br_record_date_earnings(
             account=account,
             limit=earnings_client.limit,
-            offset=earnings_client.offset,
             earnings_types=earnings_client.earnings_types
         )
 
-        earnings_us_transactions_response = BrEarningsModelToResponse.earnings_response(
+        earnings_br_transactions_response = BrEarningsModelToResponse.earnings_response(
             payable_transactions, paid_transactions, record_transactions
         )
 
-        return earnings_us_transactions_response
+        return earnings_br_transactions_response
 
     @classmethod
     async def get_earnings_client_us_account(
@@ -64,17 +64,14 @@ class EarningsFromClient:
             jwt_data=jwt_data
         )
 
-        from_date, to_date, offset = await EarningsFromClient.__get_range_date_and_offset(
-            unique_id=unique_id,
-            requested_offset=earnings_client.offset
-        )
+        from_date, to_date = await EarningsFromClient.__get_range_date_and_offset(
+            unique_id=unique_id)
 
         transaction_request = TransactionRequest(
             account=account,
             query_params=QueryParams(
                 from_date=from_date,
                 to_date=to_date,
-                offset=offset,
                 limit=earnings_client.limit
             )
         )
@@ -92,7 +89,7 @@ class EarningsFromClient:
     @classmethod
     async def get_service_response(
         cls, earnings_client: EarningsClientModel, jwt_data: dict
-    ) -> dict:
+    ) -> EarningsRecordResponse:
 
         map_key = earnings_client.region
 
@@ -110,30 +107,20 @@ class EarningsFromClient:
 
     @staticmethod
     async def __get_range_date_and_offset(
-            unique_id: str,
-            requested_offset: int
-    ) -> Tuple[RegionTimeStamp, RegionTimeStamp, RegionTimeStamp]:
+            unique_id: str
+    ) -> Tuple[RegionTimeStamp, RegionTimeStamp]:
 
         from_raw_date = await UserPortfoliosRepository.get_default_portfolio_created_at_by_region(
             unique_id=unique_id,
             region="US"
         )
 
-        to_raw_date = datetime.now().timestamp() * 1000
-
-        requested_raw_offset = EarningsFromClient.__get_offset(
-            requested_offset=requested_offset,
-            from_date=from_raw_date
-        )
+        to_raw_date = int(datetime.now().timestamp() * 1000)
 
         from_date = RegionTimeStamp(timestamp=from_raw_date, region_date_format=RegionDateFormat.US_DATE_FORMAT)
         to_date = RegionTimeStamp(timestamp=to_raw_date, region_date_format=RegionDateFormat.US_DATE_FORMAT)
-        requested_offset = RegionTimeStamp(
-            timestamp=requested_raw_offset,
-            region_date_format=RegionDateFormat.US_DATE_FORMAT
-        )
 
-        return from_date, to_date, requested_offset
+        return from_date, to_date
 
     @staticmethod
     def __extract_account(portfolios: dict, region: str) -> str:
@@ -145,13 +132,6 @@ class EarningsFromClient:
 
         account = portfolios.get(fields)
         return account
-
-    @staticmethod
-    def __get_offset(requested_offset: int, from_date: int):
-        if requested_offset is None:
-            requested_offset = from_date
-
-        return requested_offset
 
     @staticmethod
     def __extract_identifier_data_from_jwt(jwt_data: dict):

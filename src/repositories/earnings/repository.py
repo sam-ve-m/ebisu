@@ -8,7 +8,6 @@ from src.domain.earning.br.model import EarningBr
 from src.infrastructures.env_config import config
 from src.domain.enums.earnings_types import EarningsTypes
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
-# from src.domain.earning.br.request.model import TransactionBrRequest
 
 
 class EarningsClientRepository(OracleBaseRepository):
@@ -25,11 +24,10 @@ class EarningsBrRecord:
     @staticmethod
     def build_br_earning_model(earning_transaction: dict) -> EarningBr:
         earning_model = EarningBr(
-            trade_history=earning_transaction.get("DESC_HIST_MVTO"),
-            trade_type=earning_transaction.get("DESC_RESU_TIPO_MOVTO", "NOT INFORMED"),
-            trade_code=earning_transaction.get("COD_NEG"),
-            transaction_amount=earning_transaction.get("QTDE_MVTO"),
-            net_price=earning_transaction.get("PREC_LQDO"),
+            symbol=earning_transaction.get("COD_NEG"),
+            description=earning_transaction.get("DESC_HIST_MVTO", "NOT INFORMED"),
+            amount_per_share=earning_transaction.get("AMOUNT_PER_SHARE"),
+            share_quantity=earning_transaction.get("QTDE_MVTO"),
             date=RegionStringDateTime(
                 date=earning_transaction.get("DATA_MVTO"),
                 region_date_format=RegionDateFormat.BR_DATE_FORMAT
@@ -41,7 +39,6 @@ class EarningsBrRecord:
     def get_br_payable_earnings(
             account: str,
             limit: int,
-            offset: int,
             earnings_types: List[EarningsTypes] = None,
     ) -> list:
         # query to find the earning of a specific client but not including the date 31-12-9999
@@ -50,15 +47,18 @@ class EarningsBrRecord:
         )
 
         query = f"""
-            SELECT MA.DESC_HIST_MVTO, TM.DESC_RESU_TIPO_MVTO, 
-            MA.COD_NEG, MA.QTDE_MVTO, MA.PREC_LQDO, MA.DATA_MVTO                
+            SELECT MA.DESC_HIST_MVTO, MA.COD_NEG, MA.QTDE_MVTO, MA.PREC_LQDO/MA.QTDE_MVTO AS AMOUNT_PER_SHARE, 
+            MA.PREC_LQDO, MA.DATA_MVTO                
             FROM CORRWIN.TCFMOVI_ACAO MA
             LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
             WHERE COD_CLI = ('{account}') 
             {earnings_types_where_clause}
             AND DATA_MVTO <> TO_DATE('31-DEC-9999', 'DD-MM-YYYY')
             AND DATA_MVTO >= sysdate + 1
-            OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY
+            AND MA.COD_NEG IS NOT NULL
+            AND MA.QTDE_MVTO IS NOT NULL
+           	AND MA.DATA_MVTO IS NOT NULL
+            FETCH NEXT {limit} ROWS ONLY
         """
         payable_earnings_transactions = (
             EarningsClientRepository.get_data(
@@ -68,7 +68,7 @@ class EarningsBrRecord:
 
         earning_model = [
             EarningsBrRecord.build_br_earning_model(earning_transaction=earning_transaction)
-            for earning_transaction in payable_earnings_transactions
+            for earning_transaction in payable_earnings_transactions if earning_transaction.get("AMOUNT_PER_SHARE")
         ]
         return earning_model
 
@@ -76,7 +76,6 @@ class EarningsBrRecord:
     def get_br_paid_earnings(
             account: str,
             limit: int,
-            offset: int,
             earnings_types: List[EarningsTypes] = None
     ) -> list:
         # query to find all already paid earning
@@ -84,15 +83,18 @@ class EarningsBrRecord:
             EarningsBrRecord.build_earnings_types_where_clause(earnings_types)
         )
         query = f"""
-                    SELECT MA.DESC_HIST_MVTO, TM.DESC_RESU_TIPO_MVTO, 
-                    MA.COD_NEG, MA.QTDE_MVTO, MA.PREC_LQDO, MA.DATA_MVTO                
+                    SELECT MA.DESC_HIST_MVTO, MA.COD_NEG, MA.QTDE_MVTO, MA.PREC_LQDO/MA.QTDE_MVTO AS AMOUNT_PER_SHARE, 
+                    MA.PREC_LQDO, MA.DATA_MVTO                
                     FROM CORRWIN.TCFMOVI_ACAO MA
                     LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
                     WHERE COD_CLI = ('{account}') 
                     {earnings_types_where_clause}
                     AND DATA_MVTO <> TO_DATE('31-DEC-9999', 'DD-MM-YYYY')
-                    AND DATA_MVTO <= sysdate 
-                    OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY
+                    AND DATA_MVTO <= sysdate
+                    AND MA.COD_NEG IS NOT NULL
+                    AND MA.QTDE_MVTO IS NOT NULL
+                    AND MA.DATA_MVTO IS NOT NULL
+                    FETCH NEXT {limit} ROWS ONLY
                 """
 
         paid_earnings_transactions = (
@@ -103,7 +105,7 @@ class EarningsBrRecord:
 
         earning_model = [
             EarningsBrRecord.build_br_earning_model(earning_transaction=earning_transaction)
-            for earning_transaction in paid_earnings_transactions
+            for earning_transaction in paid_earnings_transactions if earning_transaction.get("AMOUNT_PER_SHARE")
         ]
         return earning_model
 
@@ -111,7 +113,6 @@ class EarningsBrRecord:
     def get_br_record_date_earnings(
             account: str,
             limit: int,
-            offset: int,
             earnings_types: List[EarningsTypes] = None,
     ) -> list:
         # query to find record date == 31-12-9999 (to be paid with no date specified)
@@ -121,14 +122,17 @@ class EarningsBrRecord:
         )
 
         query = f"""
-            SELECT MA.DESC_HIST_MVTO, TM.DESC_RESU_TIPO_MVTO, 
-            MA.COD_NEG, MA.QTDE_MVTO, MA.PREC_LQDO, MA.DATA_MVTO                
+            SELECT MA.DESC_HIST_MVTO, MA.COD_NEG, MA.QTDE_MVTO, MA.PREC_LQDO/MA.QTDE_MVTO AS AMOUNT_PER_SHARE, 
+            MA.PREC_LQDO, MA.DATA_MVTO                
             FROM CORRWIN.TCFMOVI_ACAO MA
             LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
             WHERE COD_CLI = ('{account}') 
             {earnings_types_where_clause}
             AND DATA_MVTO = TO_DATE('31-DEC-9999', 'DD-MM-YYYY')
-            OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY
+            AND MA.COD_NEG IS NOT NULL
+            AND MA.QTDE_MVTO IS NOT NULL
+            AND MA.DATA_MVTO IS NOT NULL
+            FETCH NEXT {limit} ROWS ONLY
         """
 
         record_date_earnings_transactions = (
@@ -139,7 +143,7 @@ class EarningsBrRecord:
 
         earning_model = [
             EarningsBrRecord.build_br_earning_model(earning_transaction=earning_transaction)
-            for earning_transaction in record_date_earnings_transactions
+            for earning_transaction in record_date_earnings_transactions if earning_transaction.get("AMOUNT_PER_SHARE")
         ]
         return earning_model
 
