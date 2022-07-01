@@ -11,6 +11,7 @@ class EarningsRecordResponse(BaseModel):
     paid: List[EarningsTransactionBrResponse]
     payable: List[EarningsTransactionBrResponse]
     record_date: List[EarningsTransactionBrResponse]
+    total_paid: float
 
 
 class BrEarningsModelToResponse:
@@ -20,7 +21,10 @@ class BrEarningsModelToResponse:
             payable_transactions: List[EarningBr],
             paid_transactions: List[EarningBr],
             record_transactions: List[EarningBr],
+            total_paid_transactions: float
     ):
+
+        total_paid = round(total_paid_transactions, 2)
 
         payable = [
             EarningsTransactionBrResponse(
@@ -41,6 +45,7 @@ class BrEarningsModelToResponse:
         ]
 
         earnings_dict = {
+            "total_paid": total_paid,
             "paid": paid,
             "payable": payable,
             "record_date": record_date

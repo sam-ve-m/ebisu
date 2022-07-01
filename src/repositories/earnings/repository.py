@@ -36,6 +36,28 @@ class EarningsBrRecord:
         return earning_model
 
     @staticmethod
+    def get_total_paid_earnings(
+        account: str
+    ) -> float:
+
+        query = f""" SELECT  SUM(MA.PREC_LQDO) FROM CORRWIN.TCFMOVI_ACAO MA
+                    LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
+                    WHERE COD_CLI = ('{account}') 
+                    AND DATA_MVTO <> TO_DATE('31-DEC-9999', 'DD-MM-YYYY')
+                    AND DATA_MVTO <= sysdate
+                    AND MA.DATA_MVTO IS NOT NULL
+                    """
+
+        total_earnings_transaction = (
+            EarningsClientRepository.get_data(
+                sql=query
+            )
+        )
+        earnings_response = total_earnings_transaction[0].get("SUM(MA.PREC_LQDO)")
+
+        return earnings_response
+
+    @staticmethod
     def get_br_payable_earnings(
             account: str,
             limit: int,

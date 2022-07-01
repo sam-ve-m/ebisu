@@ -31,6 +31,10 @@ class EarningsFromClient:
 
         account = cls.__extract_account(region_portfolios, earnings_client.region.value)
 
+        total_paid_earnings = EarningsBrRecord.get_total_paid_earnings(
+            account=account
+        )
+
         payable_transactions = EarningsBrRecord.get_br_payable_earnings(
             account=account,
             limit=earnings_client.limit,
@@ -50,7 +54,10 @@ class EarningsFromClient:
         )
 
         earnings_br_transactions_response = BrEarningsModelToResponse.earnings_response(
-            payable_transactions, paid_transactions, record_transactions
+            payable_transactions,
+            paid_transactions,
+            record_transactions,
+            total_paid_earnings
         )
 
         return earnings_br_transactions_response

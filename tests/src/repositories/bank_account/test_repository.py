@@ -51,7 +51,7 @@ async def test_when_sending_valid_params_to_save_register_accounts_then_return_t
     response = await UserBankAccountRepository.save_registered_user_bank_accounts(
         unique_id=account_repository_id_stub, bank_account=bank_account_repository_stub
     )
-    assert response == True
+    assert response is True
 
 
 existing_account_repository_stub = {"bank_account": "648498574893"}
