@@ -1,3 +1,5 @@
+from datetime import datetime
+
 dw_earnings_example = [
             {
                 "accountAmount": 1,
@@ -341,55 +343,40 @@ dw_earnings_example = [
             }
         ]
 
-get_br_payable_earnings_stub = {
-    "DESC_HIST_MVTO": "LC03C00006TRANSFERENCIA CRÉDITO",
-    "DESC_RESU_TIPO_MVTO": "TRANSFERENCIA",
-    "COD_NEG": "ALPA4",
-    "QTDE_MVTO": 300.0,
-    "PREC_LQDO": 0.0,
-    "DATA_MVTO": "2022-07-10",
-}
+get_br_payable_earnings_stub = {'description': 'LC04D00116LIQUIDACAO D',
+                       'symbol': 'PETR4',
+                       'share_quantity': -200.0,
+                       'amount_per_share': 5918.0,
+                       'date': "2022-7-22 00:00:00"}
 
-get_br_paid_earnings_stub = {
-    "DESC_HIST_MVTO": "LC03C00006TRANSFERENCIA CRÉDITO",
-    "DESC_RESU_TIPO_MVTO": "TRANSFERENCIA",
-    "COD_NEG": "ALPA4",
-    "QTDE_MVTO": 300.0,
-    "PREC_LQDO": 0.0,
-    "DATA_MVTO": "2022-05-10",
-}
+get_br_paid_earnings_stub = {'DESC_HIST_MVTO': 'LC04D00116LIQUIDACAO D',
+                          'COD_NEG': 'PETR4',
+                          'QTDE_MVTO': -200.0,
+                          'AMOUNT_PER_SHARE': 5918.0,
+                          'DATA_MVTO': datetime(2022, 5, 20, 0, 0)}
 
-get_br_record_date_earnings_stub = {
-    "DESC_HIST_MVTO": "LC03C00006TRANSFERENCIA CRÉDITO",
-    "DESC_RESU_TIPO_MVTO": "TRANSFERENCIA",
-    "COD_NEG": "ALPA4",
-    "QTDE_MVTO": 300.0,
-    "PREC_LQDO": 0.0,
-    "DATA_MVTO": "9999-31-12",
-}
+get_br_record_date_earnings_stub = {'DESC_HIST_MVTO': 'LC04D00116LIQUIDACAO D',
+                          'COD_NEG': 'PETR4',
+                          'QTDE_MVTO': -200.0,
+                          'AMOUNT_PER_SHARE': 5918.0,
+                          'DATA_MVTO': datetime(9999, 12, 31, 0, 0)}
 
 stub_get_service_response = {
-    "paid": [{
-    "trade_history": "LC03C00006TRANSFERENCIA CRÉDITO",
-    "trade_type": None,
-    "trade_code": "ALPA4",
-    "transaction_amount": 300.0,
-    "net_price": 0.0,
-    "transaction_date": "2022-07-10"}],
-    "payable": [{
-    "trade_history": "LC03C00006TRANSFERENCIA CRÉDITO",
-    "trade_type": None,
-    "trade_code": "ALPA4",
-    "transaction_amount": 300.0,
-    "net_price": 0.0,
-    "transaction_date": "2022-07-10"}],
-    "record_date": [{
-    "trade_history": "LC03C00006TRANSFERENCIA CRÉDITO",
-    "trade_type": None,
-    "trade_code": "ALPA4",
-    "transaction_amount": 300.0,
-    "net_price": 0.0,
-    "transaction_date": "2022-07-10"}]
+    "paid": [{'description': 'LC04D00116LIQUIDACAO D',
+            'symbol': 'PETR4',
+            'share_quantity': -200.0,
+            'net_price': 5918.0,
+            'date': "2022-1-14 00:00:00"}],
+    "payable": [{'description': 'LC04D00116LIQUIDACAO D',
+               'symbol': 'PETR4',
+               'share_quantity': -200.0,
+               'amount_per_share': 5918.0,
+               'date': "2022-7-22 00:00:00"}],
+    "record_date": [{'description': 'LC04D00220LIQUIDACAO D',
+               'symbol': 'APPL3',
+               'share_quantity': -400.0,
+               'amount_per_share': 5918.0,
+               'date': "9999-12-31 00:00:00"}]
 }
 
 

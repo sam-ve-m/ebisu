@@ -303,10 +303,17 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_list_client_orders_
 
 
 # client earning router
-earnings_response_stub = {
-    "payable_earnings": [10000.0, 25000.0],
-    "record_date_earnings": [20000.0],
-}
+earnings_response_stub = {"paid": [{
+            "symbol": "SPHD",
+            "date": 1559585520345,
+            "amount_per_share": 0.1511,
+            "description": "PowerShares S&P 500 High Div Low Vol ETF"
+        }],"payable": [{
+            "symbol": "PETR4",
+            "date": 1656871920345,
+            "amount_per_share": 5.5,
+            "description": "PowerShares S&P 500 High Div Low Vol ETF"}]}
+
 
 
 @pytest.mark.asyncio
@@ -325,7 +332,6 @@ async def test_when_sending_right_params_then_return_the_expected_values(
             **{
                 "region": Region.BR.value,
                 "limit": 2,
-                "offset": 0,
             }
         ),
     )
@@ -357,7 +363,6 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_earnings_client_rou
                 **{
                     "region": Region.BR.value,
                     "limit": 2,
-                    "offset": 0,
                 }
             ),
         )

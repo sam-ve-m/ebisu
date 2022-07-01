@@ -22,7 +22,6 @@ def test_get_br_payable_earnings_when_sending_right_params_then_return_the_expec
     response = EarningsBrRecord.get_br_payable_earnings(
         account="49",
         limit=1,
-        offset=0,
         earnings_types=None
     )
 
@@ -40,7 +39,6 @@ def test_get_br_paid_earnings_when_sending_right_params_then_return_the_expected
     response = EarningsBrRecord.get_br_paid_earnings(
         account="49",
         limit=1,
-        offset=0,
         earnings_types=None
     )
 
@@ -58,7 +56,6 @@ def test_get_br_record_date_earnings_when_sending_right_params_then_return_the_e
     response = EarningsBrRecord.get_br_record_date_earnings(
         account="49",
         limit=1,
-        offset=0,
         earnings_types=None
     )
 

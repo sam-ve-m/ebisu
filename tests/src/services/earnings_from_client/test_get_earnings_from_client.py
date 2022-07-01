@@ -32,7 +32,7 @@ async def test_get_earnings_client_br_account_when_sending_right_params_then_ret
 ):
     response = await EarningsFromClient.get_earnings_client_br_account(
         jwt_data=payload_data_dummy, earnings_client=EarningsClientModel(
-            **{"region": "BR", "limit": 2, "offset": 0}
+            **{"region": "BR", "limit": 2}
         )
     )
     assert response == get_earnings_response_stub
@@ -46,7 +46,7 @@ async def test_get_service_response_when_sending_right_params_then_return_expect
 ):
     response = await EarningsFromClient.get_service_response(
         earnings_client=EarningsClientModel(
-            **{"region": "BR", "limit": 1, "offset": 0}
+            **{"region": "BR", "limit": 1}
         ),
         jwt_data=payload_data_dummy
     )
@@ -59,7 +59,7 @@ async def test_get_earnings_client_br_account_when_sending_wrong_params_then_ret
     with pytest.raises(ValidationError):
         await EarningsFromClient.get_earnings_client_br_account(
             jwt_data=payload_data_dummy, earnings_client=EarningsClientModel(
-                **{"region": None, "limit": None, "offset": 0}
+                **{"region": None, "limit": None}
             )
         )
 
@@ -68,7 +68,7 @@ def test_earnings_from_client_response_when_the_params_are_not_valid_then_raise_
     with pytest.raises(ValidationError):
         EarningsFromClient.get_service_response(
             earnings_client=EarningsClientModel(
-                **{"region": None, "limit": None, "offset": None}
+                **{"region": None, "limit": None}
             ),
             jwt_data=payload_data_dummy,
         )
@@ -79,7 +79,7 @@ async def test_earnings_from_client_response_when_the_jwt_is_not_valid_then_rais
     with pytest.raises(AttributeError):
         await EarningsFromClient.get_service_response(
             earnings_client=EarningsClientModel(
-                **{"region": "BR", "limit": 2, "offset": 0}
+                **{"region": "BR", "limit": 2}
             ),
             jwt_data=None,
         )

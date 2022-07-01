@@ -22,9 +22,7 @@ earnings_transaction_stub = {"dividend": {"type": "CASH",
 
 get_transactions_model_stub = Earning(**{
             "symbol": "AAPL",
-            "name": "PowerShares S&P 500 High Div Low Vol ETF",
+            "description": "PowerShares S&P 500 High Div Low Vol ETF",
             "amount_per_share":  0.1511,
-            "type": "CASH",
-            "tax_code": "FULLY_TAXABLE",
             "date": RegionStringDateTime("2019-06-03T15:12:00.345Z",
                                          RegionDateFormat.US_DATE_FORMAT)})
