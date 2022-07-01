@@ -3,7 +3,7 @@ from typing import List
 from pydantic import BaseModel
 
 # PROJECT IMPORTS
-from src.domain.earning.base.model.earning.model_br import EarningBr
+from src.domain.earning.br.model import EarningBr
 from src.domain.earning.base.response.model import EarningsTransactionBrResponse
 
 

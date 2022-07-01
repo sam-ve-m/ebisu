@@ -59,9 +59,6 @@ class EarningsFromClient:
     async def get_earnings_client_us_account(
             cls, jwt_data: dict, earnings_client: EarningsClientModel
     ) -> EarningsRecordResponse:
-        us_portfolios = jwt_data.get("user", {}).get("portfolios", {}).get("us", {})
-        dw_account = us_portfolios.get("dw_account")
-        # dw_account = "89c69304-018a-40b7-be5b-2121c16e109e.1651525277006"
 
         unique_id, account = EarningsFromClient.__extract_identifier_data_from_jwt(
             jwt_data=jwt_data
@@ -73,7 +70,7 @@ class EarningsFromClient:
         )
 
         transaction_request = TransactionRequest(
-            account=dw_account,
+            account=account,
             query_params=QueryParams(
                 from_date=from_date,
                 to_date=to_date,

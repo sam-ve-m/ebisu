@@ -4,7 +4,7 @@ from typing import List
 # PROJECT IMPORTS
 from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
-from src.domain.earning.base.model.earning.model_br import EarningBr
+from src.domain.earning.br.model import EarningBr
 from src.infrastructures.env_config import config
 from src.domain.enums.earnings_types import EarningsTypes
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository

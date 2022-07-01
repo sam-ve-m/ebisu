@@ -4,7 +4,7 @@ from typing import List
 from pydantic import BaseModel
 
 # PROJECT IMPORTS
-from src.domain.earning.base.model.earning.model import Earning
+from src.domain.earning.us.model import Earning
 from src.domain.earning.base.response.model import EarningsTransactionResponse
 
 

@@ -1,7 +1,7 @@
 # PROJECT IMPORTS
 from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
-from src.domain.earning.base.model.earning.model import Earning
+from src.domain.earning.us.model import Earning
 
 
 get_transactions_stub = [{"dividend": {"type": "CASH",

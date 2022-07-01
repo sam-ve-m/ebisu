@@ -8,7 +8,7 @@ from mepho import DWApiTransport
 # PROJECT IMPORTS
 from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
-from src.domain.earning.base.model.earning.model import Earning
+from src.domain.earning.us.model import Earning
 from src.domain.statement.us.request.model import TransactionRequest
 from src.infrastructures.env_config import config
 from src.transport.drive_wealth.statement.transport import DwStatementTransport
@@ -54,7 +54,7 @@ class DwEarningsTransport:
     ) -> dict:
         query_params = transaction_request.get_query_params()
         account = transaction_request.get_account()
-        url_formatted = DwStatementTransport.transaction_url.format(account)
+        url_formatted = DwEarningsTransport.transaction_url.format(account)
 
         response = await DWApiTransport.execute_get(
             url=url_formatted,
