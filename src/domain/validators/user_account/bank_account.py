@@ -2,7 +2,6 @@ from pydantic import BaseModel, UUID4, validator, constr
 from typing import Optional
 
 from src.domain.validators.device_info import DeviceInformationOptional
-from src.domain.validators.user_account.onboarding_validators import Cpf
 from src.exceptions.exceptions import BadRequestError
 from src.services.bank_account.service import UserBankAccountService
 
@@ -17,7 +16,7 @@ class BankCode(BaseModel):
         return e
 
 
-class CreateUserBankAccount(Cpf, BankCode):
+class CreateUserBankAccount(BankCode):
     bank: str
     account_type: str
     agency: constr(max_length=5)

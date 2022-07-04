@@ -66,17 +66,6 @@ class UserBankAccountRepository(MongoDbBaseRepository):
         return has_user_bank_account
 
     @classmethod
-    async def is_user_bank_account_from_client(
-        cls, unique_id: str, bank_account: dict
-    ) -> bool:
-        cpf = bank_account["cpf"]
-        user_bank_account = await cls.find_one(
-            query={"unique_id": unique_id, "identifier_document.cpf": cpf}
-        )
-        is_user_bank_account_from_client = bool(user_bank_account)
-        return is_user_bank_account_from_client
-
-    @classmethod
     async def user_bank_account_id_exists(
         cls, unique_id: str, bank_account_id: str
     ) -> bool:
@@ -119,8 +108,6 @@ class UserBankAccountRepository(MongoDbBaseRepository):
         cls, unique_id: str, bank_account: dict
     ):
         bank_account_id = bank_account["id"]
-        if "cpf" in bank_account_id:
-            del bank_account_id["cpf"]
 
         user_bank_account_was_updated = await cls.update_one(
             old={
@@ -142,8 +129,6 @@ class UserBankAccountRepository(MongoDbBaseRepository):
         cls, unique_id: str, bank_account: dict
     ):
         bank_account_id = bank_account["id"]
-        if "cpf" in bank_account_id:
-            del bank_account_id["cpf"]
         user_bank_account_was_soft_deleted = await cls.update_one(
             old={
                 "unique_id": unique_id,
