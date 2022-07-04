@@ -1,11 +1,13 @@
 # STANDARD LIBS
 from typing import Optional
+
 # import json
 from etria_logger import Gladsheim
 
 # OUTSIDE LIBRARIES
 from fastapi import Request
 from jwt import JWT
+
 # from jwt.jwk import jwk_from_dict
 
 from heimdall_client import Heimdall, HeimdallStatusResponses
@@ -13,6 +15,7 @@ from mist_client import Mist, MistStatusResponses
 
 from src.infrastructures.env_config import config
 from src.repositories.jwt.repository import JwtRepository
+
 # from src.repositories.bucket.repository import Bucket
 from src.exceptions.exceptions import InternalServerError, UnauthorizedError
 

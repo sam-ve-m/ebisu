@@ -10,7 +10,7 @@ from nidavellir import Sindri
 from src.core.interfaces.repositories.base_repository.interface import IRepository
 from src.infrastructures.mongo_db.infraestructure import MongoDBInfrastructure
 from src.repositories.cache.repository import RepositoryRedis
-from src.domain.model.model_decorator.generate_id import hash_field
+from src.domain.models.model_decorator.generate_id import hash_field
 
 
 class MongoDbBaseRepository(IRepository):

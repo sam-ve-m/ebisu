@@ -23,14 +23,6 @@ class UserBankAccountService:
         bank_account = jwt_data["bank_account"]
         device_info = bank_account.pop("device_info")
 
-        is_bank_account_from_user = (
-            await bank_account_repository.is_user_bank_account_from_client(
-                unique_id=unique_id, bank_account=bank_account
-            )
-        )
-        if not is_bank_account_from_user:
-            raise BadRequestError("user.bank_account_is_not_yours")
-
         bank_account_exists_and_is_activated = (
             await bank_account_repository.existing_user_bank_account_and_is_activated(
                 unique_id=unique_id, bank_account=bank_account
@@ -59,9 +51,6 @@ class UserBankAccountService:
         )
         if sent_to_persephone is False:
             raise FailToSaveAuditingTrail("common.process_issue")
-
-        if "cpf" in bank_account:
-            del bank_account["cpf"]
 
         user_bank_account_was_added = (
             await UserBankAccountRepository.save_registered_user_bank_accounts(
@@ -189,8 +178,7 @@ class UserBankAccountService:
         return delete_bank_account_response
 
     @classmethod
-    def bank_code_from_client_exists(
-            cls, bank: str) -> bool:
+    def bank_code_from_client_exists(cls, bank: str) -> bool:
         bank_code_result = GetBankCode.get_bank_code_from_database(bank=bank)
 
         return bool(bank_code_result)

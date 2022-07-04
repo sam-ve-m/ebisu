@@ -3,11 +3,11 @@ from fastapi import Request, APIRouter, Depends
 
 # MODELS
 from src.domain.statement.br.response.model import StatementResponse
-from src.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
-from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
-from src.domain.validators.exchange_info.get_statement_validator import (
-    GetBrStatement, GetUsStatement,
+from src.domain.validators.exchange_info.client_orders_validator import (
+    GetClientOrderModel,
 )
+from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
+from src.domain.validators.exchange_info.get_statement_validator import GetBrStatement, GetUsStatement
 from src.domain.validators.exchange_info.list_broker_note_validator import (
     ListBrokerNoteModel,
 )
@@ -47,26 +47,28 @@ class ExchangeRouter:
         return broker_note_response
 
     @staticmethod
-    @__exchange_router.get("/br_bank_statement", response_model=StatementResponse, tags=["Bank Statement"])
+    @__exchange_router.get(
+        "/br_bank_statement", response_model=StatementResponse, tags=["Bank Statement"]
+    )
     async def get_bank_statement(
         request: Request, statement: GetBrStatement = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         bank_statement_response = await GetStatement.get_br_bank_statement(
-            statement=statement,
-            jwt_data=jwt_data
+            statement=statement, jwt_data=jwt_data
         )
         return bank_statement_response
 
     @staticmethod
-    @__exchange_router.get("/us_bank_statement", tags=["Bank Statement"])
+    @__exchange_router.get(
+        "/us_bank_statement", response_model=StatementResponse, tags=["Bank Statement"]
+    )
     async def get_bank_statement(
         request: Request, statement: GetUsStatement = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         bank_statement_response = await GetStatement.get_us_bank_statement(
-            statement=statement,
-            jwt_data=jwt_data
+            statement=statement, jwt_data=jwt_data
         )
         return bank_statement_response
 

@@ -25,20 +25,17 @@ class StatementsRepository(OracleBaseRepository):
         offset: int,
         limit: int,
     ):
-        complete_transaction_query = StatementsRepository.base_query.format(where_clause, offset * 10, limit)
-
-        transactions = StatementsRepository.get_data(
-            sql=complete_transaction_query
+        complete_transaction_query = StatementsRepository.base_query.format(
+            where_clause, offset * 10, limit
         )
+
+        transactions = StatementsRepository.get_data(sql=complete_transaction_query)
 
         transactions_model = [
             Transaction(
                 description=transaction.get("DS_LANCAMENTO"),
                 value=transaction.get("VL_LANCAMENTO"),
-                date=RegionStringDateTime(
-                    date=transaction.get("DT_LANCAMENTO"),
-                    region_date_format=RegionDateFormat.BR_DATE_FORMAT
-                )
+                region_date_format=RegionDateFormat.BR_DATE_FORMAT,
             )
             for transaction in transactions
         ]
@@ -47,64 +44,50 @@ class StatementsRepository(OracleBaseRepository):
 
     @staticmethod
     def list_paginated_complete_account_transactions(
-        offset: int,
-        limit: int,
-        bmf_account: str
+        offset: int, limit: int, bmf_account: str
     ) -> List[Transaction]:
         where_clause = f"WHERE CD_CLIENTE = 12"
 
         transactions_model = StatementsRepository.__list_paginated_account_transactions(
-            where_clause=where_clause,
-            offset=offset,
-            limit=limit
+            where_clause=where_clause, offset=offset, limit=limit
         )
 
         return transactions_model
 
     @staticmethod
     def list_paginated_future_account_transactions(
-        offset: int,
-        limit: int,
-        bmf_account: str
+        offset: int, limit: int, bmf_account: str
     ) -> List[Transaction]:
-        where_clause = f"WHERE CD_CLIENTE = {bmf_account} AND DT_LANCAMENTO > sysdate + 1"
+        where_clause = (
+            f"WHERE CD_CLIENTE = {bmf_account} AND DT_LANCAMENTO > sysdate + 1"
+        )
 
         transactions_model = StatementsRepository.__list_paginated_account_transactions(
-            where_clause=where_clause,
-            offset=offset,
-            limit=limit
+            where_clause=where_clause, offset=offset, limit=limit
         )
 
         return transactions_model
 
     @staticmethod
     def list_paginated_outflow_account_transactions(
-            offset: int,
-            limit: int,
-            bmf_account: str
+        offset: int, limit: int, bmf_account: str
     ) -> List[Transaction]:
         where_clause = f"WHERE CD_CLIENTE = {bmf_account} AND VL_LANCAMENTO < 0"
 
         transactions_model = StatementsRepository.__list_paginated_account_transactions(
-            where_clause=where_clause,
-            offset=offset,
-            limit=limit
+            where_clause=where_clause, offset=offset, limit=limit
         )
 
         return transactions_model
 
     @staticmethod
     def list_paginated_inflow_account_transactions(
-            offset: int,
-            limit: int,
-            bmf_account: str
+        offset: int, limit: int, bmf_account: str
     ) -> List[Transaction]:
         where_clause = f"WHERE CD_CLIENTE = {bmf_account} AND VL_LANCAMENTO > 0 "
 
         transactions_model = StatementsRepository.__list_paginated_account_transactions(
-            where_clause=where_clause,
-            offset=offset,
-            limit=limit
+            where_clause=where_clause, offset=offset, limit=limit
         )
 
         return transactions_model
@@ -122,3 +105,9 @@ class StatementsRepository(OracleBaseRepository):
     #     )
     #
     #     return balance_model
+
+        balance = balance[0].get("VL_TOTAL") if bool(balance) else 0.0
+
+        balance_model = Balance(value=balance)
+
+        return balance_model
