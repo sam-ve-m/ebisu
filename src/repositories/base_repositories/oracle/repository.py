@@ -59,5 +59,7 @@ class OracleBaseRepository:
             oracle_connection.release(connection)
             return rows
         except Exception as ex:
-            Gladsheim.error(error=ex, msg="Error when get date in oracle database", sql=sql)
+            Gladsheim.error(
+                error=ex, msg="Error when get date in oracle database", sql=sql
+            )
             return []

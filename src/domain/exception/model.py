@@ -31,7 +31,7 @@ class NoPdfFoundError(Exception):
 
 
 class MoneyFlowResolverNoFoundError(Exception):
-    def __init__(self, msg="Money flow resolver not found", *args, **kwargs):
+    def __init__(self, msg="Error to resolver money flow", *args, **kwargs):
         super().__init__(msg, *args, **kwargs)
 
 

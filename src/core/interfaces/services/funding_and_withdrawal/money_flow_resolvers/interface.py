@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from src.domain.model.internal.account_transfer.model import AccountTransfer
+
+from src.core.interfaces.domain.models.internal.account_transfer.interface import (
+    IAccountTransfer,
+)
 from src.repositories.funding_and_withdrawal.queue.repository import (
     FundingAndWithdrawalRepository,
 )
@@ -10,8 +13,8 @@ class IBaseMoneyFlowResolver(ABC):
     @abstractmethod
     def __init__(
         self,
-        origin_account: AccountTransfer,
-        account_destination: AccountTransfer,
+        origin_account: IAccountTransfer,
+        account_destination: IAccountTransfer,
         value: float,
     ):
         pass
