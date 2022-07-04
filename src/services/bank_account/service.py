@@ -73,12 +73,12 @@ class UserBankAccountService:
     ):
         thebes_answer = jwt_data.get("x-thebes-answer")
         unique_id = thebes_answer["user"]["unique_id"]
-        bank_accounts = await bank_account_repository.get_registered_user_bank_accounts(
+        bank_accounts_from_database = await bank_account_repository.get_registered_user_bank_accounts(
             unique_id=unique_id
         )
-        if bank_accounts is None:
-            bank_accounts = {"bank_accounts": []}
-        return bank_accounts
+        if bank_accounts_from_database["bank_accounts"] is None:
+            bank_accounts_from_database.update({"bank_accounts": []})
+        return bank_accounts_from_database
 
     @classmethod
     async def update_user_bank_account(

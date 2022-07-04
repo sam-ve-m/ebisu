@@ -9,7 +9,7 @@ class UserBankAccountRepository(MongoDbBaseRepository):
     collection = config("MONGODB_USER_COLLECTION")
 
     @classmethod
-    async def get_registered_user_bank_accounts(cls, unique_id: str) -> list:
+    async def get_registered_user_bank_accounts(cls, unique_id: str) -> dict:
         response = None
         user_bank_accounts_by_unique_id = await cls.find_all(
             query={"unique_id": unique_id},
