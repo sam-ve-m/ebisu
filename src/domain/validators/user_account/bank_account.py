@@ -1,4 +1,4 @@
-from pydantic import BaseModel, UUID4, validator
+from pydantic import BaseModel, UUID4, validator, constr
 from typing import Optional
 
 from src.domain.validators.device_info import DeviceInformationOptional
@@ -20,7 +20,7 @@ class BankCode(BaseModel):
 class CreateUserBankAccount(Cpf, BankCode):
     bank: str
     account_type: str
-    agency: str
+    agency: constr(max_length=5)
     account_number: str
     account_name: Optional[str]
     device_info: DeviceInformationOptional
@@ -29,7 +29,7 @@ class CreateUserBankAccount(Cpf, BankCode):
 class UpdateUserBankAccounts(BankCode):
     bank: Optional[str]
     account_type: Optional[str]
-    agency: Optional[str]
+    agency: Optional[constr(max_length=5)]
     account_number: Optional[str]
     account_name: str
     id: UUID4
