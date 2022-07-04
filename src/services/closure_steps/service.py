@@ -51,7 +51,7 @@ class ClosureSteps:
             balance=balance_model, jwt_data=jwt_data
         )
         balance = balance_service_response.get("balance", 0)
-        balance = int(balance)
+        balance = float(balance)
 
         if balance != 0:
             return False

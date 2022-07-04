@@ -126,7 +126,7 @@ class EarningsFromClient:
         if open_earnings:
             # query result of future earnings
             earnings_future_values = (
-                EarningsFromClient.record_date_earnings_response(
+                EarningsFromClient.future_earnings_response(
                     open_earnings=open_earnings,
                     earnings_client=earnings_client,
                     accounts=accounts,
