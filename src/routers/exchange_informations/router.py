@@ -2,16 +2,12 @@
 from fastapi import Request, APIRouter, Depends
 
 # MODELS
-from src.domain.statement.response.model import StatementResponse
+from src.domain.statement.br.response.model import StatementResponse
 from src.domain.validators.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
-from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
-from src.domain.validators.exchange_info.get_statement_validator import (
-    GetBrStatementModel,
-    GetUsStatementModel,
-)
+from src.domain.validators.exchange_info.get_statement_validator import GetBrStatement, GetUsStatement
 from src.domain.validators.exchange_info.list_broker_note_validator import (
     ListBrokerNoteModel,
 )
