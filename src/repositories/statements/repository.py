@@ -1,8 +1,9 @@
 from typing import List
 
-from src.domain.statement.model.balance.model import Balance
-from src.domain.statement.model.region_date_format.enum import RegionDateFormat
-from src.domain.statement.model.transaction.model import Transaction
+# from src.domain.statement.base.model.balance.model import Balance
+from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
+from src.domain.statement.base.model.region_date_format.enum import RegionDateFormat
+from src.domain.statement.base.model.transaction.model import Transaction
 from src.infrastructures.env_config import config
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 
@@ -32,7 +33,6 @@ class StatementsRepository(OracleBaseRepository):
 
         transactions_model = [
             Transaction(
-                date=transaction.get("DT_LANCAMENTO"),
                 description=transaction.get("DS_LANCAMENTO"),
                 value=transaction.get("VL_LANCAMENTO"),
                 region_date_format=RegionDateFormat.BR_DATE_FORMAT,
@@ -46,7 +46,7 @@ class StatementsRepository(OracleBaseRepository):
     def list_paginated_complete_account_transactions(
         offset: int, limit: int, bmf_account: str
     ) -> List[Transaction]:
-        where_clause = f"WHERE CD_CLIENTE = {bmf_account}"
+        where_clause = f"WHERE CD_CLIENTE = 12"
 
         transactions_model = StatementsRepository.__list_paginated_account_transactions(
             where_clause=where_clause, offset=offset, limit=limit
@@ -92,11 +92,19 @@ class StatementsRepository(OracleBaseRepository):
 
         return transactions_model
 
-    @staticmethod
-    def get_account_balance(bmf_account: str) -> Balance:
-        balance = StatementsRepository.get_data(
-            sql=StatementsRepository.balance_query.format(bmf_account)
-        )
+    # @staticmethod
+    # def get_account_balance(bmf_account: str) -> Balance:
+    #     balance = StatementsRepository.get_data(
+    #         sql=StatementsRepository.balance_query.format(bmf_account)
+    #     )
+    #
+    #     balance = balance[0].get("VL_TOTAL") if bool(balance) else 0.0
+    #
+    #     balance_model = Balance(
+    #         value=balance
+    #     )
+    #
+    #     return balance_model
 
         balance = balance[0].get("VL_TOTAL") if bool(balance) else 0.0
 

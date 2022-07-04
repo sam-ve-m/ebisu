@@ -4,7 +4,7 @@ from starlette import status
 import json
 
 # ERRORS
-from src.domain.exception.model import IntegrityJwtError, AuthenticationJwtError
+from src.domain.exception.model import IntegrityJwtError, AuthenticationJwtError, FailToSaveAuditingTrail
 from etria_logger import Gladsheim
 from src.exceptions.exceptions import (
     ForbiddenError,
@@ -165,6 +165,15 @@ class BaseRouter:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 content=json.dumps(
                     {"request_status": False, "status": 2, "msg": e.args[0]}
+                ),
+            )
+
+        except FailToSaveAuditingTrail as e:
+            Gladsheim.error(erro=e)
+            return Response(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                content=json.dumps(
+                    {"request_status": False, "status": 11, "msg": e.args[0]}
                 ),
             )
 

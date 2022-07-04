@@ -1,5 +1,7 @@
-from pydantic import BaseModel, UUID4, validator
+from pydantic import BaseModel, UUID4, validator, constr
 from typing import Optional
+
+from src.domain.validators.device_info import DeviceInformationOptional
 from src.domain.validators.user_account.onboarding_validators import Cpf
 from src.exceptions.exceptions import BadRequestError
 from src.services.bank_account.service import UserBankAccountService
@@ -8,31 +10,35 @@ from src.services.bank_account.service import UserBankAccountService
 class BankCode(BaseModel):
     bank: str
 
-    @validator("bank", check_fields=False, always=True, allow_reuse=True)
+    @validator("bank", check_fields=True, always=True, allow_reuse=True)
     def validate_whether_bank_code_exists(cls, e):
         if not UserBankAccountService.bank_code_from_client_exists(bank=e):
             raise BadRequestError("bank_code.invalid_bank_code")
+        return e
 
 
 class CreateUserBankAccount(Cpf, BankCode):
     bank: str
     account_type: str
-    agency: str
+    agency: constr(max_length=5)
     account_number: str
     account_name: Optional[str]
+    device_info: DeviceInformationOptional
 
 
 class UpdateUserBankAccounts(BankCode):
     bank: Optional[str]
     account_type: Optional[str]
-    agency: Optional[str]
+    agency: Optional[constr(max_length=5)]
     account_number: Optional[str]
     account_name: str
     id: UUID4
+    device_info: DeviceInformationOptional
 
 
 class DeleteUsersBankAccount(BaseModel):
     id: str
+    device_info: DeviceInformationOptional
 
 
 class GetUserBankAccount(BaseModel):
