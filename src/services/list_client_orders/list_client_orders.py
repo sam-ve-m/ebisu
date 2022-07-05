@@ -21,6 +21,10 @@ class ListOrders:
         if isinstance(data, str):
             data = data.upper()
             list_data = data.split("|")
+
+        if list_data is None:
+            return []
+
         return [OrderStatus[status] for status in list_data]
 
     @staticmethod
