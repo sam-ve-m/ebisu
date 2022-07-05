@@ -35,7 +35,7 @@ class StatementsRepository(OracleBaseRepository):
             Transaction(
                 description=transaction.get("DS_LANCAMENTO"),
                 value=transaction.get("VL_LANCAMENTO"),
-                region_date_format=RegionDateFormat.BR_DATE_FORMAT,
+                date=RegionDateFormat.BR_DATE_FORMAT,
             )
             for transaction in transactions
         ]
@@ -46,7 +46,7 @@ class StatementsRepository(OracleBaseRepository):
     def list_paginated_complete_account_transactions(
         offset: int, limit: int, bmf_account: str
     ) -> List[Transaction]:
-        where_clause = f"WHERE CD_CLIENTE = 12"
+        where_clause = f"WHERE CD_CLIENTE = {bmf_account}"
 
         transactions_model = StatementsRepository.__list_paginated_account_transactions(
             where_clause=where_clause, offset=offset, limit=limit
@@ -105,9 +105,3 @@ class StatementsRepository(OracleBaseRepository):
     #     )
     #
     #     return balance_model
-
-        balance = balance[0].get("VL_TOTAL") if bool(balance) else 0.0
-
-        balance_model = Balance(value=balance)
-
-        return balance_model

@@ -2,7 +2,8 @@
 from fastapi import Request, APIRouter, Depends
 
 # MODELS
-from src.domain.statement.br.response.model import StatementResponse
+from src.domain.statement.br.response.model import StatementResponse as BrStatementResponse
+from src.domain.statement.us.response.model import StatementResponse as UsStatementResponse
 from src.domain.validators.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
@@ -48,7 +49,7 @@ class ExchangeRouter:
 
     @staticmethod
     @__exchange_router.get(
-        "/br_bank_statement", response_model=StatementResponse, tags=["Bank Statement"]
+        "/br_bank_statement", response_model=BrStatementResponse, tags=["Bank Statement"]
     )
     async def get_bank_statement(
         request: Request, statement: GetBrStatement = Depends()
@@ -61,7 +62,7 @@ class ExchangeRouter:
 
     @staticmethod
     @__exchange_router.get(
-        "/us_bank_statement", response_model=StatementResponse, tags=["Bank Statement"]
+        "/us_bank_statement", response_model=UsStatementResponse, tags=["Bank Statement"]
     )
     async def get_bank_statement(
         request: Request, statement: GetUsStatement = Depends()
