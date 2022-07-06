@@ -2,7 +2,6 @@ from src.repositories.bank_code.repository import BankCodeRepository
 
 
 class GetBankCode:
-
     @classmethod
     def normalize_bank_code(cls, bank_code_list: dict) -> dict:
 

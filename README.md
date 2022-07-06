@@ -4,6 +4,7 @@ ___
 ## Iniciando o projeto
 ### Passo 1
 #### Criação do ambiente
+
 Crie e inicie um virtual env para o projeto. 
 
 - Para criar o ambiente virtual execute:
@@ -23,6 +24,7 @@ python3 -m venv env
 
 ### Passo 2
 #### Instalação de dependências
+
 1. __Instalar os pacotes no virtual env a partir do seguinte comando:__
     
     ```bash
@@ -151,38 +153,15 @@ LOG_NAME=FILL_THIS_WITH_VALUE
 ### Passo 4
 Rodar o arquivo `run.py` para iniciar o projeto.
 ___
+
 ## Endpoints
+
 A API possui os seguintes endpoints, listados abaixo por tópicos:
 
-### 1. Balance
-### 1.1. `balance`
-- Rota HTTP: `| GET | http://localhost:8000/balance`
-> _Retorna o valor do saldo na conta do usuário._
+&nbsp;
 
-&nbsp; 
-#### Parâmetros da requisição:
-| Parâmetro | Descrição                    |
-|-----------|------------------------------|
-| `region`  | Região do balanço (BR ou US) |
-&nbsp; 
-
-#### Modelo de requisição:
-```http
-http://0.0.0.0:8000/balance?region=BR
-```
-
-#### Modelo de resposta:
-
-~~~json
-{
-    "payload": {
-        "balance": 53552784.17
-    }
-}
-~~~
-&nbsp; 
-### 2. Broker Note
-### 2.1. `list_broker_note`
+### 1. Broker Note
+### 1.1. `list_broker_note`
 - Rota HTTP: `| GET | http://localhost:8000/list_broker_note`
 > _Retorna as notas de corretagem de um cliente em determinado período._
 
@@ -193,113 +172,108 @@ http://0.0.0.0:8000/balance?region=BR
 | `region`  | Região das notas (BR ou US).                               |
 | `year`    | (OPCIONAL) Ano da consulta, na forma de um número inteiro. |
 | `month`   | (OPCIONAL) Mês da consulta, na forma de um número inteiro. |
+| `market`  | Mercado que deseja consultar (bmf, bovespa, us, all)       |
 &nbsp; 
 
 #### Modelo de requisição:
 ```http
-http://0.0.0.0:8000/list_broker_note?region=BR&year=2022&month=3
+http://0.0.0.0:8000/list_broker_note?region=BR&year=2022&month=2&market=bmf
 ```
 
 #### Modelo de resposta:
 
 ~~~json
+
 {
     "available": []
 }
+
 ~~~
-&nbsp; 
-
-### 2.2. `broker_note_pdf`
-- Rota HTTP: `| GET | http://localhost:8000/broker_note_pdf`
-> _Retorna um link com o PDF da nota de corretagem._
 
 &nbsp; 
+
+### 2. Bank Statement para a região Brasil
+
+### 2.1. `br_bank_statement`
+- Rota HTTP: `| GET | http://localhost:8000/br_bank_statement`
+> _Retorna o extrato bancário de um usuário para a região BR._
+
+&nbsp;
 #### Parâmetros da requisição:
-| Parâmetro | Descrição                                                  |
-|-----------|------------------------------------------------------------|
-| `region`  | Região das notas (BR ou US).                               |
-| `year`    | (OPCIONAL) Ano da consulta, na forma de um número inteiro. |
-| `month`   | (OPCIONAL) Mês da consulta, na forma de um número inteiro. |
-| `day`     | (OPCIONAL) Dia da consulta, na forma de um número inteiro. |
-&nbsp; 
+| Parâmetro        | Descrição                                                                    |
+|------------------|------------------------------------------------------------------------------|
+| `region`         | Região das notas (BR ou US).                                                 |
+| `limit`          | O número de movimentações a serem retornadas, na forma de um número inteiro. |
+| `offset`         | O número de páginas que serão exibidas, na forma de um número inteiro.       |
+| `statement_type` | Opção (INFLOWS, OUTFLOWS, FUTURE, ALL) na forma de string em maiúsculo.      |
+&nbsp;
 
 #### Modelo de requisição:
 ```http
-http://0.0.0.0:8000/broker_note_pdf?year=2021&month=03&day=10&region=BR
+http://0.0.0.0:8000/br_bank_statement?region=BR&limit=10&offset=1&statement_type=OUTFLOWS
 ```
 
 #### Modelo de resposta:
 
 ~~~json
 {
-"pdf_link": "link do pdf"
-}
-~~~
-
-&nbsp;
-
-### 3. Bank Statement
-### 3.1. `bank_statement`
-- Rota HTTP: `| GET | http://localhost:8000/bank_statement`
-> _Retorna o extrato bancário de um usuário._
-
-&nbsp;
-#### Parâmetros da requisição:
-| Parâmetro    | Descrição                                                                                        |
-|--------------|--------------------------------------------------------------------------------------------------|
-| `region`     | Região das notas (BR ou US).                                                                     |
-| `limit`      | O número de movimentações a serem retornadas, na forma de um número inteiro.                     |
-| `offset`     | O número de páginas que serão exibidas, na forma de um número inteiro.                           |
-| `start_date` | Data de início da consulta, no formato Unix Timestamp com a adição de três zeros ao final (000). |
-| `end_date`   | Data de fim da consulta, no formato Unix Timestamp com a adição de três zeros ao final (000).    |
-&nbsp;
-
-#### Modelo de requisição:
-```http
-http://0.0.0.0:8000/bank_statement?region=BR&limit=2&offset=1&start_date=1646757399000&end_date=1648485399000
-```
-
-#### Modelo de resposta:
-
-~~~json
-{
-  "balance": 53552784.17,
-  "statements": [
-    {
-      "date": 1646794800.0,
-      "description": "Comprovante de Bolsa para 09/03/2022 NC: 827   ",
-      "value": -16523.96
-    },
-    {
-      "date": 1646881200.0,
-      "description": "Prévia Chamada de Margem Garantias de Operações",
-      "value": -3163.0
-    }
+    "transactions": [
+        {
+            "date": 1643943600000,
+            "description": "Comprovante BMF para 04/02/2022 NC: 494051",
+            "value": -97.5
+        },
+        {
+            "date": 1644202800000,
+            "description": "OPERAÇÃO A REGULARIZAR 20.190 DE VALE3 PREGÃO 03/02",
+            "value": -1718897.71
+        }
   ]
 }
 ~~~
 
 &nbsp;
 
-### 3.2. `request_bank_statement_pdf`
-- Rota HTTP: `| GET | http://localhost:8000/request_bank_statement_pdf`
-> _Retorna o PDF do extrato bancário do usuário._
+### 3. Bank Statement para a região Estados Unidos
+### 3.1. `us_bank_statement`
+- Rota HTTP: `| GET | http://localhost:8000/us_bank_statement`
+> _Retorna o extrato bancário de um usuário para a região US._
 
-&nbsp; 
+&nbsp;
 #### Parâmetros da requisição:
-| Parâmetro    | Descrição                                                                                        |
-|--------------|--------------------------------------------------------------------------------------------------|
-| `region`     | Região das notas (BR ou US).                                                                     |
-
-&nbsp; 
+| Parâmetro        | Descrição                                                                    |
+|------------------|------------------------------------------------------------------------------|
+| `region`         | Região das notas (BR ou US).                                                 |
+| `limit`          | O número de movimentações a serem retornadas, na forma de um número inteiro. |
+| `offset`         | O número de páginas que serão exibidas, na forma de um número inteiro.       |
+| `statement_type` | Opção (INFLOWS, OUTFLOWS, FUTURE, ALL) na forma de string em maiúsculo.      |
+&nbsp;
 
 #### Modelo de requisição:
 ```http
-http://0.0.0.0:8000/request_bank_statement_pdf?region=BR
+http://0.0.0.0:8000/us_bank_statement?region=US&limit=10&offset=1&statement_type=INFLOWS
 ```
 
-&nbsp;
+#### Modelo de resposta:
 
+~~~json
+{
+    "transactions": [
+        {
+            "date": 1644289200000,
+            "description": "Comprovante de Bolsa para 03/02/2022 NC: 789   ",
+            "value": 2133435.94
+        },
+        {
+            "date": 1644289200000,
+            "description": "Comprovante de Bolsa para 08/02/2022 NC: 793   ",
+            "value": 27281.91
+        }
+  ]
+}
+~~~
+
+&nbsp;
 
 ### 4. Client Orders
 ### 4.1. `client_orders`
@@ -320,7 +294,6 @@ http://0.0.0.0:8000/request_bank_statement_pdf?region=BR
 ```http
 http://0.0.0.0:8000/client_orders?region=BR&cl_order_id=09c4432157ebe66ff9688fb8cd65726174fcdb18
 ```
-
 #### Modelo de resposta:
 
 ~~~json
@@ -354,13 +327,12 @@ http://0.0.0.0:8000/client_orders?region=BR&cl_order_id=09c4432157ebe66ff9688fb8
 
 &nbsp; 
 
-
 ### 4.2. `list_client_orders`
 - Rota HTTP: `| GET | http://localhost:8000/list_client_orders`
 
 > _Retorna uma lista com todas as ordens de um cliente._
 
-&nbsp; 
+&nbsp;
 #### Parâmetros da requisição:
 | Parâmetro      | Descrição                                                                    |
 |----------------|------------------------------------------------------------------------------|
@@ -388,14 +360,16 @@ http://0.0.0.0:8000/client_orders?region=BR&cl_order_id=09c4432157ebe66ff9688fb8
   - ACCEPTED_FOR_BIDDING
   - PENDING_REPLACE
   - PREVIOUS_FINAL_STATE
+  - FORWARDED
+  - DELAYED
+  - TIMEOUT
 
 &nbsp;
 
 #### Modelo de requisição:
 ```http
-http://0.0.0.0:8000/list_client_orders?region=BR&limit=3&offset=0
+http://0.0.0.0:8000/list_client_orders?region=BR&offset=0&limit=2&order_status=PARTIALLY_FILLED|REJECTED
 ```
-
 #### Modelo de resposta:
 
 ~~~json
@@ -441,34 +415,116 @@ http://0.0.0.0:8000/list_client_orders?region=BR&limit=3&offset=0
 
 &nbsp; 
 
-
 ### 5. Earnings
 
-### 5.1. `earnings`
-- Rota HTTP: `| GET | http://localhost:8000/earnings`
+### 5.1. `earnings_client`
+- Rota HTTP: `| GET | http://localhost:8000/earnings_client`
 
 > _Retorna os dividendos de um cliente em determinada ação._
 
 &nbsp; 
 #### Parâmetros da requisição:
-| Parâmetro   | Descrição                                                                                 |
-|-------------|-------------------------------------------------------------------------------------------|
-| `symbol`    | O ticker que o cliente comprou (ex: JBSS3).                                               |
-| `timestamp` | Data dos dividendos, no formato Unix Timestamp com a adição de três zeros ao final (000). |
-| `limit`     | O número máximo de dividendos a serem retornados, na forma de um número inteiro.          |
-| `offset`    | O número de páginas a serem exibidas, na forma de um número float.                        |
+| Parâmetro | Descrição                                                                        |
+|-----------|----------------------------------------------------------------------------------|
+| `region`  | Região das notas (BR ou US).                                                     |
+| `limit`   | O número máximo de dividendos a serem retornados, na forma de um número inteiro. |
 &nbsp; 
 
 #### Modelo de requisição:
 ```http
-http://0.0.0.0:8000/earnings?symbol=PETR4&timestamp=1617035799&offset=0&limit=1
+http://0.0.0.0:8000/earnings_client?region=BR&limit=2
 ```
+#### Modelo de resposta:
 
-&nbsp;  
+~~~json
 
+{
+    "paid": [
+        {
+            "symbol": "PETR4",
+            "date": 1641438000000,
+            "amount_per_share": -29.59,
+            "description": "LC04D00116LIQUIDACAO D",
+            "share_quantity": -200.0
+        },
+        {
+            "symbol": "VALE3",
+            "date": 1641438000000,
+            "amount_per_share": 86.0723,
+            "description": "LC04C00117LIQUIDACAO C",
+            "share_quantity": 100.0
+        }
+    ],
+    "payable": [],
+    "record_date": [],
+    "total_paid": 1564020.42
+}
 
-### 6. User Bank Account
-### 6.1. `list_bank_accounts`
+~~~
+### 6. Bank Code
+### 6.1. `bank_code`
+- Rota HTTP: `| GET | http://localhost:8000/bank_code`
+
+> _Retorna a lista dos bancos nacionais._
+
+&nbsp; 
+#### Parâmetros da requisição:
+| Parâmetro | Sem parâmetros para requisição |
+&nbsp; 
+
+#### Modelo de requisição:
+```http
+http://0.0.0.0:8000/bank_code
+```
+#### Modelo de resposta:
+
+~~~json
+
+[
+  {"code":  "001", "description":  "Banco do Brasil S.A."}
+]
+~~~
+
+&nbsp;
+
+### 7. Stock Portfolios List
+### 7.1. `stock_portfolios_list`
+- Rota HTTP: `| GET | http://localhost:8000/user_portfolios_list`
+
+> _Retorna as carteiras do cliente de acordo com a classificação do portfolio (Vai na Cola - VNC - ou DEFAULT)
+ ou região (BR ou US)._
+
+&nbsp; 
+#### Parâmetros da requisição:
+| Parâmetro | Descrição                                                        |
+|-----------|------------------------------------------------------------------|
+| `portfolio_classification`  | Classificação das carteiras (DEFAULT ou VNC)   |
+| `region`                    | Região das carteiras (BR ou US).               |
+&nbsp; 
+
+#### Modelo de requisição:
+```http
+http://0.0.0.0:8000/user_portfolios_list?portfolio_classification=DEFAULT&region=BR
+```
+#### Modelo de resposta:
+
+~~~json
+
+{
+    "default": {
+        "br": {
+            "bovespa_account": "000000014-6",
+            "created_at": "2022-01-01T03:00:00",
+            "bmf_account": "14"
+        }
+    }
+}
+
+~~~
+&nbsp;
+
+### 8. User Bank Account
+### 8.1. `list_bank_accounts`
 - Rota HTTP: `| GET | http://localhost:8000/user/list_bank_accounts`
 
 > _Retorna lista de contas bancárias de um usuário._
@@ -478,14 +534,12 @@ http://0.0.0.0:8000/earnings?symbol=PETR4&timestamp=1617035799&offset=0&limit=1
 | (sem parâmetros) |
 |------------------|
 
-
 &nbsp; 
 
 #### Modelo de requisição:
 ```http
 http://0.0.0.0:8000/user/list_bank_accounts
 ```
-
 #### Modelo de resposta:
 
 ~~~json
@@ -518,8 +572,7 @@ http://0.0.0.0:8000/user/list_bank_accounts
 
 &nbsp;  
 
-
-### 6.2. `create_bank_account`
+### 8.2. `create_bank_account`
 - Rota HTTP: `| POST | http://localhost:8000/user/create_bank_account`
 
 > _Adiciona uma conta bancária para um usuário._
@@ -528,7 +581,6 @@ http://0.0.0.0:8000/user/list_bank_accounts
 #### Parâmetros da requisição:
 | (sem parâmetros) |
 |------------------|
-
 
 &nbsp; 
 
@@ -549,11 +601,9 @@ http://0.0.0.0:8000/user/create_bank_account
     "cpf":"12345678900"
 }
 ~~~
-
 &nbsp;   
 
-
-### 6.3. `update_bank_account`
+### 8.3. `update_bank_account`
 - Rota HTTP: `| PUT | http://localhost:8000/user/update_bank_account`
 
 > _Atualiza uma conta bancária de um usuário._
@@ -562,7 +612,6 @@ http://0.0.0.0:8000/user/create_bank_account
 #### Parâmetros da requisição:
 | (sem parâmetros) |
 |------------------|
-
 
 &nbsp; 
 
@@ -585,11 +634,9 @@ http://0.0.0.0:8000/user/update_bank_account
     "status": "active"
 }
 ~~~
-
 &nbsp;   
 
-
-### 6.4. `delete_bank_account`
+### 8.4. `delete_bank_account`
 - Rota HTTP: `| DELETE | http://localhost:8000/user/delete_bank_account`
 
 > _Deleta uma conta bancária de um usuário._
@@ -618,8 +665,8 @@ http://0.0.0.0:8000/user/delete_bank_account
 &nbsp; 
 
 
-### 7. Bank Transfer
-### 7.1. `transfer`
+### 9. Bank Transfer
+### 9.1. `transfer`
 - Rota HTTP: `| GET | http://localhost:8000/transfer`
 
 > _Retorna os dados necessários para a realização da transferência bancária (TED ou DOC): agência, conta e número do banco._
@@ -652,6 +699,7 @@ http://0.0.0.0:8000/transfer
 ---
 
 ## Erros e exceções
+
 ### BadRequestError
 - **Código HTTP:** `400 Bad Request `
 - Erro lançado quando o servidor não consegue processar a requisição por conta de um problema de sintaxe.
@@ -680,17 +728,38 @@ http://0.0.0.0:8000/transfer
 - **Código HTTP:** `500 Internal Server Error`
 - Erro lançado quando uma condição inesperada acontece no servidor.
 
+### InvalidElectronicaSignature
+- **Código HTTP:** `400 Bad Request Error`
+- Erro lançado quando a assinatura eletronica não é válida.
+
 ### ExceptionError
-- **Código HTTP:** `500 Internal Server Error`
+- **Código HTTP:** `400 Bad Request Error`
+- Erro lançado quando a moeda de conversão não é reconhecida pela aplicação.
+
+### NotMappedCurrency
+- **Código HTTP:** `400 Internal Server Error`
 - Erro lançado quando ocorre algum erro que não se encaixa nas condições listadas acima.
+
+### UnableToProcessMoneyFlow
+- **Código HTTP:** `500 Internal Server Error`
+- Erro lançado quando acessa as rotas de Money Flow onde ocorre algum erro que não se encaixa nas condições listadas acima.
+
+### InvalidAccountsOwnership
+- **Código HTTP:** `400 Bad Request Error`
+- Erro lançado ao acessar as rotas de User Bank Accounts or Same onde servidor não consegue processar a requisição por conta de um problema de sintaxe.
+
+### MoneyFlowResolverNoFoundError
+- **Código HTTP:** `400 Bad Request Error`
+- Erro lançado ao acessar a rota de Money Flow Between User Accounts or Same onde servidor não consegue processar a requisição por conta de um problema de sintaxe.
 
 ---
 ## Swagger
 É possível ver as requisições pelo link abaixo após rodar o projeto, no entanto elas apresentarão erro por
 não possuírem o token de autenticação JWT:
+
 > http://0.0.0.0:8000/docs
 >
 > http://localhost:8000/docs
 
-| Recomendado utilizar uma plataforma para testes de APIs, como o Postman. |
-|--------------------------------------------------------------------------|
+| Recomendado utilizar plataformas para testes de APIs, como o Postman. |
+|-----------------------------------------------------------------------|

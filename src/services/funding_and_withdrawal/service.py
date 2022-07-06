@@ -1,90 +1,125 @@
-import asyncio
-from typing import Type
+from typing import Type, Union
 
+from src.domain.models.account.fingerprit import Fingerprint, IsPrimaryAccount
 from src.domain.abstract_classes.services.funding_and_withdrawal.money_flow_resolvers.abstract_class import (
     MoneyFlowResolverAbstract,
 )
 from src.domain.enums.region import Region
 from src.domain.exception.model import MoneyFlowResolverNoFoundError
-from src.domain.model.internal.account_transfer.model import AccountTransfer
-from src.repositories.user.repository import UserRepository
-from src.services.funding_and_withdrawal.money_flow_resolvers.transfers_between_drive_wealth_and_sinacor import (
-    TransfersBetweenDriveWealthAndSinacor,
-)
-from src.services.funding_and_withdrawal.money_flow_resolvers.transfers_between_sinacor_and_drive_wealth import (
-    TransfersBetweenSinacorAndDriveWealth,
+from src.domain.models.account.bank import BankAccount
+from src.domain.models.account.exchanges import ExchangeAccount
+from src.domain.validators.funding_and_withdrawal.validators import (
+    UserMoneyFlowSameExchange,
+    UserMoneyFlowDifferentExchange,
+    UserMoneyFlowToExternalBank,
 )
 from nidavellir import Sindri
+
+from src.services.funding_and_withdrawal.money_flow_resolvers import (
+    TransferToExternalBank,
+    TransfersBetweenDriveWealthAndSinacor,
+    TransfersBetweenSinacorAndDriveWealth,
+)
 
 
 class FundingAndWithdrawalService:
     @classmethod
+    async def withdrawal_to_external_bank(
+        cls, money_flow: UserMoneyFlowToExternalBank, jwt_data: dict
+    ):
+        unique_id = jwt_data["user"]["unique_id"]
+
+        origin_account = ExchangeAccount(
+            account_number=jwt_data["user"]["portfolios"]["br"]["bovespa_account"],
+            user_unique_id=unique_id,
+            country=Region.BR,
+        )
+
+        account_destination = BankAccount(
+            bank_account_id=str(money_flow.bank_account_id),
+            user_unique_id=unique_id,
+            country=Region.BR,
+        )
+
+        await origin_account.validate_accounts_ownership()
+        await account_destination.validate_accounts_ownership()
+
+        transfer_to_external_bank = TransferToExternalBank(
+            origin_account=origin_account,
+            account_destination=account_destination,
+            value=money_flow.value,
+        )
+
+        resume = await transfer_to_external_bank()
+        Sindri.dict_to_primitive_types(resume)
+        return resume
+
+    @classmethod
     async def money_flow_between_user_dtvm_accounts(
         cls,
-        money_flow_between_user_accounts_request_data: dict,
-        user_repository=UserRepository,
+        money_flow: Union[UserMoneyFlowSameExchange, UserMoneyFlowDifferentExchange],
+        jwt_data: dict,
     ):
-        unique_id = money_flow_between_user_accounts_request_data["x-thebes-answer"][
-            "user"
-        ]["unique_id"]
-        user_portfolios = await user_repository.get_user_portfolios(unique_id=unique_id)
+        unique_id = jwt_data["user"]["unique_id"]
 
-        origin_account = AccountTransfer(
-            **money_flow_between_user_accounts_request_data["origin_account"],
-            user_portfolios=user_portfolios,
+        origin_account = ExchangeAccount(
+            **money_flow.origin_account.dict(),
+            user_unique_id=unique_id,
         )
-        account_destination = AccountTransfer(
-            **money_flow_between_user_accounts_request_data["account_destination"],
-            user_portfolios=user_portfolios,
+        account_destination = ExchangeAccount(
+            **money_flow.account_destination.dict(),
+            user_unique_id=unique_id,
         )
+        await origin_account.validate_accounts_ownership()
+        origin_account_fingerprint = origin_account.get_fingerprint()
 
-        origin_account_fingerprint = (
-            origin_account.validate_accounts_ownership()
-            .validate_that_is_primary_account()
-            .get_fingerprint()
-        )
-        account_destination_fingerprint = (
-            account_destination.validate_accounts_ownership()
-            .validate_that_is_primary_account()
-            .get_fingerprint()
-        )
+        await account_destination.validate_accounts_ownership()
+        account_destination_fingerprint = account_destination.get_fingerprint()
 
-        money_flow_resolver_class = await cls._get_money_flow_resolver(
-            origin_account_fingerprint=origin_account_fingerprint,
-            account_destination_fingerprint=account_destination_fingerprint,
+        money_flow_resolver_class = (
+            await cls._get_money_flow_resolver_between_exchanges(
+                origin_account_fingerprint=origin_account_fingerprint,
+                account_destination_fingerprint=account_destination_fingerprint,
+            )
         )
 
         money_flow_resolver = money_flow_resolver_class(
             origin_account=origin_account,
             account_destination=account_destination,
-            value=money_flow_between_user_accounts_request_data["value"],
+            value=money_flow.value,
         )
         resume = await money_flow_resolver()
         Sindri.dict_to_primitive_types(resume)
         return resume
 
     @classmethod
-    async def _get_money_flow_resolver(
+    async def _get_money_flow_resolver_between_exchanges(
         cls,
-        origin_account_fingerprint: tuple,
-        account_destination_fingerprint: tuple,
+        origin_account_fingerprint: Fingerprint,
+        account_destination_fingerprint: Fingerprint,
     ) -> Type[MoneyFlowResolverAbstract]:
         money_flow_fingerprint = (
             origin_account_fingerprint,
             account_destination_fingerprint,
         )
+
+        br_primary_account = (Region.BR, IsPrimaryAccount(True))
+        br_account = (Region.BR, IsPrimaryAccount(False))
+        us_primary_account = (Region.US, IsPrimaryAccount(True))
+        us_account = (Region.US, IsPrimaryAccount(False))
+
         money_flow_resolver_map = {
-            # ((Region.BR, True), (Region.BR, False)): cls.transfers_between_sinacor_accounts,
+            # (br_primary_account, br_account): cls.transfers_between_sinacor_accounts,
             (
-                (Region.BR, True),
-                (Region.US, True),
+                br_primary_account,
+                us_primary_account,
             ): TransfersBetweenSinacorAndDriveWealth,
-            # ((Region.BR, True), (Region.US, False)): cls.transfers_between_sinacor_and_drive_wealth,
-            # ((Region.BR, False), (Region.BR, True)): cls.transfers_between_sinacor_accounts,
-            # ((Region.US, False), (Region.BR, True)): cls.transfers_between_drive_wealth_and_sinacor,
+            (br_primary_account, us_account): TransfersBetweenSinacorAndDriveWealth,
+            # (br_account, br_primary_account): cls.transfers_between_sinacor_accounts,
+            (us_account, br_primary_account): TransfersBetweenDriveWealthAndSinacor,
             (
-                (Region.US, True),
-                (Region.BR, True),
+                us_primary_account,
+                br_primary_account,
             ): TransfersBetweenDriveWealthAndSinacor,
         }
         if money_flow_resolver := money_flow_resolver_map.get(money_flow_fingerprint):

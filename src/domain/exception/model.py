@@ -31,7 +31,7 @@ class NoPdfFoundError(Exception):
 
 
 class MoneyFlowResolverNoFoundError(Exception):
-    def __init__(self, msg="Money flow resolver not found", *args, **kwargs):
+    def __init__(self, msg="Error to resolver money flow", *args, **kwargs):
         super().__init__(msg, *args, **kwargs)
 
 
@@ -57,4 +57,9 @@ class NotMappedCurrency(Exception):
 
 class InvalidElectronicaSignature(Exception):
     def __init__(self, msg="Invalid electronica signature", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
+class FailToSaveAuditingTrail(Exception):
+    def __init__(self, msg="Fail to save auditing trail", *args, **kwargs):
         super().__init__(msg, *args, **kwargs)

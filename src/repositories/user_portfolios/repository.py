@@ -54,8 +54,16 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             },
         )
 
-        region_default = stock_portfolios_response.get("portfolios", {}).get("default", {}).get(region_portfolios)
-        region_vnc = stock_portfolios_response.get("portfolios", {}).get("vnc", {}).get(region_portfolios)
+        region_default = (
+            stock_portfolios_response.get("portfolios", {})
+            .get("default", {})
+            .get(region_portfolios)
+        )
+        region_vnc = (
+            stock_portfolios_response.get("portfolios", {})
+            .get("vnc", {})
+            .get(region_portfolios)
+        )
 
         if not region_default and region_vnc:
             response = {"default": {}, "vnc_portfolios": {}}
@@ -76,7 +84,9 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             project={f"portfolios.{classification_type}": 1, "_id": 0},
         )
 
-        classification_response = stock_portfolios_response.get("portfolios").get(classification_type)
+        classification_response = stock_portfolios_response.get("portfolios").get(
+            classification_type
+        )
 
         if classification_response is None:
             response = {f"{classification_type}": {}}
@@ -103,11 +113,15 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             query={"unique_id": unique_id},
             project={
                 f"portfolios.{classification_type}.{region_portfolios}": 1,
-                "_id": 0
-            }
+                "_id": 0,
+            },
         )
 
-        portfolios_response = stock_portfolios_response.get("portfolios").get(classification_type, {}).get(region_portfolios)
+        portfolios_response = (
+            stock_portfolios_response.get("portfolios")
+            .get(classification_type, {})
+            .get(region_portfolios)
+        )
 
         if portfolios_response is None:
             response = {f"{classification_type}": {}}
@@ -120,8 +134,9 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
         )
 
         stock_portfolios_response = {
-            f"{classification_type}":
-                {f"{region_portfolios}": portfolio_result,
-        }}
+            f"{classification_type}": {
+                f"{region_portfolios}": portfolio_result,
+            }
+        }
 
         return stock_portfolios_response

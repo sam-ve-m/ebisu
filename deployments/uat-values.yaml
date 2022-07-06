@@ -209,8 +209,6 @@ containers:
       value: "redis://bnd:93uOKu5H@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
     - name: REDIS_CACHE_DB
       value: "1"
-    - name: REDIS_PORTFOLIO_DB
-      value: "0"
     - name: TRANSFERS_BETWEEN_SINACOR_AND_DRIVE_WEALTH_TOPIC
       value: "ebisu-bifrost.transfers-between-sinacor-and-drive-wealth"
     - name: TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC
