@@ -1,12 +1,19 @@
-# # Standard Libs
+# STANDARD LIBS
 import pytest
 from unittest.mock import patch
+import logging.config
 
 # INTERNAL LIBS
-from src.repositories.bank_account.repository import UserBankAccountRepository
-from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
-from src.services.bank_account.service import UserBankAccountService
-from src.services.get_bank_code.service import GetBankCode
+from decouple import Config, RepositoryEnv
+with patch.object(Config, "get", return_value="info"):
+    with patch.object(logging.config, "dictConfig"):
+        with patch.object(RepositoryEnv, "__init__", return_value=None):
+            from src.repositories.bank_account.repository import UserBankAccountRepository
+            from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
+            from src.services.bank_account.service import UserBankAccountService
+            from src.services.get_bank_code.service import GetBankCode
+
+# STUB IMPORTS
 from tests.src.repositories.bank_account.stubs import (
     account_repository_id_stub,
     bank_account_repository_stub,

@@ -8,7 +8,6 @@ from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
-from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.domain.validators.exchange_info.get_statement_validator import (
     GetBrStatement,
@@ -21,18 +20,25 @@ from src.domain.validators.exchange_info.list_broker_note_validator import (
 from src.domain.validators.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
 )
-from src.routers.exchange_informations.router import ExchangeRouter
-from src.services.earnings_from_client.get_earnings_from_client import (
-    EarningsFromClient,
-)
-from src.domain.exception import UnauthorizedError
-from src.services.get_client_orders.get_client_orders import GetOrders
-from src.services.statement.get_statement import GetStatement
-from src.services.jwt.service_jwt import JwtService
-from src.services.list_broker_note.list_broker_note import ListBrokerNote
-from src.services.list_client_orders.list_client_orders import ListOrders
 
-# stubs
+import logging.config
+
+# PROJECT IMPORTS
+from decouple import Config, RepositoryEnv
+with patch.object(Config, "get", return_value="info"):
+    with patch.object(logging.config, "dictConfig"):
+        with patch.object(RepositoryEnv, "__init__", return_value=None):
+            from src.routers.exchange_informations.router import ExchangeRouter
+            from src.services.earnings_from_client.get_earnings_from_client import (
+                EarningsFromClient,
+            )
+            from src.domain.exception import UnauthorizedError
+            from src.services.get_client_orders.get_client_orders import GetOrders
+            from src.services.jwt.service_jwt import JwtService
+            from src.services.list_broker_note.list_broker_note import ListBrokerNote
+            from src.services.list_client_orders.list_client_orders import ListOrders
+
+# STUB IMPORTS
 from tests.src.stubs.project_stubs.stub_get_client_orders import (
     client_order_response_dummy,
 )
@@ -42,13 +48,12 @@ from tests.src.stubs.project_stubs.stub_list_client_orders import (
 )
 from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
 from tests.src.stubs.router_exchange_infos.stubs import (
-    balance_stub,
     scope_stub_2,
     x_thebes_tuple,
     scope_stub,
     list_broker_note_stub,
-    statement_stub,
 )
+
 
 # list broker note router
 @pytest.mark.asyncio

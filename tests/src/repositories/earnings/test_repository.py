@@ -1,11 +1,18 @@
 # STANDARD IMPORTS
 from unittest.mock import patch
+import logging.config
 
 # PROJECT IMPORTS
-from src.repositories.earnings.repository import (
-    EarningsClientRepository,
-    EarningsBrRecord,
-)
+from decouple import Config, RepositoryEnv
+with patch.object(Config, "get", return_value="info"):
+    with patch.object(logging.config, "dictConfig"):
+        with patch.object(RepositoryEnv, "__init__", return_value=None):
+            from src.repositories.earnings.repository import (
+                EarningsClientRepository,
+                EarningsBrRecord,
+            )
+
+# STUB IMPORTS
 from tests.src.repositories.earnings.repository_stub import (
     earnings_model_stub,
     earnings_payable_stub,
