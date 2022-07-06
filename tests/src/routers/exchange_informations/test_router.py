@@ -11,7 +11,7 @@ from src.domain.validators.exchange_info.client_orders_validator import (
 from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.domain.validators.exchange_info.get_statement_validator import (
-    GetStatementModel,
+    GetBrStatement,
 )
 from src.domain.validators.exchange_info.list_broker_note_validator import (
     BrokerNoteRegion,
@@ -25,10 +25,9 @@ from src.routers.exchange_informations.router import ExchangeRouter
 from src.services.earnings_from_client.get_earnings_from_client import (
     EarningsFromClient,
 )
-from src.services.get_balance.service import GetBalance
 from src.exceptions.exceptions import UnauthorizedError
 from src.services.get_client_orders.get_client_orders import GetOrders
-from src.services.get_statement.get_statement import GetStatement
+from src.services.statement.get_statement import GetStatement
 from src.services.jwt.service_jwt import JwtService
 from src.services.list_broker_note.list_broker_note import ListBrokerNote
 from src.services.list_client_orders.list_client_orders import ListOrders
@@ -50,69 +49,6 @@ from tests.src.stubs.router_exchange_infos.stubs import (
     list_broker_note_stub,
     statement_stub,
 )
-
-
-@pytest.mark.asyncio
-@patch.object(
-    JwtService, "get_thebes_answer_from_request", return_value=payload_data_dummy
-)
-@patch.object(GetBalance, "get_service_response", return_value=balance_stub)
-async def test_when_sending_the_right_params_to_get_balance_then_return_the_expected(
-    mock_get_thebes_answer_from_request, mock_get_service_response
-):
-    response = await ExchangeRouter.get_balance(
-        request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
-        balance=GetBalanceModel(**{"region": "BR"}),
-    )
-
-    assert response == balance_stub
-    assert "payload" in response
-    assert response.get("payload").get("balance") == 49030153.7
-    assert isinstance(response, dict)
-
-
-@pytest.mark.asyncio
-@patch(
-    "src.routers.exchange_informations.router.GetBalance.get_service_response",
-    return_value={},
-)
-@patch.object(
-    JwtService, "get_thebes_answer_from_request", return_value=payload_data_dummy
-)
-async def test_when_sending_the_right_params_to_get_balance_then_return_an_empty_list_as_expected(
-    mock_get_thebes_answer_from_request, mock_get_service_response
-):
-
-    response = await ExchangeRouter.get_balance(
-        request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
-        balance=GetBalanceModel(**{"region": "BR"}),
-    )
-
-    assert response == {}
-    assert isinstance(response, dict)
-
-
-@pytest.mark.asyncio
-async def test_when_sending_wrong_params_of_region_to_get_balance_then_raise_validation_error():
-
-    with pytest.raises(ValidationError):
-        await ExchangeRouter.get_balance(
-            request=MagicMock(
-                scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)
-            ),
-            balance=GetBalanceModel(**{"region": None}),
-        )
-
-
-@pytest.mark.asyncio
-async def test_when_sending_the_wrong_payload_jwt_invalid_to_get_balance_then_raise_unauthorized_error():
-
-    with pytest.raises(UnauthorizedError):
-        await ExchangeRouter.get_balance(
-            request=MagicMock(scope=scope_stub),
-            balance=GetBalanceModel(**{"region": "BR"}),
-        )
-
 
 # list broker note router
 @pytest.mark.asyncio
@@ -207,7 +143,7 @@ async def test_when_sending_the_right_params_to_bank_statement_then_return_the_e
 ):
     response_statement = await ExchangeRouter.get_bank_statement(
         request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
-        statement=GetStatementModel(
+        statement=GetBrStatement(
             **{
                 "region": BrokerNoteRegion.BR.value,
                 "limit": 1,
@@ -229,7 +165,7 @@ async def test_when_sending_wrong_params_of_get_statement_model_then_raise_valid
             request=MagicMock(
                 scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)
             ),
-            statement=GetStatementModel(
+            statement=GetBrStatement(
                 **{
                     "region": None,
                     "limit": 1,
@@ -247,7 +183,7 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_get_statement_route
     with pytest.raises(UnauthorizedError):
         await ExchangeRouter.get_bank_statement(
             request=MagicMock(scope=scope_stub_2),
-            statement=GetStatementModel(
+            statement=GetBrStatement(
                 **{
                     "region": BrokerNoteRegion.BR.value,
                     "limit": 1,

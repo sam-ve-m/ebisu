@@ -1,10 +1,16 @@
-from pydantic import BaseModel
-from src.domain.enums.region import Region
+from typing import Optional
+
+from pydantic import BaseModel, Field
+from src.domain.enums.statement_type import StatementType
 
 
-class GetStatementModel(BaseModel):
-    region: Region
+class GetBrStatement(BaseModel):
+    statement_type: StatementType
     limit: int
     offset: int
-    start_date: float
-    end_date: float
+
+
+class GetUsStatement(BaseModel):
+    statement_type: StatementType
+    limit: int = Field(gt=0)
+    offset: Optional[int]

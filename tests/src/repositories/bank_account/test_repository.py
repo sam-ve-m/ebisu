@@ -39,12 +39,11 @@ async def test_when_sending_the_right_params_to_registered_user_bank_account_the
 async def test_when_sending_the_right_params_to_registered_user_bank_account_then_return_none(
     mock_find_all,
 ):
-
     response = await UserBankAccountRepository.get_registered_user_bank_accounts(
         unique_id=account_repository_id_stub
     )
 
-    assert response == None
+    assert response is None
 
 
 @pytest.mark.asyncio
@@ -74,7 +73,7 @@ async def test_when_sending_the_right_params_then_return_the_expect_which_is_tru
             unique_id=account_repository_id_stub, bank_account=find_one_response_dummy
         )
     )
-    assert response == True
+    assert response is True
 
 
 @pytest.mark.asyncio
@@ -88,7 +87,7 @@ async def test_when_sending_the_right_params_then_return_the_expect_which_is_fal
             bank_account=find_one_wrong_response_dummy,
         )
     )
-    assert response == False
+    assert response is False
 
 
 @pytest.mark.asyncio
@@ -101,7 +100,7 @@ async def test_when_sending_the_right_params_to_is_bank_account_from_client_then
     response = await UserBankAccountRepository.is_user_bank_account_from_client(
         unique_id=account_repository_id_stub, bank_account=user_from_client_stub
     )
-    assert response == True
+    assert response is True
 
 
 @pytest.mark.asyncio
@@ -112,7 +111,7 @@ async def test_when_sending_the_right_params_to_is_bank_account_from_client_then
     response = await UserBankAccountRepository.is_user_bank_account_from_client(
         unique_id=account_repository_id_stub, bank_account=user_from_client_2_stub
     )
-    assert response == False
+    assert response is False
 
 
 @pytest.mark.asyncio
@@ -125,7 +124,7 @@ async def test_when_sending_the_right_params_to_account_id_exists_then_return_th
     response = await UserBankAccountRepository.user_bank_account_id_exists(
         unique_id=account_repository_id_stub, bank_account_id="99927276253-2"
     )
-    assert response == True
+    assert response is True
 
 
 @pytest.mark.asyncio
@@ -136,7 +135,7 @@ async def test_when_sending_the_right_params_to_account_id_exists_then_return_th
     response = await UserBankAccountRepository.user_bank_account_id_exists(
         unique_id=account_repository_id_stub, bank_account_id=None
     )
-    assert response == False
+    assert response is False
 
 
 @pytest.mark.asyncio
@@ -144,12 +143,11 @@ async def test_when_sending_the_right_params_to_account_id_exists_then_return_th
 async def test_when_sending_the_right_params_to_update_registered_bank_account_then_return_the_expected(
     mock_update_one,
 ):
-
     response = await UserBankAccountRepository.update_registered_user_bank_accounts(
         unique_id=account_repository_id_stub, bank_account=find_one_response_dummy
     )
 
-    assert response == True
+    assert response is True
 
 
 @pytest.mark.asyncio
@@ -157,12 +155,11 @@ async def test_when_sending_the_right_params_to_update_registered_bank_account_t
 async def test_when_sending_the_right_params_to_update_registered_bank_account_then_return_false(
     mock_update_one,
 ):
-
     response = await UserBankAccountRepository.update_registered_user_bank_accounts(
         unique_id=account_repository_id_stub, bank_account=find_one_response_dummy
     )
 
-    assert response == False
+    assert response is False
 
 
 @pytest.mark.asyncio
@@ -175,7 +172,7 @@ async def test_when_sending_the_right_params_to_update_registered_bank_account_t
         bank_account=find_one_response_with_cpf_dummy,
     )
 
-    assert response == True
+    assert response is True
 
 
 @pytest.mark.asyncio
@@ -188,7 +185,7 @@ async def test_when_sending_the_right_params_to_delete_registered_bank_account_t
         bank_account=find_one_response_with_cpf_dummy,
     )
 
-    assert response == True
+    assert response is True
 
 
 @pytest.mark.asyncio
@@ -201,27 +198,29 @@ async def test_when_sending_the_right_params_to_delete_registered_bank_account_t
         bank_account=find_one_response_with_cpf_dummy,
     )
 
-    assert response == False
+    assert response is False
 
 
-@patch.object(GetBankCode, "get_service_response", return_value=bank_codes_valid_stub)
+@patch.object(GetBankCode, "get_bank_code_from_database", return_value="070")
 def test_when_sending_right_params_to_bank_code_from_client_exists_then_return_true(
     mock_get_service_response,
 ):
-
     response = UserBankAccountService.bank_code_from_client_exists(bank="070")
-    assert response == True
+    assert response is True
 
 
 @patch.object(GetBankCode, "get_service_response", return_value=bank_codes_valid_stub)
 def test_when_sending_invalid_params_to_bank_code_from_client_exists_then_return_true(
     mock_get_service_response,
 ):
-    response = UserBankAccountService.bank_code_from_client_exists(bank="123456")
+    response = UserBankAccountService.bank_code_from_client_exists(
+        bank="123456"
+    )
     assert response == False
 
 
 find_one_stub = {"name": "Teste Teste", "identifier_document": {"cpf": "40340423410"}}
+
 
 # test get_cpf_and_name_from_user
 @pytest.mark.asyncio

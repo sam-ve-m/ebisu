@@ -48,6 +48,5 @@ class RealtimeFundingAndWithdrawalRepository(RedisInfrastructure):
     def generate_key(
         cls, cash_conversion: Tuple[Currency, Currency], data_type: str
     ) -> str:
-        from_currency = cash_conversion[0].value
-        to_currency = cash_conversion[1].value
-        return f"{from_currency}>{to_currency}:{data_type}"
+        cash_conversion_str = ">".join([currency.value for currency in cash_conversion])
+        return f"{cash_conversion_str}:{data_type}"
