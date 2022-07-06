@@ -10,7 +10,7 @@ from src.domain.exception.model import (
     FailToSaveAuditingTrail,
 )
 from etria_logger import Gladsheim
-from src.exceptions.exceptions import (
+from src.domain.exception import (
     ForbiddenError,
     BadRequestError,
     InternalServerError,
@@ -20,6 +20,7 @@ from src.exceptions.exceptions import (
     NotMappedCurrency,
     InvalidElectronicaSignature,
     UnauthorizedError,
+    FailToGetDataFromTransportLayer
 )
 
 # ROUTERS
@@ -178,6 +179,15 @@ class BaseRouter:
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 content=json.dumps(
                     {"request_status": False, "status": 11, "msg": e.args[0]}
+                ),
+            )
+
+        except FailToGetDataFromTransportLayer as e:
+            Gladsheim.error(erro=e)
+            return Response(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                content=json.dumps(
+                    {"request_status": False, "status": 12, "msg": e.args[0]}
                 ),
             )
 

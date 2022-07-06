@@ -9,5 +9,9 @@ class EarningsTransactionResponse(BaseModel):
     description: str
 
 
+class EarningsTransactionUSResponse(EarningsTransactionResponse):
+    amount: float
+
+
 class EarningsTransactionBrResponse(EarningsTransactionResponse):
     share_quantity: float

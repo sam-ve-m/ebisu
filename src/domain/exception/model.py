@@ -63,3 +63,28 @@ class InvalidElectronicaSignature(Exception):
 class FailToSaveAuditingTrail(Exception):
     def __init__(self, msg="Fail to save auditing trail", *args, **kwargs):
         super().__init__(msg, *args, **kwargs)
+
+
+class FailToGetDataFromTransportLayer(Exception):
+    def __init__(self, msg="Fail to get data from transport layer", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
+class ForbiddenError(Exception):
+    def __init__(self, msg="Forbidden", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
+class BadRequestError(Exception):
+    def __init__(self, msg="Bad request", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
+class InternalServerError(Exception):
+    def __init__(self, msg="Internal server", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
+class UnauthorizedError(Exception):
+    def __init__(self, msg="Unauthorized", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)

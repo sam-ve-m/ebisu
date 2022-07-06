@@ -12,7 +12,7 @@ from src.core.interfaces.services.funding_and_withdrawal.money_flow_resolvers.in
 from src.repositories.funding_and_withdrawal.queue.repository import (
     FundingAndWithdrawalRepository,
 )
-from src.exceptions.exceptions import UnableToProcessMoneyFlow
+from src.domain.exception import UnableToProcessMoneyFlow
 
 
 class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):

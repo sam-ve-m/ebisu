@@ -11,6 +11,7 @@ class Earning:
     description: str
     amount_per_share: float
     date: RegionStringDateTime
+    amount: float
 
     def get_date_in_time_stamp(self):
         timestamp = self.date.get_date_in_time_stamp()
@@ -22,6 +23,7 @@ class Earning:
             "description": self.description,
             "amount_per_share": self.amount_per_share,
             "date": self.date.get_date_in_time_stamp(),
+            "amount": self.amount
         }
 
         return earning_transaction

@@ -25,7 +25,7 @@ from src.routers.exchange_informations.router import ExchangeRouter
 from src.services.earnings_from_client.get_earnings_from_client import (
     EarningsFromClient,
 )
-from src.exceptions.exceptions import UnauthorizedError
+from src.domain.exception import UnauthorizedError
 from src.services.get_client_orders.get_client_orders import GetOrders
 from src.services.statement.get_statement import GetStatement
 from src.services.jwt.service_jwt import JwtService

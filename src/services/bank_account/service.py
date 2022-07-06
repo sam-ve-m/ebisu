@@ -6,7 +6,7 @@ from uuid import uuid4
 from src.domain.enums.persephone import PersephoneSchema, PersephoneQueue
 from src.domain.exception import FailToSaveAuditingTrail
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
-from src.exceptions.exceptions import BadRequestError, InternalServerError
+from src.domain.exception import BadRequestError, InternalServerError
 from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.services.get_bank_code.service import GetBankCode
 from persephone_client import Persephone

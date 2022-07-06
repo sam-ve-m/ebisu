@@ -10,4 +10,9 @@ from .model import (
     NotMappedCurrency,
     InvalidElectronicaSignature,
     FailToSaveAuditingTrail,
+    FailToGetDataFromTransportLayer,
+    ForbiddenError,
+    BadRequestError,
+    InternalServerError,
+    UnauthorizedError
 )

@@ -8,7 +8,7 @@ from tests.src.stubs.bank_account_stubs.stub_get_account import (
 )
 from src.services.bank_account.service import UserBankAccountService
 from src.repositories.bank_account.repository import UserBankAccountRepository
-from src.exceptions.exceptions import BadRequestError, InternalServerError
+from src.domain.exception import BadRequestError, InternalServerError
 from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
 
 
