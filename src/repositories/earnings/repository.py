@@ -30,17 +30,16 @@ class EarningsBrRecord:
             share_quantity=earning_transaction.get("QTDE_MVTO"),
             date=RegionStringDateTime(
                 date=earning_transaction.get("DATA_MVTO"),
-                region_date_format=RegionDateFormat.BR_DATE_FORMAT
-            ))
+                region_date_format=RegionDateFormat.BR_DATE_FORMAT,
+            ),
+        )
 
         return earning_model
 
     @staticmethod
-    def get_total_paid_earnings(
-        account: str
-    ) -> float:
+    def get_total_paid_earnings(account: str) -> float:
 
-        query = f""" SELECT  SUM(MA.PREC_LQDO) FROM CORRWIN.TCFMOVI_ACAO MA
+        query = f""" SELECT  SUM(MA.PREC_LQDO) as PRICE FROM CORRWIN.TCFMOVI_ACAO MA
                     LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
                     WHERE COD_CLI = ('{account}') 
                     AND DATA_MVTO <> TO_DATE('31-DEC-9999', 'DD-MM-YYYY')
@@ -48,20 +47,21 @@ class EarningsBrRecord:
                     AND MA.DATA_MVTO IS NOT NULL
                     """
 
-        total_earnings_transaction = (
-            EarningsClientRepository.get_data(
-                sql=query
-            )
+        total_earnings_transactions = EarningsClientRepository.get_data(sql=query)
+        earnings_response = sum(
+            [
+                total_earnings_transaction["PRICE"]
+                for total_earnings_transaction in total_earnings_transactions
+            ]
         )
-        earnings_response = total_earnings_transaction[0].get("SUM(MA.PREC_LQDO)")
 
         return earnings_response
 
     @staticmethod
     def get_br_payable_earnings(
-            account: str,
-            limit: int,
-            earnings_types: List[EarningsTypes] = None,
+        account: str,
+        limit: int,
+        earnings_types: List[EarningsTypes] = None,
     ) -> list:
         # query to find the earning of a specific client but not including the date 31-12-9999
         earnings_types_where_clause = (
@@ -82,23 +82,20 @@ class EarningsBrRecord:
            	AND MA.DATA_MVTO IS NOT NULL
             FETCH NEXT {limit} ROWS ONLY
         """
-        payable_earnings_transactions = (
-            EarningsClientRepository.get_data(
-                sql=query
-            )
-        )
+        payable_earnings_transactions = EarningsClientRepository.get_data(sql=query)
 
         earning_model = [
-            EarningsBrRecord.build_br_earning_model(earning_transaction=earning_transaction)
-            for earning_transaction in payable_earnings_transactions if earning_transaction.get("AMOUNT_PER_SHARE")
+            EarningsBrRecord.build_br_earning_model(
+                earning_transaction=earning_transaction
+            )
+            for earning_transaction in payable_earnings_transactions
+            if earning_transaction.get("AMOUNT_PER_SHARE")
         ]
         return earning_model
 
     @staticmethod
     def get_br_paid_earnings(
-            account: str,
-            limit: int,
-            earnings_types: List[EarningsTypes] = None
+        account: str, limit: int, earnings_types: List[EarningsTypes] = None
     ) -> list:
         # query to find all already paid earning
         earnings_types_where_clause = (
@@ -119,23 +116,22 @@ class EarningsBrRecord:
                     FETCH NEXT {limit} ROWS ONLY
                 """
 
-        paid_earnings_transactions = (
-            EarningsClientRepository.get_data(
-                sql=query
-            )
-        )
+        paid_earnings_transactions = EarningsClientRepository.get_data(sql=query)
 
         earning_model = [
-            EarningsBrRecord.build_br_earning_model(earning_transaction=earning_transaction)
-            for earning_transaction in paid_earnings_transactions if earning_transaction.get("AMOUNT_PER_SHARE")
+            EarningsBrRecord.build_br_earning_model(
+                earning_transaction=earning_transaction
+            )
+            for earning_transaction in paid_earnings_transactions
+            if earning_transaction.get("AMOUNT_PER_SHARE")
         ]
         return earning_model
 
     @staticmethod
     def get_br_record_date_earnings(
-            account: str,
-            limit: int,
-            earnings_types: List[EarningsTypes] = None,
+        account: str,
+        limit: int,
+        earnings_types: List[EarningsTypes] = None,
     ) -> list:
         # query to find record date == 31-12-9999 (to be paid with no date specified)
 
@@ -157,15 +153,14 @@ class EarningsBrRecord:
             FETCH NEXT {limit} ROWS ONLY
         """
 
-        record_date_earnings_transactions = (
-            EarningsClientRepository.get_data(
-                sql=query
-            )
-        )
+        record_date_earnings_transactions = EarningsClientRepository.get_data(sql=query)
 
         earning_model = [
-            EarningsBrRecord.build_br_earning_model(earning_transaction=earning_transaction)
-            for earning_transaction in record_date_earnings_transactions if earning_transaction.get("AMOUNT_PER_SHARE")
+            EarningsBrRecord.build_br_earning_model(
+                earning_transaction=earning_transaction
+            )
+            for earning_transaction in record_date_earnings_transactions
+            if earning_transaction.get("AMOUNT_PER_SHARE")
         ]
         return earning_model
 

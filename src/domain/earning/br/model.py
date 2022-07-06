@@ -23,7 +23,7 @@ class EarningBr:
             "symbol": self.symbol,
             "date": self.date.get_date_in_time_stamp(),
             "description": self.description,
-            "amount_per_share": self.amount_per_share
+            "amount_per_share": self.amount_per_share,
         }
 
         return earning_transaction

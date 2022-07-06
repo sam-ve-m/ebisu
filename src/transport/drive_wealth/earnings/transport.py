@@ -23,39 +23,42 @@ class DwEarningsTransport:
         earning_model = Earning(
             symbol=earning_transaction.get("instrument", {}).get("symbol"),
             description=earning_transaction.get("instrument", {}).get("name"),
-            amount_per_share=earning_transaction.get("dividend", {}).get("amountPerShare"),
+            amount_per_share=earning_transaction.get("dividend", {}).get(
+                "amountPerShare"
+            ),
             date=RegionStringDateTime(
                 date=earning_transaction.get("tranWhen"),
-                region_date_format=RegionDateFormat.US_DATE_FORMAT
-            )
+                region_date_format=RegionDateFormat.US_DATE_FORMAT,
+            ),
         )
 
         return earning_model
 
     @staticmethod
     async def get_us_transaction_earnings(
-            transaction_request: TransactionRequest
+        transaction_request: TransactionRequest,
     ) -> List[Earning]:
         earnings_transactions = await DwEarningsTransport.__get_transactions(
             transaction_request=transaction_request
         )
         earnings_model = [
-            DwEarningsTransport.__build_earning_model(earning_transaction=earning_transaction)
-            for earning_transaction in earnings_transactions if earning_transaction.get("dividend")]
+            DwEarningsTransport.__build_earning_model(
+                earning_transaction=earning_transaction
+            )
+            for earning_transaction in earnings_transactions
+            if earning_transaction.get("dividend")
+        ]
 
         return earnings_model
 
     @staticmethod
-    async def __get_transactions(
-            transaction_request: TransactionRequest
-    ) -> dict:
+    async def __get_transactions(transaction_request: TransactionRequest) -> dict:
         query_params = transaction_request.get_query_params()
         account = transaction_request.get_account()
         url_formatted = DwEarningsTransport.transaction_url.format(account)
 
         response = await DWApiTransport.execute_get(
-            url=url_formatted,
-            query_params=query_params
+            url=url_formatted, query_params=query_params
         )
 
         body = await response.text()

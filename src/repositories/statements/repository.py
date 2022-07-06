@@ -30,15 +30,18 @@ class StatementsRepository(OracleBaseRepository):
         offset: int,
         limit: int,
     ):
-        current_tail_complete_transaction_query = StatementsRepository.current_base_query.format(
-            where_clause
+        current_tail_complete_transaction_query = (
+            StatementsRepository.current_base_query.format(where_clause)
         )
-        historical_tail_complete_transaction_query = StatementsRepository.historical_base_query.format(
-            where_clause
+        historical_tail_complete_transaction_query = (
+            StatementsRepository.historical_base_query.format(where_clause)
         )
 
         complete_transaction_query = StatementsRepository.base_query.format(
-            current_tail_complete_transaction_query, historical_tail_complete_transaction_query, offset * 10, limit
+            current_tail_complete_transaction_query,
+            historical_tail_complete_transaction_query,
+            offset * 10,
+            limit,
         )
 
         transactions = StatementsRepository.get_data(sql=complete_transaction_query)

@@ -15,32 +15,28 @@ class EarningsRecordResponse(BaseModel):
 
 
 class BrEarningsModelToResponse:
-
     @staticmethod
     def earnings_response(
-            payable_transactions: List[EarningBr],
-            paid_transactions: List[EarningBr],
-            record_transactions: List[EarningBr],
-            total_paid_transactions: float
+        payable_transactions: List[EarningBr],
+        paid_transactions: List[EarningBr],
+        record_transactions: List[EarningBr],
+        total_paid_transactions: float,
     ):
 
         total_paid = round(total_paid_transactions, 2)
 
         payable = [
-            EarningsTransactionBrResponse(
-                **earning_payable_transaction.__repr__())
+            EarningsTransactionBrResponse(**earning_payable_transaction.__repr__())
             for earning_payable_transaction in payable_transactions
         ]
 
         paid = [
-            EarningsTransactionBrResponse(
-                **earning_paid_transaction.__repr__())
+            EarningsTransactionBrResponse(**earning_paid_transaction.__repr__())
             for earning_paid_transaction in paid_transactions
         ]
 
         record_date = [
-            EarningsTransactionBrResponse(
-                **earning_paid_transaction.__repr__())
+            EarningsTransactionBrResponse(**earning_paid_transaction.__repr__())
             for earning_paid_transaction in record_transactions
         ]
 
@@ -48,7 +44,7 @@ class BrEarningsModelToResponse:
             "total_paid": total_paid,
             "paid": paid,
             "payable": payable,
-            "record_date": record_date
+            "record_date": record_date,
         }
 
         earnings_response = EarningsRecordResponse(**earnings_dict)

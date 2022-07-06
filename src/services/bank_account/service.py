@@ -45,7 +45,7 @@ class UserBankAccountService:
                 "unique_id": unique_id,
                 "device_info": device_info,
                 "bank_account": bank_account,
-                "_created_at": datetime.datetime.utcnow()
+                "_created_at": datetime.datetime.utcnow(),
             },
             schema_name=PersephoneSchema.REGISTER_CLIENT_BANK_ACCOUNT.value,
         )
@@ -73,8 +73,10 @@ class UserBankAccountService:
     ):
         thebes_answer = jwt_data.get("x-thebes-answer")
         unique_id = thebes_answer["user"]["unique_id"]
-        bank_accounts_from_database = await bank_account_repository.get_registered_user_bank_accounts(
-            unique_id=unique_id
+        bank_accounts_from_database = (
+            await bank_account_repository.get_registered_user_bank_accounts(
+                unique_id=unique_id
+            )
         )
         if bank_accounts_from_database["bank_accounts"] is None:
             bank_accounts_from_database.update({"bank_accounts": []})
@@ -108,7 +110,7 @@ class UserBankAccountService:
                 "unique_id": unique_id,
                 "device_info": device_info,
                 "bank_account": bank_account,
-                "_created_at": datetime.datetime.utcnow()
+                "_created_at": datetime.datetime.utcnow(),
             },
             schema_name=PersephoneSchema.UPDATE_CLIENT_BANK_ACCOUNT.value,
         )
@@ -156,7 +158,7 @@ class UserBankAccountService:
                 "unique_id": unique_id,
                 "device_info": device_info,
                 "bank_account": bank_account,
-                "_created_at": datetime.datetime.utcnow()
+                "_created_at": datetime.datetime.utcnow(),
             },
             schema_name=PersephoneSchema.DELETE_CLIENT_BANK_ACCOUNT.value,
         )

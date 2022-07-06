@@ -4,7 +4,11 @@ from starlette import status
 import json
 
 # ERRORS
-from src.domain.exception.model import IntegrityJwtError, AuthenticationJwtError, FailToSaveAuditingTrail
+from src.domain.exception.model import (
+    IntegrityJwtError,
+    AuthenticationJwtError,
+    FailToSaveAuditingTrail,
+)
 from etria_logger import Gladsheim
 from src.exceptions.exceptions import (
     ForbiddenError,

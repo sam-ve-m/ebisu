@@ -303,17 +303,24 @@ async def test_when_sending_the_wrong_payload_jwt_invalid_to_list_client_orders_
 
 
 # client earning router
-earnings_response_stub = {"paid": [{
+earnings_response_stub = {
+    "paid": [
+        {
             "symbol": "SPHD",
             "date": 1559585520345,
             "amount_per_share": 0.1511,
-            "description": "PowerShares S&P 500 High Div Low Vol ETF"
-        }],"payable": [{
+            "description": "PowerShares S&P 500 High Div Low Vol ETF",
+        }
+    ],
+    "payable": [
+        {
             "symbol": "PETR4",
             "date": 1656871920345,
             "amount_per_share": 5.5,
-            "description": "PowerShares S&P 500 High Div Low Vol ETF"}]}
-
+            "description": "PowerShares S&P 500 High Div Low Vol ETF",
+        }
+    ],
+}
 
 
 @pytest.mark.asyncio

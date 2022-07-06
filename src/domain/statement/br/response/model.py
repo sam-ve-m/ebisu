@@ -13,11 +13,12 @@ class StatementResponse(BaseModel):
 class StatementModelToResponse:
     @staticmethod
     def statement_response(transactions: List[Transaction]):
-        transactions_response = [TransactionResponse(**transaction.__repr__()) for transaction in transactions]
+        transactions_response = [
+            TransactionResponse(**transaction.__repr__())
+            for transaction in transactions
+        ]
 
-        statement_dict = {
-            "transactions": transactions_response
-        }
+        statement_dict = {"transactions": transactions_response}
 
         statement_response = StatementResponse(**statement_dict)
 

@@ -19,9 +19,7 @@ class UserRepository(MongoDbBaseRepository):
 
     @classmethod
     async def get_user_account_creation_date(cls, unique_id: str):
-        user_data = await cls.find_one(
-            query={"unique_id": unique_id}
-        )
+        user_data = await cls.find_one(query={"unique_id": unique_id})
 
         creation_date = user_data.get("created_at")
 

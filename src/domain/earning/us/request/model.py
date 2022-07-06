@@ -4,10 +4,7 @@ from src.domain.date_formatters.region.timestamp.model import RegionTimeStamp
 
 class QueryParams:
     def __init__(
-        self,
-        from_date: RegionTimeStamp,
-        to_date: RegionTimeStamp,
-        limit: int
+        self, from_date: RegionTimeStamp, to_date: RegionTimeStamp, limit: int
     ):
         self.__from_date = from_date
         self.__to_date = to_date
@@ -24,12 +21,7 @@ class QueryParams:
 
 
 class TransactionRequest:
-
-    def __init__(
-        self,
-        account: str,
-        query_params: QueryParams
-    ):
+    def __init__(self, account: str, query_params: QueryParams):
         self.__account: str = account
         self.__query_params: QueryParams = query_params
 

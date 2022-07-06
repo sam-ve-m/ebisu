@@ -10,7 +10,9 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
     # TODO - FILTER PORTFOLIO BY THE ACTIVE OR INACTIVE STATUS
 
     @classmethod
-    async def get_default_portfolio_created_at_by_region(cls, unique_id: str, region: str):
+    async def get_default_portfolio_created_at_by_region(
+        cls, unique_id: str, region: str
+    ):
         region_portfolios = region.lower()
 
         portfolio_created_at = await cls.find_one(
@@ -21,7 +23,12 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
             },
         )
 
-        created_at = portfolio_created_at.get("portfolios", {}).get("default", {}).get(region_portfolios, {}).get("created_at")
+        created_at = (
+            portfolio_created_at.get("portfolios", {})
+            .get("default", {})
+            .get(region_portfolios, {})
+            .get("created_at")
+        )
 
         timestamp_created_at = created_at.timestamp() * 1000
         return timestamp_created_at
