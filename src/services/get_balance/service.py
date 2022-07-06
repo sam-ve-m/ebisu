@@ -30,6 +30,6 @@ class GetBalance:
         accounts = cls.get_accounts_by_region(region_portfolios, region)
         balance_resolver = balance_region[region]
 
-        balance = await balance_resolver.get_balance(accounts)
+        balance = await balance_resolver.get_dw_balance(accounts)
 
         return balance

@@ -1,13 +1,16 @@
+from mepho import DWApiTransport
+
+
 class GetUsBalance:
-    dw = DWTransport()
+    dw = DWApiTransport
 
     @classmethod
-    async def get_balance(cls, account: str) -> str:
-        balance_us = await cls.get_dw_balance(account)
-        return balance_us
+    async def get_dw_balance(cls, dw_account: str):
+        raw_balance = await cls.dw.get_balances(dw_account)
+        balance = cls.normalize_balance_us(*raw_balance)
+        return {"balance": balance}
 
     @staticmethod
-    async def get_dw_balance(dw_account: str):
-        raw_balance = await Statement.dw.get_balances(dw_account)
-        balance = Statement.normalize_balance_us(*raw_balance)
-        return {"balance": balance}
+    def normalize_balance_us(client_balance: dict) -> dict:
+        balance = client_balance.get("dict_body", {}).get("cash", {}).get("cashBalance", 0)
+        return balance
