@@ -7,6 +7,7 @@ from src.domain.statement.us.response.model import StatementResponse as UsStatem
 from src.domain.validators.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
+from src.domain.validators.exchange_info.get_closure_steps_validator import ClosureStepsModel
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.domain.validators.exchange_info.get_statement_validator import GetBrStatement, GetUsStatement
 from src.domain.validators.exchange_info.list_broker_note_validator import (

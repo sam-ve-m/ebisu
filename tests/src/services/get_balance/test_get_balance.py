@@ -12,11 +12,11 @@ from tests.src.stubs.project_stubs.stub_data import (
 )
 
 # @pytest.mark.asyncio
-# @patch.object(Statement, "get_dw_balance", return_value={"balance": 104993635.20})
+# @patch.object(Statement, "get_balance", return_value={"balance": 104993635.20})
 # async def test_dw_balance_function_us_then_return_expected_and_balance_is_in_response(
 #     mock_get_dw_balance,
 # ):
-#     response = await Statement.get_dw_balance()
+#     response = await Statement.get_balance()
 #     assert response == {"balance": 104993635.20}
 #     assert response["balance"] == 104993635.20
 #     assert isinstance(response, dict)

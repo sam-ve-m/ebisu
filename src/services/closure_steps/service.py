@@ -50,7 +50,7 @@ class ClosureSteps:
         balance_service_response = await cls.balance_service.get_service_response(
             balance=balance_model, jwt_data=jwt_data
         )
-        balance = balance_service_response.get("balance", 0)
+        balance = balance_service_response.get("balance", -1)
         balance = float(balance)
 
         if balance != 0:
@@ -77,7 +77,7 @@ class ClosureSteps:
         earnings_service_response = cls.earnings_service.get_future_earnings(
             earnings_client=earnings_model, jwt_data=jwt_data
         )
-        earnings = earnings_service_response.get("future_earnings", [])
+        earnings = earnings_service_response.get("future_earnings", False)
 
         if earnings != []:
             return False

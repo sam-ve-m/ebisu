@@ -9,10 +9,11 @@ from mepho import DWApiTransport
 
 from src.domain.enums.region import Region
 from src.infrastructures.env_config import config
+from src.repositories.drive_wealth.repository import DWRepository
 from src.repositories.user_positions.repository import UserPositionsRepository
 
 
-class UserPositionsService:
+class UserPositionsService(DWRepository):
     positions_repository = UserPositionsRepository
     transport = DWApiTransport
 
@@ -50,51 +51,12 @@ class UserPositionsService:
         if not accounts:
             return 0
         url = config("DW_POSITIONS_URL")
-        responses = await cls.__execute_get(url=url, accounts=accounts, query_params={})
-        bodies = await cls.__response_body_in_json_and_account_id(
+        responses = await cls._execute_get(url=url, accounts=accounts, query_params={})
+        bodies = await cls._response_body_in_json_and_account_id(
             responses=responses, base_url=url
         )
         positions = await cls.__consolidate_positions(responses_bodies=bodies)
         return len(positions)
-
-    @classmethod
-    async def __execute_get(
-        cls, url, accounts: List[str], query_params: dict
-    ) -> List[ClientResponse]:
-        future_request = list()
-        for account in accounts:
-            url_formatted = url.format(account)
-            future_request.append(
-                cls.transport.execute_get(url=url_formatted, query_params=query_params)
-            )
-        responses = await asyncio.gather(*future_request)
-        ok_responses = list(filter(lambda x: x.status == 200, responses))
-        not_ok_responses = list(filter(lambda x: x.status != 200, responses))
-        if not_ok_responses:
-            Gladsheim.error(
-                message=f"DWTransportGraphicAccount::execute_get::Erros to get data from dw {responses}"
-            )
-        return ok_responses
-
-    @staticmethod
-    async def __response_body_in_json_and_account_id(
-        responses: List[ClientResponse], base_url: str
-    ) -> List[dict]:
-        bodies = list()
-        for response in responses:
-            body = await response.text()
-            account = UserPositionsService.__extract_account_from_url(
-                url=str(response.url), base_url=base_url
-            )
-            dict_body = json.loads(body)
-            bodies.append({"account": account, "dict_body": dict_body})
-        return bodies
-
-    @staticmethod
-    def __extract_account_from_url(url: str, base_url: str) -> str:
-        regex = base_url.replace("/", "\/").replace(".", "\.").replace("{}", "(.+)")
-        if matches := re.match(regex, url):
-            return matches[1]
 
     @staticmethod
     async def __consolidate_positions(responses_bodies: List[dict]):
