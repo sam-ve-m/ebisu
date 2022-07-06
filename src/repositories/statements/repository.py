@@ -16,7 +16,11 @@ class StatementsRepository(OracleBaseRepository):
     base_dns = config("ORACLE_BASE_DSN")
     port = config("ORACLE_BASE_PORT")
 
-    base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO FROM CORRWIN.TCCMOVTO {0} ORDER BY NR_LANCAMENTO OFFSET {1} rows fetch first {2} row only"
+    current_base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO, NR_LANCAMENTO FROM CORRWIN.TCCMOVTO {0}"
+    historical_base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO, NR_LANCAMENTO FROM CORRWIN.TCCHISMOV {0}"
+
+    base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO FROM ({} union all {}) T ORDER BY T.NR_LANCAMENTO OFFSET {} rows fetch first {} row only"
+
     balance_query = "SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = {0}"
 
     @staticmethod
@@ -25,8 +29,15 @@ class StatementsRepository(OracleBaseRepository):
         offset: int,
         limit: int,
     ):
+        current_tail_complete_transaction_query = StatementsRepository.current_base_query.format(
+            where_clause
+        )
+        historical_tail_complete_transaction_query = StatementsRepository.historical_base_query.format(
+            where_clause
+        )
+
         complete_transaction_query = StatementsRepository.base_query.format(
-            where_clause, offset * 10, limit
+            current_tail_complete_transaction_query, historical_tail_complete_transaction_query, offset * 10, limit
         )
 
         transactions = StatementsRepository.get_data(sql=complete_transaction_query)
@@ -91,17 +102,3 @@ class StatementsRepository(OracleBaseRepository):
         )
 
         return transactions_model
-
-    # @staticmethod
-    # def get_account_balance(bmf_account: str) -> Balance:
-    #     balance = StatementsRepository.get_data(
-    #         sql=StatementsRepository.balance_query.format(bmf_account)
-    #     )
-    #
-    #     balance = balance[0].get("VL_TOTAL") if bool(balance) else 0.0
-    #
-    #     balance_model = Balance(
-    #         value=balance
-    #     )
-    #
-    #     return balance_model
