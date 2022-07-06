@@ -111,26 +111,10 @@ class Iterable:
         return self
 
 
-@patch(
-    "src.services.earnings_from_client.get_earnings_from_client.earnings_client_region"
-)
-@patch.object(
-    GetBrEarningsDetails, "build_query_payable_earnings", return_value=MagicMock
-)
-@patch.object(
-    GetBrEarningsDetails, "build_query_record_date_earnings", return_value=MagicMock
-)
-@patch.object(OracleBaseRepository, "get_data", side_effect=[client_earnings_stub, {}])
+@patch.object(OracleBaseRepository, 'get_data', side_effect=[client_earnings_stub, {}])
 def test_when_sending_the_right_params_to_earnings_client_get_response_then_return_the_expected(
-    mock_get_data,
-    mock_build_query_record_date_earnings,
-    mock_build_query_payable_earnings,
     mock_earnings_region,
 ):
-    mock_earnings_region.__getitem__ = MagicMock(return_value=GetBrEarningsDetails)
-
-    Iterable.__next__ = mock_get_data
-
     response = EarningsFromClient.get_service_response(
         earnings_client=EarningsClientModel(
             **{"region": "BR", "limit": 2, "offset": 0}
