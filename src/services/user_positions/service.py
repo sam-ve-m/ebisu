@@ -1,11 +1,6 @@
-import asyncio
-import json
-import re
 from typing import List
 
-from aiohttp import ClientResponse
 from etria_logger import Gladsheim
-from mepho import DWApiTransport
 
 from src.domain.enums.region import Region
 from src.infrastructures.env_config import config
@@ -15,7 +10,6 @@ from src.repositories.user_positions.repository import UserPositionsRepository
 
 class UserPositionsService(DWRepository):
     positions_repository = UserPositionsRepository
-    transport = DWApiTransport
 
     @staticmethod
     def __build_query_br(accounts: List[str]) -> str:

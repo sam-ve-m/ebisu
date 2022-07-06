@@ -12,13 +12,6 @@ class DWRepository:
     transport = DWApiTransport
 
     @classmethod
-    async def get_positions_br(cls, accounts: List[str]) -> int:
-        query = cls.__build_query_br(accounts)
-        result = cls.positions_repository.get_one_data(query)
-        positions = result.get("SUM(A.QTDE_TOT)", 0)
-        return positions
-
-    @classmethod
     async def _execute_get(
         cls, url, accounts: List[str], query_params: dict
     ) -> List[ClientResponse]:
