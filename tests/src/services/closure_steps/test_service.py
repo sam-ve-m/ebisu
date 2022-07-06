@@ -11,7 +11,6 @@ from src.services.closure_steps.service import ClosureSteps
 from src.services.earnings_from_client.get_earnings_from_client import (
     EarningsFromClient,
 )
-from src.services.get_balance.service import GetBalance
 from src.services.user_positions.service import UserPositionsService
 
 user_portifolios_dummy = {
@@ -79,30 +78,6 @@ async def test_get_user_accounts_us(get_portfolios_by_region_mock):
     get_portfolios_by_region_mock.return_value = user_portifolios_dummy
     result = await ClosureSteps._get_user_accounts(Region.US.value, jwt_data_dummy)
     assert result == ["123"]
-
-
-@mark.asyncio
-@patch.object(GetBalance, "get_service_response")
-async def test_verify_balance_when_client_have_balance(get_service_response_mock):
-    get_service_response_mock.return_value = {"balance": 100}
-    result = await ClosureSteps._verify_balance(Region.BR.value, jwt_data_dummy)
-    assert result is False
-
-
-@mark.asyncio
-@patch.object(GetBalance, "get_service_response")
-async def test_verify_balance_when_client_dont_have_balance(get_service_response_mock):
-    get_service_response_mock.return_value = {"balance": 0}
-    result = await ClosureSteps._verify_balance(Region.BR.value, jwt_data_dummy)
-    assert result is True
-
-
-@mark.asyncio
-@patch.object(GetBalance, "get_service_response")
-async def test_verify_balance_when_balance_is_empty(get_service_response_mock):
-    get_service_response_mock.return_value = {}
-    result = await ClosureSteps._verify_balance(Region.BR.value, jwt_data_dummy)
-    assert result is True
 
 
 @mark.asyncio

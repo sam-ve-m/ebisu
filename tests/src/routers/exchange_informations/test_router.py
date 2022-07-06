@@ -8,7 +8,6 @@ from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
-from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.domain.validators.exchange_info.get_statement_validator import (
     GetBrStatement,
@@ -42,7 +41,6 @@ from tests.src.stubs.project_stubs.stub_list_client_orders import (
 )
 from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
 from tests.src.stubs.router_exchange_infos.stubs import (
-    balance_stub,
     scope_stub_2,
     x_thebes_tuple,
     scope_stub,
