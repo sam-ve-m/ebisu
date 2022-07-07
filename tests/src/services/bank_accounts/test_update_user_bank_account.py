@@ -4,7 +4,6 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 # INTERNAL LIBS
-from decouple import RepositoryEnv
 from persephone_client import Persephone
 from tests.src.stubs.bank_account_stubs.stub_get_account import (
     jwt_with_bank_account_to_update,
@@ -24,9 +23,9 @@ from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
 )
 @patch.object(UserBankAccountService, "bank_code_from_client_exists", return_value=True)
 @patch.object(Persephone, "send_to_persephone", return_value=[True, True])
-@patch.object(decouple, "RepositoryEnv", return_value="data")
+@patch.object(decouple.Config, "get", return_value="lala")
 async def test_update_user_when_sending_the_right_params_then_return_the_duly_updated_message(
-        mock_repositoryenv,
+        mock_get,
         mock_send_to_persephone,
         mock_bank_code_from_client_exists,
         mock_update_registered_user_bank_accounts,
@@ -85,12 +84,12 @@ async def test_when_bank_account_and_register_account_are_false_then_raise_the_e
 @patch.object(UserBankAccountRepository, "user_bank_account_id_exists", return_value=True)
 @patch.object(UserBankAccountRepository, "update_registered_user_bank_accounts", return_value=False)
 @patch.object(Persephone, "send_to_persephone", return_value=[False, False])
-@patch.object(decouple, "RepositoryEnv", return_value=MagicMock())
+@patch.object(decouple.Config, "get", return_value="lala")
 async def test_when_register_account_is_false_then_raise_the_expected_fail_to_save_auditing_trail(
-    mock_repository_env,
     mock_send_to_persephone,
     mock_update_registered_user_bank_accounts,
-    mock_user_bank_account_id_exists
+    mock_user_bank_account_id_exists,
+    mock_get
 ):
     with pytest.raises(FailToSaveAuditingTrail):
         await UserBankAccountService.update_user_bank_account(
