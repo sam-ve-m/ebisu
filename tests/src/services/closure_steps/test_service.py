@@ -2,6 +2,7 @@ from unittest.mock import patch
 
 from pytest import mark
 
+from src.domain.earning.us.response.model import EarningsRecordResponse
 from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.get_closure_steps_validator import (
     ClosureStepsModel,
@@ -105,17 +106,19 @@ async def test_verify_positions_when_client_dont_have_positions(
 
 
 @mark.asyncio
-@patch.object(EarningsFromClient, "get_future_earnings")
+@patch.object(EarningsFromClient, "get_service_response")
 async def test_verify_earnings_when_client_have_earnings(earnings_service_mock):
-    earnings_service_mock.return_value = {"future_earnings": [1, 2, 3]}
+    earnigs_result = EarningsRecordResponse(paid=[], payable=[], record_date=[1, 2])
+    earnings_service_mock.return_value = earnigs_result
     result = await ClosureSteps._verify_earnings(Region.BR.value, jwt_data_dummy)
     assert result is False
 
 
 @mark.asyncio
-@patch.object(EarningsFromClient, "get_future_earnings")
+@patch.object(EarningsFromClient, "get_service_response")
 async def test_verify_earnings_when_client_dont_have_earnings(earnings_service_mock):
-    earnings_service_mock.return_value = {"future_earnings": []}
+    earnigs_result = EarningsRecordResponse(paid=[], payable=[], record_date=[])
+    earnings_service_mock.return_value = earnigs_result
     result = await ClosureSteps._verify_earnings(Region.BR.value, jwt_data_dummy)
     assert result is True
 
