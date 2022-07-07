@@ -37,7 +37,7 @@ class StatementsRepository(OracleBaseRepository):
         )
 
         complete_transaction_query = StatementsRepository.base_query.format(
-            current_tail_complete_transaction_query, historical_tail_complete_transaction_query, offset * 10, limit
+            current_tail_complete_transaction_query, historical_tail_complete_transaction_query, offset * limit, limit
         )
 
         transactions = StatementsRepository.get_data(sql=complete_transaction_query)
@@ -46,7 +46,10 @@ class StatementsRepository(OracleBaseRepository):
             Transaction(
                 description=transaction.get("DS_LANCAMENTO"),
                 value=transaction.get("VL_LANCAMENTO"),
-                date=RegionDateFormat.BR_DATE_FORMAT,
+                date=RegionStringDateTime(
+                    date=transaction.get("DT_LANCAMENTO"),
+                    region_date_format=RegionDateFormat.BR_DATE_FORMAT
+                ),
             )
             for transaction in transactions
         ]
