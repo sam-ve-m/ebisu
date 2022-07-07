@@ -1,5 +1,8 @@
+# STANDARD IMPORTS
 from pydantic import BaseModel, Extra, validator, constr
 from typing import Optional
+
+# PROJECT IMPORTS
 from src.domain.enums.earnings_types import EarningsTypes
 from src.domain.enums.region import Region
 
@@ -7,7 +10,6 @@ from src.domain.enums.region import Region
 class EarningsClientModel(BaseModel):
     region: Region
     limit: int
-    offset: int
     earnings_types: Optional[constr(min_length=1)]
 
     class Config:

@@ -2,14 +2,21 @@
 from fastapi import Request, APIRouter, Depends
 
 # MODELS
-from src.domain.statement.br.response.model import StatementResponse as BrStatementResponse
-from src.domain.statement.us.response.model import StatementResponse as UsStatementResponse
+from src.domain.statement.br.response.model import (
+    StatementResponse as BrStatementResponse,
+)
+from src.domain.statement.us.response.model import (
+    StatementResponse as UsStatementResponse,
+)
 from src.domain.validators.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
 from src.domain.validators.exchange_info.get_closure_steps_validator import ClosureStepsModel
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
-from src.domain.validators.exchange_info.get_statement_validator import GetBrStatement, GetUsStatement
+from src.domain.validators.exchange_info.get_statement_validator import (
+    GetBrStatement,
+    GetUsStatement,
+)
 from src.domain.validators.exchange_info.list_broker_note_validator import (
     ListBrokerNoteModel,
 )
@@ -51,7 +58,9 @@ class ExchangeRouter:
 
     @staticmethod
     @__exchange_router.get(
-        "/br_bank_statement", response_model=BrStatementResponse, tags=["Bank Statement"]
+        "/br_bank_statement",
+        response_model=BrStatementResponse,
+        tags=["Bank Statement"],
     )
     async def get_bank_statement(
         request: Request, statement: GetBrStatement = Depends()
@@ -64,7 +73,9 @@ class ExchangeRouter:
 
     @staticmethod
     @__exchange_router.get(
-        "/us_bank_statement", response_model=UsStatementResponse, tags=["Bank Statement"]
+        "/us_bank_statement",
+        response_model=UsStatementResponse,
+        tags=["Bank Statement"],
     )
     async def get_bank_statement(
         request: Request, statement: GetUsStatement = Depends()
@@ -103,7 +114,7 @@ class ExchangeRouter:
         request: Request, earnings_client: EarningsClientModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        earnings_client_response = EarningsFromClient.get_service_response(
+        earnings_client_response = await EarningsFromClient.get_service_response(
             earnings_client=earnings_client, jwt_data=jwt_data
         )
         return earnings_client_response

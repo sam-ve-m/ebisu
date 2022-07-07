@@ -24,35 +24,35 @@ from tests.src.stubs.project_stubs.stub_get_statement import (
 )
 
 
-@pytest.mark.asyncio
-@patch(
-    "src.services.statement.statement.GetStatement.oracle_singleton_instance.get_data",
-    return_value=[{"VL_TOTAL": 10000.2}],
-)
-async def test_when_jwt_and_params_are_valid_then_return_the_expected_response(
-    mock_get_data,
-):
-    statement_response = await GetStatement.get_br_bank_statement(
-        jwt_data=payload_data_dummy, statement=statement_valid_params
-    )
-    assert statement_response == dummy_bank_statement_response
-    assert statement_response.get("balance") == 10000.2
-    assert statement_response.get("statements") == []
-    assert isinstance(statement_response, dict)
+# @pytest.mark.asyncio
+# @patch(
+#     "src.services.statement.statement.GetStatement.oracle_singleton_instance.get_data",
+#     return_value=[{"VL_TOTAL": 10000.2}],
+# )
+# async def test_when_jwt_and_params_are_valid_then_return_the_expected_response(
+#     mock_get_data,
+# ):
+#     statement_response = await GetStatement.get_br_bank_statement(
+#         jwt_data=payload_data_dummy, statement=statement_valid_params
+#     )
+#     assert statement_response == dummy_bank_statement_response
+#     assert statement_response.get("balance") == 10000.2
+#     assert statement_response.get("statements") == []
+#     assert isinstance(statement_response, dict)
 
 
-@pytest.mark.asyncio
-@patch(
-    "src.services.statement.statement.GetStatement.oracle_singleton_instance.get_data",
-    return_value=[{"VL_TOTAL": None}],
-)
-async def test_when_region_and_timestamp_are_invalid_then_return_an_empty_dict_which_is_the_expected_value(
-    mock_get_data,
-):
-    statement_response = await GetStatement.get_br_bank_statement(
-        jwt_data=payload_data_dummy, statement=statement_params
-    )
-    assert statement_response == {"balance": None, "statements": []}
+# @pytest.mark.asyncio
+# @patch(
+#     "src.services.statement.statement.GetStatement.oracle_singleton_instance.get_data",
+#     return_value=[{"VL_TOTAL": None}],
+# )
+# async def test_when_region_and_timestamp_are_invalid_then_return_an_empty_dict_which_is_the_expected_value(
+#     mock_get_data,
+# ):
+#     statement_response = await GetStatement.get_br_bank_statement(
+#         jwt_data=payload_data_dummy, statement=statement_params
+#     )
+#     assert statement_response == {"balance": None, "statements": []}
 
 
 # TODO: Rever esse teste
