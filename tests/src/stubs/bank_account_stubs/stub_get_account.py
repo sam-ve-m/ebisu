@@ -76,6 +76,19 @@ jwt_with_bank_account_to_update = {
         "account_number": "000000020-6",
         "account_name": "poupança",
         "id": "ff302d01-849c-4805-b754-c1636cbbb1f3",
+        "device_info": {
+            "device_name": "iphone",
+            "device_model": "13",
+            "is_emulator": True,
+            "device_operating_system_name": "IOS",
+            "os_sdk_version": "45125",
+            "device_is_in_root_mode": True,
+            "device_network_interfaces": "hahahaha",
+            "public_ip": "1548455475221",
+            "access_ip": "0000145455545",
+            "phone_wifi_ip": "123255444456",
+            "geolocation": "Brasil, São Paulo, SP"
+        }
     },
 }
 
@@ -100,7 +113,22 @@ jwt_with_bank_account_to_delete = {
             "client_profile": "investor",
         },
     },
-    "bank_account": {"id": "ff302d01-849c-4805-b754-c1636cbbb1f3"},
+    "bank_account": {
+        "id": "ff302d01-849c-4805-b754-c1636cbbb1f3",
+        "device_info": {
+            "device_name": "iphone",
+            "device_model": "13",
+            "is_emulator": True,
+            "device_operating_system_name": "IOS",
+            "os_sdk_version": "45125",
+            "device_is_in_root_mode": True,
+            "device_network_interfaces": "hahahaha",
+            "public_ip": "1548455475221",
+            "access_ip": "0000145455545",
+            "phone_wifi_ip": "123255444456",
+            "geolocation": "Brasil, São Paulo, SP"
+        }}
+
 }
 
 jwt_with_bank_account_to_create = {
@@ -132,17 +160,17 @@ jwt_with_bank_account_to_create = {
         "account_name": "corrente",
         "cpf": "58038116020",
         "device_info": {
-                "device_name": "iphone",
-                "device_model": "13",
-                "is_emulator": True,
-                "device_operating_system_name": "IOS",
-                "os_sdk_version": "45125",
-                "device_is_in_root_mode": True,
-                "device_network_interfaces": "hahahaha",
-                "public_ip": "1548455475221",
-                "access_ip": "0000145455545",
-                "phone_wifi_ip": "123255444456",
-                "geolocation": "Brasil, São Paulo, SP"
+            "device_name": "iphone",
+            "device_model": "13",
+            "is_emulator": True,
+            "device_operating_system_name": "IOS",
+            "os_sdk_version": "45125",
+            "device_is_in_root_mode": True,
+            "device_network_interfaces": "hahahaha",
+            "public_ip": "1548455475221",
+            "access_ip": "0000145455545",
+            "phone_wifi_ip": "123255444456",
+            "geolocation": "Brasil, São Paulo, SP"
         }
     },
 }
@@ -175,6 +203,19 @@ jwt_with_bank_account_to_create_invalid = {
         "account_number": "72655343-2",
         "account_name": "corrente",
         "cpf": "58038116020",
+        "device_info": {
+            "device_name": "iphone",
+            "device_model": "13",
+            "is_emulator": True,
+            "device_operating_system_name": "IOS",
+            "os_sdk_version": "45125",
+            "device_is_in_root_mode": True,
+            "device_network_interfaces": "hahahaha",
+            "public_ip": "1548455475221",
+            "access_ip": "0000145455545",
+            "phone_wifi_ip": "123255444456",
+            "geolocation": "Brasil, São Paulo, SP"
+        }
     },
 }
 

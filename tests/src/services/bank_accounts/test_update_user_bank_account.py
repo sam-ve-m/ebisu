@@ -114,12 +114,11 @@ async def test_when_register_account_is_false_then_raise_the_expected_internal_s
 
 
 @pytest.mark.asyncio
-async def test_when_sending_wrong_params_then_return_an_empty_object():
+async def test_when_sending_wrong_params_of_repository_then_raise_non_type_error_as_expected():
     with pytest.raises(AttributeError):
-        response = await UserBankAccountService.update_user_bank_account(
+        await UserBankAccountService.update_user_bank_account(
             bank_account_repository="", jwt_data=jwt_with_bank_account_to_update
         )
-        assert response == "'NoneType' object has no attribute 'lower'"
 
 
 @pytest.mark.asyncio

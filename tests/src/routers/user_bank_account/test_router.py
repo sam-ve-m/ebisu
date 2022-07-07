@@ -9,22 +9,18 @@ import logging.config
 from decouple import Config, RepositoryEnv
 
 from src.domain.validators.device_info import DeviceInformationOptional
-
-with patch.object(Config, "get", return_value="info"):
-    with patch.object(logging.config, "dictConfig"):
-        with patch.object(RepositoryEnv, "__init__", return_value=None):
-            from src.domain.validators.user_account.bank_account import (
-                CreateUserBankAccount,
-                UpdateUserBankAccounts,
-                DeleteUsersBankAccount,
-            )
-            from src.domain.exception import UnauthorizedError, BadRequestError
-            from src.routers.user_bank_accounts.router import UserBankAccountsRouter
-            from src.routers.user_portfolios.router import UserPortfoliosRouter
-            from src.services.bank_account.service import UserBankAccountService
-            from src.services.get_bank_code.service import GetBankCode
-            from src.services.jwt.service_jwt import JwtService
-            from src.services.stock_portfolios_list.service import UserPortfoliosList
+from src.domain.validators.user_account.bank_account import (
+    CreateUserBankAccount,
+    UpdateUserBankAccounts,
+    DeleteUsersBankAccount,
+)
+from src.domain.exception import UnauthorizedError, BadRequestError
+from src.routers.user_bank_accounts.router import UserBankAccountsRouter
+from src.routers.user_portfolios.router import UserPortfoliosRouter
+from src.services.bank_account.service import UserBankAccountService
+from src.services.get_bank_code.service import GetBankCode
+from src.services.jwt.service_jwt import JwtService
+from src.services.stock_portfolios_list.service import UserPortfoliosList
 
 # stubs
 from tests.src.stubs.project_stubs.stub_data import payload_data_dummy

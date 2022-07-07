@@ -97,29 +97,6 @@ async def test_when_sending_the_right_params_then_return_the_expect_which_is_fal
     assert response is False
 
 
-@pytest.mark.asyncio
-@patch.object(
-    MongoDbBaseRepository, "find_one", return_value=existing_account_repository_stub
-)
-async def test_when_sending_the_right_params_to_is_bank_account_from_client_then_return_the_expected(
-    mock_find_one,
-):
-    response = await UserBankAccountRepository.is_user_bank_account_from_client(
-        unique_id=account_repository_id_stub, bank_account=user_from_client_stub
-    )
-    assert response is True
-
-
-@pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=None)
-async def test_when_sending_the_right_params_to_is_bank_account_from_client_then_return_false(
-    mock_find_one,
-):
-    response = await UserBankAccountRepository.is_user_bank_account_from_client(
-        unique_id=account_repository_id_stub, bank_account=user_from_client_2_stub
-    )
-    assert response is False
-
 
 @pytest.mark.asyncio
 @patch.object(
