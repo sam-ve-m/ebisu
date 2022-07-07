@@ -1,8 +1,9 @@
+# STANDARD IMPORTS
 from typing import List
 
-# from src.domain.statement.base.model.balance.model import Balance
+# PROJECT IMPORTS
 from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
-from src.domain.statement.base.model.region_date_format.enum import RegionDateFormat
+from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.statement.base.model.transaction.model import Transaction
 from src.infrastructures.env_config import config
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
@@ -29,15 +30,18 @@ class StatementsRepository(OracleBaseRepository):
         offset: int,
         limit: int,
     ):
-        current_tail_complete_transaction_query = StatementsRepository.current_base_query.format(
-            where_clause
+        current_tail_complete_transaction_query = (
+            StatementsRepository.current_base_query.format(where_clause)
         )
-        historical_tail_complete_transaction_query = StatementsRepository.historical_base_query.format(
-            where_clause
+        historical_tail_complete_transaction_query = (
+            StatementsRepository.historical_base_query.format(where_clause)
         )
 
         complete_transaction_query = StatementsRepository.base_query.format(
-            current_tail_complete_transaction_query, historical_tail_complete_transaction_query, offset * 10, limit
+            current_tail_complete_transaction_query,
+            historical_tail_complete_transaction_query,
+            offset * 10,
+            limit,
         )
 
         transactions = StatementsRepository.get_data(sql=complete_transaction_query)

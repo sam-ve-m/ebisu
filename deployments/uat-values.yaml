@@ -44,7 +44,7 @@ containers:
       value: "UTF-8"
     - name: ORACLE_PORT_STATEMENT
       value: "1521"
-      #oracle earnings
+      #oracle earning
     - name: ORACLE_BASE_DNS_EARNINGS
       value: "172.30.18.44"
     - name: ORACLE_PORT_EARNINGS

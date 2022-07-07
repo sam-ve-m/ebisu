@@ -1,12 +1,19 @@
-# # Standard Libs
+# STANDARD LIBS
 import pytest
 from unittest.mock import patch
+import logging.config
 
 # INTERNAL LIBS
-from src.repositories.bank_account.repository import UserBankAccountRepository
-from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
-from src.services.bank_account.service import UserBankAccountService
-from src.services.get_bank_code.service import GetBankCode
+from decouple import Config, RepositoryEnv
+with patch.object(Config, "get", return_value="info"):
+    with patch.object(logging.config, "dictConfig"):
+        with patch.object(RepositoryEnv, "__init__", return_value=None):
+            from src.repositories.bank_account.repository import UserBankAccountRepository
+            from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
+            from src.services.bank_account.service import UserBankAccountService
+            from src.services.get_bank_code.service import GetBankCode
+
+# STUB IMPORTS
 from tests.src.repositories.bank_account.stubs import (
     account_repository_id_stub,
     bank_account_repository_stub,
@@ -54,7 +61,7 @@ async def test_when_sending_valid_params_to_save_register_accounts_then_return_t
     response = await UserBankAccountRepository.save_registered_user_bank_accounts(
         unique_id=account_repository_id_stub, bank_account=bank_account_repository_stub
     )
-    assert response == True
+    assert response is True
 
 
 existing_account_repository_stub = {"bank_account": "648498574893"}
@@ -89,29 +96,6 @@ async def test_when_sending_the_right_params_then_return_the_expect_which_is_fal
     )
     assert response is False
 
-
-@pytest.mark.asyncio
-@patch.object(
-    MongoDbBaseRepository, "find_one", return_value=existing_account_repository_stub
-)
-async def test_when_sending_the_right_params_to_is_bank_account_from_client_then_return_the_expected(
-    mock_find_one,
-):
-    response = await UserBankAccountRepository.is_user_bank_account_from_client(
-        unique_id=account_repository_id_stub, bank_account=user_from_client_stub
-    )
-    assert response is True
-
-
-@pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=None)
-async def test_when_sending_the_right_params_to_is_bank_account_from_client_then_return_false(
-    mock_find_one,
-):
-    response = await UserBankAccountRepository.is_user_bank_account_from_client(
-        unique_id=account_repository_id_stub, bank_account=user_from_client_2_stub
-    )
-    assert response is False
 
 
 @pytest.mark.asyncio

@@ -6,7 +6,7 @@ from uuid import uuid4
 from src.domain.enums.persephone import PersephoneSchema, PersephoneQueue
 from src.domain.exception import FailToSaveAuditingTrail
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
-from src.exceptions.exceptions import BadRequestError, InternalServerError
+from src.domain.exception import BadRequestError, InternalServerError
 from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.services.get_bank_code.service import GetBankCode
 from persephone_client import Persephone
@@ -45,7 +45,7 @@ class UserBankAccountService:
                 "unique_id": unique_id,
                 "device_info": device_info,
                 "bank_account": bank_account,
-                "_created_at": datetime.datetime.utcnow()
+                "_created_at": datetime.datetime.utcnow(),
             },
             schema_name=PersephoneSchema.REGISTER_CLIENT_BANK_ACCOUNT.value,
         )
@@ -73,8 +73,10 @@ class UserBankAccountService:
     ):
         thebes_answer = jwt_data.get("x-thebes-answer")
         unique_id = thebes_answer["user"]["unique_id"]
-        bank_accounts_from_database = await bank_account_repository.get_registered_user_bank_accounts(
-            unique_id=unique_id
+        bank_accounts_from_database = (
+            await bank_account_repository.get_registered_user_bank_accounts(
+                unique_id=unique_id
+            )
         )
         if bank_accounts_from_database["bank_accounts"] is None:
             bank_accounts_from_database.update({"bank_accounts": []})
@@ -88,7 +90,7 @@ class UserBankAccountService:
         unique_id = thebes_answer["user"]["unique_id"]
         bank_account = jwt_data["bank_account"]
         bank_account_id = bank_account["id"]
-        device_info = bank_account.pop("device_info")
+        device_info = bank_account.get("device_info")
 
         user_bank_account_id_exists = (
             await bank_account_repository.user_bank_account_id_exists(
@@ -108,7 +110,7 @@ class UserBankAccountService:
                 "unique_id": unique_id,
                 "device_info": device_info,
                 "bank_account": bank_account,
-                "_created_at": datetime.datetime.utcnow()
+                "_created_at": datetime.datetime.utcnow(),
             },
             schema_name=PersephoneSchema.UPDATE_CLIENT_BANK_ACCOUNT.value,
         )
@@ -156,7 +158,7 @@ class UserBankAccountService:
                 "unique_id": unique_id,
                 "device_info": device_info,
                 "bank_account": bank_account,
-                "_created_at": datetime.datetime.utcnow()
+                "_created_at": datetime.datetime.utcnow(),
             },
             schema_name=PersephoneSchema.DELETE_CLIENT_BANK_ACCOUNT.value,
         )

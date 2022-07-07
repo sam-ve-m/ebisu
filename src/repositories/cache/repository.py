@@ -3,7 +3,7 @@ import pickle
 from typing import Union, Optional
 
 from src.core.interfaces.repositories.redis.interface import IRedis
-from src.exceptions.exceptions import InternalServerError
+from src.domain.exception import InternalServerError
 from src.infrastructures.redis.infraestructure import RedisInfrastructure
 from src.infrastructures.env_config import config
 

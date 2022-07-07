@@ -1,7 +1,8 @@
+# STANDARD IMPORTS
 from typing import List, Union
-
 from pydantic import BaseModel
 
+# PROJECT IMPORTS
 from src.domain.statement.base.response.model import TransactionResponse
 from src.domain.statement.base.model.transaction.model import Transaction
 
@@ -12,7 +13,6 @@ class StatementResponse(BaseModel):
 
 
 class StatementModelToResponse:
-
     @staticmethod
     def __extract_next_offset_from_transactions(transactions: List[Transaction]):
         offset = None
@@ -27,13 +27,15 @@ class StatementModelToResponse:
 
     @staticmethod
     def statement_response(transactions: List[Transaction]):
-        transactions_response = [TransactionResponse(**transaction.__repr__()) for transaction in transactions]
-        offset = StatementModelToResponse.__extract_next_offset_from_transactions(transactions)
+        transactions_response = [
+            TransactionResponse(**transaction.__repr__())
+            for transaction in transactions
+        ]
+        offset = StatementModelToResponse.__extract_next_offset_from_transactions(
+            transactions
+        )
 
-        statement_dict = {
-            "transactions": transactions_response,
-            "offset": offset
-        }
+        statement_dict = {"transactions": transactions_response, "offset": offset}
 
         statement_response = StatementResponse(**statement_dict)
 
