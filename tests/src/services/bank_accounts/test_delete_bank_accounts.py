@@ -61,8 +61,9 @@ async def test_delete_user_when_sending_an_invalid_bank_repository_call_then_ret
     "delete_registered_user_bank_accounts",
     return_value=False,
 )
-async def test_when_bank_account_and_register_account_are_false_then_raise_the_expected_bad_request(
-    mock_get_registered_user_bank_accounts, mock_update_registered_user_bank_accounts
+@patch.object(Persephone, "send_to_persephone", return_value=[False, False])
+async def test_when_bank_account_and_register_account_are_false_then_raise_fail_to_delete_error(
+    mock_get_registered_user_bank_accounts, mock_update_registered_user_bank_accounts, mock_send_to_persephone
 ):
 
     with pytest.raises(BadRequestError):
@@ -82,7 +83,7 @@ async def test_when_bank_account_and_register_account_are_false_then_raise_the_e
     return_value=False,
 )
 @patch.object(Persephone, "send_to_persephone", return_value=[False, False])
-async def test_when_register_account_is_false_then_raise_the_expected_internal_server_error(
+async def test_when_register_account_is_false_then_raise_the_expected_fail_to_save_auditing_error(
     mock_get_registered_user_bank_accounts,
     mock_update_registered_user_bank_accounts,
     mock_send_to_persephone
