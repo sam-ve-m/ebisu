@@ -54,14 +54,21 @@ class GetUsBalance(DWRepository):
 
         WARNING: The function does not return the customer's balance and is only used to check if the account balance is empty.
         """
-        user_balances = await cls.get_balances([dw_account])
-        user_balances = user_balances[0]
-        trade_balance = abs(user_balances["available_for_trade"])
-        withdraw_balance = abs(user_balances["available_for_withdraw"])
-        cash_balance = abs(user_balances["cash_balance"])
-        balances_sum = trade_balance + withdraw_balance + cash_balance
+        account_balance = {}
+        try:
+            user_balances = await cls.get_balances([dw_account])
+            user_balances = user_balances[0]
+            trade_balance = abs(user_balances["available_for_trade"])
+            withdraw_balance = abs(user_balances["available_for_withdraw"])
+            cash_balance = abs(user_balances["cash_balance"])
+            balances_sum = trade_balance + withdraw_balance + cash_balance
 
-        account_balance = {
-            "balance": balances_sum
-        }
+            account_balance = {
+                "balance": balances_sum
+            }
+        except Exception as ex:
+            Gladsheim.error(
+                message=f"GetUsBalance::get_balance::Error to get balance:  {ex}",
+                error=ex,
+            )
         return account_balance

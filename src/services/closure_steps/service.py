@@ -69,6 +69,8 @@ class ClosureSteps:
 
     @classmethod
     async def _verify_earnings(cls, region: str, jwt_data: dict) -> bool:
+        if region == Region.US.value:  # TODO: implement pending earnings in US
+            return False
         earnings_model = EarningsClientModel(
             region=region,
             limit=1,

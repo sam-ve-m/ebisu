@@ -49,6 +49,8 @@ class UserPositionsService(DWRepository):
         bodies = await cls._response_body_in_json_and_account_id(
             responses=responses, base_url=url
         )
+        if not bodies:
+            return -1
         positions = await cls.__consolidate_positions(responses_bodies=bodies)
         return len(positions)
 
