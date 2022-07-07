@@ -94,11 +94,11 @@ async def test_create_user_when_sending_the_right_params_but_account_is_from_use
 )
 @patch.object(UserBankAccountService, "bank_code_from_client_exists", return_value=True)
 @patch.object(Persephone, "send_to_persephone", return_value=[False, False])
-async def test_create_user_when_sending_the_right_params_and_bank_account_is_not_activated_and_account_isnt_from_client(
-    mock_existing_user_bank_account_and_is_activated,
-    mock_save_registered_user_bank_accounts,
-    mock_bank_code_from_client_exists,
-    mock_send_to_persephone
+async def test_when_sending_the_right_params_and_bank_account_is_not_activated_then_raise_fail_to_save(
+        mock_send_to_persephone,
+        mock_bank_code_from_client_exists,
+        mock_save_registered_user_bank_accounts,
+        mock_existing_user_bank_account_and_is_activated
 ):
 
     with pytest.raises(FailToSaveAuditingTrail):
@@ -120,10 +120,10 @@ async def test_create_user_when_sending_the_right_params_and_bank_account_is_not
 @patch.object(UserBankAccountService, "bank_code_from_client_exists", return_value=True)
 @patch.object(Persephone, "send_to_persephone", return_value=[True, True])
 async def test_create_user_when_sending_the_right_params_but_account_is_activated_and_saved(
-    mock_existing_user_bank_account_and_is_activated,
-    mock_save_registered_user_bank_accounts,
-    mock_bank_code_from_client_exists,
-    mock_send_to_persephone
+        mock_send_to_persephone,
+        mock_bank_code_from_client_exists,
+        mock_save_registered_user_bank_accounts,
+        mock_existing_user_bank_account_and_is_activated
 ):
 
     with pytest.raises(InternalServerError):
@@ -136,16 +136,14 @@ async def test_create_user_when_sending_the_right_params_but_account_is_activate
 @pytest.mark.asyncio
 async def test_when_sending_wrong_params_of_bank_account_repository_then_raise_attribute_error():
     with pytest.raises(AttributeError):
-        response = await UserBankAccountService.create_user_bank_accounts(
-            bank_account_repository="", jwt_data=jwt_with_bank_account_to_create
+        await UserBankAccountService.create_user_bank_accounts(
+            bank_account_repository=None, jwt_data=jwt_with_bank_account_to_create
         )
-        assert response == "'NoneType' object has no attribute 'lower'"
 
 
 @pytest.mark.asyncio
 async def test_when_jwt_data_payload_is_invalid_then_raise_type_error_as_expected():
     with pytest.raises(TypeError):
-        response = await UserBankAccountService.create_user_bank_accounts(
-            jwt_data="", bank_account_repository=UserBankAccountRepository
+        await UserBankAccountService.create_user_bank_accounts(
+            jwt_data=None, bank_account_repository=UserBankAccountRepository
         )
-        assert response == "string indices must be integers"

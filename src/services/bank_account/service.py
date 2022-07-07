@@ -90,7 +90,7 @@ class UserBankAccountService:
         unique_id = thebes_answer["user"]["unique_id"]
         bank_account = jwt_data["bank_account"]
         bank_account_id = bank_account["id"]
-        device_info = bank_account.pop("device_info")
+        device_info = bank_account.get("device_info")
 
         user_bank_account_id_exists = (
             await bank_account_repository.user_bank_account_id_exists(
