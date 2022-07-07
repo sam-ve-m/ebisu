@@ -11,6 +11,7 @@ from src.domain.earning.base.response.model import EarningsTransactionResponse
 class EarningsRecordResponse(BaseModel):
     paid: List[EarningsTransactionResponse]
     payable: List[EarningsTransactionResponse]
+    record_date: list
 
 
 class EarningsModelToResponse:

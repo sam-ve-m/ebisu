@@ -48,6 +48,8 @@ class EarningsBrRecord:
                     """
 
         total_earnings_transactions = EarningsClientRepository.get_data(sql=query)
+        if total_earnings_transactions.pop().get("PRICE") is None:
+            return 0
         earnings_response = sum(
             [
                 total_earnings_transaction["PRICE"]

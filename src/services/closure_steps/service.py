@@ -69,21 +69,20 @@ class ClosureSteps:
 
     @classmethod
     async def _verify_earnings(cls, region: str, jwt_data: dict) -> bool:
-        if region == Region.US.value:  # TODO: implement pending earnings in US
-            return False
         earnings_model = EarningsClientModel(
             region=region,
-            limit=1,
-            offset=0
+            limit=1
         )
-        earnings_service_response = cls.earnings_service.get_future_earnings(
+        earnings_service_response = await cls.earnings_service.get_service_response(
             earnings_client=earnings_model, jwt_data=jwt_data
         )
-        earnings = earnings_service_response.get("future_earnings", False)
+        payable_earnings = bool(earnings_service_response.payable)
+        record_date_earnings = bool(earnings_service_response.record_date)
+        earnings = payable_earnings or record_date_earnings
 
-        if earnings != []:
-            return False
-        return True
+        if not earnings:
+            return True
+        return False
 
     @classmethod
     async def get_closure_steps_by_region(cls, region: str, jwt_data: dict) -> tuple:
