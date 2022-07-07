@@ -63,7 +63,6 @@ async def test_when_sending_the_user_trade_params_then_return_the_normalized_dat
         user_trade=user_trade_dummy, region=Region.BR
     )
     assert response == normalized_data_dummy
-    mock_normalize_open_order.assert_called_with("MYPK3")
     assert isinstance(response, dict)
 
 
