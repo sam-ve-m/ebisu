@@ -1,6 +1,6 @@
+from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from src.repositories.statements.repository import StatementsRepository
-from src.domain.enums.region import Region
 from src.services.get_balance.strategies import balance_region
 
 

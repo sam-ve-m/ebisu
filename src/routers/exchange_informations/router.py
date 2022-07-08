@@ -11,7 +11,9 @@ from src.domain.statement.us.response.model import (
 from src.domain.validators.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
-from src.domain.validators.exchange_info.get_closure_steps_validator import ClosureStepsModel
+from src.domain.validators.exchange_info.get_closure_steps_validator import (
+    ClosureStepsModel,
+)
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.domain.validators.exchange_info.get_statement_validator import (
     GetBrStatement,

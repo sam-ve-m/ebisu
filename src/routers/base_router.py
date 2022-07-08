@@ -20,7 +20,7 @@ from src.domain.exception import (
     NotMappedCurrency,
     InvalidElectronicaSignature,
     UnauthorizedError,
-    FailToGetDataFromTransportLayer
+    FailToGetDataFromTransportLayer,
 )
 
 # ROUTERS

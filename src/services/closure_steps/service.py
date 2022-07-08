@@ -1,3 +1,5 @@
+from etria_logger import Gladsheim
+
 from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from src.domain.validators.exchange_info.get_closure_steps_validator import (
@@ -47,49 +49,59 @@ class ClosureSteps:
     @classmethod
     async def _verify_balance(cls, region: str, jwt_data: dict) -> bool:
         balance_model = GetBalanceModel(region=region)
-        balance_service_response = await cls.balance_service.get_service_response(
-            balance=balance_model, jwt_data=jwt_data
-        )
-        balance = balance_service_response.get("balance", -1)
-        balance = float(balance)
+        try:
+            balance_service_response = await cls.balance_service.get_service_response(
+                balance=balance_model, jwt_data=jwt_data
+            )
+            balance = balance_service_response.get("balance")
+            balance = float(balance)
+        except Exception as ex:
+            message = "Failed to verify balance"
+            Gladsheim.error(error=ex, message=message, region=region)
+            raise ex
 
-        if balance != 0:
-            return False
-        return True
+        has_no_balance = not balance
+        return has_no_balance
 
     @classmethod
     async def _verify_positions(cls, region: str, jwt_data: dict) -> bool:
-        accounts = await cls._get_user_accounts(region, jwt_data)
-        positions = await cls.positions_service.get_positions_by_region(
-            region, accounts
-        )
-        if positions != 0:
-            return False
-        return True
+        try:
+            accounts = await cls._get_user_accounts(region, jwt_data)
+            positions = await cls.positions_service.count_positions_by_region(
+                region, accounts
+            )
+        except Exception as ex:
+            message = "Failed to verify positions"
+            Gladsheim.error(error=ex, message=message, region=region)
+            raise ex
+
+        has_no_positions = not positions
+        return has_no_positions
 
     @classmethod
     async def _verify_earnings(cls, region: str, jwt_data: dict) -> bool:
-        earnings_model = EarningsClientModel(
-            region=region,
-            limit=1
-        )
-        earnings_service_response = await cls.earnings_service.get_service_response(
-            earnings_client=earnings_model, jwt_data=jwt_data
-        )
-        payable_earnings = bool(earnings_service_response.payable)
-        record_date_earnings = bool(earnings_service_response.record_date)
-        earnings = payable_earnings or record_date_earnings
+        earnings_model = EarningsClientModel(region=region, limit=1)
+        try:
+            earnings_service_response = await cls.earnings_service.get_service_response(
+                earnings_client=earnings_model, jwt_data=jwt_data
+            )
+            payable_earnings = bool(earnings_service_response.payable)
+            record_date_earnings = bool(earnings_service_response.record_date)
+        except Exception as ex:
+            message = "Failed to verify earnings"
+            Gladsheim.error(error=ex, message=message, region=region)
+            raise ex
 
-        if not earnings:
-            return True
-        return False
+        earnings = payable_earnings or record_date_earnings
+        has_no_earnings = not earnings
+        return has_no_earnings
 
     @classmethod
     async def get_closure_steps_by_region(cls, region: str, jwt_data: dict) -> tuple:
         result = {
             "balance": await cls._verify_balance(region, jwt_data),
             "positions": await cls._verify_positions(region, jwt_data),
-            "earnings": await cls._verify_earnings(region, jwt_data)
+            "earnings": await cls._verify_earnings(region, jwt_data),
         }
         steps_are_ok = all([value for key, value in result.items()])
 

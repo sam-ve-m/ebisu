@@ -83,7 +83,7 @@ async def test_get_user_accounts_us(get_portfolios_by_region_mock):
 
 @mark.asyncio
 @patch.object(ClosureSteps, "_get_user_accounts")
-@patch.object(UserPositionsService, "get_positions_by_region")
+@patch.object(UserPositionsService, "count_positions_by_region")
 async def test_verify_positions_when_client_have_positions(
     positions_service_mock, _get_user_accounts_mock
 ):
@@ -95,7 +95,7 @@ async def test_verify_positions_when_client_have_positions(
 
 @mark.asyncio
 @patch.object(ClosureSteps, "_get_user_accounts")
-@patch.object(UserPositionsService, "get_positions_by_region")
+@patch.object(UserPositionsService, "count_positions_by_region")
 async def test_verify_positions_when_client_dont_have_positions(
     positions_service_mock, _get_user_accounts_mock
 ):

@@ -33,11 +33,11 @@ from tests.src.stubs.bank_account_stubs.stub_get_account import (
 @patch.object(Persephone, "send_to_persephone", return_value=[True, True])
 @patch.object(Config, "get", return_value="lala")
 async def test_create_user_when_sending_the_right_params_then_return_the_duly_deleted_message(
-        mock_send_to_persephone,
-        mock_bank_code_from_client_exists,
-        mock_save_registered_user_bank_accounts,
-        mock_existing_user_bank_account_and_is_activated,
-        mock_get
+    mock_send_to_persephone,
+    mock_bank_code_from_client_exists,
+    mock_save_registered_user_bank_accounts,
+    mock_existing_user_bank_account_and_is_activated,
+    mock_get,
 ):
 
     jwt_data = deepcopy(jwt_with_bank_account_to_create)
@@ -63,11 +63,11 @@ async def test_create_user_when_sending_the_right_params_then_return_the_duly_de
 @patch.object(Persephone, "send_to_persephone", return_value=[False, True])
 @patch.object(Config, "get", return_value="lala")
 async def test_create_user_when_sending_the_right_params_but_account_is_from_user_and_account_is_already_activated(
-        mock_existing_user_bank_account_and_is_activated,
-        mock_save_registered_user_bank_accounts,
-        mock_bank_code_from_client_exists,
-        mock_send_to_persephone,
-        repository_env
+    mock_existing_user_bank_account_and_is_activated,
+    mock_save_registered_user_bank_accounts,
+    mock_bank_code_from_client_exists,
+    mock_send_to_persephone,
+    repository_env,
 ):
     jwt_data = deepcopy(jwt_with_bank_account_to_create)
     with pytest.raises(FailToSaveAuditingTrail):
@@ -90,11 +90,11 @@ async def test_create_user_when_sending_the_right_params_but_account_is_from_use
 @patch.object(Persephone, "send_to_persephone", return_value=[False, False])
 @patch.object(Config, "get", return_value="lala")
 async def test_when_sending_the_right_params_and_bank_account_is_not_activated_then_raise_fail_to_save(
-        mock_send_to_persephone,
-        mock_bank_code_from_client_exists,
-        mock_save_registered_user_bank_accounts,
-        mock_existing_user_bank_account_and_is_activated,
-        mock_get
+    mock_send_to_persephone,
+    mock_bank_code_from_client_exists,
+    mock_save_registered_user_bank_accounts,
+    mock_existing_user_bank_account_and_is_activated,
+    mock_get,
 ):
     jwt_data = deepcopy(jwt_with_bank_account_to_create)
     with pytest.raises(FailToSaveAuditingTrail):
@@ -117,11 +117,11 @@ async def test_when_sending_the_right_params_and_bank_account_is_not_activated_t
 @patch.object(Persephone, "send_to_persephone", return_value=[True, True])
 @patch.object(Config, "get", return_value="lala")
 async def test_create_user_when_sending_the_right_params_but_account_is_activated_and_saved(
-        mock_send_to_persephone,
-        mock_bank_code_from_client_exists,
-        mock_save_registered_user_bank_accounts,
-        mock_existing_user_bank_account_and_is_activated,
-        mock_get
+    mock_send_to_persephone,
+    mock_bank_code_from_client_exists,
+    mock_save_registered_user_bank_accounts,
+    mock_existing_user_bank_account_and_is_activated,
+    mock_get,
 ):
     jwt_data = deepcopy(jwt_with_bank_account_to_create)
 

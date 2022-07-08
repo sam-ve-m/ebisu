@@ -14,5 +14,5 @@ from .model import (
     ForbiddenError,
     BadRequestError,
     InternalServerError,
-    UnauthorizedError
+    UnauthorizedError,
 )

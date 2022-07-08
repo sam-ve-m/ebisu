@@ -1,3 +1,5 @@
+from etria_logger import Gladsheim
+
 from src.repositories.statements.repository import StatementsRepository
 
 
@@ -10,9 +12,20 @@ class GetBrBalance:
         query = (
             f"""SELECT VL_TOTAL FROM CORRWIN.TCCSALDO WHERE CD_CLIENTE = {account}"""
         )
-        balance = GetBrBalance.oracle_singleton_instance.get_data(sql=query)
+        try:
+            balance = GetBrBalance.oracle_singleton_instance.get_data(sql=query)
+            balance_value = balance.pop()["VL_TOTAL"]
+            if balance_value is None:
+                balance_value = 0
+            balance_value = float(balance_value)
 
-        if not balance:
-            return {"balance": -1}
-        balance_response = {"balance": balance.pop().get("VL_TOTAL")}
+        except Exception as ex:
+            Gladsheim.error(
+                message=f"GetBrBalance::get_balance::Error to get balance in BR",
+                account=account,
+                error=ex,
+            )
+            raise ex
+
+        balance_response = {"balance": balance_value}
         return balance_response

@@ -23,7 +23,7 @@ class Earning:
             "description": self.description,
             "amount_per_share": self.amount_per_share,
             "date": self.date.get_date_in_time_stamp(),
-            "amount": self.amount
+            "amount": self.amount,
         }
 
         return earning_transaction
