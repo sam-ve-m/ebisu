@@ -23,4 +23,4 @@ class DwBaseTransport:
                 response=response,
                 request=request
             )
-        raise FailToGetDataFromTransportLayer()
+            raise FailToGetDataFromTransportLayer()
