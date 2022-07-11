@@ -12,6 +12,7 @@ from src.domain.statement.us.response.model import (
 from src.domain.validators.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
+from src.domain.validators.exchange_info.count_client_order_validator import GetClientOrderQuantityModel
 from src.domain.validators.exchange_info.get_closure_steps_validator import (
     AccountCloseStepsRequest,
 )
@@ -29,6 +30,7 @@ from src.domain.validators.exchange_info.list_client_order_validator import (
 
 # SERVICE IMPORTS
 from src.services.account_close_steps.service import AccountCloseStepsService
+from src.services.count_client_orders.count_client_orders import CountOrders
 from src.services.earnings_from_client.get_earnings_from_client import (
     EarningsFromClient,
 )
@@ -110,6 +112,18 @@ class ExchangeRouter:
             list_client_orders=list_client_orders, jwt_data=jwt_data
         )
         return list_client_orders_response
+
+    @staticmethod
+    @__exchange_router.get("/client_orders_quantity", tags=["Client Orders"])
+    async def get_client_orders(
+        request: Request, client_order_quantity: GetClientOrderQuantityModel = Depends()
+    ):
+        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        response = await CountOrders.get_service_response(
+            client_order_quantity=client_order_quantity, jwt_data=jwt_data
+        )
+        return response
+
 
     @staticmethod
     @__exchange_router.get("/earnings_client", tags=["Earnings"])
