@@ -124,7 +124,6 @@ class ExchangeRouter:
         )
         return response
 
-
     @staticmethod
     @__exchange_router.get("/earnings_client", tags=["Earnings"])
     async def get_earnings_from_client(
