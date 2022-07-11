@@ -7,11 +7,16 @@ from copy import deepcopy
 from decouple import Config
 
 from tests.src.stubs.bank_account_stubs.stub_get_account import (
-    jwt_with_bank_account_to_delete, jwt_data_dummy,
+    jwt_with_bank_account_to_delete,
+    jwt_data_dummy,
 )
 from src.services.bank_account.service import UserBankAccountService
 from src.repositories.bank_account.repository import UserBankAccountRepository
-from src.domain.exception import BadRequestError, InternalServerError, FailToSaveAuditingTrail
+from src.domain.exception import (
+    BadRequestError,
+    InternalServerError,
+    FailToSaveAuditingTrail,
+)
 from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
 from persephone_client import Persephone
 
@@ -29,7 +34,7 @@ async def test_delete_user_when_sending_the_right_params_then_return_the_duly_up
     mock_get_registered_user_bank_accounts,
     mock_delete_registered_user_bank_accounts,
     mock_send_to_persephone,
-    mock_get
+    mock_get,
 ):
     jwt_data = deepcopy(jwt_with_bank_account_to_delete)
 
@@ -72,7 +77,9 @@ async def test_delete_user_when_sending_an_invalid_bank_repository_and_invalid_j
 )
 @patch.object(Persephone, "send_to_persephone", return_value=[False, False])
 async def test_when_bank_account_and_register_account_are_false_then_raise_fail_to_delete_error(
-    mock_get_registered_user_bank_accounts, mock_update_registered_user_bank_accounts, mock_send_to_persephone
+    mock_get_registered_user_bank_accounts,
+    mock_update_registered_user_bank_accounts,
+    mock_send_to_persephone,
 ):
     jwt_data = deepcopy(jwt_with_bank_account_to_delete)
     with pytest.raises(BadRequestError):
@@ -86,14 +93,18 @@ async def test_when_bank_account_and_register_account_are_false_then_raise_fail_
 @patch.object(
     UserBankAccountRepository, "user_bank_account_id_exists", return_value=True
 )
-@patch.object(UserBankAccountRepository, "delete_registered_user_bank_accounts", return_value=False)
+@patch.object(
+    UserBankAccountRepository,
+    "delete_registered_user_bank_accounts",
+    return_value=False,
+)
 @patch.object(Persephone, "send_to_persephone", return_value=[False, False])
 @patch.object(Config, "get", return_value="lala")
 async def test_when_register_account_is_false_then_raise_the_expected_fail_to_save_auditing_error(
     mock_send_to_persephone,
     mock_delete_registered_user_bank_accounts,
     mock_user_bank_account_id_exists,
-    mock_get
+    mock_get,
 ):
     jwt_data = deepcopy(jwt_with_bank_account_to_delete)
     with pytest.raises(FailToSaveAuditingTrail):

@@ -8,7 +8,9 @@ from decouple import Config, RepositoryEnv
 with patch.object(Config, "get", return_value="info"):
     with patch.object(logging.config, "dictConfig"):
         with patch.object(RepositoryEnv, "__init__", return_value=None):
-            from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
+            from src.repositories.base_repositories.mongo_db.base import (
+                MongoDbBaseRepository,
+            )
             from src.repositories.exchange_operations.repository import (
                 UserExchangeOperationsRepository,
             )

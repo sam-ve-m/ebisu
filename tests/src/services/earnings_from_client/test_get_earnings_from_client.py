@@ -27,6 +27,11 @@ from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
 @pytest.mark.asyncio
 @patch.object(
     EarningsBrRecord,
+    "get_total_paid_earnings",
+    return_value=10.0,
+)
+@patch.object(
+    EarningsBrRecord,
     "get_br_payable_earnings",
     return_value=get_br_payable_earnings_stub,
 )
@@ -44,6 +49,7 @@ from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
     return_value=get_earnings_response_stub,
 )
 async def test_get_earnings_client_br_account_when_sending_right_params_then_return_the_expected(
+    mock_total_paid_earnings,
     mock_get_br_payable_earnings,
     mock_get_br_paid_earnings,
     mock_get_br_record_date_earnings,

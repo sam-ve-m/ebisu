@@ -39,7 +39,7 @@ class EarningsBrRecord:
     @staticmethod
     def get_total_paid_earnings(account: str) -> float:
 
-        query = f""" SELECT  SUM(MA.PREC_LQDO) as PRICE FROM CORRWIN.TCFMOVI_ACAO MA
+        query = f""" SELECT NVL(SUM(MA.PREC_LQDO), 0) as PRICE FROM CORRWIN.TCFMOVI_ACAO MA
                     LEFT JOIN CORRWIN.TCFTIPO_MVTO TM ON TM.cod_tipo_mvto= MA.tipo_mvto
                     WHERE COD_CLI = ('{account}') 
                     AND DATA_MVTO <> TO_DATE('31-DEC-9999', 'DD-MM-YYYY')

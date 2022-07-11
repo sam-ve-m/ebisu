@@ -87,8 +87,8 @@ jwt_with_bank_account_to_update = {
             "public_ip": "1548455475221",
             "access_ip": "0000145455545",
             "phone_wifi_ip": "123255444456",
-            "geolocation": "Brasil, São Paulo, SP"
-        }
+            "geolocation": "Brasil, São Paulo, SP",
+        },
     },
 }
 
@@ -126,8 +126,9 @@ jwt_with_bank_account_to_delete = {
             "public_ip": "1548455475221",
             "access_ip": "0000145455545",
             "phone_wifi_ip": "123255444456",
-            "geolocation": "Brasil, São Paulo, SP"
-        }}
+            "geolocation": "Brasil, São Paulo, SP",
+        },
+    },
 }
 
 jwt_with_bank_account_to_create = {
@@ -170,8 +171,8 @@ jwt_with_bank_account_to_create = {
             "public_ip": "1548455475221",
             "access_ip": "0000145455545",
             "phone_wifi_ip": "123255444456",
-            "geolocation": "Brasil, São Paulo, SP"
-        }
+            "geolocation": "Brasil, São Paulo, SP",
+        },
     },
 }
 
@@ -214,8 +215,8 @@ jwt_with_bank_account_to_create_invalid = {
             "public_ip": "1548455475221",
             "access_ip": "0000145455545",
             "phone_wifi_ip": "123255444456",
-            "geolocation": "Brasil, São Paulo, SP"
-        }
+            "geolocation": "Brasil, São Paulo, SP",
+        },
     },
 }
 

@@ -31,7 +31,7 @@ class DwEarningsTransport:
                 date=earning_transaction.get("tranWhen"),
                 region_date_format=RegionDateFormat.US_DATE_FORMAT,
             ),
-            amount=earning_transaction.get("accountAmount")
+            amount=earning_transaction.get("accountAmount"),
         )
 
         return earning_model

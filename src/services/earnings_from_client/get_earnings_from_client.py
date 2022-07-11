@@ -108,11 +108,13 @@ class EarningsFromClient:
             Region.US: EarningsFromClient.get_earnings_client_us_account,
         }
         resolver: Callable = earnings_response.get(map_key)
-        xxx = list()
+        resolver_response = list()
         if resolver:
-            xxx = await resolver(jwt_data=jwt_data, earnings_client=earnings_client)
+            resolver_response = await resolver(
+                jwt_data=jwt_data, earnings_client=earnings_client
+            )
 
-        return xxx
+        return resolver_response
 
     @staticmethod
     async def __get_range_date_and_offset(

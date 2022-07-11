@@ -44,18 +44,18 @@ from tests.src.stubs.router_bank_accounts_stubs.stubs import (
 
 
 device_info_stub = {
-                "device_name": "iphone",
-                "device_model": "13",
-                "is_emulator": True,
-                "device_operating_system_name": "IOS",
-                "os_sdk_version": "45125",
-                "device_is_in_root_mode": True,
-                "device_network_interfaces": "hahahaha",
-                "public_ip": "1548455475221",
-                "access_ip": "0000145455545",
-                "phone_wifi_ip": "123255444456",
-                "geolocation": "Brasil, São Paulo, SP",
-            }
+    "device_name": "iphone",
+    "device_model": "13",
+    "is_emulator": True,
+    "device_operating_system_name": "IOS",
+    "os_sdk_version": "45125",
+    "device_is_in_root_mode": True,
+    "device_network_interfaces": "hahahaha",
+    "public_ip": "1548455475221",
+    "access_ip": "0000145455545",
+    "phone_wifi_ip": "123255444456",
+    "geolocation": "Brasil, São Paulo, SP",
+}
 
 
 @pytest.mark.asyncio
@@ -234,9 +234,9 @@ async def test_when_getting_the_bank_account_with_a_valid_jwt_then_return_the_ba
             headers=MagicMock(raw=[x_thebes_bank_tuple, x_mist_bank_tuple]),
         ),
         delete_bank_account=MagicMock(
-            id="ff302d01-849c-4805-b754-c1636cbbb1f3",
-            device_info=device_info_stub
-        ))
+            id="ff302d01-849c-4805-b754-c1636cbbb1f3", device_info=device_info_stub
+        ),
+    )
 
     assert response == {"message": "Deleted"}
 
@@ -250,8 +250,8 @@ async def test_when_sending_an_invalid_jwt_to_delete_account_then_raise_unauthor
                 scope=scope_correct_stub, headers=MagicMock(raw=[scope_stub])
             ),
             delete_bank_account=MagicMock(
-                id="ff302d01-849c-4805-b754-c1636cbbb1f3",
-                device_info=device_info_stub),
+                id="ff302d01-849c-4805-b754-c1636cbbb1f3", device_info=device_info_stub
+            ),
         )
 
 

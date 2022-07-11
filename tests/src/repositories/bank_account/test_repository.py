@@ -5,11 +5,16 @@ import logging.config
 
 # INTERNAL LIBS
 from decouple import Config, RepositoryEnv
+
 with patch.object(Config, "get", return_value="info"):
     with patch.object(logging.config, "dictConfig"):
         with patch.object(RepositoryEnv, "__init__", return_value=None):
-            from src.repositories.bank_account.repository import UserBankAccountRepository
-            from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
+            from src.repositories.bank_account.repository import (
+                UserBankAccountRepository,
+            )
+            from src.repositories.base_repositories.mongo_db.base import (
+                MongoDbBaseRepository,
+            )
             from src.services.bank_account.service import UserBankAccountService
             from src.services.get_bank_code.service import GetBankCode
 
@@ -95,7 +100,6 @@ async def test_when_sending_the_right_params_then_return_the_expect_which_is_fal
         )
     )
     assert response is False
-
 
 
 @pytest.mark.asyncio
@@ -198,7 +202,7 @@ def test_when_sending_invalid_params_to_bank_code_from_client_exists_then_return
     mock_get_service_response,
 ):
     response = UserBankAccountService.bank_code_from_client_exists(bank="123456")
-    assert response is False
+    assert response == False
 
 
 find_one_stub = {"name": "Teste Teste", "identifier_document": {"cpf": "40340423410"}}

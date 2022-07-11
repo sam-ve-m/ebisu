@@ -25,6 +25,7 @@ import logging.config
 
 # PROJECT IMPORTS
 from decouple import Config, RepositoryEnv
+
 with patch.object(Config, "get", return_value="info"):
     with patch.object(logging.config, "dictConfig"):
         with patch.object(RepositoryEnv, "__init__", return_value=None):

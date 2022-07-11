@@ -3,7 +3,11 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 # Internal Libs
+from src.domain.enums.order_status import OrderStatus
 from src.domain.enums.region import Region
+from src.domain.validators.exchange_info.list_client_order_validator import (
+    ListClientOrderModel,
+)
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from src.services.list_client_orders.list_client_orders import ListOrders
 from src.services.list_client_orders.strategies import GetBrOrders
@@ -23,7 +27,7 @@ from tests.src.stubs.project_stubs.stub_list_client_orders import (
     data_two_response,
 )
 
-list_data_dummy = ["NEW", "FILLED"]
+list_data_dummy = [OrderStatus.NEW, OrderStatus.FILLED]
 
 
 # def test_when_sending_two_order_status_then_return_the_splited_data_as_expected():

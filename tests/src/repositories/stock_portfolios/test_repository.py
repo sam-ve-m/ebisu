@@ -5,11 +5,16 @@ import logging.config
 
 # PROJECT IMPORTS
 from decouple import Config, RepositoryEnv
+
 with patch.object(Config, "get", return_value="info"):
     with patch.object(logging.config, "dictConfig"):
         with patch.object(RepositoryEnv, "__init__", return_value=None):
-            from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
-            from src.repositories.user_portfolios.repository import UserPortfoliosRepository
+            from src.repositories.base_repositories.mongo_db.base import (
+                MongoDbBaseRepository,
+            )
+            from src.repositories.user_portfolios.repository import (
+                UserPortfoliosRepository,
+            )
 
 # STUB IMPORTS
 from tests.src.repositories.stock_portfolios.stub import (
