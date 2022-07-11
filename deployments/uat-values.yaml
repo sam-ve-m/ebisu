@@ -44,7 +44,7 @@ containers:
       value: "UTF-8"
     - name: ORACLE_PORT_STATEMENT
       value: "1521"
-      #oracle earnings
+      #oracle earning
     - name: ORACLE_BASE_DNS_EARNINGS
       value: "172.30.18.44"
     - name: ORACLE_PORT_EARNINGS
@@ -57,6 +57,16 @@ containers:
       value: "udataedb001"
     - name: ORACLE_PASSWORD_EARNINGS
       value: "1DbCt$4UdAe0"
+    - name: ORACLE_POSITION_USER
+      value: "UJTHMDB001"
+    - name: ORACLE_POSITION_PASSWORD
+      value: "q5EMWlxNoN66"
+    - name: ORACLE_POSITION_DSN
+      value: "172.30.18.44"
+    - name: ORACLE_POSITION_PORT
+      value: "1521"
+    - name: ORACLE_POSITION_SERVICE
+      value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
     - name: MONGO_CONNECTION_URL
       value: "mongodb://bnd:4FZPY5Yj@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
     - name: MONGODB_DATABASE_NAME

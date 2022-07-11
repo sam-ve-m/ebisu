@@ -31,9 +31,11 @@ async def test_get_user_when_sending_the_right_params_then_return_all_the_accoun
 
 @pytest.mark.asyncio
 @patch.object(
-    UserBankAccountRepository, "get_registered_user_bank_accounts", return_value=None
+    UserBankAccountRepository,
+    "get_registered_user_bank_accounts",
+    return_value={"bank_accounts": []},
 )
-async def test_get_user_when_sending_the_right_params_then_return_no_account_as_expected(
+async def test_get_user_when_sending_the_right_params_then_return_no_bank_account_from_database_as_expected(
     mock_get_registered_user_bank_accounts,
 ):
     none_data_stub = {"bank_accounts": []}

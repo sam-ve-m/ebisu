@@ -1,5 +1,7 @@
+# STANDARD IMPORTS
 from dataclasses import dataclass
 
+# PROJECT IMPORTS
 from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
 
 
@@ -13,7 +15,7 @@ class Transaction:
         transaction = {
             "date": self.date.get_date_in_time_stamp(),
             "description": self.description,
-            "value": self.value
+            "value": self.value,
         }
 
         return transaction

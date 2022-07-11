@@ -1,126 +1,159 @@
-# INTERNAL LIBS
+# STANDARD LIBS
+from datetime import datetime
+from typing import Tuple, Callable
+
+# PROJECT IMPORTS
+from src.domain.date_formatters.region.timestamp.model import RegionTimeStamp
+from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
+from src.domain.earning.br.response.model import BrEarningsModelToResponse
 from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
-from src.repositories.earnings.repository import EarningsClientRepository
-from src.services.earnings_from_client.strategies import earnings_client_region
+from src.repositories.earnings.repository import (
+    EarningsClientRepository,
+    EarningsBrRecord,
+)
+from src.repositories.user_portfolios.repository import UserPortfoliosRepository
+from src.domain.earning.us.response.model import (
+    EarningsRecordResponse,
+    EarningsModelToResponse,
+)
+from src.transport.drive_wealth.earnings.transport import DwEarningsTransport
+from src.domain.earning.us.request.model import TransactionRequest, QueryParams
 
 
 class EarningsFromClient:
     oracle_earnings_client_singleton_instance = EarningsClientRepository
 
-    @staticmethod
-    def get_account_by_region(portfolios: dict, region: str) -> str:
+    @classmethod
+    async def get_earnings_client_br_account(
+        cls, earnings_client: EarningsClientModel, jwt_data: dict
+    ) -> EarningsRecordResponse:
 
+        portfolios = jwt_data.get("user", {}).get("portfolios", {})
+        earnings_region = earnings_client.region.value
+        region_portfolios = portfolios.get(earnings_region.lower(), {})
+
+        account = cls.__extract_account(region_portfolios, earnings_client.region.value)
+
+        total_paid_earnings = EarningsBrRecord.get_total_paid_earnings(account=account)
+
+        payable_transactions = EarningsBrRecord.get_br_payable_earnings(
+            account=account,
+            limit=earnings_client.limit,
+            earnings_types=earnings_client.earnings_types,
+        )
+
+        paid_transactions = EarningsBrRecord.get_br_paid_earnings(
+            account=account,
+            limit=earnings_client.limit,
+            earnings_types=earnings_client.earnings_types,
+        )
+
+        record_transactions = EarningsBrRecord.get_br_record_date_earnings(
+            account=account,
+            limit=earnings_client.limit,
+            earnings_types=earnings_client.earnings_types,
+        )
+
+        earnings_br_transactions_response = BrEarningsModelToResponse.earnings_response(
+            payable_transactions,
+            paid_transactions,
+            record_transactions,
+            total_paid_earnings,
+        )
+
+        return earnings_br_transactions_response
+
+    @classmethod
+    async def get_earnings_client_us_account(
+        cls, jwt_data: dict, earnings_client: EarningsClientModel
+    ) -> EarningsRecordResponse:
+
+        unique_id, account = EarningsFromClient.__extract_identifier_data_from_jwt(
+            jwt_data=jwt_data
+        )
+
+        from_date, to_date = await EarningsFromClient.__get_range_date_and_offset(
+            unique_id=unique_id
+        )
+
+        transaction_request = TransactionRequest(
+            account=account,
+            query_params=QueryParams(
+                from_date=from_date, to_date=to_date, limit=earnings_client.limit
+            ),
+        )
+
+        earnings_us_transactions = (
+            await DwEarningsTransport.get_us_transaction_earnings(
+                transaction_request=transaction_request
+            )
+        )
+
+        earnings_us_transactions_response = EarningsModelToResponse.earnings_response(
+            earnings_us_transactions
+        )
+
+        return earnings_us_transactions_response
+
+    @classmethod
+    async def get_service_response(
+        cls, earnings_client: EarningsClientModel, jwt_data: dict
+    ) -> EarningsRecordResponse:
+
+        map_key = earnings_client.region
+
+        earnings_response = {
+            Region.BR: EarningsFromClient.get_earnings_client_br_account,
+            Region.US: EarningsFromClient.get_earnings_client_us_account,
+        }
+        resolver: Callable = earnings_response.get(map_key)
+        resolver_response = list()
+        if resolver:
+            resolver_response = await resolver(
+                jwt_data=jwt_data, earnings_client=earnings_client
+            )
+
+        return resolver_response
+
+    @staticmethod
+    async def __get_range_date_and_offset(
+        unique_id: str,
+    ) -> Tuple[RegionTimeStamp, RegionTimeStamp]:
+
+        from_raw_date = (
+            await UserPortfoliosRepository.get_default_portfolio_created_at_by_region(
+                unique_id=unique_id, region="US"
+            )
+        )
+
+        to_raw_date = int(datetime.now().timestamp() * 1000)
+
+        from_date = RegionTimeStamp(
+            timestamp=from_raw_date, region_date_format=RegionDateFormat.US_DATE_FORMAT
+        )
+        to_date = RegionTimeStamp(
+            timestamp=to_raw_date, region_date_format=RegionDateFormat.US_DATE_FORMAT
+        )
+
+        return from_date, to_date
+
+    @staticmethod
+    def __extract_account(portfolios: dict, region: str) -> str:
         accounts_by_region = {
             Region.BR.value: "bmf_account",
             Region.US.value: "dw_account",
         }
         fields = accounts_by_region[region]
 
-        accounts = portfolios.get(fields)
-        return accounts
+        account = portfolios.get(fields)
+        return account
 
-    @classmethod
-    def normalize_earnings_data(cls, client_earnings: dict) -> dict:
-
-        normalized_data = {
-            "client_code": client_earnings.get("COD_CLI"),
-            "trade_history": client_earnings.get("DESC_HIST_MVTO"),
-            "trade_type": client_earnings.get("DESC_RESU_TIPO_MOVTO"),
-            "trade_code": client_earnings.get("COD_NEG"),
-            "transaction_amount": client_earnings.get("QTDE_MVTO"),
-            "net_price": client_earnings.get("PREC_LQDO"),
-            "transaction_date": client_earnings.get("DATA_MVTO"),
-        }
-
-        return normalized_data
-
-    @classmethod
-    def payable_earnings_data_response(
-        cls, earnings_client: EarningsClientModel, accounts: str, open_earnings
-    ):
-
-        query_payable_values = open_earnings.build_query_payable_earnings(
-            cod_client=accounts,
-            limit=earnings_client.limit,
-            offset=earnings_client.offset,
-            earnings_types=earnings_client.earnings_types,
-        )
-
-        payable_earnings_request = (
-            open_earnings.oracle_earnings_client_singleton_instance.get_data(
-                sql=query_payable_values
-            )
-        )
-
-        earnings_payable_values = [
-            EarningsFromClient.normalize_earnings_data(earnings_res)
-            for earnings_res in payable_earnings_request
-        ]
-        return earnings_payable_values
-
-    @classmethod
-    def record_date_earnings_response(
-        cls, earnings_client: EarningsClientModel, accounts: str, open_earnings
-    ):
-
-        query_record_date_values = open_earnings.build_query_record_date_earnings(
-            cod_client=accounts,
-            limit=earnings_client.limit,
-            offset=earnings_client.offset,
-            earnings_types=earnings_client.earnings_types,
-        )
-
-        record_date_earnings_request = (
-            open_earnings.oracle_earnings_client_singleton_instance.get_data(
-                sql=query_record_date_values
-            )
-        )
-
-        earnings_record_date_values = [
-            EarningsFromClient.normalize_earnings_data(earnings_response)
-            for earnings_response in record_date_earnings_request
-        ]
-        return earnings_record_date_values
-
-    @classmethod
-    def get_service_response(
-        cls, earnings_client: EarningsClientModel, jwt_data: dict
-    ) -> dict:
-
+    @staticmethod
+    def __extract_identifier_data_from_jwt(jwt_data: dict):
         user = jwt_data.get("user", {})
-        portfolios = user.get("portfolios", {})
+        account = user.get("portfolios", {}).get("us", {}).get("dw_account")
 
-        region = earnings_client.region.value
-        region_portfolios = portfolios.get(region.lower(), {})
+        unique_id = user.get("unique_id")
 
-        accounts = cls.get_account_by_region(region_portfolios, region)
-
-        region = earnings_client.region.value
-        open_earnings = earnings_client_region.get(region)
-
-        earnings_payable_values = []
-        earnings_record_date_values = []
-        if open_earnings:
-            # query result of FUTURE VALUES CONFIRMED earnings (with the date informed)
-            earnings_payable_values = EarningsFromClient.payable_earnings_data_response(
-                open_earnings=open_earnings,
-                earnings_client=earnings_client,
-                accounts=accounts,
-            )
-
-            # query result of NOT YET CONFIRMED earnings (31-12-9999)
-            earnings_record_date_values = (
-                EarningsFromClient.record_date_earnings_response(
-                    open_earnings=open_earnings,
-                    earnings_client=earnings_client,
-                    accounts=accounts,
-                )
-            )
-
-        response = {
-            "payable_earnings": earnings_payable_values,
-            "record_date_earnings": earnings_record_date_values,
-        }
-
-        return response
+        return unique_id, account

@@ -4,9 +4,13 @@ from starlette import status
 import json
 
 # ERRORS
-from src.domain.exception.model import IntegrityJwtError, AuthenticationJwtError, FailToSaveAuditingTrail
+from src.domain.exception.model import (
+    IntegrityJwtError,
+    AuthenticationJwtError,
+    FailToSaveAuditingTrail, DataNotFoundError,
+)
 from etria_logger import Gladsheim
-from src.exceptions.exceptions import (
+from src.domain.exception import (
     ForbiddenError,
     BadRequestError,
     InternalServerError,
@@ -16,6 +20,7 @@ from src.exceptions.exceptions import (
     NotMappedCurrency,
     InvalidElectronicaSignature,
     UnauthorizedError,
+    FailToGetDataFromTransportLayer,
 )
 
 # ROUTERS
@@ -96,6 +101,15 @@ class BaseRouter:
                 ),
             )
 
+        except UnauthorizedError as e:
+            Gladsheim.error(erro=e)
+            return Response(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                content=json.dumps(
+                    {"request_status": False, "status": 2, "msg": e.args[0]}
+                ),
+            )
+
         except ForbiddenError as e:
             return Response(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -135,14 +149,6 @@ class BaseRouter:
                 ),
             )
 
-        except UnableToProcessMoneyFlow as e:
-            return Response(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                content=json.dumps(
-                    {"request_status": False, "status": 8, "msg": e.args[0]}
-                ),
-            )
-
         except NotMappedCurrency as e:
             return Response(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -159,15 +165,6 @@ class BaseRouter:
                 ),
             )
 
-        except UnauthorizedError as e:
-            Gladsheim.error(erro=e)
-            return Response(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                content=json.dumps(
-                    {"request_status": False, "status": 2, "msg": e.args[0]}
-                ),
-            )
-
         except FailToSaveAuditingTrail as e:
             Gladsheim.error(erro=e)
             return Response(
@@ -177,13 +174,40 @@ class BaseRouter:
                 ),
             )
 
+        except FailToGetDataFromTransportLayer as e:
+            Gladsheim.error(erro=e)
+            return Response(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                content=json.dumps(
+                    {"request_status": False, "status": 12, "msg": e.args[0]}
+                ),
+            )
+
+        except UnableToProcessMoneyFlow as e:
+            return Response(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                content=json.dumps(
+                    {"request_status": False, "status": 13, "msg": e.args[0]}
+                ),
+            )
+
+        except DataNotFoundError as e:
+            Gladsheim.error(erro=e)
+            return Response(
+                status_code=status.HTTP_200_OK,
+                content=json.dumps(
+                    {"request_status": False, "status": 14, "msg": e.args[0]}
+                ),
+            )
+
         except Exception as err:
             Gladsheim.error(erro=err)
             return Response(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 content=json.dumps(
-                    {"request_status": False, "status": 6, "msg": err.args[0]}
+                    {"request_status": False, "status": 6, "msg": "An unexpected error ocurred"}
                 ),
             )
 
         return response
+

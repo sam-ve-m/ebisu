@@ -1,16 +1,26 @@
 # Standard Libs
 import pytest
 from unittest.mock import patch
+import logging.config
 
-# EXTERNAL LIBS
-from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
-from src.repositories.user_portfolios.repository import UserPortfoliosRepository
+# PROJECT IMPORTS
+from decouple import Config, RepositoryEnv
+
+with patch.object(Config, "get", return_value="info"):
+    with patch.object(logging.config, "dictConfig"):
+        with patch.object(RepositoryEnv, "__init__", return_value=None):
+            from src.repositories.base_repositories.mongo_db.base import (
+                MongoDbBaseRepository,
+            )
+            from src.repositories.user_portfolios.repository import (
+                UserPortfoliosRepository,
+            )
+
+# STUB IMPORTS
 from tests.src.repositories.stock_portfolios.stub import (
     find_one_response_stub,
     unique_id_stub,
-    find_one_by_region_stub,
     find_one_by_type_stub,
-    find_one_by_type_and_region,
 )
 
 

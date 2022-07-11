@@ -1,21 +1,26 @@
 # Standard Libs
+import decouple
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
+import logging.config
+from persephone_client import Persephone
+from copy import deepcopy
+
+# PROJECT IMPORTS
+from decouple import Config, RepositoryEnv
 
 # INTERNAL LIBS
-from tests.src.stubs.bank_account_stubs.stub_get_account import (
-    jwt_with_bank_account_to_create,
-    jwt_with_bank_account_to_create_invalid,
-)
 from src.services.bank_account.service import UserBankAccountService
 from src.repositories.bank_account.repository import UserBankAccountRepository
-from src.exceptions.exceptions import BadRequestError, InternalServerError
+from src.domain.exception import InternalServerError, FailToSaveAuditingTrail
+
+# STUB FILES
+from tests.src.stubs.bank_account_stubs.stub_get_account import (
+    jwt_with_bank_account_to_create,
+)
 
 
 @pytest.mark.asyncio
-@patch.object(
-    UserBankAccountRepository, "is_user_bank_account_from_client", return_value=True
-)
 @patch.object(
     UserBankAccountRepository,
     "existing_user_bank_account_and_is_activated",
@@ -25,15 +30,21 @@ from src.exceptions.exceptions import BadRequestError, InternalServerError
     UserBankAccountRepository, "save_registered_user_bank_accounts", return_value=True
 )
 @patch.object(UserBankAccountService, "bank_code_from_client_exists", return_value=True)
+@patch.object(Persephone, "send_to_persephone", return_value=[True, True])
+@patch.object(Config, "get", return_value="lala")
 async def test_create_user_when_sending_the_right_params_then_return_the_duly_deleted_message(
-    mock_user_bank_account_from_client,
-    mock_existing_user_bank_account_and_is_activated,
-    mock_save_registered_user_bank_accounts,
+    mock_send_to_persephone,
     mock_bank_code_from_client_exists,
+    mock_save_registered_user_bank_accounts,
+    mock_existing_user_bank_account_and_is_activated,
+    mock_get,
 ):
+
+    jwt_data = deepcopy(jwt_with_bank_account_to_create)
+
     response = await UserBankAccountService.create_user_bank_accounts(
         bank_account_repository=UserBankAccountRepository,
-        jwt_data=jwt_with_bank_account_to_create,
+        jwt_data=jwt_data,
     )
     assert response == {"message": "Created"}
     assert isinstance(response, dict)
@@ -41,31 +52,32 @@ async def test_create_user_when_sending_the_right_params_then_return_the_duly_de
 
 @pytest.mark.asyncio
 @patch.object(
-    UserBankAccountRepository, "is_user_bank_account_from_client", return_value=True
-)
-@patch.object(
     UserBankAccountRepository,
     "existing_user_bank_account_and_is_activated",
-    return_value=True,
+    return_value=False,
+)
+@patch.object(
+    UserBankAccountRepository, "save_registered_user_bank_accounts", return_value=True
 )
 @patch.object(UserBankAccountService, "bank_code_from_client_exists", return_value=True)
+@patch.object(Persephone, "send_to_persephone", return_value=[False, True])
+@patch.object(Config, "get", return_value="lala")
 async def test_create_user_when_sending_the_right_params_but_account_is_from_user_and_account_is_already_activated(
-    mock_user_bank_account_from_client,
     mock_existing_user_bank_account_and_is_activated,
+    mock_save_registered_user_bank_accounts,
     mock_bank_code_from_client_exists,
+    mock_send_to_persephone,
+    repository_env,
 ):
-
-    with pytest.raises(BadRequestError):
+    jwt_data = deepcopy(jwt_with_bank_account_to_create)
+    with pytest.raises(FailToSaveAuditingTrail):
         await UserBankAccountService.create_user_bank_accounts(
-            jwt_data=jwt_with_bank_account_to_create,
+            jwt_data=jwt_data,
             bank_account_repository=UserBankAccountRepository,
         )
 
 
 @pytest.mark.asyncio
-@patch.object(
-    UserBankAccountRepository, "is_user_bank_account_from_client", return_value=False
-)
 @patch.object(
     UserBankAccountRepository,
     "existing_user_bank_account_and_is_activated",
@@ -75,24 +87,24 @@ async def test_create_user_when_sending_the_right_params_but_account_is_from_use
     UserBankAccountRepository, "save_registered_user_bank_accounts", return_value=True
 )
 @patch.object(UserBankAccountService, "bank_code_from_client_exists", return_value=True)
-async def test_create_user_when_sending_the_right_params_and_bank_account_is_not_activated_and_account_is_not_from_client(
-    mock_user_bank_account_from_client,
-    mock_existing_user_bank_account_and_is_activated,
-    mock_save_registered_user_bank_accounts,
+@patch.object(Persephone, "send_to_persephone", return_value=[False, False])
+@patch.object(Config, "get", return_value="lala")
+async def test_when_sending_the_right_params_and_bank_account_is_not_activated_then_raise_fail_to_save(
+    mock_send_to_persephone,
     mock_bank_code_from_client_exists,
+    mock_save_registered_user_bank_accounts,
+    mock_existing_user_bank_account_and_is_activated,
+    mock_get,
 ):
-
-    with pytest.raises(BadRequestError):
+    jwt_data = deepcopy(jwt_with_bank_account_to_create)
+    with pytest.raises(FailToSaveAuditingTrail):
         await UserBankAccountService.create_user_bank_accounts(
-            jwt_data=jwt_with_bank_account_to_create,
+            jwt_data=jwt_data,
             bank_account_repository=UserBankAccountRepository,
         )
 
 
 @pytest.mark.asyncio
-@patch.object(
-    UserBankAccountRepository, "is_user_bank_account_from_client", return_value=True
-)
 @patch.object(
     UserBankAccountRepository,
     "existing_user_bank_account_and_is_activated",
@@ -102,33 +114,36 @@ async def test_create_user_when_sending_the_right_params_and_bank_account_is_not
     UserBankAccountRepository, "save_registered_user_bank_accounts", return_value=False
 )
 @patch.object(UserBankAccountService, "bank_code_from_client_exists", return_value=True)
+@patch.object(Persephone, "send_to_persephone", return_value=[True, True])
+@patch.object(Config, "get", return_value="lala")
 async def test_create_user_when_sending_the_right_params_but_account_is_activated_and_saved(
-    mock_user_bank_account_from_client,
-    mock_existing_user_bank_account_and_is_activated,
-    mock_save_registered_user_bank_accounts,
+    mock_send_to_persephone,
     mock_bank_code_from_client_exists,
+    mock_save_registered_user_bank_accounts,
+    mock_existing_user_bank_account_and_is_activated,
+    mock_get,
 ):
+    jwt_data = deepcopy(jwt_with_bank_account_to_create)
 
     with pytest.raises(InternalServerError):
         await UserBankAccountService.create_user_bank_accounts(
-            jwt_data=jwt_with_bank_account_to_create,
+            jwt_data=jwt_data,
             bank_account_repository=UserBankAccountRepository,
         )
 
 
 @pytest.mark.asyncio
-async def test_when_sending_wrong_params_then_return_an_empty_object():
+async def test_when_sending_wrong_params_of_bank_account_repository_then_raise_attribute_error():
+    jwt_data = deepcopy(jwt_with_bank_account_to_create)
     with pytest.raises(AttributeError):
-        response = await UserBankAccountService.create_user_bank_accounts(
-            bank_account_repository="", jwt_data=jwt_with_bank_account_to_create
+        await UserBankAccountService.create_user_bank_accounts(
+            bank_account_repository=None, jwt_data=jwt_data
         )
-        assert response == "'NoneType' object has no attribute 'lower'"
 
 
 @pytest.mark.asyncio
-async def test_when_jwt_data_payload_is_invalid_then_check_if_portfolios_is_in_the_payload_response():
-    with pytest.raises(TypeError) as err:
-        response = await UserBankAccountService.create_user_bank_accounts(
-            jwt_data="", bank_account_repository=UserBankAccountRepository
+async def test_when_jwt_data_payload_is_invalid_then_raise_type_error_as_expected():
+    with pytest.raises(TypeError):
+        await UserBankAccountService.create_user_bank_accounts(
+            jwt_data=None, bank_account_repository=UserBankAccountRepository
         )
-        assert response == "string indices must be integers"

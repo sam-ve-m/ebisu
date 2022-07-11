@@ -12,7 +12,7 @@ from src.core.interfaces.services.funding_and_withdrawal.money_flow_resolvers.in
 from src.repositories.funding_and_withdrawal.queue.repository import (
     FundingAndWithdrawalRepository,
 )
-from src.exceptions.exceptions import UnableToProcessMoneyFlow
+from src.domain.exception import UnableToProcessMoneyFlow
 
 
 class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
@@ -72,7 +72,9 @@ class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
             raise UnableToProcessMoneyFlow()
 
     async def _build_resume(self) -> dict:
-        cash_conversion = ">".join([currency.value for currency in self._cash_conversion])
+        cash_conversion = ">".join(
+            [currency.value for currency in self._cash_conversion]
+        )
         resume = {
             "origin_account": await self._origin_account.resume(),
             "account_destination": await self._account_destination.resume(),
