@@ -22,7 +22,7 @@ class UserPositionsRepository(OracleBaseRepository):
                 A.QTDE_TOT AS QUANTITY
                 FROM CORRWIN.VCFPOSICAO A
                 JOIN CORRWIN.TCFPAP_MERC B ON A.NUM_DIST = B.NUM_DIST AND A.TIPO_MERC = B.TIPO_MERC AND A.COD_NEG = B.COD_NEG
-                WHERE A.COD_CLI = '777' AND  A.QTDE_TOT != 0    
+                WHERE A.COD_CLI = {account} AND  A.QTDE_TOT != 0    
                 """
 
         return query

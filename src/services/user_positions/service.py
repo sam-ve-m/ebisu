@@ -1,6 +1,7 @@
 from typing import List
 
 from src.domain.enums.region import Region
+from src.domain.positions.model import Position
 from src.repositories.user_positions.repository import UserPositionsRepository
 from src.transport.drive_wealth.position.transport import DwPositionTransport
 
@@ -22,7 +23,7 @@ class UserPositionsService:
         return portfolios.get(field)
 
     @classmethod
-    async def get_positions_by_region(cls, region: str, jwt_data: dict):
+    async def get_positions_by_region(cls, region: str, jwt_data: dict) -> List[Position]:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
         region_portfolios = portfolios.get(region.lower(), {})
