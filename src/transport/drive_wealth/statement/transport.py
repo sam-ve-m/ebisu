@@ -15,7 +15,6 @@ from src.infrastructures.env_config import config
 
 class DwStatementTransport:
     transaction_url = config("DW_GET_ALL_TRANSACTIONS_URL")
-    balance_url = config("DW_BALANCE_URL")
 
     @staticmethod
     def __build_transaction_model(transaction: dict) -> Transaction:
@@ -91,18 +90,3 @@ class DwStatementTransport:
         body = await response.text()
         transactions = json.loads(body)
         return transactions
-
-    # @staticmethod
-    # async def get_balances(account: str) -> Balance:
-    #     url_formatted = DwStatementTransport.balance_url.format(account)
-    #
-    #     response = await DWApiTransport.execute_get(url=url_formatted, query_params={})
-    #     body = await response.text()
-    #     cash = json.loads(body)
-    #
-    #     balance = cash.get("cash", {}).get("cashBalance", 0.0)
-    #     balance_model = Balance(
-    #         value=balance
-    #     )
-    #
-    #     return balance_model

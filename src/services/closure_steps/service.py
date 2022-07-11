@@ -50,18 +50,15 @@ class ClosureSteps:
     async def _verify_balance(cls, region: str, jwt_data: dict) -> bool:
         balance_model = GetBalanceModel(region=region)
         try:
-            balance_service_response = await cls.balance_service.get_service_response(
+            balance = await cls.balance_service.get_service_response(
                 balance=balance_model, jwt_data=jwt_data
             )
-            balance = balance_service_response.get("balance")
-            balance = float(balance)
+            has_no_balance = not balance.has_balance()
+            return has_no_balance
         except Exception as ex:
             message = "Failed to verify balance"
             Gladsheim.error(error=ex, message=message, region=region)
             raise ex
-
-        has_no_balance = not balance
-        return has_no_balance
 
     @classmethod
     async def _verify_positions(cls, region: str, jwt_data: dict) -> bool:

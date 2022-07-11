@@ -1,76 +1,49 @@
-import asyncio
 import json
-from typing import List
 
 from etria_logger import Gladsheim
 from mepho import DWApiTransport
 
 from src.domain.balance.us.model import Balance
-from src.domain.exception import FailToGetDataFromTransportLayer
-from src.domain.positions.model import Position
 from src.infrastructures.env_config import config
+from src.transport.drive_wealth.base.transport import DwBaseTransport
 
 
-class DwBalanceTransport:
-    __transport = DWApiTransport
-
-    @classmethod
-    async def get_balances(cls, accounts: List[str]) -> List[Balance]:
-        url = config("DW_BALANCE_URL")
-        balances = await cls.__execute_get(url=url, accounts=accounts, query_params={})
-        return balances
-
-    @classmethod
-    async def __execute_get(
-        cls, url, accounts: List[str], query_params: dict
-    ) -> List[Balance]:
-        future_request = list()
-        for account in accounts:
-            url_formatted = url.format(account)
-            future_request.append(
-                cls.__transport.execute_get(
-                    url=url_formatted, query_params=query_params
-                )
-            )
-        responses = await asyncio.gather(*future_request)
-        not_ok_responses = list(filter(lambda x: x.status != 200, responses))
-        ok_responses = list(filter(lambda x: x.status == 200, responses))
-
-        if not_ok_responses:
-            Gladsheim.error(
-                message=f"DwBalanceTransport::__execute_get::Error error getting balance from dw", responses_with_error=not_ok_responses
-            )
-            raise FailToGetDataFromTransportLayer
-
-        all_balances = []
-        for response in ok_responses:
-            body_text = await response.text()
-            body_json = json.loads(body_text)
-
-            try:
-                balance_dw = body_json['cash']
-                balance = cls.__consolidate_balance(balance_dw)
-                all_balances.append(balance)
-
-            except Exception as error:
-                dw_error = body_json.get("errorCode")
-                dw_message = body_json.get("message")
-                Gladsheim.error(
-                    error=error,
-                    message=f"DwBalanceTransport::__execute_get::Error error getting balance from dw",
-                    dw_error=dw_error,
-                    dw_message=dw_message
-                )
-                raise FailToGetDataFromTransportLayer
-
-        return all_balances
+class DwBalanceTransport(DwBaseTransport):
+    __balance_url = config("DW_BALANCE_URL")
 
     @staticmethod
-    def __consolidate_balance(dw_balace: dict) -> Balance:
-        balance = Balance(
-                available_for_trade=float(dw_balace["cashAvailableForTrade"]),
-                available_for_withdraw=float(dw_balace["cashAvailableForWithdrawal"]),
-                cash_balance=float(dw_balace["cashBalance"])
+    async def get_balance(account: str) -> Balance:
+        try:
+
+            url_formatted = DwBalanceTransport.__balance_url.format(account)
+            response = await DWApiTransport.execute_get(url=url_formatted, query_params={})
+
+            DwBalanceTransport._handle_http_error_from_drive_wealth_request(
+                request=url_formatted,
+                response=response
             )
 
-        return balance
+            body = await response.text()
+            response = json.loads(body)
+
+            DwBalanceTransport._handle_dw_error_status_from_response(
+                request=url_formatted,
+                response=response
+            )
+
+            cash = response["cash"]
+            balance = Balance(
+                available_for_trade=cash.get("cashAvailableForTrade", 0),
+                available_for_withdraw=cash.get("cashAvailableForWithdrawal", 0),
+                cash_balance=cash.get("cashBalance", 0)
+            )
+
+            return balance
+
+        except Exception as err:
+
+            Gladsheim.error(
+                message=f"DwBalanceTransport::get_balances::Error when get balance from drive wealth",
+                error=err,
+            )
+            raise err
