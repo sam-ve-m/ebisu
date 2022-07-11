@@ -6,7 +6,7 @@ image:
   repository: nexus.sigame.com.br
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: sup-1.1.3.3
+  tag: 1.6.1
 
 ports:
   protocol: TCP
@@ -20,9 +20,9 @@ containers:
       value: "WARNING"
     #oracle orders
     - name: ORACLE_USER_ORDERS
-      value: "uordedb001"
+      value: "UEBISDB001"
     - name: ORACLE_PASSWORD_ORDERS
-      value: "uordedb001"
+      value: "Eb3gq7$8k7z!Sc@"
     - name: ORACLE_BASE_DSN_ORDERS
       value: "172.30.18.44"
     - name: ORACLE_PORT_ORDERS
@@ -35,9 +35,9 @@ containers:
     - name: ORACLE_BASE_DSN_STATEMENT
       value: "172.30.18.44"
     - name: ORACLE_USER_STATEMENT
-      value: "uordedb001"
+      value: "UEBISDB001"
     - name: ORACLE_PASSWORD_STATEMENT
-      value: "uordedb001"
+      value: "Eb3gq7$8k7z!Sc@"
     - name: ORACLE_SERVICE_STATEMENT
       value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
     - name: ORACLE_ENCODING_STATEMENT
@@ -54,13 +54,13 @@ containers:
     - name: ORACLE_ENCODING_STATEMENT
       value: "UTF-8"
     - name: ORACLE_USER_EARNINGS
-      value: "udataedb001"
+      value: "UEBISDB001"
     - name: ORACLE_PASSWORD_EARNINGS
-      value: "1DbCt$4UdAe0"
+      value: "Eb3gq7$8k7z!Sc@"
     - name: ORACLE_POSITION_USER
-      value: "UJTHMDB001"
+      value: "UEBISDB001"
     - name: ORACLE_POSITION_PASSWORD
-      value: "q5EMWlxNoN66"
+      value: "Eb3gq7$8k7z!Sc@"
     - name: ORACLE_POSITION_DSN
       value: "172.30.18.44"
     - name: ORACLE_POSITION_PORT
@@ -68,37 +68,19 @@ containers:
     - name: ORACLE_POSITION_SERVICE
       value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
     - name: MONGO_CONNECTION_URL
-      value: "mongodb://bnd:4FZPY5Yj@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
+      value: "mongodb://ebisu:FAoqdk31Ljdn@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
     - name: MONGODB_DATABASE_NAME
       value: "lionx"
     - name: MONGODB_USER_COLLECTION
       value: "users"
     - name: MONGODB_JWT_COLLECTION
       value: "jwts"
-    - name: MONGODB_USER
-      value: "bnd"
-    - name: MONGODB_PASSWORD
-      value: "4FZPY5Yj"
-    - name: MONGODB_HOST
-      value: "lnxbrspmongodb01.subpriv.vcnuat.oraclevcn.com"
-    - name: MONGODB_PORT
-      value: "41000"
-    - name: MONGODB_CONNECTION
-      value: "mongodb"
     - name: MONGO_DATABASE_POSEIDON
       value: "poseidon"
     - name: MONGO_COLLECTION_IZANAMI
       value: "izanami"
-    - name: MIST_REDIS_HOST
-      value: "lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com"
-    - name: MIST_REDIS_PORT
-      value: "6379"
-    - name: MIST_REDIS_DB
-      value: "1"
-    - name: MIST_REDIS_USER
-      value: "bnd"
-    - name: MIST_REDIS_PASSWORD
-      value: "93uOKu5H"
+    - name: MIST_REDIS_URL
+      value: "redis://mist:panOeimdiaODkjn34@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
     - name: MIST_AWS_ACCESS_KEY_ID
       value: "AKIATZVFXI25USQWCS5O"
     - name: MIST_AWS_SECRET_ACCESS_KEY
@@ -114,17 +96,7 @@ containers:
     - name: MIST_JWT_REQUIRED_FIELDS
       value: "[]"
     - name: MIST_MONGODB_CONNECTION
-      value: "mongodb://bnd:4FZPY5Yj@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=MongoDB%20Compass&ssl=false"
-    - name: MIST_AUTH_DATABASE_MONGO_CONNECTION
-      value: "mongodb"
-    - name: MIST_AUTH_DATABASE_HOST
-      value: "172.30.18.223"
-    - name: MIST_AUTH_DATABASE_PORT
-      value: "41000"
-    - name: MIST_AUTH_DATABASE_USER
-      value: "bnd"
-    - name: MIST_AUTH_DATABASE_PASSWORD
-      value: "4FZPY5Yj"
+      value: "mongodb://mist:LLNnmsi9WEQuhdsamn@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=MongoDB%20Compass&ssl=false"
     - name: MIST_ELECTRONIC_SIGNATURE_MAX_ATTEMPTS
       value: "5"
     - name: MIST_ENCRYPT_KEY
@@ -170,7 +142,7 @@ containers:
     - name: FILE_BUCKET_NAME
       value: "heimdall_rsa"
     - name: JWT_REQUIRED_FIELDS
-      value: '["email"]'
+      value: '[]'
     - name: HEIMDALL_FILE_BUCKET_NAME
       value: "heimdall_rsa"
     - name: HEIMDALL_AWS_ACCESS_KEY_ID
@@ -186,23 +158,15 @@ containers:
     - name: HEIMDALL_AWS_BUCKET_TERMS
       value: "dtvm-terms-uat"
     - name: HEIMDALL_JWT_REQUIRED_FIELDS
-      value: "['email']"
-    - name: HEIMDALL_REDIS_HOST
-      value: "lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com"
-    - name: HEIMDALL_REDIS_PORT
-      value: "6379"
-    - name: HEIMDALL_REDIS_DB
-      value: "1"
-    - name: HEIMDALL_REDIS_USER
-      value: "bnd"
-    - name: HEIMDALL_REDIS_PASSWORD
-      value: "93uOKu5H"
+      value: "[]"
+    - name: HEIMDALL_REDIS_URL
+      value: "redis://heimdal:FBJAnjkqw21yjewkDSA@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
     - name: FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL
       value: "redis://bnd:93uOKu5H@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
     - name: FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB
       value: "2"
     - name: BIFROST_KAFKA
-      value: "sigbrvnlkafka-uat.subpriv.vcnuat.oraclevcn.com:9092"
+      value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
     - name: MEPHO_DW_APP_KEY
       value: "93d6184b-4692-4058-b32d-82624be89cb1"
     - name: MEPHO_DW_USER
@@ -212,11 +176,11 @@ containers:
     - name: MEPHO_DW_AUTHENTICATION_URL
       value: "https://bo-api.drivewealth.io/back-office/auth"
     - name: MEPHO_REDIS_HOST
-      value: "redis://bnd:93uOKu5H@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
+      value: "redis://mepho:MueOSapfdfdPIHbwwqQa@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
     - name: MEPHO_REDIS_DB
       value: "1"
     - name: REDIS_HOST_URL
-      value: "redis://bnd:93uOKu5H@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
+      value: "redis://ebisu:Vddnjer321F@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
     - name: REDIS_CACHE_DB
       value: "1"
     - name: TRANSFERS_BETWEEN_SINACOR_AND_DRIVE_WEALTH_TOPIC
@@ -227,6 +191,11 @@ containers:
       value: "ebisu-bifrost.transfers-between-sinacor-and-sinacor"
     - name: TRANSFERS_BETWEEN_SINACOR_AND_EXTERNAL_BANK
       value: "ebisu-bifrost.transfers-between-sinacor-and-external-bank"
+    # Persephone
+    - name: PERSEPHONE_KAFKA_BROKERS
+      value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+    - name: PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT
+      value: "ebisu-persephone.client.bank_account"
 
 service:
   name: ebisu-service
