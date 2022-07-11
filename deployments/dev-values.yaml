@@ -27,6 +27,16 @@ containers:
       value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
     - name: ORACLE_BASE_SERVICE_BR
       value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
+    - name: ORACLE_POSITION_USER
+      value: "UJTHMDB001"
+    - name: ORACLE_POSITION_PASSWORD
+      value: "q5EMWlxNoN66"
+    - name: ORACLE_POSITION_DSN
+      value: "172.30.18.44"
+    - name: ORACLE_POSITION_PORT
+      value: "1521"
+    - name: ORACLE_POSITION_SERVICE
+      value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
     - name: MONGO_CONNECTION_URL
       value: "mongodb://ebisu:dslKJdm312@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
     - name: MONGODB_DATABASE_NAME
