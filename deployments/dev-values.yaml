@@ -59,6 +59,10 @@ containers:
       value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
     - name: DW_GET_ALL_TRANSACTIONS_URL
       value: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
+    - name: DW_POSITIONS_URL
+      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/positions"
+    - name: DW_BALANCE_URL
+      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
     - name: FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL
       value: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
     - name: FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB
