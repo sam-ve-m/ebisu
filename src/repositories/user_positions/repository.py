@@ -15,23 +15,22 @@ class UserPositionsRepository(OracleBaseRepository):
     port = config("ORACLE_POSITION_PORT")
 
     @staticmethod
-    def __build_query_br(accounts: List[str]) -> str:
-        query = """
+    def __build_query_br(account: str) -> str:
+        query = f"""
                 SELECT
                 A.COD_NEG AS SYMBOL,
                 A.QTDE_TOT AS QUANTITY
                 FROM CORRWIN.VCFPOSICAO A
                 JOIN CORRWIN.TCFPAP_MERC B ON A.NUM_DIST = B.NUM_DIST AND A.TIPO_MERC = B.TIPO_MERC AND A.COD_NEG = B.COD_NEG
-                WHERE A.COD_CLI IN ('{}') AND  A.QTDE_TOT != 0    
-                """.format(
-            "','".join(accounts)
-        )
+                WHERE A.COD_CLI = '777' AND  A.QTDE_TOT != 0    
+                """
+
         return query
 
     @classmethod
-    async def get_positions(cls, accounts: List[str]) -> List[Position]:
+    async def get_positions(cls, account: str) -> List[Position]:
         try:
-            query = cls.__build_query_br(accounts)
+            query = cls.__build_query_br(account)
             raw_positions = cls.get_data(query)
             positions = []
 
@@ -43,4 +42,5 @@ class UserPositionsRepository(OracleBaseRepository):
 
         except Exception as ex:
             message = "Failed to get positions"
-            Gladsheim.error(error=ex, message=message, accounts=accounts)
+            Gladsheim.error(error=ex, message=message, accounts=account)
+            raise ex

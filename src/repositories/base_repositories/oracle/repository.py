@@ -35,18 +35,6 @@ class OracleBaseRepository:
         oracle_connection.release(connection)
 
     @classmethod
-    def get_one_data(cls, sql: str):
-        oracle_connection = cls._get_connection()
-        connection = oracle_connection.acquire()
-        with connection.cursor() as cursor:
-            cursor.execute(sql)
-            columns = [col[0] for col in cursor.description]
-            cursor.rowfactory = lambda *args: dict(zip(columns, args))
-            row = cursor.fetchone()
-        oracle_connection.release(connection)
-        return row
-
-    @classmethod
     def get_data(cls, sql: str):
         try:
             oracle_connection = cls._get_connection()

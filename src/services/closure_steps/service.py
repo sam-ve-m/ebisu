@@ -10,12 +10,12 @@ from src.repositories.user_portfolios.repository import UserPortfoliosRepository
 from src.services.earnings_from_client.get_earnings_from_client import (
     EarningsFromClient,
 )
-from src.services.get_balance.service import GetBalance
+from src.services.get_balance.service import BalanceService
 from src.services.user_positions.service import UserPositionsService
 
 
 class ClosureSteps:
-    balance_service = GetBalance
+    balance_service = BalanceService
     earnings_service = EarningsFromClient
     positions_service = UserPositionsService
 
@@ -25,26 +25,6 @@ class ClosureSteps:
     def __get_unique_id_from_jwt_data(jwt_data: dict) -> str:
         unique_id = jwt_data["user"]["unique_id"]
         return unique_id
-
-    @classmethod
-    async def _get_user_accounts(cls, region: str, jwt_data: dict) -> list:
-        accounts = []
-        portfolios: dict = await UserPortfoliosRepository.get_portfolios_by_region(
-            unique_id=cls.__get_unique_id_from_jwt_data(jwt_data), region=region
-        )
-
-        for key in portfolios:
-            if key == "default":
-                account_number = portfolios[key][region.lower()][
-                    cls.account_type_by_region[region]
-                ]
-                accounts.append(account_number)
-            elif key == "vnc" and portfolios[key].get(region.lower()):
-                for account in portfolios[key][region.lower()]:
-                    account_number = account[cls.account_type_by_region[region]]
-                    accounts.append(account_number)
-
-        return accounts
 
     @classmethod
     async def _verify_balance(cls, region: str, jwt_data: dict) -> bool:
@@ -63,17 +43,18 @@ class ClosureSteps:
     @classmethod
     async def _verify_positions(cls, region: str, jwt_data: dict) -> bool:
         try:
-            accounts = await cls._get_user_accounts(region, jwt_data)
-            positions = await cls.positions_service.count_positions_by_region(
-                region, accounts
+            positions = await cls.positions_service.get_positions_by_region(
+                region=region,
+                jwt_data=jwt_data
             )
+
+            has_no_positions = not positions
+            return has_no_positions
+
         except Exception as ex:
             message = "Failed to verify positions"
             Gladsheim.error(error=ex, message=message, region=region)
             raise ex
-
-        has_no_positions = not positions
-        return has_no_positions
 
     @classmethod
     async def _verify_earnings(cls, region: str, jwt_data: dict) -> bool:
@@ -84,14 +65,15 @@ class ClosureSteps:
             )
             payable_earnings = bool(earnings_service_response.payable)
             record_date_earnings = bool(earnings_service_response.record_date)
+
+            earnings = payable_earnings or record_date_earnings
+            has_no_earnings = not earnings
+            return has_no_earnings
+
         except Exception as ex:
             message = "Failed to verify earnings"
             Gladsheim.error(error=ex, message=message, region=region)
             raise ex
-
-        earnings = payable_earnings or record_date_earnings
-        has_no_earnings = not earnings
-        return has_no_earnings
 
     @classmethod
     async def get_closure_steps_by_region(cls, region: str, jwt_data: dict) -> tuple:

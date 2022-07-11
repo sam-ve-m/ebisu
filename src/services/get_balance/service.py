@@ -5,7 +5,7 @@ from src.transport.drive_wealth.balance.transport import DwBalanceTransport
 from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 
 
-class GetBalance:
+class BalanceService:
 
     balance_region = {
         "BR": BalanceRepository.get_balance,
@@ -27,13 +27,11 @@ class GetBalance:
     ) -> BaseBalance:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
-
         region = balance.region.value
         region_portfolios = portfolios.get(region.lower(), {})
-
         account = cls.get_accounts_by_region(region_portfolios, region)
-        balance_resolver = cls.balance_region[region]
 
+        balance_resolver = cls.balance_region[region]
         balance = await balance_resolver(account)
 
         return balance

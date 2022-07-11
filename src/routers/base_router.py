@@ -205,7 +205,7 @@ class BaseRouter:
             return Response(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 content=json.dumps(
-                    {"request_status": False, "status": 6, "msg": err.args[0]}
+                    {"request_status": False, "status": 6, "msg": "An unexpected error ocurred"}
                 ),
             )
 

@@ -9,16 +9,17 @@ from src.transport.drive_wealth.base.transport import DwBaseTransport
 
 
 class DwBalanceTransport(DwBaseTransport):
+
     __balance_url = config("DW_BALANCE_URL")
+    __transport = DWApiTransport
 
-    @staticmethod
-    async def get_balance(account: str) -> Balance:
+    @classmethod
+    async def get_balance(cls, account: str) -> Balance:
         try:
+            url_formatted = cls.__balance_url.format(account)
+            response = await cls.__transport.execute_get(url=url_formatted, query_params={})
 
-            url_formatted = DwBalanceTransport.__balance_url.format(account)
-            response = await DWApiTransport.execute_get(url=url_formatted, query_params={})
-
-            DwBalanceTransport._handle_http_error_from_drive_wealth_request(
+            cls._handle_http_error_from_drive_wealth_request(
                 request=url_formatted,
                 response=response
             )
@@ -26,7 +27,7 @@ class DwBalanceTransport(DwBaseTransport):
             body = await response.text()
             response = json.loads(body)
 
-            DwBalanceTransport._handle_dw_error_status_from_response(
+            cls._handle_dw_error_status_from_response(
                 request=url_formatted,
                 response=response
             )

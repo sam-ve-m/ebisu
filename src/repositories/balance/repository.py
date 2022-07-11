@@ -24,7 +24,7 @@ class BalanceRepository(OracleBaseRepository):
 
         query = (f"""SELECT VL_TOTAL, VL_DISPONIVEL FROM CORRWIN.TCCSALREF A 
             WHERE DT_REFERENCIA = (SELECT max(DT_REFERENCIA) from CORRWIN.TCCSALREF where CD_CLIENTE = A.CD_CLIENTE) 
-            AND CD_CLIENTE = {account}""")
+            AND CD_CLIENTE = 12""")
 
         try:
             balance = BalanceRepository.fetch_one(sql=query)

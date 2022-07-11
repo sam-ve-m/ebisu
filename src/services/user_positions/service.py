@@ -6,27 +6,31 @@ from src.transport.drive_wealth.position.transport import DwPositionTransport
 
 
 class UserPositionsService:
-    positions_repository = UserPositionsRepository
-    dw_transport = DwPositionTransport
 
-    @classmethod
-    async def count_positions_by_region(cls, region: str, accounts: List[str]):
-        get_positions_per_region = {
-            Region.BR.value: cls.count_positions_br,
-            Region.US.value: cls.count_positions_us,
+    positions_per_region = {
+        Region.BR.value: UserPositionsRepository,
+        Region.US.value: DwPositionTransport,
+    }
+
+    @staticmethod
+    def get_account_by_region(portfolios: dict, region: str) -> str:
+        accounts_by_region = {
+            Region.BR.value: "bmf_account",
+            Region.US.value: "dw_account",
         }
-        get_position = get_positions_per_region.get(region)
-        positions = await get_position(accounts)
+        field = accounts_by_region[region]
+        return portfolios.get(field)
+
+    @classmethod
+    async def get_positions_by_region(cls, region: str, jwt_data: dict):
+        user = jwt_data.get("user", {})
+        portfolios = user.get("portfolios", {})
+        region_portfolios = portfolios.get(region.lower(), {})
+        account = cls.get_account_by_region(
+            portfolios=region_portfolios,
+            region=region
+        )
+
+        position_resolver = cls.positions_per_region.get(region)
+        positions = await position_resolver.get_positions(account)
         return positions
-
-    @classmethod
-    async def count_positions_br(cls, accounts: List[str]) -> int:
-        positions = await cls.positions_repository.get_positions(accounts)
-        number_of_positions = len(positions)
-        return number_of_positions
-
-    @classmethod
-    async def count_positions_us(cls, accounts: List[str]):
-        positions = await cls.dw_transport.get_positions(accounts)
-        number_of_positions = len(positions)
-        return number_of_positions
