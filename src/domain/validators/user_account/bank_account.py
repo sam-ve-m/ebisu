@@ -30,7 +30,7 @@ class UpdateUserBankAccounts(BankCode):
     account_type: Optional[str]
     agency: Optional[constr(max_length=5)]
     account_number: Optional[str]
-    account_name: str
+    account_name: Optional[str]
     id: UUID4
     device_info: DeviceInformationOptional
 
