@@ -14,49 +14,19 @@ ports:
 
 containers:
   env:
-    - name: ETRIA_LOG_LEVEL
-      value: "INFO"
-    - name: ROOT_LOG_LEVEL
-      value: "WARNING"
-    #oracle orders
-    - name: ORACLE_USER_ORDERS
+    # ebisu
+    - name: ORACLE_BASE_USER
       value: "UEBISDB001"
-    - name: ORACLE_PASSWORD_ORDERS
+    - name: ORACLE_BASE_PASSWORD
       value: "Eb3gq7$8k7z!Sc@"
-    - name: ORACLE_BASE_DSN_ORDERS
+    - name: ORACLE_BASE_DSN
       value: "172.30.18.44"
-    - name: ORACLE_PORT_ORDERS
+    - name: ORACLE_BASE_PORT
       value: "1521"
-    - name: ORACLE_SERVICE_US
+    - name: ORACLE_BASE_SERVICE_US
       value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
-    - name: ORACLE_SERVICE_BR
+    - name: ORACLE_BASE_SERVICE_BR
       value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
-      #oracle statements
-    - name: ORACLE_BASE_DSN_STATEMENT
-      value: "172.30.18.44"
-    - name: ORACLE_USER_STATEMENT
-      value: "UEBISDB001"
-    - name: ORACLE_PASSWORD_STATEMENT
-      value: "Eb3gq7$8k7z!Sc@"
-    - name: ORACLE_SERVICE_STATEMENT
-      value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
-    - name: ORACLE_ENCODING_STATEMENT
-      value: "UTF-8"
-    - name: ORACLE_PORT_STATEMENT
-      value: "1521"
-      #oracle earning
-    - name: ORACLE_BASE_DNS_EARNINGS
-      value: "172.30.18.44"
-    - name: ORACLE_PORT_EARNINGS
-      value: "1521"
-    - name: ORACLE_SERVICE_EARNINGS
-      value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
-    - name: ORACLE_ENCODING_STATEMENT
-      value: "UTF-8"
-    - name: ORACLE_USER_EARNINGS
-      value: "UEBISDB001"
-    - name: ORACLE_PASSWORD_EARNINGS
-      value: "Eb3gq7$8k7z!Sc@"
     - name: ORACLE_POSITION_USER
       value: "UEBISDB001"
     - name: ORACLE_POSITION_PASSWORD
@@ -79,8 +49,45 @@ containers:
       value: "poseidon"
     - name: MONGO_COLLECTION_IZANAMI
       value: "izanami"
+    - name: MONGODB_SNAPSHOT_DATABASE
+      value: "ebisu"
+    - name: MONGODB_SNAPSHOT_COLLECTION
+      value: "exchange_user_snapshot"
+    - name: DW_AUTHENTICATION_URL
+      value: "https://bo-api.drivewealth.io/back-office/auth"
+    - name: DW_BALANCE_URL
+      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
+    - name: DW_GET_ALL_TRANSACTIONS_URL
+      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
+    - name: DW_POSITIONS_URL
+      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/positions"
+    - name: DW_BALANCE_URL
+      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
+    - name: FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL
+      value: 'redis://ebisu:Vddnjer321F@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379'
+    - name: FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB
+      value: "2"
+    - name: AWS_ACCESS_KEY_ID
+      value: "AKIATZVFXI25USQWCS5O"
+    - name: AWS_SECRET_ACCESS_KEY
+      value: "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"
+    - name: REGION_NAME
+      value: "sa-east-1"
+    - name: AWS_FILE_BUCKET_NAME
+      value: "brokerage-note-and-bank-statement-dev"
+    - name: JWT_FILE_BUCKET_NAME
+      value: "heimdall_rsa"
+    - name: BUCKET_NAME_KEY
+      value: "auth-gateway-keys-uat"
+    - name: REDIS_HOST_URL
+      value: 'redis://ebisu:Vddnjer321F@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379'
+    - name: REDIS_CACHE_DB
+      value: "1"
+    - name: BANK_CODE
+      value: "001"
+    # Mist
     - name: MIST_REDIS_URL
-      value: "redis://mist:panOeimdiaODkjn34@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
+      value: "redis://mist:InPuaku76Jbdsa@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
     - name: MIST_AWS_ACCESS_KEY_ID
       value: "AKIATZVFXI25USQWCS5O"
     - name: MIST_AWS_SECRET_ACCESS_KEY
@@ -88,7 +95,7 @@ containers:
     - name: MIST_REGION_NAME
       value: "sa-east-1"
     - name: MIST_BUCKET_NAME_KEY
-      value: "auth-gateway-keys-uat"
+      value: "auth-gateway-keys-dev"
     - name: MIST_JWT_FILE_BUCKET_NAME
       value: "mist_rsa"
     - name: MIST_ELECTRONIC_SIGNATURE_FILE_BUCKET_NAME
@@ -107,42 +114,7 @@ containers:
       value: "lionx"
     - name: MIST_AUTH_DATABASE_USER_COLLECTION
       value: "users"
-    - name: JWT_FILE_BUCKET_NAME
-      value: "heimdall_rsa"
-    - name: BUCKET_NAME_KEY
-      value: "auth-gateway-keys-uat"
-    - name: DW_APP_KEY
-      value: "93d6184b-4692-4058-b32d-82624be89cb1"
-    - name: DW_USER
-      value: "bo.lionx.api"
-    - name: DW_PASSWORD
-      value: "passw0rd"
-    - name: DW_AUTHENTICATION_URL
-      value: "https://bo-api.drivewealth.io/back-office/auth"
-    - name: DW_BALANCE_URL
-      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
-    - name: DW_GET_ALL_TRANSACTIONS_URL
-      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
-    - name: AWS_ACCESS_KEY_ID
-      value: "AKIATZVFXI25USQWCS5O"
-    - name: AWS_SECRET_ACCESS_KEY
-      value: "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"
-    - name: REGION_NAME
-      value: "sa-east-1"
-    - name: AWS_FILE_BUCKET_NAME
-      value: "brokerage-note-and-bank-statement-uat"
-    - name: BUCKET_NAME_KEY
-      value: "auth-gateway-keys-uat"
-    - name: AWS_BUCKET_USERS_FILES
-      value: "dtvm-users-files-uat"
-    - name: AWS_BUCKET_USERS_SELF
-      value: "dtvm-user-self-uat"
-    - name: AWS_BUCKET_TERMS
-      value: "dtvm-terms-uat"
-    - name: FILE_BUCKET_NAME
-      value: "heimdall_rsa"
-    - name: JWT_REQUIRED_FIELDS
-      value: '[]'
+    # Heimdal
     - name: HEIMDALL_FILE_BUCKET_NAME
       value: "heimdall_rsa"
     - name: HEIMDALL_AWS_ACCESS_KEY_ID
@@ -152,21 +124,16 @@ containers:
     - name: HEIMDALL_REGION_NAME
       value: "sa-east-1"
     - name: HEIMDALL_BUCKET_NAME_KEY
-      value: "auth-gateway-keys-uat"
+      value: "auth-gateway-keys-dev"
     - name: HEIMDALL_AWS_BUCKET_USERS_FILES
-      value: "dtvm-users-files-uat"
+      value: "dtvm-users-files-dev"
     - name: HEIMDALL_AWS_BUCKET_TERMS
-      value: "dtvm-terms-uat"
+      value: "dtvm-terms-dev"
     - name: HEIMDALL_JWT_REQUIRED_FIELDS
       value: "[]"
     - name: HEIMDALL_REDIS_URL
-      value: "redis://heimdal:FBJAnjkqw21yjewkDSA@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
-    - name: FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL
-      value: "redis://bnd:93uOKu5H@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
-    - name: FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB
-      value: "2"
-    - name: BIFROST_KAFKA
-      value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+      value: "redis://heimdal:LLOnmUUffhaUHnewIz@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
+    # Mepho DW transport
     - name: MEPHO_DW_APP_KEY
       value: "93d6184b-4692-4058-b32d-82624be89cb1"
     - name: MEPHO_DW_USER
@@ -176,13 +143,12 @@ containers:
     - name: MEPHO_DW_AUTHENTICATION_URL
       value: "https://bo-api.drivewealth.io/back-office/auth"
     - name: MEPHO_REDIS_HOST
-      value: "redis://mepho:MueOSapfdfdPIHbwwqQa@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
+      value: "redis://mepho:LndhhhII565dsaadspoi@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
     - name: MEPHO_REDIS_DB
       value: "1"
-    - name: REDIS_HOST_URL
-      value: "redis://ebisu:Vddnjer321F@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
-    - name: REDIS_CACHE_DB
-      value: "1"
+    # bifrost
+    - name: BIFROST_KAFKA
+      value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
     - name: TRANSFERS_BETWEEN_SINACOR_AND_DRIVE_WEALTH_TOPIC
       value: "ebisu-bifrost.transfers-between-sinacor-and-drive-wealth"
     - name: TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC
@@ -191,6 +157,11 @@ containers:
       value: "ebisu-bifrost.transfers-between-sinacor-and-sinacor"
     - name: TRANSFERS_BETWEEN_SINACOR_AND_EXTERNAL_BANK
       value: "ebisu-bifrost.transfers-between-sinacor-and-external-bank"
+    # etria
+    - name: ETRIA_LOG_LEVEL
+      value: "INFO"
+    - name: ROOT_LOG_LEVEL
+      value: "WARNING"
     # Persephone
     - name: PERSEPHONE_KAFKA_BROKERS
       value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
