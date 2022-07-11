@@ -6,7 +6,7 @@ image:
   repository: nexus.sigame.com.br
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.6.0
+  tag: 1.6.1
 
 ports:
   protocol: TCP
@@ -28,9 +28,9 @@ containers:
     - name: ORACLE_BASE_SERVICE_BR
       value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
     - name: ORACLE_POSITION_USER
-      value: "UJTHMDB001"
+      value: "UEBISDB001"
     - name: ORACLE_POSITION_PASSWORD
-      value: "q5EMWlxNoN66"
+      value: "Eb3gq7$8k7z!Sc@"
     - name: ORACLE_POSITION_DSN
       value: "172.30.18.44"
     - name: ORACLE_POSITION_PORT
@@ -38,7 +38,7 @@ containers:
     - name: ORACLE_POSITION_SERVICE
       value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
     - name: MONGO_CONNECTION_URL
-      value: "mongodb://ebisu:dslKJdm312@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
+      value: "mongodb://ebisu:DAlnafcnmmcsa1@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
     - name: MONGODB_DATABASE_NAME
       value: "lionx"
     - name: MONGODB_USER_COLLECTION
@@ -86,16 +86,8 @@ containers:
     - name: BANK_CODE
       value: "001"
     # Mist
-    - name: MIST_REDIS_HOST
-      value: "172.30.11.235"
-    - name: MIST_REDIS_PORT
-      value: "6379"
-    - name: MIST_REDIS_DB
-      value: "1"
-    - name: MIST_REDIS_USER
-      value: "bnd"
-    - name: MIST_REDIS_PASSWORD
-      value: "jkl321pqr"
+    - name: MIST_REDIS_URL
+      value: "redis://mist:InPuaku76Jbdsa@lnxbrspkeydbdb01-dev.subpriv.vcndev.oraclevcn.com:6379?db=1"
     - name: MIST_AWS_ACCESS_KEY_ID
       value: "AKIATZVFXI25USQWCS5O"
     - name: MIST_AWS_SECRET_ACCESS_KEY
@@ -111,17 +103,7 @@ containers:
     - name: MIST_JWT_REQUIRED_FIELDS
       value: "[]"
     - name: MIST_MONGODB_CONNECTION
-      value: "mongodb://bnd:jkl321pqr@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=MongoDB%20Compass&ssl=false"
-    - name: MIST_AUTH_DATABASE_MONGO_CONNECTION
-      value: "mongodb"
-    - name: MIST_AUTH_DATABASE_HOST
-      value: "172.30.10.75"
-    - name: MIST_AUTH_DATABASE_PORT
-      value: "41000"
-    - name: MIST_AUTH_DATABASE_USER
-      value: "bnd"
-    - name: MIST_AUTH_DATABASE_PASSWORD
-      value: "jkl321pqr"
+      value: "mongodb://mist:Anm8irJdsanmdsapqoiwu@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=MongoDB%20Compass&ssl=false"
     - name: MIST_ELECTRONIC_SIGNATURE_MAX_ATTEMPTS
       value: "5"
     - name: MIST_ENCRYPT_KEY
@@ -148,17 +130,9 @@ containers:
     - name: HEIMDALL_AWS_BUCKET_TERMS
       value: "dtvm-terms-dev"
     - name: HEIMDALL_JWT_REQUIRED_FIELDS
-      value: "['email']"
-    - name: HEIMDALL_REDIS_HOST
-      value: "172.30.11.235"
-    - name: HEIMDALL_REDIS_PORT
-      value: "6379"
-    - name: HEIMDALL_REDIS_DB
-      value: "1"
-    - name: HEIMDALL_REDIS_USER
-      value: "bnd"
-    - name: HEIMDALL_REDIS_PASSWORD
-      value: "jkl321pqr"
+      value: "[]"
+    - name: HEIMDALL_REDIS_URL
+      value: "redis://heimdal:LLOnmUUffhaUHnewIz@lnxbrspkeydbdb01-dev.subpriv.vcndev.oraclevcn.com:6379?db=1"
     # Mepho DW transport
     - name: MEPHO_DW_APP_KEY
       value: "93d6184b-4692-4058-b32d-82624be89cb1"
@@ -169,7 +143,7 @@ containers:
     - name: MEPHO_DW_AUTHENTICATION_URL
       value: "https://bo-api.drivewealth.io/back-office/auth"
     - name: MEPHO_REDIS_HOST
-      value: "redis://bnd:jkl321pqr@172.30.11.235:6379"
+      value: "redis://mepho:LndhhhII565dsaadspoi@172.30.19.183:6379"
     - name: MEPHO_REDIS_DB
       value: "1"
     # bifrost
