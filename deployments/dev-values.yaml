@@ -6,7 +6,7 @@ image:
   repository: nexus.sigame.com.br
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.6.1
+  tag: 1.6.2
 
 ports:
   protocol: TCP
@@ -143,7 +143,7 @@ containers:
     - name: MEPHO_DW_AUTHENTICATION_URL
       value: "https://bo-api.drivewealth.io/back-office/auth"
     - name: MEPHO_REDIS_HOST
-      value: "redis://mepho:LndhhhII565dsaadspoi@172.30.19.183:6379"
+      value: "redis://mepho:LndhhhII565dsaadspoi@lnxbrspkeydbdb01-dev.subpriv.vcndev.oraclevcn.com:6379"
     - name: MEPHO_REDIS_DB
       value: "1"
     # bifrost
