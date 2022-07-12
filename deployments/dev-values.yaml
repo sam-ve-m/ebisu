@@ -36,7 +36,7 @@ containers:
     - name: ORACLE_POSITION_PORT
       value: "1521"
     - name: ORACLE_POSITION_SERVICE
-      value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
+      value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
     - name: MONGO_CONNECTION_URL
       value: "mongodb://ebisu:DAlnafcnmmcsa1@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
     - name: MONGODB_DATABASE_NAME
