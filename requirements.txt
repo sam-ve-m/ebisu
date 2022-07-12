@@ -2,7 +2,7 @@ aiokafka==0.7.2
 boto3==1.20.24
 cx-oracle==8.3.0
 fastapi==0.66.0
-heimdall-client==2.3.0
+heimdall-client==2.3.1
 motor==2.5.1
 pdfkit==1.0.0
 persephone-client==1.4.2
@@ -10,7 +10,7 @@ psycopg2-binary==2.9.3
 pytz==2021.3
 redis==3.5.3
 uvicorn==0.14.0
-mist-client==2.3.1
+mist-client==2.3.3
 python-i18n==0.3.9
 mepho==0.1.2
 wkhtmltopdf==0.2
