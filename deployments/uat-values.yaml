@@ -87,7 +87,7 @@ containers:
       value: "001"
     # Mist
     - name: MIST_REDIS_URL
-      value: "redis://mist:InPuaku76Jbdsa@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
+      value: "redis://mist:panOeimdiaODkjn34@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
     - name: MIST_AWS_ACCESS_KEY_ID
       value: "AKIATZVFXI25USQWCS5O"
     - name: MIST_AWS_SECRET_ACCESS_KEY
@@ -132,7 +132,7 @@ containers:
     - name: HEIMDALL_JWT_REQUIRED_FIELDS
       value: "[]"
     - name: HEIMDALL_REDIS_URL
-      value: "redis://heimdal:LLOnmUUffhaUHnewIz@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
+      value: "redis://heimdal:FBJAnjkqw21yjewkDSA@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
     # Mepho DW transport
     - name: MEPHO_DW_APP_KEY
       value: "93d6184b-4692-4058-b32d-82624be89cb1"
@@ -143,7 +143,7 @@ containers:
     - name: MEPHO_DW_AUTHENTICATION_URL
       value: "https://bo-api.drivewealth.io/back-office/auth"
     - name: MEPHO_REDIS_HOST
-      value: "redis://mepho:LndhhhII565dsaadspoi@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
+      value: "redis://mepho:MueOSapfdfdPIHbwwqQa@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
     - name: MEPHO_REDIS_DB
       value: "1"
     # bifrost
