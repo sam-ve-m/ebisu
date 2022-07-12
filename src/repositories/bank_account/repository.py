@@ -72,7 +72,12 @@ class UserBankAccountRepository(MongoDbBaseRepository):
         user_bank_account = await cls.find_one(
             query={
                 "unique_id": unique_id,
-                "bank_accounts": {"$elemMatch": {"id": bank_account_id}},
+                "bank_accounts": {
+                    "$elemMatch": {
+                        "id": bank_account_id,
+                        "status": UserBankAccountStatus.ACTIVE.value
+                    }
+                },
             }
         )
         user_bank_account_id_exists = bool(user_bank_account)
