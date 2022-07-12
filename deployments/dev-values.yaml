@@ -32,7 +32,7 @@ containers:
     - name: ORACLE_POSITION_PASSWORD
       value: "Eb3gq7$8k7z!Sc@"
     - name: ORACLE_POSITION_DSN
-      value: "172.30.18.44"
+      value: "172.30.10.227"
     - name: ORACLE_POSITION_PORT
       value: "1521"
     - name: ORACLE_POSITION_SERVICE
