@@ -15,21 +15,23 @@ class BalanceRepository(OracleBaseRepository):
     port = config("ORACLE_BASE_PORT")
 
     @staticmethod
-    def __handle_balance_error(balance: dict, account: str):
+    def __handle_balance_error(balance: dict, account: str) -> dict:
+        # TODO Validar account pois cliente pode nao ter movitacao bancaria
+        # raise DataNotFoundError(msg=f"Account {account} not found")
         if not balance:
-            raise DataNotFoundError(msg=f"Account {account} not found")
+            return {}
 
     @staticmethod
     async def get_balance(account: str) -> Balance:
 
-        query = (f"""SELECT VL_TOTAL, VL_DISPONIVEL FROM CORRWIN.TCCSALREF A 
+        query = (f"""SELECT NVL(VL_TOTAL,0) as VL_TOTAL, NVL(VL_DISPONIVEL, 0) as VL_DISPONIVEL FROM CORRWIN.TCCSALREF A 
             WHERE DT_REFERENCIA = (SELECT max(DT_REFERENCIA) from CORRWIN.TCCSALREF where CD_CLIENTE = A.CD_CLIENTE) 
             AND CD_CLIENTE = {account}""")
 
         try:
             balance = BalanceRepository.fetch_one(sql=query)
 
-            BalanceRepository.__handle_balance_error(
+            balance = BalanceRepository.__handle_balance_error(
                 balance=balance, account=account
             )
 

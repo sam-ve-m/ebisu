@@ -6,6 +6,7 @@ from src.domain.account_close_steps.model import AccountCloseSteps
 from src.domain.account_close_steps.response.model import AccountCloseStepsToResponse
 from src.domain.balance.base.model import BaseBalance
 from src.domain.enums.region import Region
+from src.domain.exception import UnauthorizedError
 from src.domain.positions.model import Position
 from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from src.domain.validators.exchange_info.get_closure_steps_validator import (
@@ -94,19 +95,23 @@ class AccountCloseStepsService:
     async def get_service_response(
         cls, closure_steps: AccountCloseStepsRequest, jwt_data: dict
     ) -> dict:
-
-        accounts_close_steps: List[AccountCloseSteps] = []
-
         region = closure_steps.region.value
+        is_br_account = region == Region.BR.value
+        is_us_account = region == Region.US.value
+        user_portfolios = jwt_data.get("user").get("portfolios", {})
+        has_us_account = user_portfolios.get("us", {}).get("dw_account")
+        has_br_account = user_portfolios.get("br", {}).get("bmf_account")
+
+        if (is_br_account and not has_br_account) or (is_us_account and not has_us_account):
+            raise UnauthorizedError()
+
         account_close_steps = await cls.get_closure_steps_by_region(
             region,
             jwt_data
         )
-
+        accounts_close_steps: List[AccountCloseSteps] = []
         accounts_close_steps.append(account_close_steps)
 
-        is_br_account = region == Region.BR.value
-        has_us_account = jwt_data.get("user").get("portfolios").get("us", {}).get("dw_account")
         if is_br_account and has_us_account:
             account_close_steps_us = await cls.get_closure_steps_by_region(
                 Region.US.value,
