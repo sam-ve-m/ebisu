@@ -194,7 +194,7 @@ class BaseRouter:
         except DataNotFoundError as e:
             Gladsheim.error(erro=e)
             return Response(
-                status_code=status.HTTP_200_OK,
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 content=json.dumps(
                     {"request_status": False, "status": 14, "msg": e.args[0]}
                 ),
