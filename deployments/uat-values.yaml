@@ -6,7 +6,7 @@ image:
   repository: nexus.sigame.com.br
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.6.4
+  tag: 1.6.5
 
 ports:
   protocol: TCP
@@ -84,7 +84,7 @@ containers:
     - name: REDIS_CACHE_DB
       value: "1"
     - name: BANK_CODE
-      value: "001"
+      value: "469"
     # Mist
     - name: MIST_REDIS_URL
       value: "redis://mist:InPuaku76Jbdsa@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"

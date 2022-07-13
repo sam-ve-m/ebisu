@@ -106,7 +106,7 @@ class AccountCloseStepsService:
         accounts_close_steps.append(account_close_steps)
 
         is_br_account = region == Region.BR.value
-        has_us_account = jwt_data.get("user").get("portfolios").get("us")
+        has_us_account = jwt_data.get("user").get("portfolios").get("us", {}).get("dw_account")
         if is_br_account and has_us_account:
             account_close_steps_us = await cls.get_closure_steps_by_region(
                 Region.US.value,
