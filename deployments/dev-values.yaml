@@ -143,7 +143,7 @@ containers:
     - name: MEPHO_DW_AUTHENTICATION_URL
       value: "https://bo-api.drivewealth.io/back-office/auth"
     - name: MEPHO_REDIS_HOST
-      value: "redis://mepho:LndhhhII565dsaadspoi@lnxbrspkeydbdb01-dev.subpriv.vcndev.oraclevcn.com:6379"
+      value: "redis://mepho:MueOSapfdfdPIHbwwqQa@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
     - name: MEPHO_REDIS_DB
       value: "1"
     # bifrost
@@ -165,7 +165,7 @@ containers:
     # Persephone
     - name: PERSEPHONE_KAFKA_BROKERS
       value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
-    - name : PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT
+    - name: PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT
       value: "ebisu-persephone.client.bank_account"
 
 service:

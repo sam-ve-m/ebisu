@@ -3,6 +3,7 @@ from typing import List
 
 # PROJECT IMPORTS
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
+from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
 from src.domain.statement.base.model.transaction.model import Transaction
 from src.infrastructures.env_config import config
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
