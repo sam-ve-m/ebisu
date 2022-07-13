@@ -34,7 +34,7 @@ class GetOrders:
         normalized_data = {
             "cl_order_id": user_trade.get("CLORDID"),
             "account": user_trade.get("ACCOUNT"),
-            "time": str_to_timestamp(user_trade.get("TRANSACTTIME")),
+            "time": int(str_to_timestamp(user_trade.get("TRANSACTTIME")) * 1000),
             "quantity": user_trade.get("ORDERQTY"),
             "average_price": GetOrders.decimal_128_converter(user_trade, "AVGPX"),
             "price": GetOrders.decimal_128_converter(user_trade, "PRICE"),
@@ -57,7 +57,7 @@ class GetOrders:
             "text": user_trade.get("TEXT"),
             "reject_reason": user_trade.get("ORDREJREASON"),
             "exec_type": user_trade.get("EXECTYPE"),
-            "expire_date": user_trade.get("EXPIREDATE"),
+            "expire_date": int(str_to_timestamp(user_trade.get("EXPIREDATE")) * 1000) if user_trade.get("EXPIREDATE") else None,
             "error_message": user_trade.get("MESSAGE"),
         }
         return normalized_data
