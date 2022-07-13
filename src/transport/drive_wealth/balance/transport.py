@@ -19,15 +19,15 @@ class DwBalanceTransport(DwBaseTransport):
             url_formatted = cls.__balance_url.format(account)
             response = await cls.__transport.execute_get(url=url_formatted, query_params={})
 
-            cls._handle_http_error_from_drive_wealth_request(
-                request=url_formatted,
-                response=response
-            )
-
             body = await response.text()
             response = json.loads(body)
 
             cls._handle_dw_error_status_from_response(
+                request=url_formatted,
+                response=response
+            )
+
+            cls._handle_http_error_from_drive_wealth_request(
                 request=url_formatted,
                 response=response
             )
