@@ -49,7 +49,7 @@ class BankAccount(IAccountTransfer):
 
     async def resume(self):
         return {
-            "user_unique_id ": self._user_unique_id,
+            "user_unique_id": self._user_unique_id,
             "account_number": self._bank_account_id,
             "country": self._country,
             "currency": self._currency,
