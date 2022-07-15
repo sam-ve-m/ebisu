@@ -40,6 +40,11 @@ class InvalidAccountsOwnership(Exception):
         super().__init__(msg, *args, **kwargs)
 
 
+class MoneyFlowPerformedOutsideTransactionWindow(Exception):
+    def __init__(self, msg="Money flow performed outside the transaction window", *args, **kwargs):
+        super().__init__(msg, *args, **kwargs)
+
+
 class UnableToProcessMoneyFlow(Exception):
     def __init__(self, msg="Unable to process money flow", *args, **kwargs):
         super().__init__(msg, *args, **kwargs)
