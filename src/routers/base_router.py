@@ -7,7 +7,7 @@ import json
 from src.domain.exception.model import (
     IntegrityJwtError,
     AuthenticationJwtError,
-    FailToSaveAuditingTrail, DataNotFoundError,
+    FailToSaveAuditingTrail, DataNotFoundError, MoneyFlowPerformedOutsideTransactionWindow,
 )
 from etria_logger import Gladsheim
 from src.domain.exception import (
@@ -197,6 +197,15 @@ class BaseRouter:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 content=json.dumps(
                     {"request_status": False, "status": 14, "msg": e.args[0]}
+                ),
+            )
+
+        except MoneyFlowPerformedOutsideTransactionWindow as e:
+            Gladsheim.error(erro=e)
+            return Response(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                content=json.dumps(
+                    {"request_status": False, "status": 15, "msg": e.args[0]}
                 ),
             )
 

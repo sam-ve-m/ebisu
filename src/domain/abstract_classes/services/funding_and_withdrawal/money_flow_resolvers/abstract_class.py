@@ -59,6 +59,10 @@ class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
     def _get_topic_name(self) -> str:
         pass
 
+    @abstractmethod
+    async def _apply_rule(self) -> str:
+        pass
+
     async def _send(
         self,
         resume: dict,
@@ -88,6 +92,7 @@ class MoneyFlowResolverAbstract(IBaseMoneyFlowResolver):
         return resume
 
     async def __call__(self, *args, **kwargs) -> dict:
+        await self._apply_rule()
         self._spread = await self._get_spread()
         self._tax = await self._get_tax()
         self._converted_value = await self._convert_value()

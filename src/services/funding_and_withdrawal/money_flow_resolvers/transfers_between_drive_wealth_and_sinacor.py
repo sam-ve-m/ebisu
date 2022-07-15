@@ -14,6 +14,9 @@ class TransfersBetweenDriveWealthAndSinacor(MoneyFlowResolverAbstract):
         RealtimeFundingAndWithdrawalRepository
     )
 
+    async def _apply_rule(self) -> str:
+        pass
+
     async def _get_spread(self) -> float:
         cash_conversion_references = self._get_cash_conversion_references()
         spread = await self.funding_and_withdrawal_realtime_data_repository.get_tax(

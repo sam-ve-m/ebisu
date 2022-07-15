@@ -15,7 +15,6 @@ class ExchangeOperationsService:
     async def get_service_response_to_save_exchange_operations(
         cls, jwt_data: dict, resume: dict
     ):
-
         name, cpf = await UserBankAccountRepository.get_cpf_and_name_from_user(
             unique_id=jwt_data.get("user").get("unique_id")
         )
