@@ -30,9 +30,9 @@ containers:
     - name: ORACLE_POSITION_USER
       value: "UBIFRDB001"
     - name: ORACLE_POSITION_PASSWORD
-      value: "MFhyfjewqjhd3432Vajo"
+      value: "OmehKNsLOPqqir1028"
     - name: ORACLE_POSITION_DSN
-      value: "172.20.16.249"
+      value: "lnxexdt-4q83u-scan.subdbexaclipriv.vcndb.oraclevcn.com"
     - name: ORACLE_POSITION_PORT
       value: "1521"
     - name: ORACLE_POSITION_SERVICE
