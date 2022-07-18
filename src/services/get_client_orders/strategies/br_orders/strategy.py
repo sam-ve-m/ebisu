@@ -13,6 +13,6 @@ class GetBrOrdersDetails:
                     LEFT JOIN UORDEDB001.MAP_ORDERS_REJECT_REASON_TO_SIGAME_MESSAGES B ON A.ORDREJREASON = B.B3_MESSAGE_ID
                     LEFT JOIN UORDEDB001.SIGAME_ORDERS_MESSAGES C ON B.SIGAME_MESSAGE_ID = C.SIGAME_MESSAGE_ID
                     WHERE NODE_ACCOUNT in ('{"', '".join(accounts)}') AND NODE_CLORDID = '{clordid}'
-                    ORDER BY TRANSACTTIME DESC
+                    ORDER BY CREATEDAT DESC
                     """
         return query
