@@ -14,11 +14,11 @@ class GetBrOrders:
         order_status: List[OrderStatus],
     ) -> str:
 
-        query = f"""SELECT B.SYMBOL, ORDSTATUS, B.CLORDID, B.TRANSACTTIME, B.CUMQTY, B.AVGPX, B.ORDTYPE, B.ORDERQTY
+        query = f"""SELECT B.SYMBOL, ORDSTATUS, B.CLORDID, B.CREATEDAT, B.CUMQTY, B.AVGPX, B.ORDTYPE, B.ORDERQTY
                     FROM USOLUDB001.VW_CURRENT_EXECUTION_REPORTS B
                     WHERE B.ACCOUNT in ('{"','".join(accounts)}')
                     {GetBrOrders.filter(order_status)}
-                    ORDER BY B.TRANSACTTIME DESC
+                    ORDER BY B.CREATEDAT DESC
                     offset {offset} rows
                     fetch first {limit} row only  
                     """
