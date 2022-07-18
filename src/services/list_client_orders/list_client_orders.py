@@ -43,7 +43,7 @@ class ListOrders:
                 user_trade.get("SYMBOL")
             ),
             "cl_order_id": user_trade.get("CLORDID"),
-            "time": str_to_timestamp(user_trade.get("TRANSACTTIME")),
+            "time": str_to_timestamp(user_trade.get("CREATEDAT")),
             "quantity": user_trade.get("ORDERQTY"),
             "order_type": user_trade.get("ORDTYPE"),
             "average_price": ListOrders.decimal_128_converter(user_trade, "AVGPX"),
