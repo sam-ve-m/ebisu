@@ -34,7 +34,7 @@ class GetOrders:
         normalized_data = {
             "cl_order_id": user_trade.get("CLORDID"),
             "account": user_trade.get("ACCOUNT"),
-            "time": int(str_to_timestamp(user_trade.get("TRANSACTTIME")) * 1000),
+            "time": int(str_to_timestamp(user_trade.get("CREATEDAT")) * 1000),
             "quantity": user_trade.get("ORDERQTY"),
             "average_price": GetOrders.decimal_128_converter(user_trade, "AVGPX"),
             "price": GetOrders.decimal_128_converter(user_trade, "PRICE"),

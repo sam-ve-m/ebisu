@@ -20,7 +20,7 @@ class StatementsRepository(OracleBaseRepository):
     current_base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO, NR_LANCAMENTO FROM CORRWIN.TCCMOVTO {0}"
     historical_base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO, NR_LANCAMENTO FROM CORRWIN.TCCHISMOV {0}"
 
-    base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO FROM ({} union all {}) T ORDER BY T.NR_LANCAMENTO OFFSET {} rows fetch first {} row only"
+    base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO FROM ({} union all {}) T ORDER BY T.DT_LANCAMENTO DESC OFFSET {} rows fetch first {} row only"
 
     balance_query = "SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = {0}"
 
