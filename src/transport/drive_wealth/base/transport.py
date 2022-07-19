@@ -17,7 +17,7 @@ class DwBaseTransport:
 
     @staticmethod
     def _handle_dw_error_status_from_response(request: any, response: dict):
-        if response.get("errorCode"):
+        if isinstance(response, dict) and response.get("errorCode"):
             Gladsheim.error(
                 message=f"DwBaseTransport::execute_get::Dw error code when request dw api",
                 response=response,

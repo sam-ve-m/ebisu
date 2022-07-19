@@ -10,12 +10,3 @@ class Transaction:
     date: RegionStringDateTime
     description: str
     value: float
-
-    def __repr__(self):
-        transaction = {
-            "date": self.date.get_date_in_time_stamp(),
-            "description": self.description,
-            "value": self.value,
-        }
-
-        return transaction

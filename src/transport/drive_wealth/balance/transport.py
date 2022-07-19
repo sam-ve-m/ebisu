@@ -20,11 +20,11 @@ class DwBalanceTransport(DwBaseTransport):
             response = await cls.__transport.execute_get(url=url_formatted, query_params={})
 
             body = await response.text()
-            response = json.loads(body)
+            json_balance = json.loads(body)
 
             cls._handle_dw_error_status_from_response(
                 request=url_formatted,
-                response=response
+                response=json_balance
             )
 
             cls._handle_http_error_from_drive_wealth_request(
@@ -32,7 +32,7 @@ class DwBalanceTransport(DwBaseTransport):
                 response=response
             )
 
-            cash = response["cash"]
+            cash = json_balance["cash"]
             balance = Balance(
                 available_for_trade=cash.get("cashAvailableForTrade", 0),
                 available_for_withdraw=cash.get("cashAvailableForWithdrawal", 0),
