@@ -4,6 +4,7 @@ from typing import List
 # PROJECT IMPORTS
 from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
+from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOffset
 from src.domain.earning.br.model import EarningBr
 from src.infrastructures.env_config import config
 from src.domain.enums.earnings_types import EarningsTypes
@@ -30,6 +31,7 @@ class EarningsBrRecord:
             share_quantity=earning_transaction.get("QTDE_MVTO"),
             date=RegionStringDateTime(
                 date=earning_transaction.get("DATA_MVTO"),
+                utc_offset=ExchangeUtcOffset.BR_UTC_OFFSET,
                 region_date_format=RegionDateFormat.BR_DATE_FORMAT,
             ),
         )
