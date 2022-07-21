@@ -30,20 +30,20 @@ class EarningsModelToResponse:
         paid = [
             EarningsTransactionResponse(**earning_paid_transaction.__repr__())
             for earning_paid_transaction in earnings_transactions
-            if earning_paid_transaction.date.get_date_in_time_stamp() <= yesterday_date
+            if earning_paid_transaction.get_date_in_time_stamp() <= yesterday_date
         ]
         total_paid = sum(
             [
                 earning_paid_transaction.amount
                 for earning_paid_transaction in earnings_transactions
-                if earning_paid_transaction.date.get_date_in_time_stamp()
+                if earning_paid_transaction.get_date_in_time_stamp()
                 <= yesterday_date
             ]
         )
         payable = [
             EarningsTransactionResponse(**earning_payable_transaction.__repr__())
             for earning_payable_transaction in earnings_transactions
-            if earning_payable_transaction.date.get_date_in_time_stamp()
+            if earning_payable_transaction.date.get_date_in_time_stamp_with_timezone_replace()
             > yesterday_date
         ]
 

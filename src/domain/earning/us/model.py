@@ -14,7 +14,7 @@ class Earning:
     amount: float
 
     def get_date_in_time_stamp(self):
-        timestamp = self.date.get_date_in_time_stamp()
+        timestamp = self.date.get_date_in_timestamp_with_timezone_offset()
         return timestamp
 
     def __repr__(self):
@@ -22,7 +22,7 @@ class Earning:
             "symbol": self.symbol,
             "description": self.description,
             "amount_per_share": self.amount_per_share,
-            "date": self.date.get_date_in_time_stamp(),
+            "date": self.date.get_date_in_timestamp_with_timezone_offset(),
             "amount": self.amount,
         }
 

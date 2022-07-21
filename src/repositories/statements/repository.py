@@ -4,7 +4,9 @@ from typing import List
 # PROJECT IMPORTS
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
+from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOffset
 from src.domain.statement.base.model.transaction.model import Transaction
+from src.domain.statement.br.model import BrTransaction
 from src.infrastructures.env_config import config
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 
@@ -20,7 +22,7 @@ class StatementsRepository(OracleBaseRepository):
     current_base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO, NR_LANCAMENTO FROM CORRWIN.TCCMOVTO {0}"
     historical_base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO, NR_LANCAMENTO FROM CORRWIN.TCCHISMOV {0}"
 
-    base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO FROM ({} union all {}) T ORDER BY T.NR_LANCAMENTO OFFSET {} rows fetch first {} row only"
+    base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO FROM ({} union all {}) T ORDER BY T.DT_LANCAMENTO DESC OFFSET {} rows fetch first {} row only"
 
     balance_query = "SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = {0}"
 
@@ -44,11 +46,12 @@ class StatementsRepository(OracleBaseRepository):
         transactions = StatementsRepository.get_data(sql=complete_transaction_query)
 
         transactions_model = [
-            Transaction(
+            BrTransaction(
                 description=transaction.get("DS_LANCAMENTO"),
                 value=transaction.get("VL_LANCAMENTO"),
                 date=RegionStringDateTime(
                     date=transaction.get("DT_LANCAMENTO"),
+                    utc_offset=ExchangeUtcOffset.BR_UTC_OFFSET,
                     region_date_format=RegionDateFormat.BR_DATE_FORMAT
                 ),
             )
