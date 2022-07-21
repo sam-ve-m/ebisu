@@ -30,7 +30,7 @@ class FundingAndWithdrawalService:
         unique_id = jwt_data["user"]["unique_id"]
 
         origin_account = ExchangeAccount(
-            account_number=jwt_data["user"]["portfolios"]["br"]["bovespa_account"],
+            account_number=jwt_data["user"]["portfolios"]["br"]["bmf_account"],
             user_unique_id=unique_id,
             country=Region.BR,
         )
