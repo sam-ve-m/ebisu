@@ -38,6 +38,7 @@ class ListOrders:
     async def normalize_open_order(user_trade: dict, region: Region) -> dict:
         currency = country_to_currency[region]
         accumulated_quantity = user_trade.get("CUMQTY")
+        side = user_trade.get("SIDE")
         normalized_data = {
             "name": await ListOrders.company_information_repository.get_company_name(
                 user_trade.get("SYMBOL")
@@ -50,6 +51,7 @@ class ListOrders:
             "currency": currency.value,
             "symbol": user_trade.get("SYMBOL"),
             "status": user_trade.get("ORDSTATUS"),
+            "side": side.lower() if side else side,
             "total_spent": (
                 (accumulated_quantity if accumulated_quantity else float(0.0))
                 * ListOrders.decimal_128_converter(user_trade, "AVGPX")
