@@ -19,10 +19,10 @@ class StatementsRepository(OracleBaseRepository):
     base_dns = config("ORACLE_BASE_DSN")
     port = config("ORACLE_BASE_PORT")
 
-    current_base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO, NR_LANCAMENTO FROM CORRWIN.TCCMOVTO {0}"
-    historical_base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO, NR_LANCAMENTO FROM CORRWIN.TCCHISMOV {0}"
+    current_base_query = "SELECT DT_LIQUIDACAO, DS_LANCAMENTO, VL_LANCAMENTO, NR_LANCAMENTO FROM CORRWIN.TCCMOVTO {0}"
+    historical_base_query = "SELECT DT_LIQUIDACAO, DS_LANCAMENTO, VL_LANCAMENTO, NR_LANCAMENTO FROM CORRWIN.TCCHISMOV {0}"
 
-    base_query = "SELECT DT_LANCAMENTO, DS_LANCAMENTO, VL_LANCAMENTO FROM ({} union all {}) T ORDER BY T.DT_LANCAMENTO DESC OFFSET {} rows fetch first {} row only"
+    base_query = "SELECT DT_LIQUIDACAO, DS_LANCAMENTO, VL_LANCAMENTO FROM ({} union all {}) T ORDER BY T.DT_LIQUIDACAO DESC OFFSET {} rows fetch first {} row only"
 
     balance_query = "SELECT VL_TOTAL FROM CORRWIN.TCCSALREF WHERE CD_CLIENTE = {0}"
 
@@ -50,7 +50,7 @@ class StatementsRepository(OracleBaseRepository):
                 description=transaction.get("DS_LANCAMENTO"),
                 value=transaction.get("VL_LANCAMENTO"),
                 date=RegionStringDateTime(
-                    date=transaction.get("DT_LANCAMENTO"),
+                    date=transaction.get("DT_LIQUIDACAO"),
                     utc_offset=ExchangeUtcOffset.BR_UTC_OFFSET,
                     region_date_format=RegionDateFormat.BR_DATE_FORMAT
                 ),
@@ -77,7 +77,7 @@ class StatementsRepository(OracleBaseRepository):
         offset: int, limit: int, bmf_account: str
     ) -> List[Transaction]:
         where_clause = (
-            f"WHERE CD_CLIENTE = {bmf_account} AND DT_LANCAMENTO > sysdate + 1"
+            f"WHERE CD_CLIENTE = {bmf_account} AND DT_LIQUIDACAO > sysdate + 1"
         )
 
         transactions_model = StatementsRepository.__list_paginated_account_transactions(
