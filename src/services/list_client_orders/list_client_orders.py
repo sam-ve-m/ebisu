@@ -51,6 +51,8 @@ class ListOrders:
             "currency": currency.value,
             "symbol": user_trade.get("SYMBOL"),
             "status": user_trade.get("ORDSTATUS"),
+            "price": user_trade.get("PRICE"),
+            "stop": user_trade.get("STOPPX"),
             "side": side.lower() if side else side,
             "total_spent": (
                 (accumulated_quantity if accumulated_quantity else float(0.0))
