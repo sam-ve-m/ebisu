@@ -167,6 +167,37 @@ containers:
       value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
     - name: PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT
       value: "ebisu-persephone.client.bank_account"
+    # Floki
+    - name: FLOKI_SINACOR_BASE_IP
+      value: "172.30.19.203:25149"
+    - name: FLOKI_SINACOR_AUTHENTICATION_ROUTE
+      value: "infra/api/v1/oauth/token"
+    - name: FLOKI_SINACOR_CLIENT_ID
+      value: "1B5FEA46423D56C0EECD0CEB.SINACOR"
+    - name: FLOKI_SINACOR_CLIENT_SECRET
+      value: "b8X2xWgfxEPyBB92ni6EbJFknnETaOPW7lNQj5pqPkPzXb1NCygotdSz5/fTnRz3iTzhb3J5bnTKnuYly/R/rlhlnhEIizoN4x1gF/yRCMk="
+    - name: FLOKI_SINACOR_COMPANY_ID
+      value: "7029"
+    - name: FLOKI_REDIS_HOST_URL
+      value: "redis://bifrost:Lysjn32J65NmMhsOOm@172.30.19.183:6379?db=1"
+    - name: FLOKI_CLIENT_LOCK_MANAGER_REDIS_URLS
+      value: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
+    - name: FLOKI_CLIENT_AUTHENTICATION_RETRY_COUNT
+      value: "100"
+    - name: FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN
+      value: "0.5"
+    - name: FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX
+      value: "0.7"
+    - name: FLOKI_CLIENT_AUTHENTICATION_LOCK_MANAGER_TIMEOUT
+      value: "5"
+    - name: FLOKI_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER
+      value: "sinacor_authentication"
+    - name: PAID_EARNINGS_URL
+      value: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Pagos"
+    - name: DUE_DATE_EARNINGS_URL
+      value: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/AVencer"
+    - name: PROVISIONED_EARNINGS_URL
+      value: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Provisionados"
 
 service:
   name: ebisu-service
