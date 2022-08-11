@@ -7,7 +7,9 @@ import json
 from src.domain.exception.model import (
     IntegrityJwtError,
     AuthenticationJwtError,
-    FailToSaveAuditingTrail, DataNotFoundError, MoneyFlowPerformedOutsideTransactionWindow,
+    FailToSaveAuditingTrail,
+    DataNotFoundError,
+    MoneyFlowPerformedOutsideTransactionWindow,
 )
 from etria_logger import Gladsheim
 from src.domain.exception import (
@@ -214,9 +216,12 @@ class BaseRouter:
             return Response(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 content=json.dumps(
-                    {"request_status": False, "status": 6, "msg": "An unexpected error ocurred"}
+                    {
+                        "request_status": False,
+                        "status": 6,
+                        "msg": "An unexpected error ocurred",
+                    }
                 ),
             )
 
         return response
-

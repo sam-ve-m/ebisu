@@ -57,7 +57,9 @@ class GetOrders:
             "text": user_trade.get("TEXT"),
             "reject_reason": user_trade.get("ORDREJREASON"),
             "exec_type": user_trade.get("EXECTYPE"),
-            "expire_date": int(str_to_timestamp(user_trade.get("EXPIREDATE")) * 1000) if user_trade.get("EXPIREDATE") else None,
+            "expire_date": int(str_to_timestamp(user_trade.get("EXPIREDATE")) * 1000)
+            if user_trade.get("EXPIREDATE")
+            else None,
             "error_message": user_trade.get("MESSAGE"),
         }
         return normalized_data

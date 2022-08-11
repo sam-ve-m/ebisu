@@ -12,7 +12,9 @@ from src.domain.statement.us.response.model import (
 from src.domain.validators.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
-from src.domain.validators.exchange_info.count_client_order_validator import GetClientOrderQuantityModel
+from src.domain.validators.exchange_info.count_client_order_validator import (
+    GetClientOrderQuantityModel,
+)
 from src.domain.validators.exchange_info.get_closure_steps_validator import (
     AccountCloseStepsRequest,
 )
@@ -136,7 +138,11 @@ class ExchangeRouter:
         return earnings_client_response
 
     @staticmethod
-    @__exchange_router.get("/account_close_steps", response_model=AccountCloseStepsResponse, tags=["Account Close Steps"])
+    @__exchange_router.get(
+        "/account_close_steps",
+        response_model=AccountCloseStepsResponse,
+        tags=["Account Close Steps"],
+    )
     async def get_closure_steps(
         request: Request, closure_steps: AccountCloseStepsRequest = Depends()
     ):

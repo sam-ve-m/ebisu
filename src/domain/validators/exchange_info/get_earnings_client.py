@@ -9,6 +9,7 @@ from src.domain.enums.region import Region
 
 class EarningsClientModel(BaseModel):
     region: Region
+    # Not used limit and earnings_types but mapped
     limit: int
     earnings_types: Optional[constr(min_length=1)]
 

@@ -75,7 +75,7 @@ class UserBankAccountRepository(MongoDbBaseRepository):
                 "bank_accounts": {
                     "$elemMatch": {
                         "id": bank_account_id,
-                        "status": UserBankAccountStatus.ACTIVE.value
+                        "status": UserBankAccountStatus.ACTIVE.value,
                     }
                 },
             }

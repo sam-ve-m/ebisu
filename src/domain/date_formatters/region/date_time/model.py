@@ -8,14 +8,18 @@ from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOf
 
 class RegionStringDateTime:
     def __init__(
-            self,
-            date: datetime,
-            utc_offset: ExchangeUtcOffset,
-            region_date_format: RegionDateFormat
+        self,
+        date: datetime,
+        utc_offset: ExchangeUtcOffset,
+        region_date_format: RegionDateFormat,
     ):
         self.__date = date
         self.__utc_offset = utc_offset
         self.__region_date_format = region_date_format
+
+    @property
+    def date(self):
+        return self.__date
 
     def get_date_in_time_stamp_with_timezone_replace(self):
         timedelta_utc_offset = timedelta(minutes=self.__utc_offset.value)

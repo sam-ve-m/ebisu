@@ -35,8 +35,8 @@ class UserPositionsRepository(OracleBaseRepository):
             positions = []
 
             for position in raw_positions:
-                symbol = position.get('SYMBOL')
-                quantity = position.get('QUANTITY')
+                symbol = position.get("SYMBOL")
+                quantity = position.get("QUANTITY")
                 positions.append(Position(symbol=symbol, quantity=quantity))
             return positions
 

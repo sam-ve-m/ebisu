@@ -41,7 +41,9 @@ class InvalidAccountsOwnership(Exception):
 
 
 class MoneyFlowPerformedOutsideTransactionWindow(Exception):
-    def __init__(self, msg="Money flow performed outside the transaction window", *args, **kwargs):
+    def __init__(
+        self, msg="Money flow performed outside the transaction window", *args, **kwargs
+    ):
         super().__init__(msg, *args, **kwargs)
 
 

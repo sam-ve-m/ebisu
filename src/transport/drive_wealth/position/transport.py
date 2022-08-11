@@ -19,22 +19,22 @@ class DwPositionTransport(DwBaseTransport):
     async def get_positions(cls, account: str) -> List[Position]:
         try:
             url_formatted = cls.__positions_url.format(account)
-            response = await cls.__transport.execute_get(url=url_formatted, query_params={})
+            response = await cls.__transport.execute_get(
+                url=url_formatted, query_params={}
+            )
 
             cls._handle_http_error_from_drive_wealth_request(
-                request=url_formatted,
-                response=response
+                request=url_formatted, response=response
             )
 
             body = await response.text()
             response = json.loads(body)
 
             cls._handle_dw_error_status_from_response(
-                request=url_formatted,
-                response=response
+                request=url_formatted, response=response
             )
 
-            equity_positions = response['equityPositions']
+            equity_positions = response["equityPositions"]
             positions = cls.__consolidate_positions(equity_positions)
 
             return positions
@@ -54,7 +54,7 @@ class DwPositionTransport(DwBaseTransport):
             positions.append(
                 Position(
                     symbol=equity_position["symbol"],
-                    quantity=equity_position["openQty"]
+                    quantity=equity_position["openQty"],
                 )
             )
         return positions
