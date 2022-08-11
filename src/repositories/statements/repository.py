@@ -80,7 +80,7 @@ class StatementsRepository(OracleBaseRepository):
         offset: int, limit: int, bmf_account: str
     ) -> List[Transaction]:
         where_clause = (
-            f"WHERE CD_CLIENTE = {bmf_account} AND DT_LIQUIDACAO >= sysdate + 1"
+            f"WHERE CD_CLIENTE = {bmf_account} AND DT_LIQUIDACAO >= trunc(sysdate)"
         )
 
         transactions_model = StatementsRepository.__list_paginated_account_transactions(
