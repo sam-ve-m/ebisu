@@ -23,14 +23,13 @@ class UserPositionsService:
         return portfolios.get(field)
 
     @classmethod
-    async def get_positions_by_region(cls, region: str, jwt_data: dict) -> List[Position]:
+    async def get_positions_by_region(
+        cls, region: str, jwt_data: dict
+    ) -> List[Position]:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
         region_portfolios = portfolios.get(region.lower(), {})
-        account = cls.get_account_by_region(
-            portfolios=region_portfolios,
-            region=region
-        )
+        account = cls.get_account_by_region(portfolios=region_portfolios, region=region)
 
         position_resolver = cls.positions_per_region.get(region)
         positions = await position_resolver.get_positions(account)

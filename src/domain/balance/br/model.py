@@ -2,7 +2,6 @@ from src.domain.balance.base.model import BaseBalance
 
 
 class Balance(BaseBalance):
-
     def __init__(self, available_for_trade: float, available_for_withdraw: float):
         self.__available_for_trade: float = available_for_trade
         self.__available_for_withdraw: float = available_for_withdraw

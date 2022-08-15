@@ -95,13 +95,11 @@ class DwStatementTransport(DwBaseTransport):
         transactions = json.loads(body)
 
         cls._handle_dw_error_status_from_response(
-            request=url_formatted,
-            response=transactions
+            request=url_formatted, response=transactions
         )
 
         cls._handle_http_error_from_drive_wealth_request(
-            request=url_formatted,
-            response=response
+            request=url_formatted, response=response
         )
 
         return transactions

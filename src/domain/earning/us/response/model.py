@@ -36,8 +36,7 @@ class EarningsModelToResponse:
             [
                 earning_paid_transaction.amount
                 for earning_paid_transaction in earnings_transactions
-                if earning_paid_transaction.get_date_in_time_stamp()
-                <= yesterday_date
+                if earning_paid_transaction.get_date_in_time_stamp() <= yesterday_date
             ]
         )
         payable = [

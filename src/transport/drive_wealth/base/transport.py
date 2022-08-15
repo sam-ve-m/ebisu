@@ -4,14 +4,13 @@ from src.domain.exception import FailToGetDataFromTransportLayer
 
 
 class DwBaseTransport:
-
     @staticmethod
     def _handle_http_error_from_drive_wealth_request(request: any, response: any):
         if response.status != 200:
             Gladsheim.error(
                 message=f"DwBaseTransport::execute_get::Http error when request dw api",
                 response=response,
-                request=request
+                request=request,
             )
             raise FailToGetDataFromTransportLayer()
 
@@ -21,6 +20,6 @@ class DwBaseTransport:
             Gladsheim.error(
                 message=f"DwBaseTransport::execute_get::Dw error code when request dw api",
                 response=response,
-                request=request
+                request=request,
             )
             raise FailToGetDataFromTransportLayer()
