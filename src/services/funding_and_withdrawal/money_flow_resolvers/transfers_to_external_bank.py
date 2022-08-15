@@ -11,12 +11,11 @@ from src.infrastructures.env_config import config
 
 
 class TransferToExternalBank(MoneyFlowResolverAbstract):
-
     @staticmethod
     def _get_period():
         # open transfer window
-        window_open_at = "10:00:00".replace(':', '')
-        window_close_at = "20:00:00".replace(':', '')
+        window_open_at = "10:00:00".replace(":", "")
+        window_close_at = "20:00:00".replace(":", "")
         return int(window_open_at), int(window_close_at)
 
     @staticmethod

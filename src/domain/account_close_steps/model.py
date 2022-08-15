@@ -5,8 +5,13 @@ from src.domain.positions.model import Position
 
 
 class AccountCloseSteps:
-
-    def __init__(self, balance: BaseBalance, positions: List[Position], earnings: any, region: str):
+    def __init__(
+        self,
+        balance: BaseBalance,
+        positions: List[Position],
+        earnings: any,
+        region: str,
+    ):
         self.__balance: BaseBalance = balance
         self.__positions: List[Position] = positions
         self.__earnings: any = earnings
@@ -35,7 +40,7 @@ class AccountCloseSteps:
             "balance": not self.has_balance(),
             "positions": not self.has_positions(),
             "earnings": not self.has_earnings(),
-            "region": self.__region
+            "region": self.__region,
         }
 
         return account_steps

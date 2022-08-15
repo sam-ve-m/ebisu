@@ -24,9 +24,9 @@ class BalanceRepository(OracleBaseRepository):
     @staticmethod
     async def get_balance(account: str) -> Balance:
 
-        query = (f"""SELECT NVL(VL_TOTAL,0) as VL_TOTAL, NVL(VL_DISPONIVEL, 0) as VL_DISPONIVEL FROM CORRWIN.TCCSALREF A 
+        query = f"""SELECT NVL(VL_TOTAL,0) as VL_TOTAL, NVL(VL_DISPONIVEL, 0) as VL_DISPONIVEL FROM CORRWIN.TCCSALREF A 
             WHERE DT_REFERENCIA = (SELECT max(DT_REFERENCIA) from CORRWIN.TCCSALREF where CD_CLIENTE = A.CD_CLIENTE) 
-            AND CD_CLIENTE = {account}""")
+            AND CD_CLIENTE = {account}"""
 
         try:
             balance = BalanceRepository.fetch_one(sql=query)

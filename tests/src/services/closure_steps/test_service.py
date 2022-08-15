@@ -69,7 +69,9 @@ jwt_data_dummy = {
 @patch.object(UserPortfoliosRepository, "get_portfolios_by_region")
 async def test_get_user_accounts_br(get_portfolios_by_region_mock):
     get_portfolios_by_region_mock.return_value = user_portifolios_dummy
-    result = await AccountCloseStepsService._get_user_accounts(Region.BR.value, jwt_data_dummy)
+    result = await AccountCloseStepsService._get_user_accounts(
+        Region.BR.value, jwt_data_dummy
+    )
     assert result == ["1", "2", "3"]
 
 
@@ -77,7 +79,9 @@ async def test_get_user_accounts_br(get_portfolios_by_region_mock):
 @patch.object(UserPortfoliosRepository, "get_portfolios_by_region")
 async def test_get_user_accounts_us(get_portfolios_by_region_mock):
     get_portfolios_by_region_mock.return_value = user_portifolios_dummy
-    result = await AccountCloseStepsService._get_user_accounts(Region.US.value, jwt_data_dummy)
+    result = await AccountCloseStepsService._get_user_accounts(
+        Region.US.value, jwt_data_dummy
+    )
     assert result == ["123"]
 
 
@@ -89,7 +93,9 @@ async def test_verify_positions_when_client_have_positions(
 ):
     positions_service_mock.return_value = 100
     _get_user_accounts_mock.return_value = ["1", "2", "3"]
-    result = await AccountCloseStepsService._verify_positions(Region.BR.value, jwt_data_dummy)
+    result = await AccountCloseStepsService._verify_positions(
+        Region.BR.value, jwt_data_dummy
+    )
     assert result is False
 
 
@@ -101,7 +107,9 @@ async def test_verify_positions_when_client_dont_have_positions(
 ):
     positions_service_mock.return_value = 0
     _get_user_accounts_mock.return_value = ["1", "2", "3"]
-    result = await AccountCloseStepsService._verify_positions(Region.BR.value, jwt_data_dummy)
+    result = await AccountCloseStepsService._verify_positions(
+        Region.BR.value, jwt_data_dummy
+    )
     assert result is True
 
 
@@ -110,7 +118,9 @@ async def test_verify_positions_when_client_dont_have_positions(
 async def test_verify_earnings_when_client_have_earnings(earnings_service_mock):
     earnigs_result = EarningsRecordResponse(paid=[], payable=[], record_date=[1, 2])
     earnings_service_mock.return_value = earnigs_result
-    result = await AccountCloseStepsService._verify_earnings(Region.BR.value, jwt_data_dummy)
+    result = await AccountCloseStepsService._verify_earnings(
+        Region.BR.value, jwt_data_dummy
+    )
     assert result is False
 
 
@@ -119,7 +129,9 @@ async def test_verify_earnings_when_client_have_earnings(earnings_service_mock):
 async def test_verify_earnings_when_client_dont_have_earnings(earnings_service_mock):
     earnigs_result = EarningsRecordResponse(paid=[], payable=[], record_date=[])
     earnings_service_mock.return_value = earnigs_result
-    result = await AccountCloseStepsService._verify_earnings(Region.BR.value, jwt_data_dummy)
+    result = await AccountCloseStepsService._verify_earnings(
+        Region.BR.value, jwt_data_dummy
+    )
     assert result is True
 
 
@@ -133,7 +145,9 @@ async def test_get_closure_steps_by_region_when_all_true(
     earnings_mock.return_value = True
     positions_mock.return_value = True
     balance_mock.return_value = True
-    result = await AccountCloseStepsService.get_closure_steps_by_region("BR", jwt_data_dummy)
+    result = await AccountCloseStepsService.get_closure_steps_by_region(
+        "BR", jwt_data_dummy
+    )
     expected_result = (True, {"balance": True, "positions": True, "earnings": True})
     assert result == expected_result
 
@@ -148,7 +162,9 @@ async def test_get_closure_steps_by_region_when_one_step_is_false(
     earnings_mock.return_value = False
     positions_mock.return_value = True
     balance_mock.return_value = True
-    result = await AccountCloseStepsService.get_closure_steps_by_region("BR", jwt_data_dummy)
+    result = await AccountCloseStepsService.get_closure_steps_by_region(
+        "BR", jwt_data_dummy
+    )
     expected_result = (False, {"balance": True, "positions": True, "earnings": False})
     assert result == expected_result
 
@@ -165,7 +181,9 @@ async def test_get_service_response_when_region_us_and_all_true(monkeypatch):
             result = (True, {"balance": True, "positions": True, "earnings": True})
             return result
 
-    monkeypatch.setattr(AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps)
+    monkeypatch.setattr(
+        AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps
+    )
 
     result = await AccountCloseStepsService.get_service_response(
         closure_steps_dummy, jwt_data_dummy
@@ -190,7 +208,9 @@ async def test_get_service_response_when_region_us_and_one_step_is_false(monkeyp
             result = (False, {"balance": False, "positions": True, "earnings": True})
             return result
 
-    monkeypatch.setattr(AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps)
+    monkeypatch.setattr(
+        AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps
+    )
 
     result = await AccountCloseStepsService.get_service_response(
         closure_steps_dummy, jwt_data_dummy
@@ -215,7 +235,9 @@ async def test_get_service_response_when_region_br_and_all_true(monkeypatch):
             result = (True, {"balance": True, "positions": True, "earnings": True})
             return result
 
-    monkeypatch.setattr(AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps)
+    monkeypatch.setattr(
+        AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps
+    )
 
     result = await AccountCloseStepsService.get_service_response(
         closure_steps_dummy, jwt_data_dummy
@@ -243,7 +265,9 @@ async def test_get_service_response_when_region_br_and_one_step_is_false(monkeyp
             result = (True, {"balance": True, "positions": True, "earnings": True})
             return result
 
-    monkeypatch.setattr(AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps)
+    monkeypatch.setattr(
+        AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps
+    )
 
     result = await AccountCloseStepsService.get_service_response(
         closure_steps_dummy, jwt_data_dummy
@@ -273,7 +297,9 @@ async def test_get_service_response_when_region_br_and_one_step_is_false_in_us(
             result = (False, {"balance": False, "positions": True, "earnings": True})
             return result
 
-    monkeypatch.setattr(AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps)
+    monkeypatch.setattr(
+        AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps
+    )
 
     result = await AccountCloseStepsService.get_service_response(
         closure_steps_dummy, jwt_data_dummy

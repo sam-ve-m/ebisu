@@ -50,8 +50,7 @@ class AccountCloseStepsService:
     async def __get_positions(cls, region: str, jwt_data: dict) -> List[Position]:
         try:
             positions = await cls.positions_service.get_positions_by_region(
-                region=region,
-                jwt_data=jwt_data
+                region=region, jwt_data=jwt_data
             )
 
             return positions
@@ -76,17 +75,16 @@ class AccountCloseStepsService:
             raise ex
 
     @classmethod
-    async def get_closure_steps_by_region(cls, region: str, jwt_data: dict) -> AccountCloseSteps:
+    async def get_closure_steps_by_region(
+        cls, region: str, jwt_data: dict
+    ) -> AccountCloseSteps:
 
         balance = await cls.__get_balance(region, jwt_data)
         positions = await cls.__get_positions(region, jwt_data)
         earnings = await cls.__get_earnings(region, jwt_data)
 
         account_close_steps = AccountCloseSteps(
-            balance=balance,
-            positions=positions,
-            earnings=earnings,
-            region=region
+            balance=balance, positions=positions, earnings=earnings, region=region
         )
 
         return account_close_steps
@@ -102,26 +100,25 @@ class AccountCloseStepsService:
         has_us_account = user_portfolios.get("us", {}).get("dw_account")
         has_br_account = user_portfolios.get("br", {}).get("bmf_account")
 
-        if (is_br_account and not has_br_account) or (is_us_account and not has_us_account):
+        if (is_br_account and not has_br_account) or (
+            is_us_account and not has_us_account
+        ):
             raise UnauthorizedError()
 
-        account_close_steps = await cls.get_closure_steps_by_region(
-            region,
-            jwt_data
-        )
+        account_close_steps = await cls.get_closure_steps_by_region(region, jwt_data)
         accounts_close_steps: List[AccountCloseSteps] = []
         accounts_close_steps.append(account_close_steps)
 
         if is_br_account and has_us_account:
             account_close_steps_us = await cls.get_closure_steps_by_region(
-                Region.US.value,
-                jwt_data
+                Region.US.value, jwt_data
             )
             accounts_close_steps.append(account_close_steps_us)
 
-        account_close_steps_response = \
+        account_close_steps_response = (
             AccountCloseStepsToResponse.account_close_steps_response(
                 accounts_close_steps=accounts_close_steps
             )
+        )
 
         return account_close_steps_response
