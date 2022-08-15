@@ -6,6 +6,7 @@
 # .env file
 .env
 .env.example
+ebisu
 
 # Node artifact files
 node_modules/
