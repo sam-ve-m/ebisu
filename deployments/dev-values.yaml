@@ -194,10 +194,12 @@ containers:
       value: "sinacor_authentication"
     - name: PAID_EARNINGS_URL
       value: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Pagos"
-    - name: DUE_DATE_EARNINGS_URL
-      value: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/AVencer"
     - name: PROVISIONED_EARNINGS_URL
       value: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Provisionados"
+    - name: TRANSFER_WINDOW_START
+      value: "11:00:00"
+    - name: TRANSFER_WINDOW_END
+      value: "19:30:00"
 
 service:
   name: ebisu-service
