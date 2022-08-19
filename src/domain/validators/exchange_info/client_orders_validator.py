@@ -4,4 +4,4 @@ from src.domain.enums.region import Region
 
 class GetClientOrderModel(BaseModel):
     region: Region
-    cl_order_id: str
+    root_cl_order_id: str

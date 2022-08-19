@@ -6,6 +6,7 @@ from src.repositories.orders.us.repository import UsOrdersRepository
 class GetUsOrders:
     oracle_singleton_instance = UsOrdersRepository
 
+    # TODO: Atualizar para view com root cl order id quando subirmos US
     @staticmethod
     def build_query(
         accounts: List[str],
