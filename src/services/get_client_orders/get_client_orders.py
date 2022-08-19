@@ -91,7 +91,7 @@ class GetOrders:
 
         open_orders = order_region[region]
         query = open_orders.build_query(
-            accounts=accounts, clordid=client_order.cl_order_id
+            accounts=accounts, root_cl_order_id=client_order.root_cl_order_id
         )
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
         data = [
