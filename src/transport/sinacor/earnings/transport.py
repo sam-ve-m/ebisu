@@ -11,6 +11,7 @@ from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFo
 from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOffset
 from src.domain.earning.br.model import EarningBr
 from src.domain.enums.earnings_types import EarningsTypes
+from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
 from src.infrastructures.env_config import config
 
 
@@ -23,7 +24,7 @@ class SinacorEarningsTransport:
 
     @classmethod
     async def paid_earnings(
-        cls, account: str, earnings_type: List[EarningsTypes]
+        cls, account: str, earnings_client: EarningsClientModel
     ) -> List[EarningBr]:
         try:
             url = config("PAID_EARNINGS_URL")
@@ -31,8 +32,12 @@ class SinacorEarningsTransport:
                 "filtro.contaDe": account,
                 "filtro.contaAte": account,
             }
-            if earnings_type:
-                query_params.update({"filtro.tipoProvento": [i.value for i in earnings_type],})
+            if earnings_client.earnings_types:
+                query_params.update({"filtro.tipoProvento": [i.value for i in earnings_client.earnings_types]})
+            if earnings_client.limit:
+                query_params.update({"filtro.pagamentoAte": earnings_client.limit.isoformat()})
+            if earnings_client.offset:
+                query_params.update({"filtro.pagamentoDe": earnings_client.offset.isoformat()})
             response = await cls._floki_client.get(
                 url,
                 query_params=query_params,
@@ -46,7 +51,7 @@ class SinacorEarningsTransport:
 
     @classmethod
     async def payable_and_record_date_earnings(
-        cls, account: str, earnings_type: List[EarningsTypes]
+        cls, account: str, earnings_client: EarningsClientModel
     ) -> Tuple[PayableEarnings, RecordDateEarnings]:
         try:
             url = config("PROVISIONED_EARNINGS_URL")
@@ -54,8 +59,8 @@ class SinacorEarningsTransport:
                 "filtro.contaDe": account,
                 "filtro.contaAte": account,
             }
-            if earnings_type:
-                query_params.update({"filtro.tipoProvento": [i.value for i in earnings_type],})
+            if earnings_client.earnings_types:
+                query_params.update({"filtro.tipoProvento": [i.value for i in earnings_client.earnings_types]})
             response = await cls._floki_client.get(
                 url,
                 query_params=query_params,
