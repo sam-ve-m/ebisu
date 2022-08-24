@@ -4,9 +4,9 @@ namespace: homolog
 
 image:
   repository: nexus.sigame.com.br
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.0.14
+  tag: 1.0.15
 
 ports:
   protocol: TCP
@@ -159,9 +159,9 @@ containers:
       value: "ebisu-bifrost.transfers-between-sinacor-and-external-bank"
     # etria
     - name: ETRIA_LOG_LEVEL
-      value: "INFO"
+      value: "DEBUG"
     - name: ROOT_LOG_LEVEL
-      value: "WARNING"
+      value: "INFO"
     # Persephone
     - name: PERSEPHONE_KAFKA_BROKERS
       value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"

@@ -10,6 +10,7 @@ from src.domain.date_formatters.region.date_time.model import RegionStringDateTi
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOffset
 from src.domain.earning.br.model import EarningBr
+from src.domain.enums.earnings_types import EarningsTypes
 from src.infrastructures.env_config import config
 
 
@@ -21,12 +22,20 @@ class SinacorEarningsTransport:
     _floki_client = SinacorTransport(system_origin="ebisu")
 
     @classmethod
-    async def paid_earnings(cls, account: str) -> List[EarningBr]:
+    async def paid_earnings(
+        cls, account: str, earnings_type: List[EarningsTypes]
+    ) -> List[EarningBr]:
         try:
             url = config("PAID_EARNINGS_URL")
+            query_params = {
+                "filtro.contaDe": account,
+                "filtro.contaAte": account,
+            }
+            if earnings_type:
+                query_params.update({"filtro.tipoProvento": [i.value for i in earnings_type],})
             response = await cls._floki_client.get(
                 url,
-                query_params={"filtro.contaDe": account, "filtro.contaAte": account},
+                query_params=query_params,
             )
             process_response = await cls._build_earnings_models(response=response)
             return process_response
@@ -37,13 +46,19 @@ class SinacorEarningsTransport:
 
     @classmethod
     async def payable_and_record_date_earnings(
-        cls, account: str
+        cls, account: str, earnings_type: List[EarningsTypes]
     ) -> Tuple[PayableEarnings, RecordDateEarnings]:
         try:
             url = config("PROVISIONED_EARNINGS_URL")
+            query_params = {
+                "filtro.contaDe": account,
+                "filtro.contaAte": account,
+            }
+            if earnings_type:
+                query_params.update({"filtro.tipoProvento": [i.value for i in earnings_type],})
             response = await cls._floki_client.get(
                 url,
-                query_params={"filtro.contaDe": account, "filtro.contaAte": account},
+                query_params=query_params,
             )
             process_response = await cls._build_earnings_models(response=response)
             payable_earnings = list()

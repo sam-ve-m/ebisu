@@ -26,6 +26,7 @@ from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
 
 # MUDOU HOTFIX 1.0.12
 
+
 @pytest.mark.asyncio
 @patch.object(
     EarningsBrRecord,
