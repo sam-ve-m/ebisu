@@ -33,7 +33,7 @@ class EarningsFromClient:
         account = cls.__extract_account(region_portfolios, earnings_client.region.value)
 
         paid_transactions = await cls.sinacor_earnings_transport.paid_earnings(
-            account=account, earnings_type=earnings_client.earnings_types
+            account=account, earnings_client=earnings_client
         )
 
         total_paid_earnings = sum(
@@ -44,7 +44,7 @@ class EarningsFromClient:
             payable_transactions,
             record_transactions,
         ) = await cls.sinacor_earnings_transport.payable_and_record_date_earnings(
-            account=account, earnings_type=earnings_client.earnings_types
+            account=account, earnings_client=earnings_client
         )
 
         earnings_br_transactions_response = BrEarningsModelToResponse.earnings_response(
