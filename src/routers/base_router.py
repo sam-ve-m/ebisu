@@ -27,6 +27,7 @@ from src.domain.exception import (
 
 # ROUTERS
 from src.routers.exchange_informations.router import ExchangeRouter
+from src.routers.forex_exchange.router import ForexExchange
 from src.routers.user_bank_accounts.router import UserBankAccountsRouter
 from src.routers.funding_and_withdrawal.router import FundingAndWithdrawalRouter
 from src.routers.user_portfolios.router import UserPortfoliosRouter
@@ -43,6 +44,12 @@ class BaseRouter:
     def __register_router_exchange():
         exchange_router = ExchangeRouter.get_exchange_router()
         BaseRouter.app.include_router(exchange_router)
+        return BaseRouter.app
+
+    @staticmethod
+    def __register_forex_exchange():
+        forex_exchange_router = ForexExchange.get_forex_exchange_router()
+        BaseRouter.app.include_router(forex_exchange_router)
         return BaseRouter.app
 
     @staticmethod
@@ -66,6 +73,7 @@ class BaseRouter:
     @staticmethod
     def register_routers():
         BaseRouter.__register_router_exchange()
+        BaseRouter.__register_forex_exchange()
         BaseRouter.__register_router_account()
         BaseRouter.__register_funding_and_withdrawal()
         BaseRouter.__register_user_portfolios()
