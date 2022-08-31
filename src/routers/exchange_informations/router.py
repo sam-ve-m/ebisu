@@ -51,6 +51,16 @@ class ExchangeRouter:
     def get_exchange_router():
         return ExchangeRouter.__exchange_router
 
+
+    @staticmethod
+    @__exchange_router.get("/exchange/simulation_proposal", tags=["Simulation Proposal"])
+    async def get_exchange_simulation_proposal(
+            request: Request,
+    ):
+        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        exchange_simulation_response =
+        pass
+
     # still not working due to AWS has no correlated route yet
     @staticmethod
     @__exchange_router.get("/list_broker_note", tags=["Broker Note"])
