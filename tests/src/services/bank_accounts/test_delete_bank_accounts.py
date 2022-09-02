@@ -12,7 +12,7 @@ from tests.src.stubs.bank_account_stubs.stub_get_account import (
 )
 from src.services.bank_account.service import UserBankAccountService
 from src.repositories.bank_account.repository import UserBankAccountRepository
-from src.domain.exception import (
+from src.domain.exceptions import (
     BadRequestError,
     InternalServerError,
     FailToSaveAuditingTrail,

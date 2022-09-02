@@ -1,7 +1,7 @@
 from etria_logger import Gladsheim
 
 from src.domain.balance.br.model import Balance
-from src.domain.exception import DataNotFoundError
+from src.domain.exceptions import DataNotFoundError
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from src.infrastructures.env_config import config
 

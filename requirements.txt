@@ -1,3 +1,4 @@
+--extra-index-url https://backend:dc222fa6-452f-4253-a2fd-a52e7ba2e7e9@nexus.sigame.com.br/repository/pypi/simple
 aiokafka==0.7.2
 boto3==1.20.24
 cx-oracle==8.3.0

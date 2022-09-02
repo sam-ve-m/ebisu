@@ -24,3 +24,10 @@ class UserRepository(MongoDbBaseRepository):
         creation_date = user_data.get("created_at")
 
         return creation_date
+
+    @classmethod
+    async def get_user_exchange_data(cls, unique_id: str, base: str, quote: str) -> dict:
+        user_exchange_data = await cls.find_one(
+            query={"unique_id": unique_id, "base": base, "quote": quote}
+        )
+        return user_exchange_data

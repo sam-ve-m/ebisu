@@ -2,7 +2,7 @@ from pydantic import BaseModel, UUID4, validator, constr
 from typing import Optional
 
 from src.domain.validators.device_info import DeviceInformationOptional
-from src.domain.exception import BadRequestError
+from src.domain.exceptions import BadRequestError
 from src.services.bank_account.service import UserBankAccountService
 
 

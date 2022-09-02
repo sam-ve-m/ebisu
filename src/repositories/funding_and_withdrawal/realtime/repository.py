@@ -2,7 +2,7 @@ from src.domain.enums.currency import Currency
 from typing import Tuple
 from src.infrastructures.redis.infraestructure import RedisInfrastructure
 from src.infrastructures.env_config import config
-from src.domain.exception.model import NotMappedCurrency
+from src.domain.exceptions.model import NotMappedCurrency
 
 
 class RealtimeFundingAndWithdrawalRepository(RedisInfrastructure):
