@@ -19,7 +19,7 @@ class ForexExchange:
             request: Request, currency_exchange: CurrencyExchange
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        result = await ProposalSimulationService.get_proposal_simulation(
+        result = await ProposalSimulationService.get_exchange_proposal_simulation(
             jwt_data=jwt_data,
             currency_exchange=currency_exchange
         )

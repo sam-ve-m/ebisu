@@ -5,9 +5,10 @@ class InvalidOperation(DomainException):
     pass
 
 
-class MissingExchangeAccountId(DomainException):
+class SpreadTaxNotFound(DomainException):
     pass
 
 
-class MissingSpreadTax(DomainException):
+class OperationNotImplemented(DomainException):
     pass
+

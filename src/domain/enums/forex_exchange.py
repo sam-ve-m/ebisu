@@ -1,8 +1,9 @@
 # Standards
-from enum import IntEnum, Enum
+from enum import IntEnum
+from strenum import StrEnum
 
 
-class CurrencyOptions(Enum):
+class CurrencyOptions(StrEnum):
     BRL = "BRL"
     USD = "USD"
 
