@@ -1,5 +1,5 @@
 from src.services.jwt.service_jwt import JwtService
-from src.services.forex_exchange.proposal_simulation.service import ProposalSimulationService
+from src.services.forex_exchange.proposal_simulation.service import CustomerExchangeService
 from src.domain.validators.forex_exchange.currency_options import CurrencyExchange
 
 from fastapi import Request, APIRouter, Depends
@@ -16,11 +16,11 @@ class ForexExchange:
     @staticmethod
     @__forex_exchange_router.get("/currency_exchange_simulation")
     async def get_exchange_simulation_proposal(
-            request: Request, currency_exchange: CurrencyExchange
+            request: Request, currency_exchange: CurrencyExchange = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        result = await ProposalSimulationService.get_exchange_proposal_simulation(
+        response = await CustomerExchangeService.get_proposal_simulation(
             jwt_data=jwt_data,
             currency_exchange=currency_exchange
         )
-        pass
+        return response
