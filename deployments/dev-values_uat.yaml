@@ -1,0 +1,189 @@
+---
+global:
+  application: ebisu
+  namespace: develop
+
+  image:
+    repository: "nexus.sigame.com.br"
+    pullPolicy: Always
+    pullSecret: nexus-v3
+
+  labels:  
+    mongo: true
+    oracle: true
+    postgres: false
+    redis: true
+    sqlserver: false
+    external: true
+    priority: 5
+
+  serviceaccount:
+    enabled: false
+    annotations: []
+
+  configMap:
+    enabled: false
+    data: {}
+
+  revisionHistoryLimit: 4
+
+  annotations:
+    sidecar.istio.io/inject: "false"
+    proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
+
+  nameOverride: ""
+  fullnameOverride: ""
+
+  volumes:
+    enabled: false
+    name:
+    hostPath:
+
+  nodeAffinity:
+    bff: true
+
+certificate:
+  enabled: true
+  commonName: "ebisu"
+  issuer:
+    name: letsencrypt
+  dnsNames:
+    - ebisunew.dev-lionx.com.br
+    - ebisu.dev-lionx.com.br
+
+restartPolicy: Always
+
+deployment:
+  - name: ebisu
+    enabled: true
+    containers: 
+    - name: ebisu
+      imagename: null
+      tag: 1.0.10-0
+      containerPorts: 8000
+
+      probes:
+        enabled: false
+      
+      env:
+        # ebisu
+        ORACLE_BASE_USER: "UEBISDB001"
+        ORACLE_BASE_PASSWORD: "Eb3gq7$8k7z!Sc@"
+        ORACLE_BASE_DSN: "172.30.10.227"
+        ORACLE_BASE_PORT: "1521"
+        ORACLE_BASE_SERVICE_US: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
+        ORACLE_BASE_SERVICE_BR: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
+        ORACLE_POSITION_USER: "UEBISDB001"
+        ORACLE_POSITION_PASSWORD: "Eb3gq7$8k7z!Sc@"
+        ORACLE_POSITION_DSN: "172.30.10.227"
+        ORACLE_POSITION_PORT: "1521"
+        ORACLE_POSITION_SERVICE: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
+        MONGO_CONNECTION_URL: "mongodb://ebisu:DAlnafcnmmcsa1@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
+        MONGODB_DATABASE_NAME: "lionx"
+        MONGODB_USER_COLLECTION: "users"
+        MONGODB_JWT_COLLECTION: "jwts"
+        MONGO_DATABASE_POSEIDON: "poseidon"
+        MONGO_COLLECTION_IZANAMI: "izanami"
+        MONGODB_SNAPSHOT_DATABASE: "ebisu"
+        MONGODB_SNAPSHOT_COLLECTION: "exchange_user_snapshot"
+        DW_AUTHENTICATION_URL: "https://bo-api.drivewealth.io/back-office/auth"
+        DW_BALANCE_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
+        DW_GET_ALL_TRANSACTIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
+        DW_POSITIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/positions"
+        DW_BALANCE_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
+        FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
+        FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB: "2"
+        AWS_ACCESS_KEY_ID: "AKIATZVFXI25USQWCS5O"
+        AWS_SECRET_ACCESS_KEY: "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"
+        REGION_NAME: "sa-east-1"
+        AWS_FILE_BUCKET_NAME: "brokerage-note-and-bank-statement-dev"
+        JWT_FILE_BUCKET_NAME: "heimdall_rsa"
+        BUCKET_NAME_KEY: "auth-gateway-keys-uat"
+        REDIS_HOST_URL: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
+        REDIS_CACHE_DB: "1"
+        BANK_CODE: "469"
+        # Mist
+        MIST_REDIS_URL: "redis://mist:InPuaku76Jbdsa@lnxbrspkeydbdb01-dev.subpriv.vcndev.oraclevcn.com:6379?db=1"
+        MIST_AWS_ACCESS_KEY_ID: "AKIATZVFXI25USQWCS5O"
+        MIST_AWS_SECRET_ACCESS_KEY: "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"
+        MIST_REGION_NAME: "sa-east-1"
+        MIST_BUCKET_NAME_KEY: "auth-gateway-keys-dev"
+        MIST_JWT_FILE_BUCKET_NAME: "mist_rsa"
+        MIST_ELECTRONIC_SIGNATURE_FILE_BUCKET_NAME: "eletronic-signature-key"
+        MIST_JWT_REQUIRED_FIELDS: "[]"
+        MIST_MONGODB_CONNECTION: "mongodb://mist:Anm8irJdsanmdsapqoiwu@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=MongoDB%20Compass&ssl=false"
+        MIST_ELECTRONIC_SIGNATURE_MAX_ATTEMPTS: "5"
+        MIST_ENCRYPT_KEY: "c_-e_-e_-e_-i_-i"
+        MIST_FILE_BUCKET_NAME: "mist_rsa"
+        MIST_AUTH_DATABASE_NAME: "lionx"
+        MIST_AUTH_DATABASE_USER_COLLECTION: "users"
+        # Heimdal
+        HEIMDALL_FILE_BUCKET_NAME: "heimdall_rsa"
+        HEIMDALL_AWS_ACCESS_KEY_ID: "AKIATZVFXI25USQWCS5O"
+        HEIMDALL_AWS_SECRET_ACCESS_KEY: "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"
+        HEIMDALL_REGION_NAME: "sa-east-1"
+        HEIMDALL_BUCKET_NAME_KEY: "auth-gateway-keys-dev"
+        HEIMDALL_AWS_BUCKET_USERS_FILES: "dtvm-users-files-dev"
+        HEIMDALL_AWS_BUCKET_TERMS: "dtvm-terms-dev"
+        HEIMDALL_JWT_REQUIRED_FIELDS: "[]"
+        HEIMDALL_REDIS_URL: "redis://heimdal:LLOnmUUffhaUHnewIz@lnxbrspkeydbdb01-dev.subpriv.vcndev.oraclevcn.com:6379?db=1"
+        # Mepho DW transport
+        MEPHO_DW_APP_KEY: "93d6184b-4692-4058-b32d-82624be89cb1"
+        MEPHO_DW_USER: "bo.lionx.api"
+        MEPHO_DW_PASSWORD: "passw0rd"
+        MEPHO_DW_AUTHENTICATION_URL: "https://bo-api.drivewealth.io/back-office/auth"
+        MEPHO_REDIS_HOST: "redis://mepho:MueOSapfdfdPIHbwwqQa@172.30.19.183:6379"
+        MEPHO_REDIS_DB: "1"
+        # bifrost
+        BIFROST_KAFKA: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+        TRANSFERS_BETWEEN_SINACOR_AND_DRIVE_WEALTH_TOPIC: "ebisu-bifrost.transfers-between-sinacor-and-drive-wealth"
+        TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC: "ebisu-bifrost.transfers-between-drive-wealth-and-sinacor"
+        TRANSFERS_BETWEEN_SINACOR_AND_SINACOR: "ebisu-bifrost.transfers-between-sinacor-and-sinacor"
+        TRANSFERS_BETWEEN_SINACOR_AND_EXTERNAL_BANK: "ebisu-bifrost.transfers-between-sinacor-and-external-bank"
+        # etria
+        ETRIA_LOG_LEVEL: "INFO"
+        ROOT_LOG_LEVEL: "WARNING"
+        # Persephone
+        PERSEPHONE_KAFKA_BROKERS: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+        PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT: "ebisu-persephone.client.bank_account"
+      
+      resources:
+        requests:
+          cpu: 500m
+          memory: 128Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+      
+      hpa:
+        enabled: true
+        minReplicas: 1
+        maxReplicas: 5
+        metrics:
+          cpu: 80
+          memory: 80
+
+      service:
+        enabled: true
+        name: http
+        protocol: TCP
+        annotations: []
+
+      ingress:
+        enabled: true
+        rewriteURI: /
+
+        cors:
+          enabled: false
+          allowCredentials: true
+          allowOrigins:
+          - regex: .
+          allowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - PATCH
+          - OPTIONS
+          allowHeaders:
+          - x-thebes-answer    

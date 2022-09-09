@@ -1,0 +1,362 @@
+---
+# Source: python/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ebisu
+  namespace: develop
+  labels:
+    app: ebisu
+    external: "true"
+    mongo: "true"
+    oracle: "true"
+    postgres: "false"
+    priority: "5"
+    redis: "true"
+    sqlserver: "false"
+spec:
+  selector:
+    app: ebisu
+  ports:
+    - name: ebisu
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
+---
+# Source: python/templates/deploytment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ebisu
+  namespace: develop  
+  labels:
+    app: ebisu
+    external: "true"
+    mongo: "true"
+    oracle: "true"
+    postgres: "false"
+    priority: "5"
+    redis: "true"
+    sqlserver: "false"
+  annotations:
+    proxy.istio.io/config: "{ \"holdApplicationUntilProxyStarts\": true }"
+    sidecar.istio.io/inject: "true"
+spec:
+  replicas: 1
+  progressDeadlineSeconds: 600
+  strategy:
+    type: RollingUpdate
+  revisionHistoryLimit: 4
+  selector:
+    matchLabels:
+      app: ebisu
+  template:
+    metadata:
+      labels:
+        app: ebisu
+      annotations:
+        proxy.istio.io/config: "{ \"holdApplicationUntilProxyStarts\": true }"
+        sidecar.istio.io/inject: "true"
+    spec:
+      imagePullSecrets:
+      - name: nexus-v3
+      containers:
+        - name: ebisu
+          image: nexus.sigame.com.br/ebisu:1.0.10-0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 500m
+              memory: 128Mi
+            requests:
+              cpu: 500m
+              memory: 128Mi
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              value: "AKIATZVFXI25USQWCS5O"
+            - name: AWS_FILE_BUCKET_NAME
+              value: "brokerage-note-and-bank-statement-dev"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "/5pswHkrCgWhMYrV7TM7oVm8VtulfzdYKE2rlS8f"
+            - name: BANK_CODE
+              value: "469"
+            - name: BIFROST_KAFKA
+              value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+            - name: BUCKET_NAME_KEY
+              value: "auth-gateway-keys-uat"
+            - name: DW_AUTHENTICATION_URL
+              value: "https://bo-api.drivewealth.io/back-office/auth"
+            - name: DW_BALANCE_URL
+              value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
+            - name: DW_GET_ALL_TRANSACTIONS_URL
+              value: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
+            - name: DW_POSITIONS_URL
+              value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/positions"
+            - name: ETRIA_LOG_LEVEL
+              value: "INFO"
+            - name: FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB
+              value: "2"
+            - name: FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL
+              value: "redis://bnd:93uOKu5H@172.30.19.183:6379"
+            - name: HEIMDALL_AWS_ACCESS_KEY_ID
+              value: "AKIATZVFXI25USQWCS5O"
+            - name: HEIMDALL_AWS_BUCKET_TERMS
+              value: "dtvm-terms-dev"
+            - name: HEIMDALL_AWS_BUCKET_USERS_FILES
+              value: "dtvm-users-files-dev"
+            - name: HEIMDALL_AWS_SECRET_ACCESS_KEY
+              value: "/5pswHkrCgWhMYrV7TM7oVm8VtulfzdYKE2rlS8f"
+            - name: HEIMDALL_BUCKET_NAME_KEY
+              value: "auth-gateway-keys-dev"
+            - name: HEIMDALL_FILE_BUCKET_NAME
+              value: "heimdall_rsa"
+            - name: HEIMDALL_JWT_REQUIRED_FIELDS
+              value: "[]"
+            - name: HEIMDALL_REDIS_URL
+              value: "redis://heimdal:LLOnmUUffhaUHnewIz@lnxbrspkeydbdb01-dev.subpriv.vcndev.oraclevcn.com:6379?db=1"
+            - name: HEIMDALL_REGION_NAME
+              value: "sa-east-1"
+            - name: JWT_FILE_BUCKET_NAME
+              value: "heimdall_rsa"
+            - name: MEPHO_DW_APP_KEY
+              value: "93d6184b-4692-4058-b32d-82624be89cb1"
+            - name: MEPHO_DW_AUTHENTICATION_URL
+              value: "https://bo-api.drivewealth.io/back-office/auth"
+            - name: MEPHO_DW_PASSWORD
+              value: "passw0rd"
+            - name: MEPHO_DW_USER
+              value: "bo.lionx.api"
+            - name: MEPHO_REDIS_DB
+              value: "1"
+            - name: MEPHO_REDIS_HOST
+              value: "redis://mepho:MueOSapfdfdPIHbwwqQa@172.30.19.183:6379"
+            - name: MIST_AUTH_DATABASE_NAME
+              value: "lionx"
+            - name: MIST_AUTH_DATABASE_USER_COLLECTION
+              value: "users"
+            - name: MIST_AWS_ACCESS_KEY_ID
+              value: "AKIATZVFXI25USQWCS5O"
+            - name: MIST_AWS_SECRET_ACCESS_KEY
+              value: "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"
+            - name: MIST_BUCKET_NAME_KEY
+              value: "auth-gateway-keys-dev"
+            - name: MIST_ELECTRONIC_SIGNATURE_FILE_BUCKET_NAME
+              value: "eletronic-signature-key"
+            - name: MIST_ELECTRONIC_SIGNATURE_MAX_ATTEMPTS
+              value: "5"
+            - name: MIST_ENCRYPT_KEY
+              value: "c_-e_-e_-e_-i_-i"
+            - name: MIST_FILE_BUCKET_NAME
+              value: "mist_rsa"
+            - name: MIST_JWT_FILE_BUCKET_NAME
+              value: "mist_rsa"
+            - name: MIST_JWT_REQUIRED_FIELDS
+              value: "[]"
+            - name: MIST_MONGODB_CONNECTION
+              value: "mongodb://mist:Anm8irJdsanmdsapqoiwu@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=MongoDB%20Compass&ssl=false"
+            - name: MIST_REDIS_URL
+              value: "redis://mist:InPuaku76Jbdsa@lnxbrspkeydbdb01-dev.subpriv.vcndev.oraclevcn.com:6379?db=1"
+            - name: MIST_REGION_NAME
+              value: "sa-east-1"
+            - name: MONGODB_DATABASE_NAME
+              value: "lionx"
+            - name: MONGODB_JWT_COLLECTION
+              value: "jwts"
+            - name: MONGODB_SNAPSHOT_COLLECTION
+              value: "exchange_user_snapshot"
+            - name: MONGODB_SNAPSHOT_DATABASE
+              value: "ebisu"
+            - name: MONGODB_USER_COLLECTION
+              value: "users"
+            - name: MONGO_COLLECTION_IZANAMI
+              value: "izanami"
+            - name: MONGO_CONNECTION_URL
+              value: "mongodb://ebisu:DAlnafcnmmcsa1@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
+            - name: MONGO_DATABASE_POSEIDON
+              value: "poseidon"
+            - name: ORACLE_BASE_DSN
+              value: "172.30.10.227"
+            - name: ORACLE_BASE_PASSWORD
+              value: "Eb3gq7$8k7z!Sc@"
+            - name: ORACLE_BASE_PORT
+              value: "1521"
+            - name: ORACLE_BASE_SERVICE_BR
+              value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
+            - name: ORACLE_BASE_SERVICE_US
+              value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
+            - name: ORACLE_BASE_USER
+              value: "UEBISDB001"
+            - name: ORACLE_POSITION_DSN
+              value: "172.30.10.227"
+            - name: ORACLE_POSITION_PASSWORD
+              value: "Eb3gq7$8k7z!Sc@"
+            - name: ORACLE_POSITION_PORT
+              value: "1521"
+            - name: ORACLE_POSITION_SERVICE
+              value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
+            - name: ORACLE_POSITION_USER
+              value: "UEBISDB001"
+            - name: PERSEPHONE_KAFKA_BROKERS
+              value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+            - name: PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT
+              value: "ebisu-persephone.client.bank_account"
+            - name: REDIS_CACHE_DB
+              value: "1"
+            - name: REDIS_HOST_URL
+              value: "redis://bnd:93uOKu5H@172.30.19.183:6379"
+            - name: REGION_NAME
+              value: "sa-east-1"
+            - name: ROOT_LOG_LEVEL
+              value: "WARNING"
+            - name: TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC
+              value: "ebisu-bifrost.transfers-between-drive-wealth-and-sinacor"
+            - name: TRANSFERS_BETWEEN_SINACOR_AND_DRIVE_WEALTH_TOPIC
+              value: "ebisu-bifrost.transfers-between-sinacor-and-drive-wealth"
+            - name: TRANSFERS_BETWEEN_SINACOR_AND_EXTERNAL_BANK
+              value: "ebisu-bifrost.transfers-between-sinacor-and-external-bank"
+            - name: TRANSFERS_BETWEEN_SINACOR_AND_SINACOR
+              value: "ebisu-bifrost.transfers-between-sinacor-and-sinacor"
+          ports:
+          - containerPort: 8000
+      restartPolicy: Always
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+                - key: "bff"
+                  operator: In
+                  values:
+                  - "true"
+---
+# Source: python/templates/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ebisu
+  namespace: develop
+  labels:
+    app: ebisu
+    external: "true"
+    mongo: "true"
+    oracle: "true"
+    postgres: "false"
+    priority: "5"
+    redis: "true"
+    sqlserver: "false"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ebisu
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 80
+        type: Utilization
+    type: Resource
+  - resource:
+      name: memory
+      target:
+        averageUtilization: 80
+        type: Utilization
+    type: Resource
+---
+# Source: python/templates/certificate.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ebisu
+  namespace: istio-system
+  labels:
+    app: ebisu
+    external: "true"
+    mongo: "true"
+    oracle: "true"
+    postgres: "false"
+    priority: "5"
+    redis: "true"
+    sqlserver: "false"
+spec:
+  secretName: ebisu
+  issuerRef:
+    name: letsencrypt
+  commonName: ebisu.dev-lionx.com.br
+  dnsNames:
+    - ebisunew.dev-lionx.com.br
+    - ebisu.dev-lionx.com.br
+---
+# Source: python/templates/ingress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: "ebisu"
+  namespace: develop
+  labels:
+    app: ebisu
+    external: "true"
+    mongo: "true"
+    oracle: "true"
+    postgres: "false"
+    priority: "5"
+    redis: "true"
+    sqlserver: "false"
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      name: http
+      number: 80
+      protocol: HTTP
+    tls:
+      httpsRedirect: true
+    hosts:
+      - "ebisunew.dev-lionx.com.br"
+      - "ebisu.dev-lionx.com.br"
+  - port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    tls:
+      credentialName:  ebisu
+      mode: SIMPLE
+    hosts:
+      - ebisunew.dev-lionx.com.br
+      - ebisu.dev-lionx.com.br
+---
+# Source: python/templates/virtualService.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: ebisu  
+  labels:
+    app: ebisu
+    external: "true"
+    mongo: "true"
+    oracle: "true"
+    postgres: "false"
+    priority: "5"
+    redis: "true"
+    sqlserver: "false"
+  namespace: develop
+spec:
+  gateways:
+    - ebisu
+  hosts:
+    - ebisunew.dev-lionx.com.br
+    - ebisu.dev-lionx.com.br
+  http:
+  - match:
+    - uri:
+        prefix: /
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: ebisu.develop.svc.cluster.local
+        port:
+          number: 8000
