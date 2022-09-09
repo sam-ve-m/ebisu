@@ -25,3 +25,10 @@ class CustomerQuotationTokenNotFound(ServiceException):
         self.code = HTTPStatus.INTERNAL_SERVER_ERROR
         super().__init__(self.msg, self.code, args, kwargs)
 
+
+class ExpiredExchangeSimulationToken(ServiceException):
+    def __init__(self, *args, **kwargs):
+        self.msg = "Expired exchange simulation token"
+        self.code = HTTPStatus.INTERNAL_SERVER_ERROR
+        super().__init__(self.msg, self.code, args, kwargs)
+

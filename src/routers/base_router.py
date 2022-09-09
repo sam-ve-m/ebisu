@@ -12,6 +12,9 @@ from src.domain.exceptions.model import (
     MoneyFlowPerformedOutsideTransactionWindow,
 )
 from etria_logger import Gladsheim
+from src.domain.exceptions.base_exceptions.exceptions import (
+    ServiceException, RepositoryException, DomainException, TransportException
+)
 from src.domain.exceptions import (
     ForbiddenError,
     BadRequestError,
@@ -92,6 +95,43 @@ class BaseRouter:
     async def __add_process_time_header(request: Request, call_next):
         try:
             response = await call_next(request)
+
+        except ServiceException as err:
+            Gladsheim.error(error=err)
+            return Response(
+                status_code=err.code,
+                content=json.dumps(
+                    {"request_status": False, "msg": err.msg}
+                )
+            )
+        except DomainException as err:
+            Gladsheim.error(error=err)
+            return Response(
+                status_code=err.code,
+                content=json.dumps(
+                    {"request_status": False, "msg": err.msg}
+                )
+            )
+        except TransportException as err:
+            Gladsheim.error(error=err)
+            return Response(
+                status_code=err.code,
+                content=json.dumps(
+                    {"request_status": False, "msg": err.msg}
+                )
+            )
+        except RepositoryException as err:
+            Gladsheim.error(error=err)
+            return Response(
+                status_code=err.code,
+                content=json.dumps(
+                    {"request_status": False, "msg": err.msg}
+                )
+            )
+
+
+
+
         except IntegrityJwtError as err:
             Gladsheim.error(erro=err)
 
