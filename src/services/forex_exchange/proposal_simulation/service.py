@@ -5,7 +5,7 @@ from src.domain.exceptions.service.forex_exchange.exception import (
     ExpiredExchangeSimulationToken
 )
 from src.domain.exceptions.repository.exception import CustomerExchangeDataNotFound
-from src.domain.models.forex_exchange.customer_exchange_request_data.model import CustomerExchangeResquestModel
+from src.domain.models.forex_exchange.customer_exchange_request_data.model import CustomerExchangeRequestModel
 from src.domain.models.forex_exchange.customer_exchange_response_data.model import CustomerExchangeResponseModel
 from src.domain.validators.forex_exchange.currency_options import CurrencyExchange
 from src.repositories.user.repository import UserRepository
@@ -27,15 +27,17 @@ class CustomerExchangeService:
         customer_exchange_data = await cls.__get_customer_exchange_account_data(
             exchange_account_id=exchange_account_id, currency_exchange=currency_exchange
         )
-        customer_exchange_request_model = CustomerExchangeResquestModel(
+        customer_exchange_request_model = CustomerExchangeRequestModel(
             customer_exchange_data=customer_exchange_data,
-            currency_exchange=currency_exchange
+            currency_exchange=currency_exchange,
+            exchange_account_id=exchange_account_id
         )
         customer_token = await cls.__get_customer_token_on_route_21(
             customer_exchange_request_model=customer_exchange_request_model
         )
         exchange_simulation_proposal_data = await cls.__get_exchange_simulation_proposal_data_on_route_22(
             customer_token=customer_token,
+            customer_exchange_request_model=customer_exchange_request_model
         )
         exchange_simulation_proposal_response = await cls.__treatment_and_validation_exchange_simulation_data(
             exchange_simulation_proposal_data=exchange_simulation_proposal_data
@@ -69,8 +71,9 @@ class CustomerExchangeService:
         return customer_exchange_data
 
     @staticmethod
-    async def __get_customer_token_on_route_21(customer_exchange_request_model: CustomerExchangeResquestModel) \
-            -> Union[str, CustomerQuotationTokenNotFound, ErrorOnGetCustomerQuotationToken]:
+    async def __get_customer_token_on_route_21(
+        customer_exchange_request_model: CustomerExchangeRequestModel
+    ) -> Union[str, CustomerQuotationTokenNotFound, ErrorOnGetCustomerQuotationToken]:
         url_path = await customer_exchange_request_model.build_url_path_to_request_current_currency_quote()
         success, caronte_status, content = await ExchangeCompanyApi.request_as_client(
             method=AllowedHTTPMethods.GET,
@@ -85,7 +88,7 @@ class CustomerExchangeService:
         return customer_token
 
     @staticmethod
-    async def __get_exchange_simulation_proposal_data_on_route_22(customer_token: str, customer_exchange_request_model: CustomerExchangeResquestModel) -> Union[dict, ErrorOnGetExchangeSimulationProposal]:
+    async def __get_exchange_simulation_proposal_data_on_route_22(customer_token: str, customer_exchange_request_model: CustomerExchangeRequestModel) -> Union[dict, ErrorOnGetExchangeSimulationProposal]:
         url_path = await customer_exchange_request_model.get_url_path_to_request_exchange_simulation()
         body = await customer_exchange_request_model.get_body_template_to_request_exchange_simulation(customer_token=customer_token)
         success, caronte_status, exchange_simulation_proposal_data = ExchangeCompanyApi.request_as_client(

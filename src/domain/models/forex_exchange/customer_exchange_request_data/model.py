@@ -9,7 +9,7 @@ from src.domain.exceptions.domain.forex_exchange.exception import (
 from decouple import config
 
 
-class CustomerExchangeResquestModel:
+class CustomerExchangeRequestModel:
     def __init__(self, customer_exchange_data: dict, currency_exchange: CurrencyExchange, exchange_account_id: int):
         self.base = currency_exchange.base
         self.exchange_account_id = exchange_account_id
@@ -20,7 +20,7 @@ class CustomerExchangeResquestModel:
 
     async def build_url_path_to_request_current_currency_quote(self) -> str:
         map_url_path = {
-            NatureOperation.BRL_TO_USD: f'{config("BASE_URL")}{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.BRL, CurrencyOptions.USD, self.exchange_account_id, self.spread)}',
+            NatureOperation.BRL_TO_USD: f'{config("BASE_URL")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.BRL, CurrencyOptions.USD, self.exchange_account_id, self.spread)}',
             NatureOperation.USD_TO_BRL: f'{config("BASE_URL")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.USD, CurrencyOptions.BRL, self.exchange_account_id, self.spread)}',
         }
         url_path = map_url_path.get(self.operation_key)
@@ -55,5 +55,5 @@ class CustomerExchangeResquestModel:
 
     @staticmethod
     async def get_url_path_to_request_exchange_simulation() -> str:
-        url_path = f'{config("BASE_URL")}{config("EXCHANGE_SIMULATION_URL")}/operacao/cambio/calcular'
+        url_path = f'{config("BASE_URL")}/{config("EXCHANGE_SIMULATION_URL")}'
         return url_path
