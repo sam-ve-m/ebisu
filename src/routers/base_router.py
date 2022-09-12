@@ -129,9 +129,6 @@ class BaseRouter:
                 )
             )
 
-
-
-
         except IntegrityJwtError as err:
             Gladsheim.error(erro=err)
 

@@ -57,5 +57,3 @@ class CustomerExchangeResquestModel:
     async def get_url_path_to_request_exchange_simulation() -> str:
         url_path = f'{config("BASE_URL")}{config("EXCHANGE_SIMULATION_URL")}/operacao/cambio/calcular'
         return url_path
-
-# "https://sbxapi.ourinvest.com.br:43400/api/v1/produto/cambio/naturezaOperacao/4/taxa/BRL/USD/cliente/208785/spread/0.02"

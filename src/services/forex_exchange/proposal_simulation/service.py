@@ -27,12 +27,12 @@ class CustomerExchangeService:
         customer_exchange_data = await cls.__get_customer_exchange_account_data(
             exchange_account_id=exchange_account_id, currency_exchange=currency_exchange
         )
-        exchange_proposal_model = CustomerExchangeResquestModel(
+        customer_exchange_request_model = CustomerExchangeResquestModel(
             customer_exchange_data=customer_exchange_data,
             currency_exchange=currency_exchange
         )
         customer_token = await cls.__get_customer_token_on_route_21(
-            exchange_proposal_model=exchange_proposal_model
+            customer_exchange_request_model=customer_exchange_request_model
         )
         exchange_simulation_proposal_data = await cls.__get_exchange_simulation_proposal_data_on_route_22(
             customer_token=customer_token,
@@ -69,13 +69,13 @@ class CustomerExchangeService:
         return customer_exchange_data
 
     @staticmethod
-    async def __get_customer_token_on_route_21(exchange_proposal_model: CustomerExchangeResquestModel) \
+    async def __get_customer_token_on_route_21(customer_exchange_request_model: CustomerExchangeResquestModel) \
             -> Union[str, CustomerQuotationTokenNotFound, ErrorOnGetCustomerQuotationToken]:
-        url_path = await exchange_proposal_model.build_url_path_to_request_current_currency_quote()
+        url_path = await customer_exchange_request_model.build_url_path_to_request_current_currency_quote()
         success, caronte_status, content = await ExchangeCompanyApi.request_as_client(
             method=AllowedHTTPMethods.GET,
             url=url_path,
-            exchange_account_id=exchange_proposal_model.exchange_account_id
+            exchange_account_id=customer_exchange_request_model.exchange_account_id
         )
         if not success:
             raise ErrorOnGetCustomerQuotationToken()
@@ -85,13 +85,13 @@ class CustomerExchangeService:
         return customer_token
 
     @staticmethod
-    async def __get_exchange_simulation_proposal_data_on_route_22(customer_token: str, exchange_proposal_model: CustomerExchangeResquestModel) -> Union[dict, ErrorOnGetExchangeSimulationProposal]:
-        url_path = await exchange_proposal_model.get_url_path_to_request_exchange_simulation()
-        body = await exchange_proposal_model.get_body_template_to_request_exchange_simulation(customer_token=customer_token)
+    async def __get_exchange_simulation_proposal_data_on_route_22(customer_token: str, customer_exchange_request_model: CustomerExchangeResquestModel) -> Union[dict, ErrorOnGetExchangeSimulationProposal]:
+        url_path = await customer_exchange_request_model.get_url_path_to_request_exchange_simulation()
+        body = await customer_exchange_request_model.get_body_template_to_request_exchange_simulation(customer_token=customer_token)
         success, caronte_status, exchange_simulation_proposal_data = ExchangeCompanyApi.request_as_client(
             method=AllowedHTTPMethods.GET,
             url=url_path,
-            exchange_account_id=exchange_proposal_model.exchange_account_id,
+            exchange_account_id=customer_exchange_request_model.exchange_account_id,
             body=body
         )
         if caronte_status == CaronteStatus.SUCCESS:
