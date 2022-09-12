@@ -6,6 +6,7 @@ class GetUsOrdersDetails:
 
     oracle_singleton_instance = UsOrdersRepository
 
+    # TODO: Atualizar para view com root cl order id quando subirmos US
     @staticmethod
     def build_query(accounts: List[str], clordid: str) -> str:
         query = f"""
