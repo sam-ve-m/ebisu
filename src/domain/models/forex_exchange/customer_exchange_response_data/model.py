@@ -2,7 +2,8 @@
 from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOffset
-from src.domain.enums.forex_exchange import CurrencyOptions, NatureOperation
+from src.domain.enums.forex_exchange.currency import CurrencyOptions
+from src.domain.enums.forex_exchange.nature_operation import NatureOperation
 
 # Standards
 from datetime import datetime
@@ -77,9 +78,9 @@ class CustomerExchangeResponseModel(BaseModel):
         return cls(**exchange_data_to_validate)
 
     @staticmethod
-    async def __convert_date_to_time_stamp(date: datetime):
+    def __convert_date_to_time_stamp(date: datetime):
         converted_date = RegionStringDateTime(
-            region_date_format=RegionDateFormat.BR_DATE_ISO_FORMAT,
+            region_date_format=RegionDateFormat.BR_DATE_ZULU_FORMAT,
             date=date,
             utc_offset=ExchangeUtcOffset.BR_UTC_OFFSET
         )

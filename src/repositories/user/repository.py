@@ -7,8 +7,8 @@ from src.repositories.base_repositories.mongo_db.base import MongoDbBaseReposito
 
 class UserRepository(MongoDbBaseRepository):
 
-    database = config("MONGODB_DATABASE_NAME")
-    collection = config("MONGODB_USER_COLLECTION")
+    database = config("MONGODB_SNAPSHOT_DATABASE")
+    collection = config("MONGODB_EXCHANGE_COLLECTION")
 
     @classmethod
     async def get_user_portfolios(cls, unique_id: str):
