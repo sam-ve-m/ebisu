@@ -20,8 +20,8 @@ class CustomerExchangeRequestModel:
 
     async def build_url_path_to_request_current_currency_quote(self) -> str:
         map_url_path = {
-            NatureOperation.BRL_TO_USD: f'{config("BASE_URL")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.BRL, CurrencyOptions.USD, self.exchange_account_id, self.spread)}',
-            NatureOperation.USD_TO_BRL: f'{config("BASE_URL")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.USD, CurrencyOptions.BRL, self.exchange_account_id, self.spread)}',
+            NatureOperation.BRL_TO_USD: f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.BRL, CurrencyOptions.USD, self.exchange_account_id, self.spread)}',
+            NatureOperation.USD_TO_BRL: f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.USD, CurrencyOptions.BRL, self.exchange_account_id, self.spread)}',
         }
         url_path = map_url_path.get(self.operation_key)
         if not url_path:
@@ -55,5 +55,5 @@ class CustomerExchangeRequestModel:
 
     @staticmethod
     async def get_url_path_to_request_exchange_simulation() -> str:
-        url_path = f'{config("BASE_URL")}/{config("EXCHANGE_SIMULATION_URL")}'
+        url_path = f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("EXCHANGE_SIMULATION_URL")}'
         return url_path

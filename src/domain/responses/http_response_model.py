@@ -35,5 +35,6 @@ class ResponseModel:
         http_response = Response(
             content=self.response,
             status_code=status_code,
+            headers={"Content-type": "application/json"}
         )
         return http_response
