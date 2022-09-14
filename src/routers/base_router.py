@@ -4,6 +4,7 @@ from starlette import status
 import json
 
 # ERRORS
+from etria_logger import Gladsheim
 from src.domain.exceptions.model import (
     IntegrityJwtError,
     AuthenticationJwtError,
@@ -11,7 +12,6 @@ from src.domain.exceptions.model import (
     DataNotFoundError,
     MoneyFlowPerformedOutsideTransactionWindow,
 )
-from etria_logger import Gladsheim
 from src.domain.exceptions.base_exceptions.exceptions import (
     ServiceException, RepositoryException, DomainException, TransportException
 )
@@ -34,6 +34,9 @@ from src.routers.forex_exchange.router import ForexExchange
 from src.routers.user_bank_accounts.router import UserBankAccountsRouter
 from src.routers.funding_and_withdrawal.router import FundingAndWithdrawalRouter
 from src.routers.user_portfolios.router import UserPortfoliosRouter
+
+# MODELS
+from src.domain.responses.http_response_model import ResponseModel
 
 
 class BaseRouter:
@@ -97,37 +100,32 @@ class BaseRouter:
             response = await call_next(request)
 
         except ServiceException as err:
-            Gladsheim.error(error=err)
-            return Response(
-                status_code=err.code,
-                content=json.dumps(
-                    {"request_status": False, "msg": err.msg}
-                )
-            )
+            Gladsheim.error(error=err, message=err.msg)
+            response = ResponseModel(
+                success=err.success, message=err.msg, internal_code=err.internal_code
+            ).build_http_response(status_code=err.status_code)
+            return response
+
         except DomainException as err:
-            Gladsheim.error(error=err)
-            return Response(
-                status_code=err.code,
-                content=json.dumps(
-                    {"request_status": False, "msg": err.msg}
-                )
-            )
+            Gladsheim.error(error=err, message=err.msg)
+            response = ResponseModel(
+                success=err.success, message=err.msg, internal_code=err.internal_code
+            ).build_http_response(status_code=err.status_code)
+            return response
+
         except TransportException as err:
-            Gladsheim.error(error=err)
-            return Response(
-                status_code=err.code,
-                content=json.dumps(
-                    {"request_status": False, "msg": err.msg}
-                )
-            )
+            Gladsheim.error(error=err, message=err.msg)
+            response = ResponseModel(
+                success=err.success, message=err.msg, internal_code=err.internal_code
+            ).build_http_response(status_code=err.status_code)
+            return response
+
         except RepositoryException as err:
-            Gladsheim.error(error=err)
-            return Response(
-                status_code=err.code,
-                content=json.dumps(
-                    {"request_status": False, "msg": err.msg}
-                )
-            )
+            Gladsheim.error(error=err, message=err.msg)
+            response = ResponseModel(
+                success=err.success, message=err.msg, internal_code=err.internal_code
+            ).build_http_response(status_code=err.status_code)
+            return response
 
         except IntegrityJwtError as err:
             Gladsheim.error(erro=err)
