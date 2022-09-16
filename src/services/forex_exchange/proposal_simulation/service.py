@@ -29,17 +29,17 @@ from etria_logger import Gladsheim
 class CustomerExchangeService:
     @classmethod
     async def get_proposal_simulation(
-        cls, jwt_data: dict, currency_exchange: CurrencyExchange
+        cls, jwt_data: dict, payload: CurrencyExchange
     ) -> dict:
         exchange_account_id = jwt_data.get("user", {}).get(
             "exchange_account_id", 208785
         )
         customer_exchange_data = await cls.__get_customer_exchange_account_data(
-            exchange_account_id=exchange_account_id, currency_exchange=currency_exchange
+            exchange_account_id=exchange_account_id, payload=payload
         )
         customer_exchange_request_model = CustomerExchangeRequestModel(
             customer_exchange_data=customer_exchange_data,
-            currency_exchange=currency_exchange,
+            payload=payload,
             exchange_account_id=exchange_account_id,
         )
         content = await cls.__get_customer_token_on_route_21(
@@ -82,12 +82,12 @@ class CustomerExchangeService:
 
     @staticmethod
     async def __get_customer_exchange_account_data(
-        exchange_account_id: int, currency_exchange: CurrencyExchange
+        exchange_account_id: int, payload: CurrencyExchange
     ) -> Union[CustomerExchangeDataNotFound, dict]:
         customer_exchange_data = await UserRepository.get_user_exchange_data(
             exchange_account_id=exchange_account_id,
-            base=currency_exchange.base,
-            quote=currency_exchange.quote,
+            base=payload.base,
+            quote=payload.quote,
         )
         if not customer_exchange_data:
             raise CustomerExchangeDataNotFound()

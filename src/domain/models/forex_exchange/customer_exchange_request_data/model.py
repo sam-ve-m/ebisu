@@ -10,11 +10,11 @@ from decouple import config
 
 
 class CustomerExchangeRequestModel:
-    def __init__(self, customer_exchange_data: dict, currency_exchange: CurrencyExchange, exchange_account_id: int):
-        self.base = currency_exchange.base
+    def __init__(self, customer_exchange_data: dict, payload: CurrencyExchange, exchange_account_id: int):
+        self.base = payload.base
         self.exchange_account_id = exchange_account_id
-        self.quote = currency_exchange.quote
-        self.quantity = currency_exchange.quantity
+        self.quote = payload.quote
+        self.quantity = payload.quantity
         self.operation_key = self.__get_operation_value()
         self.spread = self.__get_spread_tax(customer_exchange_data=customer_exchange_data)
 

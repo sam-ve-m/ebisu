@@ -51,6 +51,8 @@ containers:
       value: "izanami"
     - name: MONGODB_SNAPSHOT_DATABASE
       value: "ebisu"
+    - name: MONGODB_EXCHANGE_COLLECTION
+      value: "exchange_parameters"
     - name: MONGODB_SNAPSHOT_COLLECTION
       value: "exchange_user_snapshot"
     - name: DW_AUTHENTICATION_URL
@@ -85,6 +87,12 @@ containers:
       value: "1"
     - name: BANK_CODE
       value: "469"
+    - name: BASE_URL_FROM_EXCHANGE_API
+      value: "https://sbxapi.ourinvest.com.br:43400/api/v1"
+    - name: CURRENT_CURRENCY_QUOTE_URL
+      value: "produto/cambio/naturezaOperacao/{}/taxa/{}/{}/cliente/{}/spread/{}"
+    - name: EXCHANGE_SIMULATION_URL
+      value: "operacao/cambio/calcular"
     # Mist
     - name: MIST_REDIS_URL
       value: "redis://mist:InPuaku76Jbdsa@lnxbrspkeydbdb01-dev.subpriv.vcndev.oraclevcn.com:6379?db=1"
