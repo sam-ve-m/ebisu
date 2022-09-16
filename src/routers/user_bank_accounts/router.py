@@ -15,6 +15,8 @@ from src.domain.validators.user_account.bank_account import (
 # SERVICES
 from src.services.bank_account.service import UserBankAccountService
 from src.services.bank_transfer.service import BankTransferService
+from src.domain.exception.model import InvalidElectronicaSignature
+from src.services.jwt.service_jwt import JwtService
 
 
 class UserBankAccountsRouter:
@@ -40,9 +42,13 @@ class UserBankAccountsRouter:
     async def create_user_bank_accounts(
         request: Request, create_bank_account: CreateUserBankAccount
     ):
+        jwt_mist_data = await JwtService.get_jwt_data_and_validate_electronica_signature(
+            request=request
+        )
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         jwt_data = {
             "x-thebes-answer": jwt_data,
+            "x-mist": jwt_mist_data,
             "bank_account": create_bank_account.dict(),
         }
         create_user_bank_accounts_response = (
