@@ -32,8 +32,14 @@ class EarningsFromClient:
 
         account = cls.__extract_account(region_portfolios, earnings_client.region.value)
 
+        unique_id = cls.__extract_unique_id_from_jwt(jwt_data=jwt_data)
+
+        from_date, to_date = await EarningsFromClient.__get_range_date_and_offset(
+            unique_id=unique_id, region=earnings_client.region, region_date_format=RegionDateFormat.BR_DATE_ISO_FORMAT
+        )
+
         paid_transactions = await cls.sinacor_earnings_transport.paid_earnings(
-            account=account, earnings_client=earnings_client
+            account=account, earnings_client=earnings_client, from_date=to_date, to_date=to_date
         )
 
         total_paid_earnings = sum(
@@ -66,7 +72,7 @@ class EarningsFromClient:
         )
 
         from_date, to_date = await EarningsFromClient.__get_range_date_and_offset(
-            unique_id=unique_id
+            unique_id=unique_id, region=earnings_client.region, region_date_format=RegionDateFormat.US_DATE_FORMAT
         )
 
         transaction_request = TransactionRequest(
@@ -110,25 +116,26 @@ class EarningsFromClient:
 
     @staticmethod
     async def __get_range_date_and_offset(
-        unique_id: str,
+        unique_id: str, region: Region, region_date_format: RegionDateFormat
     ) -> Tuple[RegionTimeStamp, RegionTimeStamp]:
 
         from_raw_date = (
             await UserPortfoliosRepository.get_default_portfolio_created_at_by_region(
-                unique_id=unique_id, region="US"
+                unique_id=unique_id, region=region
             )
         )
 
         to_raw_date = int(datetime.now().timestamp() * 1000)
 
         from_date = RegionTimeStamp(
-            timestamp=from_raw_date, region_date_format=RegionDateFormat.US_DATE_FORMAT
+            timestamp=from_raw_date, region_date_format=region_date_format
         )
         to_date = RegionTimeStamp(
-            timestamp=to_raw_date, region_date_format=RegionDateFormat.US_DATE_FORMAT
+            timestamp=to_raw_date, region_date_format=region_date_format
         )
 
         return from_date, to_date
+
 
     @staticmethod
     def __extract_account(portfolios: dict, region: str) -> str:
@@ -142,10 +149,17 @@ class EarningsFromClient:
         return account
 
     @staticmethod
+    def __extract_unique_id_from_jwt(jwt_data: dict) -> str:
+        user = jwt_data.get("user", {})
+        unique_id = user.get("unique_id")
+
+        return unique_id
+
+    @staticmethod
     def __extract_identifier_data_from_jwt(jwt_data: dict):
         user = jwt_data.get("user", {})
         account = user.get("portfolios", {}).get("us", {}).get("dw_account")
 
-        unique_id = user.get("unique_id")
+        unique_id = EarningsFromClient.__extract_unique_id_from_jwt(jwt_data=jwt_data)
 
         return unique_id, account
