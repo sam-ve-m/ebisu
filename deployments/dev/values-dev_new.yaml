@@ -48,7 +48,6 @@ certificate:
   issuer:
     name: letsencrypt
   dnsNames:
-    - ebisunew.dev-lionx.com.br
     - ebisu.dev-lionx.com.br
 
 restartPolicy: Always
