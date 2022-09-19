@@ -61,10 +61,17 @@ class UserBankAccountsRouter:
     async def update_bank_account(
         request: Request, update_bank_account: UpdateUserBankAccounts
     ):
+        jwt_mist_data = await JwtService.get_jwt_data_and_validate_electronica_signature(
+            request=request
+        )
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         bank_account = update_bank_account.dict()
         Sindri.dict_to_primitive_types(obj=bank_account)
-        jwt_data = {"x-thebes-answer": jwt_data, "bank_account": bank_account}
+        jwt_data = {
+            "x-thebes-answer": jwt_data,
+            "x-mist": jwt_mist_data,
+            "bank_account": bank_account,
+        }
         update_bank_account_response = (
             await UserBankAccountService.update_user_bank_account(jwt_data=jwt_data)
         )
