@@ -1,4 +1,5 @@
 # EXTERNAL LIBS
+from src.domain.enums.region import Region
 from src.infrastructures.env_config import config
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 
@@ -11,9 +12,9 @@ class UserPortfoliosRepository(MongoDbBaseRepository):
 
     @classmethod
     async def get_default_portfolio_created_at_by_region(
-        cls, unique_id: str, region: str
+        cls, unique_id: str, region: Region
     ):
-        region_portfolios = region.lower()
+        region_portfolios = region.value.lower()
 
         portfolio_created_at = await cls.find_one(
             query={"unique_id": unique_id},

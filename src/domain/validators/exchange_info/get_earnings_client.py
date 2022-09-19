@@ -12,8 +12,7 @@ from src.domain.enums.region import Region
 
 class EarningsClientModel(BaseModel):
     region: Region
-    limit: datetime = None
-    offset: datetime = None
+    limit: int
     earnings_types: Optional[constr(min_length=1)]
 
     class Config:
