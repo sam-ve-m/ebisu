@@ -9,6 +9,7 @@ from floki_client.src.transport.sinacor.transport import SinacorTransport
 from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOffset
+from src.domain.date_formatters.region.timestamp.model import RegionTimeStamp
 from src.domain.earning.br.model import EarningBr
 from src.domain.enums.earnings_types import EarningsTypes
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
@@ -24,7 +25,7 @@ class SinacorEarningsTransport:
 
     @classmethod
     async def paid_earnings(
-        cls, account: str, earnings_client: EarningsClientModel
+        cls, account: str, earnings_client: EarningsClientModel, from_date: RegionTimeStamp, to_date: RegionTimeStamp
     ) -> List[EarningBr]:
         try:
             url = config("PAID_EARNINGS_URL")
@@ -34,10 +35,8 @@ class SinacorEarningsTransport:
             }
             if earnings_client.earnings_types:
                 query_params.update({"filtro.tipoProvento": [i.value for i in earnings_client.earnings_types]})
-            if earnings_client.limit:
-                query_params.update({"filtro.pagamentoAte": earnings_client.limit.isoformat()})
-            if earnings_client.offset:
-                query_params.update({"filtro.pagamentoDe": earnings_client.offset.isoformat()})
+            query_params.update({"filtro.pagamentoAte": to_date.get_region_string_datetime_from_timestamp()})
+            query_params.update({"filtro.pagamentoDe": from_date.get_region_string_datetime_from_timestamp()})
             response = await cls._floki_client.get(
                 url,
                 query_params=query_params,
