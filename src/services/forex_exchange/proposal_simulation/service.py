@@ -29,17 +29,17 @@ from etria_logger import Gladsheim
 class CustomerExchangeService:
     @classmethod
     async def get_proposal_simulation(
-        cls, jwt_data: dict, payload: CurrencyExchange
+        cls, jwt_data: dict, currency_exchange: CurrencyExchange
     ) -> dict:
         exchange_account_id = jwt_data.get("user", {}).get(
             "exchange_account_id", 208785
         )
         customer_exchange_data = await cls.__get_customer_exchange_account_data(
-            exchange_account_id=exchange_account_id, payload=payload
+            exchange_account_id=exchange_account_id, payload=currency_exchange
         )
         customer_exchange_request_model = CustomerExchangeRequestModel(
             customer_exchange_data=customer_exchange_data,
-            payload=payload,
+            payload=currency_exchange,
             exchange_account_id=exchange_account_id,
         )
         content = await cls.__get_customer_token_on_route_21(
