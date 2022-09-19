@@ -93,6 +93,8 @@ containers:
       value: "produto/cambio/naturezaOperacao/{}/taxa/{}/{}/cliente/{}/spread/{}"
     - name: EXCHANGE_SIMULATION_URL
       value: "operacao/cambio/calcular"
+    - name: SPREAD_DEFAULT
+      value: "0.02"
     # Mist
     - name: MIST_REDIS_URL
       value: "redis://mist:InPuaku76Jbdsa@lnxbrspkeydbdb01-dev.subpriv.vcndev.oraclevcn.com:6379?db=1"

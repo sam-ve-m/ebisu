@@ -16,7 +16,8 @@ class CustomerExchangeRequestModel:
         self.quote = payload.quote
         self.quantity = payload.quantity
         self.operation_key = self.__get_operation_value()
-        self.spread = self.__get_spread_tax(customer_exchange_data=customer_exchange_data)
+        self.spread = float(config("SPREAD_DEFAULT"))
+        # self.spread = self.__get_spread_tax(customer_exchange_data=customer_exchange_data) TODO: pegar spread por usuário no banco, quando existir os dados.
 
     async def build_url_path_to_request_current_currency_quote(self) -> str:
         map_url_path = {
