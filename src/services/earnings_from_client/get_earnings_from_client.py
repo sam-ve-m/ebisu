@@ -39,7 +39,7 @@ class EarningsFromClient:
         )
 
         paid_transactions = await cls.sinacor_earnings_transport.paid_earnings(
-            account=account, earnings_client=earnings_client, from_date=to_date, to_date=to_date
+            account=account, earnings_client=earnings_client, from_date=from_date, to_date=to_date
         )
 
         total_paid_earnings = sum(
