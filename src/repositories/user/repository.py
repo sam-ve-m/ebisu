@@ -30,4 +30,13 @@ class UserRepository(MongoDbBaseRepository):
         user_exchange_data = await cls.find_one(
             query={"exchange_account_id": exchange_account_id, "base": base, "quote": quote}
         )
+
+        if not user_exchange_data:
+            user_exchange_data = {
+                "exchange_account_id": exchange_account_id,
+                "base": base,
+                "quote": quote,
+                "spread": config("SPREAD_DEFAULT")
+            }
+
         return user_exchange_data
