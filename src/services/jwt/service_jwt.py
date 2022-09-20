@@ -5,7 +5,7 @@ from typing import Optional
 from etria_logger import Gladsheim
 
 # OUTSIDE LIBRARIES
-from fastapi import Request
+from fastapi import Request, APIRouter
 from jwt import JWT
 
 # from jwt.jwk import jwk_from_dict
@@ -21,6 +21,7 @@ from src.domain.exception import InternalServerError, UnauthorizedError
 
 
 # BUCKET_NAME_KEY = config("BUCKET_NAME_KEY")
+from src.domain.exception.model import InvalidElectronicaSignature
 
 
 class JwtService:
@@ -106,3 +107,13 @@ class JwtService:
             Gladsheim.error(message=str(payload))
             raise InternalServerError("common.process_issue")
         return payload
+
+    @classmethod
+    async def get_jwt_data_and_validate_electronica_signature(cls, request: Request):
+        jwt_data = await cls.get_thebes_answer_from_request(request=request)
+        valid_electronica_signature = await cls.validate_electronic_signature(
+            request, user_data=jwt_data["user"]
+        )
+        if not valid_electronica_signature:
+            raise InvalidElectronicaSignature()
+        return jwt_data
