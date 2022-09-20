@@ -2,7 +2,7 @@ import json
 from typing import Optional, Union
 from fastapi import Response, Request, status
 from heimdall_client.bifrost import Heimdall
-from src.domain.exception.model import IntegrityJwtError, AuthenticationJwtError
+from src.domain.exceptions.model import IntegrityJwtError, AuthenticationJwtError
 
 heimdall = Heimdall()
 CLIENT_JWT_NAME = "x-thebes-answer"

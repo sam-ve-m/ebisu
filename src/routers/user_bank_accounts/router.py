@@ -15,7 +15,7 @@ from src.domain.validators.user_account.bank_account import (
 # SERVICES
 from src.services.bank_account.service import UserBankAccountService
 from src.services.bank_transfer.service import BankTransferService
-from src.domain.exception.model import InvalidElectronicaSignature
+from src.domain.exceptions import InvalidElectronicaSignature
 from src.services.jwt.service_jwt import JwtService
 
 

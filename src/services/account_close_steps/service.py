@@ -6,7 +6,7 @@ from src.domain.account_close_steps.model import AccountCloseSteps
 from src.domain.account_close_steps.response.model import AccountCloseStepsToResponse
 from src.domain.balance.base.model import BaseBalance
 from src.domain.enums.region import Region
-from src.domain.exception import UnauthorizedError
+from src.domain.exceptions import UnauthorizedError
 from src.domain.positions.model import Position
 from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
 from src.domain.validators.exchange_info.get_closure_steps_validator import (

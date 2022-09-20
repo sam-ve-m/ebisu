@@ -3,9 +3,9 @@ from src.core.interfaces.domain.models.internal.account_transfer.interface impor
 )
 from src.domain.models.account.fingerprit import Fingerprint, IsPrimaryAccount
 from src.domain.enums.region import Region
-from src.domain.exception.model import InvalidAccountsOwnership
+from src.domain.exceptions.model import InvalidAccountsOwnership
 from src.domain.currency_map.country_to_currency.map import country_to_currency
-from src.domain.exception.model import NotMappedCurrency
+from src.domain.exceptions.model import NotMappedCurrency
 from src.domain.enums.currency import Currency
 from src.repositories.user.repository import UserRepository
 

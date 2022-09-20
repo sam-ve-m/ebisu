@@ -17,11 +17,11 @@ from src.infrastructures.env_config import config
 from src.repositories.jwt.repository import JwtRepository
 
 # from src.repositories.bucket.repository import Bucket
-from src.domain.exception import InternalServerError, UnauthorizedError
+from src.domain.exceptions import InternalServerError, UnauthorizedError
 
 
 # BUCKET_NAME_KEY = config("BUCKET_NAME_KEY")
-from src.domain.exception.model import InvalidElectronicaSignature
+from src.domain.exceptions.model import InvalidElectronicaSignature
 
 
 class JwtService:
