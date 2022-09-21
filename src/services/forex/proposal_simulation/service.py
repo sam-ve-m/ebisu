@@ -6,15 +6,15 @@ from src.domain.exceptions.repository.exception import CustomerExchangeDataNotFo
 from src.domain.exceptions.service.forex_exchange.exception import (
     CustomerQuotationTokenNotFound,
 )
-from src.domain.models.forex_exchange.customer_exchange_request_data.model import (
+from src.domain.models.forex.customer_exchange_request_data.model import (
     CustomerExchangeRequestModel,
 )
-from src.domain.models.forex_exchange.customer_exchange_response_data.model import (
+from src.domain.models.forex.customer_exchange_response_data.model import (
     CustomerExchangeResponseModel,
 )
-from src.domain.validators.forex_exchange.currency_options import CurrencyExchange
+from src.domain.validators.forex.currency_options import CurrencyExchange
 from src.repositories.user.repository import UserRepository
-from src.services.forex_exchange.response_exchange_map.service import (
+from src.services.forex.response_exchange_map.service import (
     ExchangeResponseMap,
 )
 

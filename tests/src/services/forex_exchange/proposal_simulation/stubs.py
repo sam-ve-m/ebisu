@@ -1,6 +1,6 @@
 # Ebisu
-from src.domain.validators.forex_exchange.currency_options import CurrencyExchange
-from src.domain.models.forex_exchange.customer_exchange_request_data.model import (
+from src.domain.validators.forex.currency_options import CurrencyExchange
+from src.domain.models.forex.customer_exchange_request_data.model import (
     CustomerExchangeRequestModel,
 )
 

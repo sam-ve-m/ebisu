@@ -42,7 +42,7 @@ class ErrorOnValidateExchangeSimulationProposalData(DomainException):
         super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
 
 
-class ClosedExchangeOperations(DomainException):
+class ClosedForexOperations(DomainException):
     def __init__(self, *args, **kwargs):
         self.msg = "Opening hours for currency exchange operations are from 9:00 am to 4:30 pm."
         self.status_code = HTTPStatus.BAD_REQUEST

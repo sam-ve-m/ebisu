@@ -30,7 +30,7 @@ from src.domain.exceptions import (
 
 # ROUTERS
 from src.routers.exchange_informations.router import ExchangeRouter
-from src.routers.forex_exchange.router import ForexExchange
+from src.routers.forex.router import ForexExchange
 from src.routers.user_bank_accounts.router import UserBankAccountsRouter
 from src.routers.funding_and_withdrawal.router import FundingAndWithdrawalRouter
 from src.routers.user_portfolios.router import UserPortfoliosRouter

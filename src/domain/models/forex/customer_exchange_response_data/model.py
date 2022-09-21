@@ -2,8 +2,8 @@
 from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOffset
-from src.domain.enums.forex_exchange.currency import CurrencyOptions
-from src.domain.enums.forex_exchange.nature_operation import NatureOperation
+from src.domain.enums.forex.currency import CurrencyOptions
+from src.domain.enums.forex.nature_operation import NatureOperation
 
 # Standards
 from datetime import datetime
