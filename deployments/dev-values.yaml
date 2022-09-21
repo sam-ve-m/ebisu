@@ -89,7 +89,6 @@ deployment:
         DW_BALANCE_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
         DW_GET_ALL_TRANSACTIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
         DW_POSITIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/positions"
-        DW_BALANCE_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
         FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
         FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB: "2"
         AWS_ACCESS_KEY_ID: "AKIATZVFXI25USQWCS5O"
@@ -151,7 +150,7 @@ deployment:
         PERSEPHONE_KAFKA_BROKERS: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
         PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT: "ebisu-persephone.client.bank_account"
         # Caronte
-        CARONTE_CLIENT_LOCK_MANAGER_REDIS_URLS: [ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]
+        CARONTE_CLIENT_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
         CARONTE_CLIENT_AUTHENTICATION_RETRY_COUNT: "100"
         CARONTE_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN: "0.5"
         CARONTE_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX: "0.7"
@@ -176,21 +175,21 @@ deployment:
         OUROINVEST_DEFAULT_TOKEN_URL: "https://sbxapi.ourinvest.com.br:43400/api/v1/cross/usuario/login/parceiro"
         OUROINVEST_USER_TOKEN_URL: "https://sbxapi.ourinvest.com.br:43400/api/v1/cross/servicos/autorizacao/representante"
         # FLOKI
-        FLOKI_SINACOR_BASE_IP: 172.30.19.203:25149
-        FLOKI_SINACOR_AUTHENTICATION_ROUTE: infra/api/v1/oauth/token
-        FLOKI_SINACOR_CLIENT_ID: 1B5FEA46423D56C0EECD0CEB.SINACOR
-        FLOKI_SINACOR_CLIENT_SECRET: b8X2xWgfxEPyBB92ni6EbJFknnETaOPW7lNQj5pqPkPzXb1NCygotdSz5/fTnRz3iTzhb3J5bnTKnuYly/R/rlhlnhEIizoN4x1gF/yRCMk=
+        FLOKI_SINACOR_BASE_IP: "172.30.19.203:25149"
+        FLOKI_SINACOR_AUTHENTICATION_ROUTE: "infra/api/v1/oauth/token"
+        FLOKI_SINACOR_CLIENT_ID: "1B5FEA46423D56C0EECD0CEB.SINACOR"
+        FLOKI_SINACOR_CLIENT_SECRET: "b8X2xWgfxEPyBB92ni6EbJFknnETaOPW7lNQj5pqPkPzXb1NCygotdSz5/fTnRz3iTzhb3J5bnTKnuYly/R/rlhlnhEIizoN4x1gF/yRCMk="
         FLOKI_SINACOR_COMPANY_ID: "7029"
-        FLOKI_REDIS_HOST_URL: redis://bifrost:Lysjn32J65NmMhsOOm@172.30.19.183:6379?db=1
-        FLOKI_REDIS_TOKEN_KEY: access_token_of_floki_to_sinacor
-        FLOKI_CLIENT_LOCK_MANAGER_REDIS_URLS: [ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]
+        FLOKI_REDIS_HOST_URL: "redis://bifrost:Lysjn32J65NmMhsOOm@172.30.19.183:6379?db=1"
+        FLOKI_REDIS_TOKEN_KEY: "access_token_of_floki_to_sinacor"
+        FLOKI_CLIENT_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
         FLOKI_CLIENT_AUTHENTICATION_RETRY_COUNT: "100"
         FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN: "0.5"
         FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX: "0.7"
         FLOKI_CLIENT_AUTHENTICATION_LOCK_MANAGER_TIMEOUT: "5"
-        FLOKI_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER: sinacor_authentication_bifrost
-        PAID_EARNINGS_URL: http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Pagos
-        PROVISIONED_EARNINGS_URL: http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Provisionados
+        FLOKI_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER: "sinacor_authentication_bifrost"
+        PAID_EARNINGS_URL: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Pagos"
+        PROVISIONED_EARNINGS_URL: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Provisionados"
         TRANSFER_WINDOW_START: "11:00:00"
         TRANSFER_WINDOW_END: "19:30:00"
       
