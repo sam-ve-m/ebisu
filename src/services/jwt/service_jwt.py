@@ -109,7 +109,7 @@ class JwtService:
         return payload
 
     @classmethod
-    async def get_jwt_data_and_validate_electronica_signature(cls, request: Request):
+    async def get_validate_electronica_signature(cls, request: Request):
         jwt_data = await cls.get_thebes_answer_from_request(request=request)
         valid_electronica_signature = await cls.validate_electronic_signature(
             request, user_data=jwt_data["user"]
