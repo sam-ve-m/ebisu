@@ -5,7 +5,7 @@ from src.domain.abstract_classes.services.funding_and_withdrawal.money_flow_reso
     MoneyFlowResolverAbstract,
 )
 from src.domain.enums.region import Region
-from src.domain.exception.model import MoneyFlowResolverNoFoundError
+from src.domain.exceptions.model import MoneyFlowResolverNoFoundError
 from src.domain.models.account.bank import BankAccount
 from src.domain.models.account.exchanges import ExchangeAccount
 from src.domain.validators.funding_and_withdrawal.validators import (

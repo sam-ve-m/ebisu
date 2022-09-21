@@ -18,7 +18,7 @@ containers:
     - name: ORACLE_BASE_USER
       value: "UEBISDB001"
     - name: ORACLE_BASE_PASSWORD
-      value: "Eb3gq7$8k7z!Sc@"
+      value: "JLhvdjkhbfacdui32uhj"
     - name: ORACLE_BASE_DSN
       value: "172.30.18.44"
     - name: ORACLE_BASE_PORT
@@ -30,7 +30,7 @@ containers:
     - name: ORACLE_POSITION_USER
       value: "UEBISDB001"
     - name: ORACLE_POSITION_PASSWORD
-      value: "Eb3gq7$8k7z!Sc@"
+      value: "JLhvdjkhbfacdui32uhj"
     - name: ORACLE_POSITION_DSN
       value: "172.30.18.44"
     - name: ORACLE_POSITION_PORT

@@ -1,6 +1,7 @@
 # PROJECT IMPORTS
 from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
+from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOffset
 from src.domain.earning.us.model import Earning
 
 
@@ -36,7 +37,9 @@ get_transactions_model_stub = Earning(
         "description": "PowerShares S&P 500 High Div Low Vol ETF",
         "amount_per_share": 0.1511,
         "date": RegionStringDateTime(
-            "2019-06-03T15:12:00.345Z", RegionDateFormat.US_DATE_FORMAT
+            date="2019-06-03T15:12:00.345Z",
+            region_date_format=RegionDateFormat.US_DATE_FORMAT,
+            utc_offset=ExchangeUtcOffset.US_UTC_OFFSET
         ),
         "amount": 0,
     }

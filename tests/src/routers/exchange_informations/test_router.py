@@ -33,7 +33,7 @@ with patch.object(Config, "get", return_value="info"):
             from src.services.earnings_from_client.get_earnings_from_client import (
                 EarningsFromClient,
             )
-            from src.domain.exception import UnauthorizedError
+            from src.domain.exceptions import UnauthorizedError
             from src.services.get_client_orders.get_client_orders import GetOrders
             from src.services.jwt.service_jwt import JwtService
             from src.services.list_broker_note.list_broker_note import ListBrokerNote

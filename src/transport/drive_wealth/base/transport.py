@@ -1,6 +1,6 @@
 from etria_logger import Gladsheim
 
-from src.domain.exception import FailToGetDataFromTransportLayer
+from src.domain.exceptions import FailToGetDataFromTransportLayer
 
 
 class DwBaseTransport:

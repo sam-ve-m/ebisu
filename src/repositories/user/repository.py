@@ -7,8 +7,8 @@ from src.repositories.base_repositories.mongo_db.base import MongoDbBaseReposito
 
 class UserRepository(MongoDbBaseRepository):
 
-    database = config("MONGODB_DATABASE_NAME")
-    collection = config("MONGODB_USER_COLLECTION")
+    database = config("MONGODB_SNAPSHOT_DATABASE")
+    collection = config("MONGODB_EXCHANGE_COLLECTION")
 
     @classmethod
     async def get_user_portfolios(cls, unique_id: str):
@@ -24,3 +24,19 @@ class UserRepository(MongoDbBaseRepository):
         creation_date = user_data.get("created_at")
 
         return creation_date
+
+    @classmethod
+    async def get_user_exchange_data(cls, exchange_account_id: int, base: str, quote: str) -> dict:
+        user_exchange_data = await cls.find_one(
+            query={"exchange_account_id": exchange_account_id, "base": base, "quote": quote}
+        )
+
+        if not user_exchange_data:
+            user_exchange_data = {
+                "exchange_account_id": exchange_account_id,
+                "base": base,
+                "quote": quote,
+                "spread": config("SPREAD_DEFAULT")
+            }
+
+        return user_exchange_data

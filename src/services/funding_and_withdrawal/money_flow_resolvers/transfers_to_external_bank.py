@@ -3,7 +3,7 @@ from src.domain.abstract_classes.services.funding_and_withdrawal.money_flow_reso
 )
 from datetime import datetime, timedelta
 
-from src.domain.exception.model import MoneyFlowPerformedOutsideTransactionWindow
+from src.domain.exceptions.model import MoneyFlowPerformedOutsideTransactionWindow
 from src.repositories.funding_and_withdrawal.realtime.repository import (
     RealtimeFundingAndWithdrawalRepository,
 )

@@ -14,7 +14,7 @@ from src.domain.validators.user_account.bank_account import (
     UpdateUserBankAccounts,
     DeleteUsersBankAccount,
 )
-from src.domain.exception import UnauthorizedError, BadRequestError
+from src.domain.exceptions import UnauthorizedError, BadRequestError
 from src.routers.user_bank_accounts.router import UserBankAccountsRouter
 from src.routers.user_portfolios.router import UserPortfoliosRouter
 from src.services.bank_account.service import UserBankAccountService
