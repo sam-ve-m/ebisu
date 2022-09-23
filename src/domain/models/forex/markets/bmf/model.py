@@ -28,7 +28,7 @@ class Bmf(ForexMarket):
     def get_liquidation_date(self, day: LiquidationDayOptions) -> date:
         valid_dates = self.get_valid_date_range(end_date=self.end_date)
         if self.start_date not in valid_dates:
-            raise ClosedForexOperations
+            raise ClosedForexOperations()
         liquidation_date = valid_dates[day]
         return liquidation_date
 
