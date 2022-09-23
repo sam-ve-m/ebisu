@@ -13,7 +13,7 @@ from src.domain.models.forex.customer_exchange_response_data.model import (
     CustomerExchangeResponseModel,
 )
 from src.domain.validators.forex.currency_options import CurrencyExchange
-from src.repositories.user.repository import UserRepository
+from src.repositories.user_exchange.repository import UserExchangeRepository
 from src.services.forex.response_exchange_map.service import (
     ExchangeResponseMap,
 )
@@ -84,7 +84,7 @@ class CustomerExchangeService:
     async def __get_customer_exchange_account_data(
         exchange_account_id: int, payload: CurrencyExchange
     ) -> Union[CustomerExchangeDataNotFound, dict]:
-        customer_exchange_data = await UserRepository.get_user_exchange_data(
+        customer_exchange_data = await UserExchangeRepository.get_user_exchange_data(
             exchange_account_id=exchange_account_id,
             base=payload.base,
             quote=payload.quote,

@@ -7,7 +7,7 @@ from src.domain.exceptions.model import InvalidAccountsOwnership
 from src.domain.currency_map.country_to_currency.map import country_to_currency
 from src.domain.exceptions.model import NotMappedCurrency
 from src.domain.enums.currency import Currency
-from src.repositories.user.repository import UserRepository
+from src.repositories.user_exchange.repository import UserExchangeRepository
 
 
 class ExchangeAccount(IAccountTransfer):
@@ -23,7 +23,7 @@ class ExchangeAccount(IAccountTransfer):
 
     async def _extract_accounts(self):
         country = self._country.value.lower()
-        user_portfolios = await UserRepository.get_user_portfolios(
+        user_portfolios = await UserExchangeRepository.get_user_portfolios(
             unique_id=self._user_unique_id
         )
 
