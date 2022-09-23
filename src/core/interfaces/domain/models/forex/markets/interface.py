@@ -1,28 +1,24 @@
 # Ebisu
 from src.domain.enums.forex.liquidation_date import LiquidationDayOptions
 from src.domain.enums.forex.time_zones import TimeZones
+from src.domain.models.forex.markets.calendar.model import ForexMarketCalendars
 
 # Standards
 from abc import ABC, abstractmethod
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 # Third party
-import pandas_market_calendars
-
-
-class ForexMarketCalendars:
-    def __init__(self):
-        self.nyse = pandas_market_calendars.get_calendar("NYSE")
-        self.bmf = pandas_market_calendars.get_calendar("BMF")
+from decouple import config
 
 
 class ForexMarket(ABC):
 
-    def __init__(self, date_time: datetime, time_zone: TimeZones):
+    def __init__(self, date_time: datetime, time_zone: TimeZones, market_calendar: ForexMarketCalendars):
         self.date_time = date_time
-        self.date = date_time.date()
         self.time_zone = time_zone.value
-        self.forex_calendar = ForexMarketCalendars()
+        self.start_date = date_time.date()
+        self.end_date = self.start_date + timedelta(days=int(config("MARKET_DAYS_RANGE")))
+        self.forex_calendar = market_calendar
 
     @abstractmethod
     async def validate_open_market_hours(self) -> bool:

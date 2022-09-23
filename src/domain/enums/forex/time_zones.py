@@ -1,5 +1,6 @@
-from pytz import timezone
+# Standards
 from enum import Enum
+from pytz import timezone
 
 
 class TimeZones(Enum):
