@@ -158,7 +158,7 @@ deployment:
         CARONTE_CLIENT_AUTHENTICATION_LOCK_MANAGER_TIMEOUT: "5"
         CARONTE_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER: "ouroinvest__authentication"
         CARONTE_MAX_RETRY: "5"
-        CARONTE_REDIS_HOST: "redis://bnd:jkl321pqr@172.30.11.235:6379?db=1"
+        CARONTE_REDIS_HOST: "redis://bnd:jkl321pqr@172.30.11.235:6379"
         CARONTE_CACHE_KEYS_PREFIX: "caronte:"
         CARONTE_REDIS_DB: "1"
         # OuroInvest
