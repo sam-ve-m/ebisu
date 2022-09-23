@@ -2,6 +2,7 @@
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
 from src.infrastructures.env_config import config
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
+from src.domain.models.database.bank_account import BankAccountModel
 
 
 class UserBankAccountRepository(MongoDbBaseRepository):
@@ -10,8 +11,7 @@ class UserBankAccountRepository(MongoDbBaseRepository):
 
     @classmethod
     async def get_registered_user_bank_accounts(cls, unique_id: str) -> dict:
-        response = None
-        user_bank_accounts_by_unique_id = await cls.find_all(
+        user_bank_accounts_by_unique_id = await cls.find_one(
             query={"unique_id": unique_id},
             project={
                 "_id": 0,
@@ -24,14 +24,12 @@ class UserBankAccountRepository(MongoDbBaseRepository):
                 },
             },
         )
-
-        has_user_bank_accounts_by_unique_id = (
-            user_bank_accounts_by_unique_id is not None
-        )
-        if has_user_bank_accounts_by_unique_id:
-            response = user_bank_accounts_by_unique_id[0]
-
-        return response
+        bank_accounts_result = user_bank_accounts_by_unique_id["bank_accounts"]
+        user_bank_accounts_response = [
+            BankAccountModel(**symbol)
+            for symbol in bank_accounts_result
+        ]
+        return user_bank_accounts_response
 
     @classmethod
     async def save_registered_user_bank_accounts(
