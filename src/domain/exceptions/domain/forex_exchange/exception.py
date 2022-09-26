@@ -15,6 +15,15 @@ class InvalidOperation(DomainException):
         super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
 
 
+class InvalidHashCombination(DomainException):
+    def __init__(self, *args, **kwargs):
+        self.msg = "Invalid combination to create a redis hash to find balance values"
+        self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+        self.internal_code = InternalCode.NOT_IMPLEMENTED
+        self.success = False
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+
+
 class SpreadTaxNotFound(DomainException):
     def __init__(self, *args, **kwargs):
         self.msg = "Spread data not found on customer"

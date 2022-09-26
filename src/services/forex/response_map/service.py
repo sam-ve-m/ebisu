@@ -15,7 +15,7 @@ from typing import Union
 from caronte import CaronteStatus, CaronteStatusResponse
 
 
-class ExchangeResponseMap:
+class ForexResponseMap:
 
     @classmethod
     async def get_response(

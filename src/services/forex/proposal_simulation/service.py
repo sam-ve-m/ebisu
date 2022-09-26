@@ -14,8 +14,8 @@ from src.domain.models.forex.customer_exchange_response_data.model import (
 )
 from src.domain.validators.forex.currency_options import CurrencyExchange
 from src.repositories.user_exchange.repository import UserExchangeRepository
-from src.services.forex.response_exchange_map.service import (
-    ExchangeResponseMap,
+from src.services.forex.response_map.service import (
+    ForexResponseMap,
 )
 
 # Standards
@@ -105,7 +105,7 @@ class CustomerExchangeService:
             url=url_path,
             exchange_account_id=customer_exchange_request_model.exchange_account_id,
         )
-        customer_token = await ExchangeResponseMap.get_response(
+        customer_token = await ForexResponseMap.get_response(
             caronte_response=caronte_response
         )
         return customer_token
@@ -127,7 +127,7 @@ class CustomerExchangeService:
             exchange_account_id=customer_exchange_request_model.exchange_account_id,
             body=body,
         )
-        exchange_simulation_proposal_data = await ExchangeResponseMap.get_response(
+        exchange_simulation_proposal_data = await ForexResponseMap.get_response(
             caronte_response=caronte_response
         )
         return exchange_simulation_proposal_data
