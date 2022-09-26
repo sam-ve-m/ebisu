@@ -3,6 +3,7 @@ import datetime
 from uuid import uuid4
 
 # INTERNAL LIBRARIES
+from nidavellir import Sindri
 from src.domain.enums.persephone import PersephoneSchema, PersephoneQueue
 from src.domain.exceptions import FailToSaveAuditingTrail
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
@@ -14,6 +15,7 @@ from src.infrastructures.env_config import config
 from src.domain.models.response.create_bank_account.response_model import ListBankAccountsResponse
 from src.domain.responses.http_response_model import ResponseModel
 from src.domain.enums.response.internal_code import InternalCode
+from http import HTTPStatus
 
 
 class UserBankAccountService:
@@ -86,7 +88,12 @@ class UserBankAccountService:
         response_model = ListBankAccountsResponse.to_response(
             models=bank_accounts_from_database
         )
-        return response_model
+        user_bank_accounts_result = response_model.dict()
+        Sindri.dict_to_primitive_types(user_bank_accounts_result)
+        response = ResponseModel(
+            success=True, result=user_bank_accounts_result, internal_code=InternalCode.SUCCESS
+        ).build_http_response(status_code=HTTPStatus.OK)
+        return response
 
     @classmethod
     async def update_user_bank_account(
