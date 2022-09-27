@@ -1,6 +1,6 @@
 # Ebisu
 from src.domain.exceptions.domain.forex.exception import (
-    ErrorOnValidateExchangeSimulationProposalData,
+    ErrorValidatingSimulationProposalData,
 )
 from src.domain.exceptions.repository.forex.exception import CustomerForexDataNotFound
 from src.domain.exceptions.service.forex.exception import (
@@ -78,7 +78,7 @@ class CustomerExchangeService:
             return exchange_simulation_proposal_response
         except Exception as ex:
             Gladsheim.error(error=ex)
-            raise ErrorOnValidateExchangeSimulationProposalData()
+            raise ErrorValidatingSimulationProposalData()
 
     @staticmethod
     async def __get_customer_exchange_account_data(

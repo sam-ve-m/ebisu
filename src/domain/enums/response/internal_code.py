@@ -17,6 +17,5 @@ class InternalCode(IntEnum):
     ERROR_IN_CARONTE = 300
     ERROR_IN_HALBERD = 400
 
-
     def __repr__(self):
         return self.value

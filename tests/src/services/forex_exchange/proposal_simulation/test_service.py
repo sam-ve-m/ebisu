@@ -1,6 +1,6 @@
 # Ebisu
 from src.domain.exceptions.domain.forex.exception import (
-    ErrorOnValidateExchangeSimulationProposalData,
+    ErrorValidatingSimulationProposalData,
 )
 from src.domain.exceptions.repository.forex.exception import CustomerForexDataNotFound
 from src.domain.exceptions.service.forex.exception import (
@@ -322,7 +322,7 @@ async def test_when_treatment_and_validation_with_success_then_return_exchange_s
 
 @pytest.mark.asyncio
 async def test_when_treatment_and_validation_failed_then_raises():
-    with pytest.raises(ErrorOnValidateExchangeSimulationProposalData):
+    with pytest.raises(ErrorValidatingSimulationProposalData):
         await CustomerExchangeService._CustomerExchangeService__treatment_and_validation_exchange_simulation_data(
             exchange_simulation_proposal_data=stub_response_missing_data_rote_22
         )
