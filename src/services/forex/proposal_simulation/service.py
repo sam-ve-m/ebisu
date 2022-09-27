@@ -1,9 +1,9 @@
 # Ebisu
-from src.domain.exceptions.domain.forex_exchange.exception import (
+from src.domain.exceptions.domain.forex.exception import (
     ErrorOnValidateExchangeSimulationProposalData,
 )
-from src.domain.exceptions.repository.exception import CustomerExchangeDataNotFound
-from src.domain.exceptions.service.forex_exchange.exception import (
+from src.domain.exceptions.repository.forex.exception import CustomerForexDataNotFound
+from src.domain.exceptions.service.forex.exception import (
     CustomerQuotationTokenNotFound,
 )
 from src.domain.models.forex.customer_exchange_request_data.model import (
@@ -83,14 +83,14 @@ class CustomerExchangeService:
     @staticmethod
     async def __get_customer_exchange_account_data(
         exchange_account_id: int, payload: CurrencyExchange
-    ) -> Union[CustomerExchangeDataNotFound, dict]:
+    ) -> Union[CustomerForexDataNotFound, dict]:
         customer_exchange_data = await UserExchangeRepository.get_user_exchange_data(
             exchange_account_id=exchange_account_id,
             base=payload.base,
             quote=payload.quote,
         )
         if not customer_exchange_data:
-            raise CustomerExchangeDataNotFound()
+            raise CustomerForexDataNotFound()
         return customer_exchange_data
 
     @staticmethod

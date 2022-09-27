@@ -1,5 +1,5 @@
 # Ebisu
-from src.domain.exceptions.service.forex_exchange.exception import (
+from src.domain.exceptions.service.forex.exception import (
     UnexpectedErrorWhenTryingToGetExchangeSimulationProposal,
     ExpiredToken,
     InvalidToken,

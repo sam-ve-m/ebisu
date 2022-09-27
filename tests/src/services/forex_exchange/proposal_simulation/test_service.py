@@ -1,9 +1,9 @@
 # Ebisu
-from src.domain.exceptions.domain.forex_exchange.exception import (
+from src.domain.exceptions.domain.forex.exception import (
     ErrorOnValidateExchangeSimulationProposalData,
 )
-from src.domain.exceptions.repository.exception import CustomerExchangeDataNotFound
-from src.domain.exceptions.service.forex_exchange.exception import (
+from src.domain.exceptions.repository.forex.exception import CustomerForexDataNotFound
+from src.domain.exceptions.service.forex.exception import (
     InvalidToken,
     ExpiredToken,
     DroppedToken,
@@ -64,7 +64,7 @@ async def test_when_customer_have_exchange_data_then_return_expected_values(
     return_value=None,
 )
 async def test_when_customer_not_have_exchange_data_then_raises(mock_user_repository):
-    with pytest.raises(CustomerExchangeDataNotFound):
+    with pytest.raises(CustomerForexDataNotFound):
         await CustomerExchangeService._CustomerExchangeService__get_customer_exchange_account_data(
             exchange_account_id=12345, currency_exchange=stub_currency_exchange
         )

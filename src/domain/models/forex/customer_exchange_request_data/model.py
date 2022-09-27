@@ -1,7 +1,7 @@
 # Ebisu
 from src.domain.validators.forex.currency_options import CurrencyExchange, CurrencyOptions
 from src.domain.enums.forex.operations import NatureOperation
-from src.domain.exceptions.domain.forex_exchange.exception import (
+from src.domain.exceptions.domain.forex.exception import (
     InvalidOperation, SpreadTaxNotFound, OperationNotImplemented
 )
 from src.infrastructures.env_config import config

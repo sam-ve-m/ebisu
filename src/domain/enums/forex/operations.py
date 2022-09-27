@@ -1,9 +1,8 @@
 # Standards
 from enum import IntEnum
-from halberd import Country as HCountry
-
 
 # Third party
+from halberd import Country as HCountry
 from strenum import StrEnum
 
 

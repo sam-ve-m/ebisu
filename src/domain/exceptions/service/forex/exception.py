@@ -42,12 +42,39 @@ class ExpiredToken(ServiceException):
         super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
 
 
+class ErrorTryingToLockResource(ServiceException):
+    def __init__(self, *args, **kwargs):
+        self.msg = "Error when trying to lock resource in redis"
+        self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+        self.internal_code = InternalCode.ERROR_IN_HALBERD
+        self.success = False
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+
+
+class ErrorTryingToUnlock(ServiceException):
+    def __init__(self, *args, **kwargs):
+        self.msg = "Error when trying to unlock resource in redis"
+        self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+        self.internal_code = InternalCode.ERROR_IN_HALBERD
+        self.success = False
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+
+
 class InvalidToken(ServiceException):
     def __init__(self, *args, **kwargs):
         self.msg = "Invalid token. This is not a valid jwt."
         self.status_code = HTTPStatus.UNAUTHORIZED
         self.internal_code = InternalCode.JWT_INVALID
         self.success = False
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+
+
+class InsufficientFunds(ServiceException):
+    def __init__(self, *args, **kwargs):
+        self.msg = "Invalid token. This is not a valid jwt."
+        self.status_code = HTTPStatus.OK
+        self.internal_code = InternalCode.INSUFFICIENT_FUNDS
+        self.success = True
         super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
 
 
@@ -58,3 +85,4 @@ class UnexpectedErrorWhenTryingToGetExchangeSimulationProposal(ServiceException)
         self.internal_code = InternalCode.INTERNAL_SERVER_ERROR
         self.success = False
         super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+

@@ -1,6 +1,6 @@
 from src.domain.models.forex.markets.liga_invest_markets.model import LigaInvestStock
 from src.domain.enums.forex.time_zones import TimeZones
-from src.domain.exceptions.domain.forex_exchange.exception import ClosedForexOperations
+from src.domain.exceptions.domain.forex.exception import ClosedForexOperations
 from src.domain.models.forex.markets.calendar.model import ForexMarketCalendars
 
 # Standards
