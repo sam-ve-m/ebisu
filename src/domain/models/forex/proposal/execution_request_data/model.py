@@ -46,7 +46,7 @@ class ProposalTokenData:
         return exchange_combination_hash
 
 
-class ExecutionProposalModel:
+class ExecutionModel:
     def __init__(self, payload: ForexExecution, jwt_data: dict, token_decoded: dict):
         self.jwt = JwtModel(jwt_data=jwt_data)
         self.origin_country = self.__get_origin_country()

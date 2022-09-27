@@ -72,7 +72,7 @@ async def test_when_customer_not_have_exchange_data_then_raises(mock_user_reposi
 
 @pytest.mark.asyncio
 @patch(
-    "src.domain.models.forex.customer_exchange_request_data.model.config",
+    "src.domain.models.forex.simulation_request_data.model.config",
     side_effect=stub_config_path_quotation,
 )
 @patch(
@@ -91,7 +91,7 @@ async def test_when_get_customer_token_with_successfully_then_return_token_data(
 
 @pytest.mark.asyncio
 @patch(
-    "src.domain.models.forex.customer_exchange_request_data.model.config",
+    "src.domain.models.forex.simulation_request_data.model.config",
     side_effect=stub_config_path_quotation,
 )
 @patch(
@@ -109,7 +109,7 @@ async def test_when_get_customer_token_result_is_bad_request_then_raises(
 
 @pytest.mark.asyncio
 @patch(
-    "src.domain.models.forex.customer_exchange_request_data.model.config",
+    "src.domain.models.forex.simulation_request_data.model.config",
     side_effect=stub_config_path_quotation,
 )
 @patch(
@@ -127,7 +127,7 @@ async def test_when_get_customer_token_result_is_unauthorized_then_raises(
 
 @pytest.mark.asyncio
 @patch(
-    "src.domain.models.forex.customer_exchange_request_data.model.config",
+    "src.domain.models.forex.simulation_request_data.model.config",
     side_effect=stub_config_path_quotation,
 )
 @patch(
@@ -145,7 +145,7 @@ async def test_when_get_customer_token_result_is_forbidden_then_raises(
 
 @pytest.mark.asyncio
 @patch(
-    "src.domain.models.forex.customer_exchange_request_data.model.config",
+    "src.domain.models.forex.simulation_request_data.model.config",
     side_effect=stub_config_path_quotation,
 )
 @patch(
@@ -163,7 +163,7 @@ async def test_when_get_customer_token_result_is_token_not_found_then_raises(
 
 @pytest.mark.asyncio
 @patch(
-    "src.domain.models.forex.customer_exchange_request_data.model.config",
+    "src.domain.models.forex.simulation_request_data.model.config",
     side_effect=stub_config_path_quotation,
 )
 @patch(
@@ -181,7 +181,7 @@ async def test_when_get_customer_token_result_is_unexpected_error_found_then_rai
 
 @pytest.mark.asyncio
 @patch(
-    "src.domain.models.forex.customer_exchange_request_data.model.config",
+    "src.domain.models.forex.simulation_request_data.model.config",
     side_effect=stub_config_path_exchange_simulation,
 )
 @patch(
@@ -201,7 +201,7 @@ async def test_when_get_exchange_simulation_with_success_then_return_exchange_si
 
 @pytest.mark.asyncio
 @patch(
-    "src.domain.models.forex.customer_exchange_request_data.model.config",
+    "src.domain.models.forex.simulation_request_data.model.config",
     side_effect=stub_config_path_exchange_simulation,
 )
 @patch(
@@ -220,7 +220,7 @@ async def test_when_get_exchange_simulation_result_is_bad_request_then_raises(
 
 @pytest.mark.asyncio
 @patch(
-    "src.domain.models.forex.customer_exchange_request_data.model.config",
+    "src.domain.models.forex.simulation_request_data.model.config",
     side_effect=stub_config_path_exchange_simulation,
 )
 @patch(
@@ -239,7 +239,7 @@ async def test_when_get_exchange_simulation_result_is_forbidden_then_raises(
 
 @pytest.mark.asyncio
 @patch(
-    "src.domain.models.forex.customer_exchange_request_data.model.config",
+    "src.domain.models.forex.simulation_request_data.model.config",
     side_effect=stub_config_path_exchange_simulation,
 )
 @patch(
@@ -258,7 +258,7 @@ async def test_when_get_exchange_simulation_result_is_unauthorized_then_raises(
 
 @pytest.mark.asyncio
 @patch(
-    "src.domain.models.forex.customer_exchange_request_data.model.config",
+    "src.domain.models.forex.simulation_request_data.model.config",
     side_effect=stub_config_path_exchange_simulation,
 )
 @patch(
@@ -277,7 +277,7 @@ async def test_when_get_exchange_simulation_result_is_token_not_found_then_raise
 
 @pytest.mark.asyncio
 @patch(
-    "src.domain.models.forex.customer_exchange_request_data.model.config",
+    "src.domain.models.forex.simulation_request_data.model.config",
     side_effect=stub_config_path_exchange_simulation,
 )
 @patch(

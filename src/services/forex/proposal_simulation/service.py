@@ -6,17 +6,14 @@ from src.domain.exceptions.repository.forex.exception import CustomerForexDataNo
 from src.domain.exceptions.service.forex.exception import (
     CustomerQuotationTokenNotFound,
 )
-from src.domain.models.forex.customer_exchange_request_data.model import (
-    CustomerExchangeRequestModel,
+from src.domain.models.forex.proposal.simulation_request_data.model import (
+    SimulationModel,
 )
-from src.domain.models.forex.customer_exchange_response_data.model import (
-    CustomerExchangeResponseModel,
-)
+from src.domain.models.forex.proposal.simulation_response_data.model import SimulationResponseModel
 from src.domain.validators.forex.currency_options import CurrencyExchange
 from src.repositories.user_exchange.repository import UserExchangeRepository
-from src.services.forex.response_map.service import (
-    ForexResponseMap,
-)
+from src.services.forex.response_map.service import ForexResponseMap
+
 
 # Standards
 from typing import Union
@@ -31,19 +28,19 @@ class CustomerExchangeService:
     async def get_proposal_simulation(
         cls, jwt_data: dict, currency_exchange: CurrencyExchange
     ) -> dict:
-        exchange_account_id = jwt_data.get("user", {}).get(
+        forex_account = jwt_data.get("user", {}).get(
             "exchange_account_id", 208785
         )
         customer_exchange_data = await cls.__get_customer_exchange_account_data(
-            exchange_account_id=exchange_account_id, payload=currency_exchange
+            exchange_account_id=forex_account, payload=currency_exchange
         )
-        customer_exchange_request_model = CustomerExchangeRequestModel(
+        simulation_model = SimulationModel(
             customer_exchange_data=customer_exchange_data,
             payload=currency_exchange,
-            exchange_account_id=exchange_account_id,
+            forex_account=forex_account,
         )
         content = await cls.__get_customer_token_on_route_21(
-            customer_exchange_request_model=customer_exchange_request_model
+            simulation_model=simulation_model
         )
         customer_token = await cls.__validate_if_token_exists_in_content(
             content=content
@@ -51,7 +48,7 @@ class CustomerExchangeService:
         exchange_simulation_proposal_data = (
             await cls.__get_exchange_simulation_proposal_data_on_route_22(
                 customer_token=customer_token,
-                customer_exchange_request_model=customer_exchange_request_model,
+                simulation_model=simulation_model,
             )
         )
         exchange_simulation_proposal_response = (
@@ -68,7 +65,7 @@ class CustomerExchangeService:
     ) -> dict:
         try:
             exchange_simulation_model = (
-                await CustomerExchangeResponseModel.get_customer_exchange_model(
+                await SimulationResponseModel.get_customer_exchange_model(
                     exchange_simulation_proposal_data=exchange_simulation_proposal_data
                 )
             )
@@ -95,15 +92,15 @@ class CustomerExchangeService:
 
     @staticmethod
     async def __get_customer_token_on_route_21(
-        customer_exchange_request_model: CustomerExchangeRequestModel,
+        simulation_model: SimulationModel,
     ) -> dict:
         url_path = (
-            await customer_exchange_request_model.build_url_path_to_request_current_currency_quote()
+            await simulation_model.build_url_path_to_request_current_currency_quote()
         )
         caronte_response = await ExchangeCompanyApi.request_as_client(
             method=AllowedHTTPMethods.GET,
             url=url_path,
-            exchange_account_id=customer_exchange_request_model.exchange_account_id,
+            exchange_account_id=simulation_model.forex_account,
         )
         customer_token = await ForexResponseMap.get_response(
             caronte_response=caronte_response
@@ -113,18 +110,18 @@ class CustomerExchangeService:
     @staticmethod
     async def __get_exchange_simulation_proposal_data_on_route_22(
         customer_token: str,
-        customer_exchange_request_model: CustomerExchangeRequestModel,
+        simulation_model: SimulationModel,
     ) -> dict:
         url_path = (
-            await customer_exchange_request_model.get_url_path_to_request_exchange_simulation()
+            await simulation_model.get_url_path_to_request_exchange_simulation()
         )
-        body = await customer_exchange_request_model.get_body_template_to_request_exchange_simulation(
+        body = await simulation_model.get_body_template_to_request_exchange_simulation(
             customer_token=customer_token
         )
         caronte_response = await ExchangeCompanyApi.request_as_client(
             method=AllowedHTTPMethods.GET,
             url=url_path,
-            exchange_account_id=customer_exchange_request_model.exchange_account_id,
+            exchange_account_id=simulation_model.forex_account,
             body=body,
         )
         exchange_simulation_proposal_data = await ForexResponseMap.get_response(

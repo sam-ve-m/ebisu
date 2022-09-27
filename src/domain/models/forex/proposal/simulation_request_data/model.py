@@ -10,10 +10,10 @@ from src.infrastructures.env_config import config
 # Third party
 
 
-class CustomerExchangeRequestModel:
-    def __init__(self, customer_exchange_data: dict, payload: CurrencyExchange, exchange_account_id: int):
+class SimulationModel:
+    def __init__(self, customer_exchange_data: dict, payload: CurrencyExchange, forex_account: int):
         self.base = payload.base
-        self.exchange_account_id = exchange_account_id
+        self.forex_account = forex_account
         self.quote = payload.quote
         self.quantity = payload.quantity
         self.operation_key = self.__get_operation_value()
@@ -21,8 +21,8 @@ class CustomerExchangeRequestModel:
 
     async def build_url_path_to_request_current_currency_quote(self) -> str:
         map_url_path = {
-            NatureOperation.BRL_TO_USD: f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.BRL, CurrencyOptions.USD, self.exchange_account_id, self.spread)}',
-            NatureOperation.USD_TO_BRL: f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.USD, CurrencyOptions.BRL, self.exchange_account_id, self.spread)}',
+            NatureOperation.BRL_TO_USD: f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.BRL, CurrencyOptions.USD, self.forex_account, self.spread)}',
+            NatureOperation.USD_TO_BRL: f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.USD, CurrencyOptions.BRL, self.forex_account, self.spread)}',
         }
         url_path = map_url_path.get(self.operation_key)
         if not url_path:

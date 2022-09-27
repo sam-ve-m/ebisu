@@ -12,7 +12,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class CustomerExchangeResponseModel(BaseModel):
+class SimulationResponseModel(BaseModel):
     exchange_account_id: int
     operation_nature_code: NatureOperation
     base_currency_symbol: CurrencyOptions
