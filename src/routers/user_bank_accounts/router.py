@@ -11,12 +11,16 @@ from src.domain.validators.user_account.bank_account import (
     UpdateUserBankAccounts,
     DeleteUsersBankAccount,
 )
+from src.domain.models.response.create_bank_account.response_model import ListBankAccountsResponse
 
 # SERVICES
 from src.services.bank_account.service import UserBankAccountService
 from src.services.bank_transfer.service import BankTransferService
 from src.domain.exceptions import InvalidElectronicaSignature
 from src.services.jwt.service_jwt import JwtService
+from src.domain.responses.http_response_model import ResponseModel
+from src.domain.enums.response.internal_code import InternalCode
+from http import HTTPStatus
 
 
 class UserBankAccountsRouter:
@@ -28,14 +32,18 @@ class UserBankAccountsRouter:
         return UserBankAccountsRouter.__bank_account_router
 
     @staticmethod
-    @__bank_account_router.get("/user/list_bank_accounts", tags=["User Bank Account"])
+    @__bank_account_router.get(
+        "/user/list_bank_accounts",
+        tags=["User Bank Account"],
+        response_model=ListBankAccountsResponse
+    )
     async def get_user_bank_accounts(request: Request):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         jwt_data = {"x-thebes-answer": jwt_data}
-        get_user_bank_accounts_response = (
+        user_bank_accounts = (
             await UserBankAccountService.get_user_bank_accounts(jwt_data)
         )
-        return get_user_bank_accounts_response
+        return user_bank_accounts
 
     @staticmethod
     @__bank_account_router.post("/user/create_bank_account", tags=["User Bank Account"])

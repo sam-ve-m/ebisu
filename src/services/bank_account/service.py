@@ -3,6 +3,7 @@ import datetime
 from uuid import uuid4
 
 # INTERNAL LIBRARIES
+from nidavellir import Sindri
 from src.domain.enums.persephone import PersephoneSchema, PersephoneQueue
 from src.domain.exceptions import FailToSaveAuditingTrail
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
@@ -11,6 +12,10 @@ from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.services.get_bank_code.service import GetBankCode
 from persephone_client import Persephone
 from src.infrastructures.env_config import config
+from src.domain.models.response.create_bank_account.response_model import ListBankAccountsResponse
+from src.domain.responses.http_response_model import ResponseModel
+from src.domain.enums.response.internal_code import InternalCode
+from http import HTTPStatus
 
 
 class UserBankAccountService:
@@ -61,11 +66,13 @@ class UserBankAccountService:
         if not user_bank_account_was_added:
             raise InternalServerError("common.process_issue")
 
-        create_account_response = {
-            "message": "Created",
-        }
+        result = ResponseModel(
+            success=True,
+            internal_code=InternalCode.SUCCESS,
+            message="Created",
+        )
 
-        return create_account_response
+        return result
 
     @classmethod
     async def get_user_bank_accounts(
@@ -78,9 +85,15 @@ class UserBankAccountService:
                 unique_id=unique_id
             )
         )
-        if bank_accounts_from_database["bank_accounts"] is None:
-            bank_accounts_from_database.update({"bank_accounts": []})
-        return bank_accounts_from_database
+        response_model = ListBankAccountsResponse.to_response(
+            models=bank_accounts_from_database
+        )
+        user_bank_accounts_result = response_model.dict()
+        Sindri.dict_to_primitive_types(user_bank_accounts_result)
+        response = ResponseModel(
+            success=True, result=user_bank_accounts_result, internal_code=InternalCode.SUCCESS
+        ).build_http_response(status_code=HTTPStatus.OK)
+        return response
 
     @classmethod
     async def update_user_bank_account(
@@ -125,11 +138,13 @@ class UserBankAccountService:
         if not user_bank_account_was_updated:
             raise InternalServerError("common.process_issue")
 
-        update_bank_account_response = {
-            "message": "Updated",
-        }
+        result = ResponseModel(
+            success=True,
+            internal_code=InternalCode.SUCCESS,
+            message="Updated",
+        )
 
-        return update_bank_account_response
+        return result
 
     @classmethod
     async def delete_user_bank_account(
@@ -173,11 +188,13 @@ class UserBankAccountService:
         if not user_bank_account_was_soft_deleted:
             raise InternalServerError("common.process_issue")
 
-        delete_bank_account_response = {
-            "message": "Deleted",
-        }
+        result = ResponseModel(
+            success=True,
+            internal_code=InternalCode.SUCCESS,
+            message="Deleted",
+        )
 
-        return delete_bank_account_response
+        return result
 
     @classmethod
     def bank_code_from_client_exists(cls, bank: str) -> bool:
