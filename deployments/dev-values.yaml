@@ -85,6 +85,7 @@ deployment:
         MONGO_COLLECTION_IZANAMI: "izanami"
         MONGODB_SNAPSHOT_DATABASE: "ebisu"
         MONGODB_SNAPSHOT_COLLECTION: "exchange_user_snapshot"
+        MONGODB_EXCHANGE_COLLECTION: ""
         DW_AUTHENTICATION_URL: "https://bo-api.drivewealth.io/back-office/auth"
         DW_BALANCE_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
         DW_GET_ALL_TRANSACTIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
