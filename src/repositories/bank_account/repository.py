@@ -2,7 +2,7 @@
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
 from src.infrastructures.env_config import config
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
-from src.domain.models.database.bank_account import BankAccountModel
+from src.domain.models.database.bank_account.model import BankAccountModel
 
 
 class UserBankAccountRepository(MongoDbBaseRepository):
@@ -10,7 +10,7 @@ class UserBankAccountRepository(MongoDbBaseRepository):
     collection = config("MONGODB_USER_COLLECTION")
 
     @classmethod
-    async def get_registered_user_bank_accounts(cls, unique_id: str) -> dict:
+    async def get_registered_user_bank_accounts(cls, unique_id: str) -> BankAccountModel:
         user_bank_accounts_by_unique_id = await cls.find_one(
             query={"unique_id": unique_id},
             project={

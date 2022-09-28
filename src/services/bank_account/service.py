@@ -22,7 +22,7 @@ class UserBankAccountService:
     @classmethod
     async def create_user_bank_accounts(
         cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
-    ):
+    ) -> ResponseModel:
         thebes_answer = jwt_data["x-thebes-answer"]
         unique_id = thebes_answer["user"]["unique_id"]
         bank_account = jwt_data["bank_account"]
@@ -77,7 +77,7 @@ class UserBankAccountService:
     @classmethod
     async def get_user_bank_accounts(
         cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
-    ):
+    ) -> ResponseModel:
         thebes_answer = jwt_data.get("x-thebes-answer")
         unique_id = thebes_answer["user"]["unique_id"]
         bank_accounts_from_database = (
@@ -98,7 +98,7 @@ class UserBankAccountService:
     @classmethod
     async def update_user_bank_account(
         cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
-    ):
+    ) -> ResponseModel:
         thebes_answer = jwt_data["x-thebes-answer"]
         unique_id = thebes_answer["user"]["unique_id"]
         bank_account = jwt_data["bank_account"]
@@ -149,7 +149,7 @@ class UserBankAccountService:
     @classmethod
     async def delete_user_bank_account(
         cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
-    ):
+    ) -> ResponseModel:
         thebes_answer = jwt_data["x-thebes-answer"]
         unique_id = thebes_answer["user"]["unique_id"]
         bank_account = jwt_data["bank_account"]

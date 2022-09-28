@@ -32,15 +32,15 @@ from src.domain.validators.exchange_info.list_client_order_validator import (
 
 # SERVICE IMPORTS
 from src.services.account_close_steps.service import AccountCloseStepsService
-from src.services.count_client_orders.count_client_orders import CountOrders
 from src.services.earnings_from_client.get_earnings_from_client import (
     EarningsFromClient,
 )
-from src.services.get_client_orders.get_client_orders import GetOrders
+from src.services.get_client_orders.get_client_orders import Orders
 from src.services.statement.get_statement import GetStatement
 from src.services.jwt.service_jwt import JwtService
 from src.services.list_broker_note.list_broker_note import ListBrokerNote
-from src.services.list_client_orders.list_client_orders import ListOrders
+from src.domain.models.response.list_client_orders.response_model import ClientOrdersResponse
+from src.domain.models.response.count_client_orders.response_model import QuantityResponse
 
 
 class ExchangeRouter:
@@ -94,35 +94,45 @@ class ExchangeRouter:
         return bank_statement_response
 
     @staticmethod
-    @__exchange_router.get("/client_orders", tags=["Client Orders"])
+    @__exchange_router.get(
+        "/client_orders",
+        tags=["Client Orders"],
+
+    )
     async def get_client_orders(
         request: Request, client_order: GetClientOrderModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        client_orders_response = GetOrders.get_service_response(
-            client_order=client_order, jwt_data=jwt_data
-        )
+        client_orders_response = Orders.get_client_orders(client_order=client_order, jwt_data=jwt_data)
         return client_orders_response
 
     @staticmethod
-    @__exchange_router.get("/list_client_orders", tags=["Client Orders"])
+    @__exchange_router.get(
+        "/list_client_orders",
+        tags=["Client Orders"],
+        response_model=list[ClientOrdersResponse],
+    )
     async def list_client_orders(
         request: Request, list_client_orders: ListClientOrderModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        list_client_orders_response = await ListOrders.get_service_response(
-            list_client_orders=list_client_orders, jwt_data=jwt_data
-        )
+        list_client_orders_response = await Orders.get_list_client_orders(jwt_data=jwt_data,
+                                                                          list_client_orders=list_client_orders)
         return list_client_orders_response
 
     @staticmethod
-    @__exchange_router.get("/client_orders_quantity", tags=["Client Orders"])
+    @__exchange_router.get(
+        "/client_orders_quantity",
+        tags=["Client Orders"],
+        response_model=QuantityResponse
+    )
     async def get_client_orders(
         request: Request, client_order_quantity: GetClientOrderQuantityModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        response = await CountOrders.get_service_response(
-            client_order_quantity=client_order_quantity, jwt_data=jwt_data
+        response = await Orders.get_client_orders_quantity(
+            jwt_data=jwt_data,
+            client_order_quantity=client_order_quantity
         )
         return response
 
