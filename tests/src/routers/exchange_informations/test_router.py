@@ -34,7 +34,7 @@ with patch.object(Config, "get", return_value="info"):
                 EarningsFromClient,
             )
             from src.domain.exceptions import UnauthorizedError
-            from src.services.get_client_orders.get_client_orders import GetOrders
+            from src.services.orders.orders import Orders
             from src.services.jwt.service_jwt import JwtService
             from src.services.list_broker_note.list_broker_note import ListBrokerNote
 
@@ -204,7 +204,7 @@ async def test_when_sending_wrong_params_of_get_statement_model_then_raise_valid
     JwtService, "get_thebes_answer_from_request", return_value=payload_data_dummy
 )
 @patch.object(
-    GetOrders, "get_service_response", return_value=client_order_response_dummy
+    Orders, "get_client_orders", return_value=client_order_response_dummy
 )
 async def test_when_sending_the_right_params_to_client_order_router_then_return_the_expected(
     mock_get_thebes_answer_from_request, mock_get_service_response
