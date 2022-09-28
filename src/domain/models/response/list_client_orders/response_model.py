@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from src.domain.models.database.list_client_orders.model import ClientOrdersModel
 
 
-class ClientOrdersResponse(BaseModel):
+class ClientListOrdersResponse(BaseModel):
     name: Optional[str]
     cl_order_id: Optional[str]
     root_cl_order_id: Optional[str]
@@ -22,7 +22,7 @@ class ClientOrdersResponse(BaseModel):
     @classmethod
     def to_response(cls, models: list[ClientOrdersModel]):
         orders = [
-            ClientOrdersResponse(
+            ClientListOrdersResponse(
                 name=model.name,
                 cl_order_id=model.cl_order_id,
                 root_cl_order_id=model.root_cl_order_id,

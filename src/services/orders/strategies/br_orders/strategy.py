@@ -9,15 +9,33 @@ class GetBrOrders:
     @staticmethod
     def build_query(
         accounts: List[str],
+        offset: int,
+        limit: int,
         order_status: List[OrderStatus],
     ) -> str:
 
-        query = f"""SELECT count(*) as count
-                    FROM USOLUDB001.VW_CURRENT_EXECUTION_REPORTS B
+        query = f"""SELECT B.SYMBOL, B.ROOTCLORDID, ORDSTATUS, B.CLORDID, B.CREATEDAT, B.CUMQTY, B.AVGPX, B.ORDTYPE, B.ORDERQTY, B.SIDE, B.PRICE, B.STOPPX
+                    FROM UORDEDB001.VW_ORDER_LIST B
                     WHERE B.ACCOUNT in ('{"','".join(accounts)}')
                     {GetBrOrders.filter(order_status)}
-                    ORDER BY B.TRANSACTTIME DESC
+                    ORDER BY B.CREATEDAT DESC
+                    offset {offset} rows
+                    fetch first {limit} row only  
                     """
+        return query
+
+    @staticmethod
+    def build_quantity_query(
+            accounts: List[str],
+            order_status: List[OrderStatus],
+    ) -> str:
+
+        query = f"""SELECT count(*) as count
+                        FROM USOLUDB001.VW_CURRENT_EXECUTION_REPORTS B
+                        WHERE B.ACCOUNT in ('{"','".join(accounts)}')
+                        {GetBrOrders.filter(order_status)}
+                        ORDER BY B.TRANSACTTIME DESC
+                        """
         return query
 
     @staticmethod

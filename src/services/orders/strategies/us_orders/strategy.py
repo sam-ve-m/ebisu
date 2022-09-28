@@ -25,6 +25,19 @@ class GetUsOrders:
         return query
 
     @staticmethod
+    def build_quantity_query(
+            accounts: List[str],
+            order_status: List[OrderStatus],
+    ) -> str:
+        query = f"""SELECT count(*) as count
+                        FROM UDRIVDB001.VW_CURRENT_EXECUTION_REPORTS B
+                        WHERE B.ACCOUNT in ('{"','".join(accounts)}')
+                        {GetUsOrders.filter(order_status)}                   
+                        ORDER BY B.TRANSACTTIME DESC
+                        """
+        return query
+
+    @staticmethod
     def filter(order_status: List[OrderStatus]):
         if not order_status:
             filter_order_status = ""

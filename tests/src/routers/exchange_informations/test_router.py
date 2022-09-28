@@ -37,7 +37,6 @@ with patch.object(Config, "get", return_value="info"):
             from src.services.get_client_orders.get_client_orders import GetOrders
             from src.services.jwt.service_jwt import JwtService
             from src.services.list_broker_note.list_broker_note import ListBrokerNote
-            from src.services.list_client_orders.list_client_orders import ListOrders
 
 # STUB IMPORTS
 from tests.src.stubs.project_stubs.stub_get_client_orders import (
