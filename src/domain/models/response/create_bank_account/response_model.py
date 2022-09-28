@@ -15,10 +15,10 @@ class CreateBankAccount(BaseModel):
 
 
 class ListBankAccountsResponse(BaseModel):
-    bank_accounts: list[CreateBankAccount]
+    bank_accounts: List[CreateBankAccount]
 
     @classmethod
-    def to_response(cls, models: list[BankAccountModel]):
+    def to_response(cls, models: List[BankAccountModel]):
         bank_accounts = [
             CreateBankAccount(
                 bank=model.bank,
