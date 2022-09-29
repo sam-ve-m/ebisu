@@ -16,6 +16,7 @@ class InternalCode(IntEnum):
     INSUFFICIENT_FUNDS = 202
     ERROR_IN_CARONTE = 300
     ERROR_IN_HALBERD = 400
+    ERROR_IN_BIFROST_CLIENT = 500
 
     def __repr__(self):
         return self.value

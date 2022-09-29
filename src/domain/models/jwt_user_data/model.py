@@ -30,13 +30,13 @@ class JwtModel:
         return dw_display_account
 
     def __get_portfolios(self):
-        portfolios = self.jwt_data.get("user_exchange", {}).get("unique_id", {}).get("portfolios")
+        portfolios = self.jwt_data.get("user", {}).get("portfolios")
         if not portfolios:
             raise DataNotFoundInJwt()
         return portfolios
 
     def __get_unique_id(self):
-        unique_id = self.jwt_data.get("user_exchange", {}).get("unique_id")
+        unique_id = self.jwt_data.get("user", {}).get("unique_id")
         if not unique_id:
             raise DataNotFoundInJwt()
         return unique_id

@@ -7,9 +7,6 @@ from src.domain.exceptions.domain.forex.exception import (
 from src.infrastructures.env_config import config
 
 
-# Third party
-
-
 class SimulationModel:
     def __init__(self, customer_exchange_data: dict, payload: CurrencyExchange, forex_account: int):
         self.base = payload.base

@@ -17,5 +17,5 @@ class OperationType(StrEnum):
 
 
 class HalberdCountry(StrEnum):
-    BR = HCountry.BR
-    US = HCountry.US
+    BR = HCountry.BR.value
+    US = HCountry.US.value

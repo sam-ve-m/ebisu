@@ -45,5 +45,5 @@ class LigaInvestStock(ForexMarket):
         )
         bmf_valid_dates_treated = [next_date for next_date in bmf_opening_dates.date]
         nyse_valid_dates_treated = [next_date for next_date in nyse_opening_dates.date]
-        intersection_opening_dates = list(set(nyse_valid_dates_treated) & set(bmf_valid_dates_treated))
+        intersection_opening_dates = sorted(list(set(nyse_valid_dates_treated) & set(bmf_valid_dates_treated)))
         return intersection_opening_dates

@@ -1,6 +1,6 @@
 from src.infrastructures.env_config import config
 from src.infrastructures.redis.infraestructure import RedisInfrastructure
-from src.domain.models.forex.balance.model import AllowedWithdraw
+from src.domain.models.forex.balance.model import AllowedWithdraw, WithdrawValues
 
 
 class ForexBalanceRepository(RedisInfrastructure):
@@ -16,15 +16,6 @@ class ForexBalanceRepository(RedisInfrastructure):
         keys = await redis.keys(redis_hash)
         values = await redis.mget(keys)
         values_decoded = [eval(value.decode()) for value in values]
-        allowed_withdraw = AllowedWithdraw(values=values_decoded)
+        withdraw_values = WithdrawValues(values_decoded)
+        allowed_withdraw = AllowedWithdraw(withdraw_values=withdraw_values)
         return allowed_withdraw
-
-
-# from src.domain.enums.forex.countrys import Country
-# from src.domain.enums.forex.composition_hash_options import Wallet, Balance
-# import asyncio
-#
-#
-# allowed_to_withdraw = asyncio.run(ForexBalanceRepository.get_allowed_to_withdraw(balance_hash=f"4e2617aa-2700-4fd4-acb6-47bc64362aa4:{Country.BR.lower()}:932:{Wallet.BALANCE}:"
-#                                f"{Balance.ALLOWED_TO_WITHDRAW}:*"))
-# print(allowed_to_withdraw.total_available)

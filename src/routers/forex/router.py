@@ -16,14 +16,14 @@ from http import HTTPStatus
 
 class ForexExchange:
 
-    __forex_exchange_router = APIRouter(prefix="/forex", tags=["Forex exchange"])
+    __forex_exchange_router = APIRouter(prefix="/forex", tags=["Foreign exchange"])
 
     @staticmethod
     def get_forex_exchange_router():
         return ForexExchange.__forex_exchange_router
 
     @staticmethod
-    @__forex_exchange_router.get("/currency_exchange_simulation")
+    @__forex_exchange_router.get("/proposal_simulation")
     async def get_exchange_simulation_proposal(
         request: Request, payload: CurrencyExchange = Depends()
     ) -> Response:
@@ -40,7 +40,7 @@ class ForexExchange:
         return response
 
     @staticmethod
-    @__forex_exchange_router.get("/execute_exchange_proposal")
+    @__forex_exchange_router.post("/execute_proposal")
     async def execute_exchange_simulation_proposal(
             request: Request, payload: ForexExecution) -> Response:
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)

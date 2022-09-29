@@ -8,7 +8,7 @@ from src.domain.exceptions.service.forex.exception import (
     ExpiredToken,
     DroppedToken,
     CaronteCantFindToken,
-    UnexpectedErrorWhenTryingToGetExchangeSimulationProposal,
+    UnexpectedErrorInExchangeAPI,
     CustomerQuotationTokenNotFound,
 )
 
@@ -173,7 +173,7 @@ async def test_when_get_customer_token_result_is_token_not_found_then_raises(
 async def test_when_get_customer_token_result_is_unexpected_error_found_then_raises(
     mock_request_caronte, mock_config
 ):
-    with pytest.raises(UnexpectedErrorWhenTryingToGetExchangeSimulationProposal):
+    with pytest.raises(UnexpectedErrorInExchangeAPI):
         await CustomerExchangeService._CustomerExchangeService__get_customer_token_on_route_21(
             customer_exchange_request_model=stub_customer_exchange_request_model
         )
@@ -287,7 +287,7 @@ async def test_when_get_exchange_simulation_result_is_token_not_found_then_raise
 async def test_when_get_exchange_simulation_result_is_unexpected_error_then_raises(
     mock_request_caronte, mock_config
 ):
-    with pytest.raises(UnexpectedErrorWhenTryingToGetExchangeSimulationProposal):
+    with pytest.raises(UnexpectedErrorInExchangeAPI):
         await CustomerExchangeService._CustomerExchangeService__get_exchange_simulation_proposal_data_on_route_22(
             customer_token=stub_token_generated_in_route_21,
             customer_exchange_request_model=stub_customer_exchange_request_model,

@@ -86,7 +86,6 @@ deployment:
         MONGODB_SNAPSHOT_DATABASE: "ebisu"
         MONGODB_SNAPSHOT_COLLECTION: "exchange_user_snapshot"
         DW_AUTHENTICATION_URL: "https://bo-api.drivewealth.io/back-office/auth"
-        DW_BALANCE_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
         DW_GET_ALL_TRANSACTIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
         DW_POSITIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/positions"
         DW_BALANCE_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
@@ -106,6 +105,7 @@ deployment:
         BASE_URL_FROM_EXCHANGE_API: "https://sbxapi.ourinvest.com.br:43400/api/v1"
         CURRENT_CURRENCY_QUOTE_URL: "produto/cambio/naturezaOperacao/{}/taxa/{}/{}/cliente/{}/spread/{}"
         EXCHANGE_SIMULATION_URL: "operacao/cambio/calcular"
+        EXECUTION_URL: "operacao/cambio/remessa/token"
         SPREAD_DEFAULT: "0.02"
         # Mist
         MIST_REDIS_URL: "redis://mist:InPuaku76Jbdsa@172.30.11.235:6379?db=1"

@@ -11,7 +11,7 @@ from pydantic import BaseModel, root_validator
 
 
 class ForexExecution(BaseModel):
-    customer_proposal_token: str
+    proposal_simulation_token: str
     liga_invest_stock_market: LigaInvestStock
 
     class Config:

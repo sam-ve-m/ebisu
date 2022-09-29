@@ -9,6 +9,8 @@ from src.domain.exceptions.domain.forex.exception import (
 from src.domain.date_formatters.region.date_time.model import RegionDateFormat
 from src.domain.models.jwt_user_data.model import JwtModel
 from src.domain.validators.forex.execution_proposal import ForexExecution
+from src.infrastructures.env_config import config
+from halberd import Country as HalberdCountry
 
 
 class ProposalTokenData:
@@ -29,7 +31,7 @@ class ProposalTokenData:
         net_value = self.token_decoded.get("ValorLiquido")
         if not net_value:
             raise DataNotFoundInToken()
-        return net_value
+        return float(net_value)
 
     def __get_nature_operation(self):
         nature_operation = self.token_decoded.get("CodigoNaturezaOperacao")
@@ -49,15 +51,16 @@ class ProposalTokenData:
 class ExecutionModel:
     def __init__(self, payload: ForexExecution, jwt_data: dict, token_decoded: dict):
         self.jwt = JwtModel(jwt_data=jwt_data)
-        self.origin_country = self.__get_origin_country()
-        self.origin_account = self.__get_origin_account()
-        self.destination_country = self.__get_destination_country()
-        self.destination_account = self.__get_destination_account()
-        self.redis_hash = self.get_redis_hash()
         self.stock_market = payload.liga_invest_stock_market
-        self.token = payload.customer_proposal_token
+        self.token = payload.proposal_simulation_token
         self.token_decoded = ProposalTokenData(token_decoded=token_decoded)
         self.operation_type = self.__get_operation_type()
+        self.redis_hash = self.get_redis_hash()
+        self.origin_country = self.__get_origin_country()
+        self.origin_account = self.__get_origin_account()
+        self.halberd_country = self.__get_halberd_country()
+        self.destination_country = self.__get_destination_country()
+        self.destination_account = self.__get_destination_account()
 
     def __get_operation_type(self) -> OperationType:
         map_operation_types_per_hash = {
@@ -93,6 +96,16 @@ class ExecutionModel:
         map_countries_per_hash = {
             "BRL_TO_USD": Country.BR,
             "USD_TO_BRL": Country.US,
+        }
+        origin_country = map_countries_per_hash.get(self.token_decoded.exchange_hash)
+        if not origin_country:
+            raise ErrorGettingValueByExchangeHash()
+        return origin_country
+
+    def __get_halberd_country(self) -> Country:
+        map_countries_per_hash = {
+            "BRL_TO_USD": HalberdCountry.BR,
+            "USD_TO_BRL": HalberdCountry.US,
         }
         origin_country = map_countries_per_hash.get(self.token_decoded.exchange_hash)
         if not origin_country:
@@ -137,10 +150,10 @@ class ExecutionModel:
         }
         return bifrost_template
 
-    def get_execute_proposal_body(self, name: str) -> dict:
+    def get_execute_proposal_body(self, customer_data: dict) -> dict:
         next_d2 = self.stock_market.get_liquidation_date(day=LiquidationDayOptions.D2)
         next_d2_date_time_formatted = next_d2.strftime(RegionDateFormat.BR_DATE_ZULU_FORMAT.value)
-        request_date_time_formatted = self.stock_market.date_time.strftime(RegionDateFormat.BR_DATE_ZULU_FORMAT.value)
+        name = customer_data.get("name")
 
         body = {
             "token": self.token,
@@ -153,18 +166,69 @@ class ExecutionModel:
                 "infoComplementar": f"/{self.origin_account}/{name}"
             },
             "dataLiquidacaoFutura": next_d2_date_time_formatted,  # f"{date}T00:00:00.000Z"
-            "controle": {
-                "dataHoraCliente": request_date_time_formatted,
-                "byPassTokenRefresh": True,
-                "recurso": {
-                    "codigo": "63",
-                    "sigla": "CAAS"
-                },
-                "origem": {
-                    "nome": "SmartCambio.ClientAPI.LIONX",
-                    "chave": "SYSTEM::API::KEY::LIONX",
-                    "endereco": "IP_NOSSO_QUE_ESTA_FAZENDO_A_REQUISIÇÃO",
-                }
-            }
         }
         return body
+
+    @staticmethod
+    def get_execution_url():
+        url_path = f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("EXECUTION_URL")}'
+        return url_path
+
+# jwt_data = {
+#   "exp": 1687961421,
+#   "created_at": 1656425421.60926,
+#   "scope": {
+#     "view_type": "default",
+#     "user_level": "client",
+#     "features": [
+#       "default",
+#       "realtime"
+#     ]
+#   },
+#   "user": {
+#     "unique_id": "40db7fee-6d60-4d73-824f-1bf87edc4491",
+#     "nick_name": "RAST3",
+#     "portfolios": {
+#       "br": {
+#         "bovespa_account": "000000014-6",
+#         "bmf_account": "14"
+#       },
+#       "us": {
+#         "dw_account": "89c69304-018a-40b7-be5b-2121c16e109e.1651525277006",
+#         "dw_display_account": "LX01000001"
+#       }
+#     },
+#     "client_has_br_trade_allowed": True,
+#     "client_has_us_trade_allowed": True,
+#     "client_profile": "investor"
+#   }
+# }
+#
+# token_decoded = {
+#   "CodigoCliente": "208785",
+#   "CodigoNaturezaOperacao": "4",
+#   "SimboloMoedaBase": "BRL",
+#   "SimboloMoedaCotacao": "USD",
+#   "QuantidadeMoedaNegociada": "46.33",
+#   "ValorCotacaoCambio": "5.33770171",
+#   "ValorTarifa": "0",
+#   "ValorBruto": "247.28",
+#   "PercentualIOF": "1.100000",
+#   "ValorIOF": "2.72",
+#   "ValorLiquido": "250.00",
+#   "DataCotacao": "1664477550",
+#   "DataValidade": "1664478234",
+#   "DataPagamento": "1664431200",
+#   "PercentualSpread": "0.0200",
+#   "TaxaComercial": "5.2330",
+#   "tp": "Rv3mfiTL8sBoqhaOoAJciQ==",
+#   "nbf": 1664477550,
+#   "exp": 1664478234,
+#   "iat": 1664478115,
+#   "iss": "208785"
+# }
+#
+# payload = ForexExecution(**{"proposal_simulation_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDb2RpZ29DbGllbnRlIjoiMjA4Nzg1IiwiQ29kaWdvTmF0dXJlemFPcGVyYWNhbyI6IjQiLCJTaW1ib2xvTW9lZGFCYXNlIjoiQlJMIiwiU2ltYm9sb01vZWRhQ290YWNhbyI6IlVTRCIsIlF1YW50aWRhZGVNb2VkYU5lZ29jaWFkYSI6IjQ2LjMzIiwiVmFsb3JDb3RhY2FvQ2FtYmlvIjoiNS4zMzc3MDE3MSIsIlZhbG9yVGFyaWZhIjoiMCIsIlZhbG9yQnJ1dG8iOiIyNDcuMjgiLCJQZXJjZW50dWFsSU9GIjoiMS4xMDAwMDAiLCJWYWxvcklPRiI6IjIuNzIiLCJWYWxvckxpcXVpZG8iOiIyNTAuMDAiLCJEYXRhQ290YWNhbyI6IjE2NjQ0Nzc1NTAiLCJEYXRhVmFsaWRhZGUiOiIxNjY0NDc4MjM0IiwiRGF0YVBhZ2FtZW50byI6IjE2NjQ0MzEyMDAiLCJQZXJjZW50dWFsU3ByZWFkIjoiMC4wMjAwIiwiVGF4YUNvbWVyY2lhbCI6IjUuMjMzMCIsInRwIjoiUnYzbWZpVEw4c0JvcWhhT29BSmNpUT09IiwibmJmIjoxNjY0NDc3NTUwLCJleHAiOjE2NjQ0NzgyMzQsImlhdCI6MTY2NDQ3ODExNSwiaXNzIjoiMjA4Nzg1In0.Gt5aGm6IBBPBmh6bACAeSRx0plwhcViY5h7QfqrevGM"})
+#
+#
+# a = ExecutionModel(payload=payload, jwt_data=jwt_data, token_decoded=token_decoded)

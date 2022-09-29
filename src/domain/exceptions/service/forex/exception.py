@@ -71,16 +71,16 @@ class InvalidToken(ServiceException):
 
 class InsufficientFunds(ServiceException):
     def __init__(self, *args, **kwargs):
-        self.msg = "Invalid token. This is not a valid jwt."
+        self.msg = "Customer does not have enough balance to complete the transaction"
         self.status_code = HTTPStatus.OK
         self.internal_code = InternalCode.INSUFFICIENT_FUNDS
         self.success = True
         super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
 
 
-class UnexpectedErrorWhenTryingToGetExchangeSimulationProposal(ServiceException):
+class UnexpectedErrorInExchangeAPI(ServiceException):
     def __init__(self, *args, **kwargs):
-        self.msg = "Error when trying to get exchange simulation proposal from customer"
+        self.msg = "Error trying to get/post some resource from ExchangeAPI"
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.INTERNAL_SERVER_ERROR
         self.success = False
