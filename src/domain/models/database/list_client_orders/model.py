@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from dataclasses import dataclass
 
 
-class ClientOrdersModel(BaseModel):
+class ClientListOrdersModel(BaseModel):
     name: Optional[str]
     cl_order_id: Optional[str]
     root_cl_order_id: Optional[str]

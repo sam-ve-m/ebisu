@@ -3,6 +3,7 @@ from fastapi import Request, APIRouter, Depends
 
 # MODELS
 from src.domain.account_close_steps.response.model import AccountCloseStepsResponse
+from src.domain.models.response.client_orders.response_model import ClientOrdersResponse
 from src.domain.statement.br.response.model import (
     StatementResponse as BrStatementResponse,
 )
@@ -40,7 +41,7 @@ from src.services.statement.get_statement import GetStatement
 from src.services.jwt.service_jwt import JwtService
 from src.services.list_broker_note.list_broker_note import ListBrokerNote
 from src.domain.models.response.list_client_orders.response_model import ClientListOrdersResponse
-from src.domain.models.response.count_quantity_client_orders.response_model import QuantityResponse
+from src.domain.models.response.client_orders_quantity.response_model import QuantityResponse
 
 
 class ExchangeRouter:
@@ -97,6 +98,7 @@ class ExchangeRouter:
     @__exchange_router.get(
         "/client_orders",
         tags=["Client Orders"],
+        response_model=list[ClientOrdersResponse]
 
     )
     async def get_client_orders(

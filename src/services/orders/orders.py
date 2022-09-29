@@ -6,14 +6,16 @@ from nidavellir import Sindri
 from src.domain.enums.order_status import OrderStatus
 from src.domain.enums.order_tifs import OrderTifs
 from src.domain.enums.region import Region
-from src.domain.models.database.count_client_orders.model import QuantityModel
-from src.domain.models.response.count_quantity_client_orders.response_model import QuantityResponse
+from src.domain.models.database.client_orders.model import ClientOrdersModel
+from src.domain.models.database.client_orders_quantity.model import QuantityModel
+from src.domain.models.response.client_orders.response_model import ClientOrdersResponse
+from src.domain.models.response.client_orders_quantity.response_model import QuantityResponse
 from src.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
 from src.domain.validators.exchange_info.count_client_order_validator import GetClientOrderQuantityModel
 from src.domain.validators.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
 )
-from src.domain.models.database.list_client_orders.model import ClientOrdersModel
+from src.domain.models.database.list_client_orders.model import ClientListOrdersModel
 from src.repositories.companies_data.repository import CompanyInformationRepository
 from src.domain.time_formatter.time_formatter import str_to_timestamp
 from src.domain.currency_map.country_to_currency.map import country_to_currency
@@ -48,7 +50,7 @@ class Orders:
         return 0
 
     @staticmethod
-    async def normalize_list_open_order(user_trade: dict, region: Region) -> dict:
+    async def normalize_list_open_order(user_trade: dict, region: Region) -> ClientListOrdersModel:
         currency = country_to_currency[region]
         accumulated_quantity = user_trade.get("CUMQTY")
         side = user_trade.get("SIDE")
@@ -73,7 +75,7 @@ class Orders:
                     * Orders.decimal_128_converter(user_trade, "AVGPX")
             ),
         }
-        response_model = ClientOrdersModel(**normalized_data)
+        response_model = ClientListOrdersModel(**normalized_data)
 
         return response_model
 
@@ -93,7 +95,7 @@ class Orders:
     @classmethod
     async def get_list_client_orders(
         cls, jwt_data: dict, list_client_orders: ListClientOrderModel
-    ) -> List[dict]:
+    ) -> ResponseModel:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
 
@@ -127,7 +129,7 @@ class Orders:
     @classmethod
     async def get_client_orders_quantity(
             cls, jwt_data: dict, client_order_quantity: GetClientOrderQuantityModel
-    ) -> List[dict]:
+    ) -> ResponseModel:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
 
@@ -143,8 +145,7 @@ class Orders:
             accounts=accounts,
             order_status=order_status_res,
         )
-        orders_in_status = [{"COUNT": 15431}]
-        # open_orders.oracle_singleton_instance.get_data(sql=query)
+        orders_in_status = open_orders.oracle_singleton_instance.get_data(sql=query)
         if orders_in_status:
             count = orders_in_status.pop()
             response_model = QuantityModel(quantity=count["COUNT"])
@@ -164,7 +165,7 @@ class Orders:
         return OrderTifs.NOT_AVAILABLE.value
 
     @staticmethod
-    def normalize_client_orders_open_order(user_trade: dict, region: Region) -> dict:
+    def normalize_client_orders_open_order(user_trade: dict, region: Region) -> ClientOrdersModel:
         side = user_trade.get("SIDE")
         accumulated_quantity = user_trade.get("CUMQTY")
         currency = country_to_currency[region]
@@ -200,12 +201,13 @@ class Orders:
             else None,
             "error_message": user_trade.get("MESSAGE"),
         }
-        return normalized_data
+        response_model = ClientOrdersModel(**normalized_data)
+        return response_model
 
     @classmethod
     def get_client_orders(
             cls, client_order: GetClientOrderModel, jwt_data: dict
-    ) -> List[dict]:
+    ) -> ResponseModel:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
 
@@ -223,4 +225,10 @@ class Orders:
             Orders.normalize_client_orders_open_order(user_open_order, client_order.region)
             for user_open_order in user_open_orders
         ]
-        return data
+        response_model = ClientOrdersResponse.to_response(
+            models=data
+        )
+        response = ResponseModel(
+            success=True, result=response_model, internal_code=InternalCode.SUCCESS
+        ).build_http_response(status_code=HTTPStatus.OK)
+        return response

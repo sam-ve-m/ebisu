@@ -1,4 +1,4 @@
-from src.domain.models.database.count_client_orders.model import QuantityModel
+from src.domain.models.database.client_orders_quantity.model import QuantityModel
 from typing import Optional
 from pydantic import BaseModel
 

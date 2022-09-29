@@ -1,6 +1,6 @@
-from typing import List, Optional, TypeVar
+from typing import Optional
 from pydantic import BaseModel
-from src.domain.models.database.list_client_orders.model import ClientOrdersModel
+from src.domain.models.database.list_client_orders.model import ClientListOrdersModel
 
 
 class ClientListOrdersResponse(BaseModel):
@@ -20,7 +20,7 @@ class ClientListOrdersResponse(BaseModel):
     total_spent: Optional[float]
 
     @classmethod
-    def to_response(cls, models: list[ClientOrdersModel]):
+    def to_response(cls, models: list[ClientListOrdersModel]):
         orders = [
             ClientListOrdersResponse(
                 name=model.name,
