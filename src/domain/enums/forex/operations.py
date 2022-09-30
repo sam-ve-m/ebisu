@@ -2,7 +2,6 @@
 from enum import IntEnum
 
 # Third party
-from halberd import Country as HCountry
 from strenum import StrEnum
 
 
@@ -15,7 +14,3 @@ class OperationType(StrEnum):
     BRL_TO_USD = "OUT"
     USD_TO_BRL = "IN"
 
-
-class HalberdCountry(StrEnum):
-    BR = HCountry.BR.value
-    US = HCountry.US.value

@@ -2,13 +2,11 @@
 from src.core.interfaces.domain.models.forex.markets.interface import ForexMarket
 from src.domain.enums.forex.liquidation_date import LiquidationDayOptions
 from src.domain.exceptions.domain.forex.exception import ClosedForexOperations
+from src.infrastructures.env_config import config
 
 # Standards
 from datetime import date
 from typing import List
-
-# Third party
-from decouple import config
 
 
 class LigaInvestStock(ForexMarket):

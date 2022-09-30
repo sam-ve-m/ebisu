@@ -86,3 +86,11 @@ class UnexpectedErrorInExchangeAPI(ServiceException):
         self.success = False
         super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
 
+
+class ErrorTryingToDecodeJwt(ServiceException):
+    def __init__(self, *args, **kwargs):
+        self.msg = "Error to decode OuroInvest JWT. it's probably expired"
+        self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+        self.internal_code = InternalCode.JWT_INVALID
+        self.success = False
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)

@@ -5,7 +5,7 @@ from src.repositories.base_repositories.mongo_db.base import MongoDbBaseReposito
 
 
 class ProposalExecutionRepository(MongoDbBaseRepository):
-    database = config("MONGODB_DATABASE_NAME")
+    database = config("MONGODB_DATABASE_EBISU")
     collection = config("MONGODB_PROPOSALS_EXECUTED")
 
     @classmethod

@@ -159,13 +159,13 @@ class ExecutionModel:
             "token": self.token,
             "dadosBeneficiario": {
                 "siglaPaisBanco": Country.US,
-                "nomeBanco": "JPMorgan Chase Bank, National Association",
-                "codigoSWIFTBanco": "CHASUS33",
-                "nomeBeneficiario": "DriveWealth LLC",
-                "contaBeneficiario": "10000337256168",
+                "nomeBanco": config("BENEFICIARY_BANK_NAME"),
+                "codigoSWIFTBanco": config("BENEFICIARY_SWIFT_BANK_CODE"),
+                "nomeBeneficiario": config("BENEFICIARY_NAME"),
+                "contaBeneficiario": config("BENEFICIARY_ACCOUNT"),
                 "infoComplementar": f"/{self.origin_account}/{name}"
             },
-            "dataLiquidacaoFutura": next_d2_date_time_formatted,  # f"{date}T00:00:00.000Z"
+            "dataLiquidacaoFutura": next_d2_date_time_formatted,
         }
         return body
 
@@ -173,62 +173,3 @@ class ExecutionModel:
     def get_execution_url():
         url_path = f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("EXECUTION_URL")}'
         return url_path
-
-# jwt_data = {
-#   "exp": 1687961421,
-#   "created_at": 1656425421.60926,
-#   "scope": {
-#     "view_type": "default",
-#     "user_level": "client",
-#     "features": [
-#       "default",
-#       "realtime"
-#     ]
-#   },
-#   "user": {
-#     "unique_id": "40db7fee-6d60-4d73-824f-1bf87edc4491",
-#     "nick_name": "RAST3",
-#     "portfolios": {
-#       "br": {
-#         "bovespa_account": "000000014-6",
-#         "bmf_account": "14"
-#       },
-#       "us": {
-#         "dw_account": "89c69304-018a-40b7-be5b-2121c16e109e.1651525277006",
-#         "dw_display_account": "LX01000001"
-#       }
-#     },
-#     "client_has_br_trade_allowed": True,
-#     "client_has_us_trade_allowed": True,
-#     "client_profile": "investor"
-#   }
-# }
-#
-# token_decoded = {
-#   "CodigoCliente": "208785",
-#   "CodigoNaturezaOperacao": "4",
-#   "SimboloMoedaBase": "BRL",
-#   "SimboloMoedaCotacao": "USD",
-#   "QuantidadeMoedaNegociada": "46.33",
-#   "ValorCotacaoCambio": "5.33770171",
-#   "ValorTarifa": "0",
-#   "ValorBruto": "247.28",
-#   "PercentualIOF": "1.100000",
-#   "ValorIOF": "2.72",
-#   "ValorLiquido": "250.00",
-#   "DataCotacao": "1664477550",
-#   "DataValidade": "1664478234",
-#   "DataPagamento": "1664431200",
-#   "PercentualSpread": "0.0200",
-#   "TaxaComercial": "5.2330",
-#   "tp": "Rv3mfiTL8sBoqhaOoAJciQ==",
-#   "nbf": 1664477550,
-#   "exp": 1664478234,
-#   "iat": 1664478115,
-#   "iss": "208785"
-# }
-#
-# payload = ForexExecution(**{"proposal_simulation_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDb2RpZ29DbGllbnRlIjoiMjA4Nzg1IiwiQ29kaWdvTmF0dXJlemFPcGVyYWNhbyI6IjQiLCJTaW1ib2xvTW9lZGFCYXNlIjoiQlJMIiwiU2ltYm9sb01vZWRhQ290YWNhbyI6IlVTRCIsIlF1YW50aWRhZGVNb2VkYU5lZ29jaWFkYSI6IjQ2LjMzIiwiVmFsb3JDb3RhY2FvQ2FtYmlvIjoiNS4zMzc3MDE3MSIsIlZhbG9yVGFyaWZhIjoiMCIsIlZhbG9yQnJ1dG8iOiIyNDcuMjgiLCJQZXJjZW50dWFsSU9GIjoiMS4xMDAwMDAiLCJWYWxvcklPRiI6IjIuNzIiLCJWYWxvckxpcXVpZG8iOiIyNTAuMDAiLCJEYXRhQ290YWNhbyI6IjE2NjQ0Nzc1NTAiLCJEYXRhVmFsaWRhZGUiOiIxNjY0NDc4MjM0IiwiRGF0YVBhZ2FtZW50byI6IjE2NjQ0MzEyMDAiLCJQZXJjZW50dWFsU3ByZWFkIjoiMC4wMjAwIiwiVGF4YUNvbWVyY2lhbCI6IjUuMjMzMCIsInRwIjoiUnYzbWZpVEw4c0JvcWhhT29BSmNpUT09IiwibmJmIjoxNjY0NDc3NTUwLCJleHAiOjE2NjQ0NzgyMzQsImlhdCI6MTY2NDQ3ODExNSwiaXNzIjoiMjA4Nzg1In0.Gt5aGm6IBBPBmh6bACAeSRx0plwhcViY5h7QfqrevGM"})
-#
-#
-# a = ExecutionModel(payload=payload, jwt_data=jwt_data, token_decoded=token_decoded)

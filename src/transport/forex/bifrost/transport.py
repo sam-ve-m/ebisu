@@ -14,17 +14,17 @@ class BifrostTransport:
     withdraw_topic = BifrostTopics.DRIVE_WEALTH_WITHDRAW
 
     @classmethod
-    async def send_solicitation_to_queue(cls, execution_model: ExecutionModel) -> True:
+    async def build_template_and_send(cls, execution_model: ExecutionModel) -> True:
         message = execution_model.get_bifrost_template()
         if execution_model.operation_type == OperationType.BRL_TO_USD:
-            await cls.send_to_bifrost(message=message, topic=cls.ted_topic)
-            await cls.send_to_bifrost(message=message, topic=cls.buy_power_topic)
+            await cls.send_to_queue(message=message, topic=cls.ted_topic)
+            await cls.send_to_queue(message=message, topic=cls.buy_power_topic)
             return True
-        await cls.send_to_bifrost(message=message, topic=cls.withdraw_topic)
+        await cls.send_to_queue(message=message, topic=cls.withdraw_topic)
         return True
 
     @staticmethod
-    async def send_to_bifrost(message: dict, topic: BifrostTopics):
+    async def send_to_queue(message: dict, topic: BifrostTopics):
         success, bifrost_status = await BifrostClient.send_to_bifrost(
             message=message,
             topic=topic,
@@ -35,4 +35,4 @@ class BifrostTransport:
                 bifrost_status=bifrost_status,
                 message=msg
             )
-            raise ErrorSendingToBifrostClient(msg=msg)
+            raise ErrorSendingToBifrostClient()

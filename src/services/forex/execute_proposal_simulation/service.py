@@ -1,5 +1,5 @@
 # Ebisu
-from src.domain.exceptions.repository.forex.exception import CustomerPersonalDataNotFound
+from src.domain.exceptions.repository.forex.exception import CustomerPersonalDataNotFound, ErrorTryingToInsertData
 from src.domain.exceptions.service.forex.exception import (
     ErrorTryingToLockResource, ErrorTryingToUnlock, InsufficientFunds
 )
@@ -26,7 +26,7 @@ from halberd import (
 class ExecutionExchangeService:
 
     @classmethod
-    async def execute_exchange_proposal(cls, payload: ForexExecution, jwt_data: dict):
+    async def execute_exchange_proposal(cls, payload: ForexExecution, jwt_data: dict) -> True:
         token_decoded = await JwtForexService.decode(jwt_token=payload.proposal_simulation_token)
         execution_model = ExecutionModel(
             jwt_data=jwt_data,
@@ -36,13 +36,13 @@ class ExecutionExchangeService:
         await cls.check_customer_has_enough_balance(execution_model=execution_model)
         content = await cls.execute_proposal_on_route_23(execution_model=execution_model)
 
-        # await BifrostTransport.send_solicitation_to_queue(execution_model=execution_model)
+        # await BifrostTransport.build_template_and_send(execution_model=execution_model)
         execution_response_model = ExecutionResponseModel.get_model(
             execution_response=content,
             unique_id=execution_model.jwt.unique_id
         )
-        await ProposalExecutionRepository.insert_exchange_proposal(execution_response_model=execution_response_model)
-        return execution_response_model.dict()
+        await cls.__insert_execution_response_data(execution_response_model=execution_response_model)
+        return True
 
     @classmethod
     async def check_customer_has_enough_balance(cls, execution_model: ExecutionModel):
@@ -54,7 +54,6 @@ class ExecutionExchangeService:
         )
         lock = await cls.__lock_balance(resource=resource)
         try:
-            lock = await cls.__lock_balance(resource=resource)
             allowed_to_withdraw: AllowedWithdraw = await ForexBalanceRepository.get_allowed_to_withdraw(
                 redis_hash=execution_model.redis_hash
             )
@@ -90,7 +89,7 @@ class ExecutionExchangeService:
         return lock
 
     @staticmethod
-    async def __unlock_balance(lock):
+    async def __unlock_balance(lock) -> True:
         if not lock:
             return True
         success, unlock_status = await BalanceLockManagerService.unlock_balance(lock=lock)
@@ -105,3 +104,12 @@ class ExecutionExchangeService:
         if not name:
             raise CustomerPersonalDataNotFound()
         return name
+
+    @staticmethod
+    async def __insert_execution_response_data(execution_response_model: ExecutionResponseModel):
+        result = await ProposalExecutionRepository.insert_exchange_proposal(
+            execution_response_model=execution_response_model
+        )
+        if not result:
+            raise ErrorTryingToInsertData()
+        return True

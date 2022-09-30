@@ -2,13 +2,11 @@
 from src.domain.enums.forex.liquidation_date import LiquidationDayOptions
 from src.domain.enums.forex.time_zones import TimeZones
 from src.domain.models.forex.markets.calendar.model import ForexMarketCalendars
+from src.infrastructures.env_config import config
 
 # Standards
 from abc import ABC, abstractmethod
 from datetime import datetime, date, timedelta
-
-# Third party
-from decouple import config
 
 
 class ForexMarket(ABC):

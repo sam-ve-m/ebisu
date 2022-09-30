@@ -8,7 +8,7 @@ from http import HTTPStatus
 
 class ErrorSendingToBifrostClient(TransportException):
     def __init__(self, *args, **kwargs):
-        self.msg = ''
+        self.msg = "Error trying sending to bifrost queue"
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.ERROR_IN_BIFROST_CLIENT
         self.success = False
