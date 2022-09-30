@@ -36,7 +36,7 @@ class ExecutionExchangeService:
         await cls.check_customer_has_enough_balance(execution_model=execution_model)
         content = await cls.execute_proposal_on_route_23(execution_model=execution_model)
 
-        # await BifrostTransport.build_template_and_send(execution_model=execution_model)
+        await BifrostTransport.build_template_and_send(execution_model=execution_model)
         execution_response_model = ExecutionResponseModel.get_model(
             execution_response=content,
             unique_id=execution_model.jwt.unique_id

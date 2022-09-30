@@ -33,6 +33,15 @@ class DroppedToken(ServiceException):
         super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
 
 
+class ErrorTryingToGetUniqueId(ServiceException):
+    def __init__(self, *args, **kwargs):
+        self.msg = "Error trying to get unique_id from jwt_data"
+        self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+        self.internal_code = InternalCode.DATA_NOT_FOUND
+        self.success = False
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+
+
 class ExpiredToken(ServiceException):
     def __init__(self, *args, **kwargs):
         self.msg = "Exceeded time limit to execute foreign exchange transaction"
