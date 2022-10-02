@@ -12,7 +12,7 @@ class ClosedForexOperations(DomainException):
         self.status_code = HTTPStatus.BAD_REQUEST
         self.internal_code = InternalCode.INVALID_PARAMS
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
 
 
 class DataNotFoundInToken(DomainException):
@@ -21,7 +21,7 @@ class DataNotFoundInToken(DomainException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.DATA_VALIDATION_ERROR
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
 
 
 class ErrorGettingValueByExchangeHash(DomainException):
@@ -30,7 +30,7 @@ class ErrorGettingValueByExchangeHash(DomainException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.DATA_VALIDATION_ERROR
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
 
 
 class DataNotFoundInJwt(DomainException):
@@ -39,7 +39,7 @@ class DataNotFoundInJwt(DomainException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.DATA_VALIDATION_ERROR
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
 
 
 class ErrorValidatingSimulationProposalData(DomainException):
@@ -48,7 +48,7 @@ class ErrorValidatingSimulationProposalData(DomainException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.DATA_VALIDATION_ERROR
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
 
 
 class InvalidOperation(DomainException):
@@ -57,7 +57,7 @@ class InvalidOperation(DomainException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.NOT_IMPLEMENTED
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
 
 
 class InvalidRedisHashCombination(DomainException):
@@ -66,7 +66,7 @@ class InvalidRedisHashCombination(DomainException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.NOT_IMPLEMENTED
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
 
 
 class OperationNotImplemented(DomainException):
@@ -75,7 +75,7 @@ class OperationNotImplemented(DomainException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.NOT_IMPLEMENTED
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
 
 
 class SpreadTaxNotFound(DomainException):
@@ -84,4 +84,4 @@ class SpreadTaxNotFound(DomainException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.DATA_NOT_FOUND
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)

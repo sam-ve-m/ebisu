@@ -12,7 +12,7 @@ class CustomerForexDataNotFound(RepositoryException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.DATA_NOT_FOUND
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
 
 
 class CustomerPersonalDataNotFound(RepositoryException):
@@ -21,7 +21,7 @@ class CustomerPersonalDataNotFound(RepositoryException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.DATA_NOT_FOUND
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
 
 
 class ErrorTryingToInsertData(RepositoryException):
@@ -30,7 +30,7 @@ class ErrorTryingToInsertData(RepositoryException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.INTERNAL_SERVER_ERROR
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
 
 
 class ErrorTryingToGetForexAccountNumber(RepositoryException):
@@ -39,4 +39,4 @@ class ErrorTryingToGetForexAccountNumber(RepositoryException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.DATA_NOT_FOUND
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, args, kwargs)
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
