@@ -122,6 +122,13 @@ deployment:
         REDIS_FOREX_DB: "1"
         SPREAD_DEFAULT: "0.02"
         BIFROST_KAFKA_BROKERS: "172.30.16.124:9094"
+        # Halberd
+        HALBERD_LOCK_MANAGER_REDIS_URLS: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
+        HALBERD_BALANCE_RETRY_COUNT: "100"
+        HALBERD_BALANCE_RETRY_DELAY_MIN: "0.2"
+        HALBERD_BALANCE_RETRY_DELAY_MAX: "1"
+        HALBERD_BALANCE_LOCK_MANAGER_TIMEOUT: "15"
+        HALBERD_BALANCE_LOCK_MANAGER_IDENTIFIER: "ebisu-forex"
         # Mist
         MIST_REDIS_URL: "redis://mist:InPuaku76Jbdsa@172.30.11.235:6379?db=1"
         MIST_AWS_ACCESS_KEY_ID: "AKIATZVFXI25USQWCS5O"
