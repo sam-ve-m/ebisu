@@ -3,10 +3,10 @@ from pydantic import BaseModel
 from fastapi import Query
 
 from src.domain.enums.region import Region
+from src.domain.validators.orders.order_status import OrderStatusValidator
 
 
-class ListClientOrderModel(BaseModel):
+class ListClientOrderModel(OrderStatusValidator):
     region: Region
     limit: int
     offset: int
-    order_status: Optional[str] = Query(None)

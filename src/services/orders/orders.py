@@ -16,6 +16,7 @@ from src.domain.validators.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
 )
 from src.domain.models.database.list_client_orders.model import ClientListOrdersModel
+from src.domain.validators.orders.order_status import OrderStatusValidator
 from src.repositories.companies_data.repository import CompanyInformationRepository
 from src.domain.time_formatter.time_formatter import str_to_timestamp
 from src.domain.currency_map.country_to_currency.map import country_to_currency
@@ -29,18 +30,6 @@ from src.services.orders.strategies import order_region
 
 class Orders:
     company_information_repository = CompanyInformationRepository
-
-    @classmethod
-    def pipe_to_list(cls, data: str):
-        list_data = None
-        if isinstance(data, str):
-            data = data.upper()
-            list_data = data.split("|")
-
-        if list_data is None:
-            return []
-
-        return [OrderStatus[status] for status in list_data]
 
     @staticmethod
     def decimal_128_converter(user_trade: dict, field: str) -> float:
@@ -105,13 +94,12 @@ class Orders:
         accounts = cls.get_accounts_by_region(region_portfolios, region)
 
         open_orders = order_region[region]
-        order_status_res = Orders.pipe_to_list(list_client_orders.order_status)
 
         query = open_orders.build_query(
             accounts=accounts,
             offset=list_client_orders.offset,
             limit=list_client_orders.limit,
-            order_status=order_status_res,
+            order_status=list_client_orders.order_status,
         )
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
         data = [
@@ -139,11 +127,10 @@ class Orders:
         accounts = cls.get_accounts_by_region(region_portfolios, region)
 
         open_orders = order_region[region]
-        order_status_res = Orders.pipe_to_list(client_order_quantity.order_status)
 
         query = open_orders.build_quantity_query(
             accounts=accounts,
-            order_status=order_status_res,
+            order_status=client_order_quantity.order_status,
         )
         orders_in_status = open_orders.oracle_singleton_instance.get_data(sql=query)
         if orders_in_status:
