@@ -1,42 +1,24 @@
-# OUTSIDE LIBRARIES
-
+# EXTERNAL LIBS
 from src.infrastructures.env_config import config
-
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 
 
 class UserRepository(MongoDbBaseRepository):
-
-    database = config("MONGODB_SNAPSHOT_DATABASE")
-    collection = config("MONGODB_EXCHANGE_COLLECTION")
+    database = config("MONGODB_DATABASE_NAME")
+    collection = config("MONGODB_USER_COLLECTION")
 
     @classmethod
-    async def get_user_portfolios(cls, unique_id: str):
-        user_portfolios = await cls.find_one(
-            query={"unique_id": unique_id}, project={"portfolios": True, "_id": False}
+    async def get_customer_name(cls, unique_id: str) -> dict:
+        name = await cls.find_one(
+            query={"unique_id": unique_id},
+            project={"name": 1, '_id': 0}
         )
-        return user_portfolios["portfolios"]
+        return name
 
     @classmethod
-    async def get_user_account_creation_date(cls, unique_id: str):
-        user_data = await cls.find_one(query={"unique_id": unique_id})
-
-        creation_date = user_data.get("created_at")
-
-        return creation_date
-
-    @classmethod
-    async def get_user_exchange_data(cls, exchange_account_id: int, base: str, quote: str) -> dict:
-        user_exchange_data = await cls.find_one(
-            query={"exchange_account_id": exchange_account_id, "base": base, "quote": quote}
+    async def get_forex_account(cls, unique_id: str) -> dict:
+        forex_account_number = await cls.find_one(
+            query={"unique_id": unique_id},
+            project={"account_number": 1, '_id': 0}
         )
-
-        if not user_exchange_data:
-            user_exchange_data = {
-                "exchange_account_id": exchange_account_id,
-                "base": base,
-                "quote": quote,
-                "spread": config("SPREAD_DEFAULT")
-            }
-
-        return user_exchange_data
+        return forex_account_number

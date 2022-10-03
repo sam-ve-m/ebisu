@@ -13,7 +13,10 @@ class InternalCode(IntEnum):
     INTERNAL_SERVER_ERROR = 100
     DROPPED_TOKEN = 200
     EXPIRED_TOKEN = 201
+    INSUFFICIENT_FUNDS = 202
     ERROR_IN_CARONTE = 300
+    ERROR_IN_HALBERD = 400
+    ERROR_IN_BIFROST_CLIENT = 500
 
     def __repr__(self):
         return self.value

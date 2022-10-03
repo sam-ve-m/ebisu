@@ -8,7 +8,7 @@ class DomainException(Exception):
         self.success = success
         self.msg = msg
         self.status_code = status_code
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class RepositoryException(Exception):
@@ -17,7 +17,7 @@ class RepositoryException(Exception):
         self.success = success
         self.msg = msg
         self.status_code = status_code
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class ServiceException(Exception):
@@ -26,7 +26,7 @@ class ServiceException(Exception):
         self.success = success
         self.msg = msg
         self.status_code = status_code
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class TransportException(Exception):
@@ -35,4 +35,4 @@ class TransportException(Exception):
         self.success = success
         self.msg = msg
         self.status_code = status_code
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)

@@ -1,7 +1,7 @@
 # Ebisu
-from src.domain.validators.forex_exchange.currency_options import CurrencyExchange
-from src.domain.models.forex_exchange.customer_exchange_request_data.model import (
-    CustomerExchangeRequestModel,
+from src.domain.validators.forex.currency_options import CurrencyExchange
+from src.domain.models.forex.proposal.simulation_request_data.model import (
+    SimulationModel,
 )
 
 # Third party
@@ -49,7 +49,7 @@ stub_customer_exchange_data = {
     "spread": 0.02,
 }
 
-stub_customer_exchange_request_model = CustomerExchangeRequestModel(
+stub_customer_exchange_request_model = SimulationModel(
     exchange_account_id=12345,
     currency_exchange=stub_currency_exchange,
     customer_exchange_data=stub_customer_exchange_data,
