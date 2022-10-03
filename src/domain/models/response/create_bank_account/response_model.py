@@ -1,4 +1,4 @@
-from src.domain.models.database.bank_account import BankAccountModel
+from src.domain.models.database.bank_account.model import BankAccountModel
 
 from typing import List, Optional, TypeVar
 from pydantic import BaseModel

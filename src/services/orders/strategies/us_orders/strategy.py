@@ -25,6 +25,31 @@ class GetUsOrders:
         return query
 
     @staticmethod
+    def build_quantity_query(
+            accounts: List[str],
+            order_status: List[OrderStatus],
+    ) -> str:
+        query = f"""SELECT count(*) as count
+                        FROM UDRIVDB001.VW_CURRENT_EXECUTION_REPORTS B
+                        WHERE B.ACCOUNT in ('{"','".join(accounts)}')
+                        {GetUsOrders.filter(order_status)}                   
+                        ORDER BY B.TRANSACTTIME DESC
+                        """
+        return query
+
+    @staticmethod
+    def build_client_orders_query(accounts: List[str], clordid: str) -> str:
+        query = f"""
+                        SELECT C.MESSAGE, A.*
+                        FROM UDRIVDB001.VW_HIERARCHY_EXECUTION_REPORTS A
+                        LEFT JOIN UORDEDB001.MAP_ORDERS_REJECT_REASON_TO_SIGAME_MESSAGES B ON A.ORDREJREASON = B.B3_MESSAGE_ID
+                        LEFT JOIN UORDEDB001.SIGAME_ORDERS_MESSAGES C ON B.SIGAME_MESSAGE_ID = C.SIGAME_MESSAGE_ID
+                        WHERE NODE_ACCOUNT in ('{"', '".join(accounts)}') AND NODE_CLORDID = '{clordid}'
+                        ORDER BY CREATEDAT DESC
+                        """
+        return query
+
+    @staticmethod
     def filter(order_status: List[OrderStatus]):
         if not order_status:
             filter_order_status = ""
