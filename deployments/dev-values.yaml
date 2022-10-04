@@ -58,7 +58,7 @@ deployment:
     containers: 
     - name: ebisu
       imagename: null
-      tag: 1.2.0-1
+      tag: 1.2.0-2
       containerPorts: 8000
 
       probes:
@@ -121,8 +121,12 @@ deployment:
         REDIS_BALANCE_DB: "0"
         REDIS_FOREX_DB: "1"
         SPREAD_DEFAULT: "0.02"
+        PAID_EARNINGS_URL: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Pagos"
+        PROVISIONED_EARNINGS_URL: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Provisionados"
+        TRANSFER_WINDOW_START: "11:00:00"
+        TRANSFER_WINDOW_END: "19:30:00"
         # Bifrost client
-        BIFROST_KAFKA_BROKERS: "172.30.16.124:9094"
+        BIFROST_KAFKA_BROKERS: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
         # Halberd
         HALBERD_LOCK_MANAGER_REDIS_URLS: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
         HALBERD_BALANCE_RETRY_COUNT: "100"
@@ -207,10 +211,7 @@ deployment:
         FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX: "0.7"
         FLOKI_CLIENT_AUTHENTICATION_LOCK_MANAGER_TIMEOUT: "5"
         FLOKI_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER: "sinacor_authentication_bifrost"
-        PAID_EARNINGS_URL: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Pagos"
-        PROVISIONED_EARNINGS_URL: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Provisionados"
-        TRANSFER_WINDOW_START: "11:00:00"
-        TRANSFER_WINDOW_END: "19:30:00"
+
       
       resources:
         requests:
