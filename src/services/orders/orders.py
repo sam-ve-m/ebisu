@@ -109,10 +109,7 @@ class Orders:
         response_model = ClientListOrdersResponse.to_response(
             models=data
         )
-        response = ResponseModel(
-            success=True, result=response_model, internal_code=InternalCode.SUCCESS
-        ).build_http_response(status_code=HTTPStatus.OK)
-        return response
+        return response_model
 
     @classmethod
     async def get_client_orders_quantity(
@@ -139,10 +136,7 @@ class Orders:
             quantity_response_model = QuantityResponse.to_response(model=response_model)
             client_quantity_result = quantity_response_model.dict()
             Sindri.dict_to_primitive_types(client_quantity_result)
-            response = ResponseModel(
-                success=True, result=client_quantity_result, internal_code=InternalCode.SUCCESS
-            ).build_http_response(status_code=HTTPStatus.OK)
-            return response
+            return client_quantity_result
 
     @staticmethod
     def tiff_response_converter(tif_value: str):
@@ -215,7 +209,4 @@ class Orders:
         response_model = ClientOrdersResponse.to_response(
             models=data
         )
-        response = ResponseModel(
-            success=True, result=response_model, internal_code=InternalCode.SUCCESS
-        ).build_http_response(status_code=HTTPStatus.OK)
-        return response
+        return response_model

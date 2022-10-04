@@ -1,4 +1,6 @@
 # Standard Libs
+from typing import List
+
 from fastapi import Request, APIRouter, Depends
 
 # MODELS
@@ -98,7 +100,7 @@ class ExchangeRouter:
     @__exchange_router.get(
         "/client_orders",
         tags=["Client Orders"],
-        response_model=list[ClientOrdersResponse]
+        response_model=List[ClientOrdersResponse]
 
     )
     async def get_client_orders(
@@ -112,7 +114,7 @@ class ExchangeRouter:
     @__exchange_router.get(
         "/list_client_orders",
         tags=["Client Orders"],
-        response_model=list[ClientListOrdersResponse],
+        response_model=List[ClientListOrdersResponse],
     )
     async def list_client_orders(
         request: Request, list_client_orders: ListClientOrderModel = Depends()

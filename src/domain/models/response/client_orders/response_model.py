@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 from src.domain.models.database.client_orders.model import ClientOrdersModel
 
@@ -29,7 +29,7 @@ class ClientOrdersResponse(BaseModel):
 
 
     @classmethod
-    def to_response(cls, models: list[ClientOrdersModel]):
+    def to_response(cls, models: List[ClientOrdersModel]):
         orders = [
             ClientOrdersResponse(
                 cl_order_id=model.cl_order_id,
