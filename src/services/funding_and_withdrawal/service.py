@@ -1,8 +1,6 @@
-from typing import Type, Union
+from typing import Union
 
-from src.domain.models.account.fingerprit import Fingerprint, IsPrimaryAccount
 from src.domain.enums.region import Region
-from src.domain.exceptions.model import MoneyFlowResolverNoFoundError
 from src.domain.models.account.bank import BankAccount
 from src.domain.models.account.exchanges import ExchangeAccount
 from src.domain.validators.funding_and_withdrawal.validators import (
@@ -46,7 +44,7 @@ class FundingAndWithdrawalService:
         )
 
         resume = await transfer_to_external_bank()
-        Sindri.dict_to_primitive_types(resume)
+
         return resume
 
     @classmethod

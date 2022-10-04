@@ -92,13 +92,13 @@ deployment:
         DW_POSITIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/positions"
         DW_BALANCE_URL: "https://bo-api:drivewealth:io/back-office/accounts/{}/summary/money"
         FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
-        FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB: "2"
+        FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB: "1"
         AWS_ACCESS_KEY_ID: "AKIATZVFXI25USQWCS5O"
         AWS_SECRET_ACCESS_KEY: "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"
         REGION_NAME: "sa-east-1"
         AWS_FILE_BUCKET_NAME: "brokerage-note-and-bank-statement-dev"
         JWT_FILE_BUCKET_NAME: "heimdall_rsa"
-        BUCKET_NAME_KEY: "auth-gateway-keys-uat"
+        BUCKET_NAME_KEY: "auth-gateway-keys-dev"
         REDIS_HOST_URL: 'redis://ebisu:DAlnafcnmmcsa1@172.30.11.235:6379'
         REDIS_CACHE_DB: "1"
         BANK_CODE: "469"

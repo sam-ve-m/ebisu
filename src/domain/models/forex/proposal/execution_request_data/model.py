@@ -49,11 +49,12 @@ class ProposalTokenData:
 
 
 class ExecutionModel:
-    def __init__(self, payload: ForexExecution, jwt_data: dict, token_decoded: dict):
+    def __init__(self, payload: ForexExecution, jwt_data: dict, token_decoded: dict, forex_account: int):
         self.jwt = JwtModel(jwt_data=jwt_data)
         self.stock_market = payload.liga_invest_stock_market
         self.token = payload.proposal_simulation_token
         self.token_decoded = ProposalTokenData(token_decoded=token_decoded)
+        self.forex_account = forex_account
         self.operation_type = self.__get_operation_type()
         self.redis_hash = self.get_redis_hash()
         self.origin_country = self.__get_origin_country()
@@ -134,6 +135,22 @@ class ExecutionModel:
             raise InvalidRedisHashCombination()
         return redis_hash
 
+    def get_bifrost_template_ted_to_forex(self) -> dict:
+        bifrost_template = {
+            "origin_account": {
+                "user_unique_id": self.jwt.unique_id,
+                "account_number": self.origin_account,
+                "country": self.origin_country
+            },
+            "account_destination": {
+                "user_unique_id": self.jwt.unique_id,
+                "account_number": self.forex_account,
+                "country": self.destination_country,
+            },
+            "value": self.token_decoded.net_value
+        }
+        return bifrost_template
+
     def get_bifrost_template(self) -> dict:
         bifrost_template = {
             "origin_account": {
@@ -149,6 +166,7 @@ class ExecutionModel:
             "value": self.token_decoded.net_value
         }
         return bifrost_template
+
 
     def get_execute_proposal_body(self, customer_data: dict) -> dict:
         next_d2 = self.stock_market.get_liquidation_date(day=LiquidationDayOptions.D2)

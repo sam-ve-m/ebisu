@@ -32,7 +32,7 @@ class CustomerExchangeService:
     async def get_proposal_simulation(
         cls, jwt_data: dict, currency_exchange: CurrencyExchange
     ) -> dict:
-        forex_account_number = await cls.__get_forex_account(jwt_data=jwt_data)
+        forex_account_number = await cls.__get_forex_id(jwt_data=jwt_data)
         customer_exchange_data = await cls.__get_customer_exchange_account_data(
             exchange_account_id=forex_account_number, payload=currency_exchange
         )
@@ -139,12 +139,12 @@ class CustomerExchangeService:
         return customer_token
 
     @staticmethod
-    async def __get_forex_account(jwt_data: dict) -> int:
+    async def __get_forex_id(jwt_data: dict) -> int:
         unique_id = jwt_data.get("user", {}).get("unique_id")
         if not unique_id:
             raise ErrorTryingToGetUniqueId()
         forex_account_data = await UserRepository.get_forex_account(unique_id=unique_id)
-        forex_account_number = forex_account_data.get("account_number")
+        forex_account_number = forex_account_data.get("client_id")
         if not forex_account_number:
             raise ErrorTryingToGetForexAccountNumber()
         return int(forex_account_number)

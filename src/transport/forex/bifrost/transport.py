@@ -17,8 +17,9 @@ class BifrostTransport:
     async def build_template_and_send(cls, execution_model: ExecutionModel) -> True:
         message = execution_model.get_bifrost_template()
         if execution_model.operation_type == OperationType.BRL_TO_USD:
-            await cls.send_to_queue(message=message, topic=cls.ted_topic)
             await cls.send_to_queue(message=message, topic=cls.buy_power_topic)
+            message = execution_model.get_bifrost_template_ted_to_forex()
+            await cls.send_to_queue(message=message, topic=cls.ted_topic)
             return True
         await cls.send_to_queue(message=message, topic=cls.withdraw_topic)
         return True

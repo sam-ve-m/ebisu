@@ -1,7 +1,8 @@
 # Ebisu
-from src.domain.exceptions.repository.forex.exception import CustomerPersonalDataNotFound, ErrorTryingToInsertData
+from src.domain.exceptions.repository.forex.exception import CustomerPersonalDataNotFound, ErrorTryingToInsertData, \
+    ErrorTryingToGetForexAccountNumber
 from src.domain.exceptions.service.forex.exception import (
-    ErrorTryingToLockResource, ErrorTryingToUnlock, InsufficientFunds
+    ErrorTryingToLockResource, ErrorTryingToUnlock, InsufficientFunds, ErrorTryingToGetUniqueId
 )
 from src.domain.models.forex.balance.model import AllowedWithdraw
 from src.domain.models.forex.proposal.execution_request_data.model import ExecutionModel
@@ -28,10 +29,12 @@ class ExecutionExchangeService:
     @classmethod
     async def execute_exchange_proposal(cls, payload: ForexExecution, jwt_data: dict) -> True:
         token_decoded = await JwtForexService.decode(jwt_token=payload.proposal_simulation_token)
+        forex_account = await cls.__get_forex_account(jwt_data=jwt_data)
         execution_model = ExecutionModel(
             jwt_data=jwt_data,
             token_decoded=token_decoded,
-            payload=payload
+            payload=payload,
+            forex_account=forex_account
         )
         await cls.check_customer_has_enough_balance(execution_model=execution_model)
         content = await cls.execute_proposal_on_route_23(execution_model=execution_model)
@@ -113,3 +116,14 @@ class ExecutionExchangeService:
         if not result:
             raise ErrorTryingToInsertData()
         return True
+
+    @staticmethod
+    async def __get_forex_account(jwt_data: dict) -> int:
+        unique_id = jwt_data.get("user", {}).get("unique_id")
+        if not unique_id:
+            raise ErrorTryingToGetUniqueId()
+        forex_account_data = await UserRepository.get_forex_account(unique_id=unique_id)
+        forex_account_number = forex_account_data.get("account_number")
+        if not forex_account_number:
+            raise ErrorTryingToGetForexAccountNumber()
+        return int(forex_account_number)
