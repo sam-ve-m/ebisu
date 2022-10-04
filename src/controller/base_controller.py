@@ -8,7 +8,7 @@ from abc import ABC
 from typing import Optional, Union
 
 from src.core.interfaces.controllers.base_controller.interface import IController
-from src.domain.exception import (
+from src.domain.exceptions import (
     UnauthorizedError,
     ForbiddenError,
     BadRequestError,

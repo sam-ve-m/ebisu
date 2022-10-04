@@ -9,6 +9,7 @@ from src.domain.date_formatters.region.date_time.model import RegionStringDateTi
 class EarningBr:
     share_quantity: float
     symbol: str
+    total: float
     date: RegionStringDateTime
     description: str
     amount_per_share: float

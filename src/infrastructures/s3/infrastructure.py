@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from etria_logger import Gladsheim
 
 from src.infrastructures.env_config import config
-from src.domain.exception import InternalServerError
+from src.domain.exceptions import InternalServerError
 
 
 class S3Infrastructure:

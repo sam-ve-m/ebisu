@@ -40,7 +40,10 @@ class StatementsRepository(OracleBaseRepository):
         )
 
         complete_transaction_query = StatementsRepository.base_query.format(
-            current_tail_complete_transaction_query, historical_tail_complete_transaction_query, offset * limit, limit
+            current_tail_complete_transaction_query,
+            historical_tail_complete_transaction_query,
+            offset * limit,
+            limit,
         )
 
         transactions = StatementsRepository.get_data(sql=complete_transaction_query)
@@ -52,7 +55,7 @@ class StatementsRepository(OracleBaseRepository):
                 date=RegionStringDateTime(
                     date=transaction.get("DT_LIQUIDACAO"),
                     utc_offset=ExchangeUtcOffset.BR_UTC_OFFSET,
-                    region_date_format=RegionDateFormat.BR_DATE_FORMAT
+                    region_date_format=RegionDateFormat.BR_DATE_FORMAT,
                 ),
             )
             for transaction in transactions
@@ -77,7 +80,7 @@ class StatementsRepository(OracleBaseRepository):
         offset: int, limit: int, bmf_account: str
     ) -> List[Transaction]:
         where_clause = (
-            f"WHERE CD_CLIENTE = {bmf_account} AND DT_LIQUIDACAO > sysdate + 1"
+            f"WHERE CD_CLIENTE = {bmf_account} AND DT_LIQUIDACAO >= trunc(sysdate)"
         )
 
         transactions_model = StatementsRepository.__list_paginated_account_transactions(

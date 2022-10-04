@@ -8,10 +8,6 @@ from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFo
 from src.domain.earning.br.response.model import BrEarningsModelToResponse
 from src.domain.enums.region import Region
 from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
-from src.repositories.earnings.repository import (
-    EarningsClientRepository,
-    EarningsBrRecord,
-)
 from src.repositories.user_portfolios.repository import UserPortfoliosRepository
 from src.domain.earning.us.response.model import (
     EarningsRecordResponse,
@@ -19,10 +15,11 @@ from src.domain.earning.us.response.model import (
 )
 from src.transport.drive_wealth.earnings.transport import DwEarningsTransport
 from src.domain.earning.us.request.model import TransactionRequest, QueryParams
+from src.transport.sinacor.earnings.transport import SinacorEarningsTransport
 
 
 class EarningsFromClient:
-    oracle_earnings_client_singleton_instance = EarningsClientRepository
+    sinacor_earnings_transport = SinacorEarningsTransport
 
     @classmethod
     async def get_earnings_client_br_account(
@@ -35,24 +32,25 @@ class EarningsFromClient:
 
         account = cls.__extract_account(region_portfolios, earnings_client.region.value)
 
-        total_paid_earnings = EarningsBrRecord.get_total_paid_earnings(account=account)
+        unique_id = cls.__extract_unique_id_from_jwt(jwt_data=jwt_data)
 
-        payable_transactions = EarningsBrRecord.get_br_payable_earnings(
-            account=account,
-            limit=earnings_client.limit,
-            earnings_types=earnings_client.earnings_types,
+        from_date, to_date = await EarningsFromClient.__get_range_date_and_offset(
+            unique_id=unique_id, region=earnings_client.region, region_date_format=RegionDateFormat.BR_DATE_ISO_FORMAT
         )
 
-        paid_transactions = EarningsBrRecord.get_br_paid_earnings(
-            account=account,
-            limit=earnings_client.limit,
-            earnings_types=earnings_client.earnings_types,
+        paid_transactions = await cls.sinacor_earnings_transport.paid_earnings(
+            account=account, earnings_client=earnings_client, from_date=from_date, to_date=to_date
         )
 
-        record_transactions = EarningsBrRecord.get_br_record_date_earnings(
-            account=account,
-            limit=earnings_client.limit,
-            earnings_types=earnings_client.earnings_types,
+        total_paid_earnings = sum(
+            [paid_transaction.total for paid_transaction in paid_transactions]
+        )
+
+        (
+            payable_transactions,
+            record_transactions,
+        ) = await cls.sinacor_earnings_transport.payable_and_record_date_earnings(
+            account=account, earnings_client=earnings_client
         )
 
         earnings_br_transactions_response = BrEarningsModelToResponse.earnings_response(
@@ -74,7 +72,7 @@ class EarningsFromClient:
         )
 
         from_date, to_date = await EarningsFromClient.__get_range_date_and_offset(
-            unique_id=unique_id
+            unique_id=unique_id, region=earnings_client.region, region_date_format=RegionDateFormat.US_DATE_FORMAT
         )
 
         transaction_request = TransactionRequest(
@@ -118,25 +116,26 @@ class EarningsFromClient:
 
     @staticmethod
     async def __get_range_date_and_offset(
-        unique_id: str,
+        unique_id: str, region: Region, region_date_format: RegionDateFormat
     ) -> Tuple[RegionTimeStamp, RegionTimeStamp]:
 
         from_raw_date = (
             await UserPortfoliosRepository.get_default_portfolio_created_at_by_region(
-                unique_id=unique_id, region="US"
+                unique_id=unique_id, region=region
             )
         )
 
         to_raw_date = int(datetime.now().timestamp() * 1000)
 
         from_date = RegionTimeStamp(
-            timestamp=from_raw_date, region_date_format=RegionDateFormat.US_DATE_FORMAT
+            timestamp=from_raw_date, region_date_format=region_date_format
         )
         to_date = RegionTimeStamp(
-            timestamp=to_raw_date, region_date_format=RegionDateFormat.US_DATE_FORMAT
+            timestamp=to_raw_date, region_date_format=region_date_format
         )
 
         return from_date, to_date
+
 
     @staticmethod
     def __extract_account(portfolios: dict, region: str) -> str:
@@ -150,10 +149,17 @@ class EarningsFromClient:
         return account
 
     @staticmethod
+    def __extract_unique_id_from_jwt(jwt_data: dict) -> str:
+        user = jwt_data.get("user", {})
+        unique_id = user.get("unique_id")
+
+        return unique_id
+
+    @staticmethod
     def __extract_identifier_data_from_jwt(jwt_data: dict):
         user = jwt_data.get("user", {})
         account = user.get("portfolios", {}).get("us", {}).get("dw_account")
 
-        unique_id = user.get("unique_id")
+        unique_id = EarningsFromClient.__extract_unique_id_from_jwt(jwt_data=jwt_data)
 
         return unique_id, account

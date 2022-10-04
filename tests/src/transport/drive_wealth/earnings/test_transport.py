@@ -40,13 +40,16 @@ async def test_get_us_transaction_earnings_when_sending_right_params_then_return
             query_params=QueryParams(
                 limit=1,
                 offset=RegionTimeStamp(
-                    1642699893000, region_date_format=RegionDateFormat.US_DATE_FORMAT
+                    timestamp=1642699893000,
+                    region_date_format=RegionDateFormat.US_DATE_FORMAT
                 ),
                 from_date=RegionTimeStamp(
-                    1646757399000, region_date_format=RegionDateFormat.US_DATE_FORMAT
+                    timestamp=1646757399000,
+                    region_date_format=RegionDateFormat.US_DATE_FORMAT
                 ),
                 to_date=RegionTimeStamp(
-                    1648485399000, region_date_format=RegionDateFormat.US_DATE_FORMAT
+                    timestamp=1648485399000,
+                    region_date_format=RegionDateFormat.US_DATE_FORMAT
                 ),
             ),
         )
@@ -67,7 +70,7 @@ async def test_get_us_transaction_earnings_when_sending_wrong_params_then_return
                     offset=None,
                     from_date=None,
                     to_date=RegionTimeStamp(
-                        1648485399000,
+                        timestamp=1648485399000,
                         region_date_format=RegionDateFormat.US_DATE_FORMAT,
                     ),
                 ),

@@ -5,7 +5,7 @@ from typing import Optional
 from etria_logger import Gladsheim
 
 # OUTSIDE LIBRARIES
-from fastapi import Request
+from fastapi import Request, APIRouter
 from jwt import JWT
 
 # from jwt.jwk import jwk_from_dict
@@ -17,10 +17,11 @@ from src.infrastructures.env_config import config
 from src.repositories.jwt.repository import JwtRepository
 
 # from src.repositories.bucket.repository import Bucket
-from src.domain.exception import InternalServerError, UnauthorizedError
+from src.domain.exceptions import InternalServerError, UnauthorizedError
 
 
 # BUCKET_NAME_KEY = config("BUCKET_NAME_KEY")
+from src.domain.exceptions.model import InvalidElectronicaSignature
 
 
 class JwtService:
@@ -37,20 +38,6 @@ class JwtService:
             await cls.jwt_repository.insert({"jwt": jwt, "email": email})
         except Exception:
             raise InternalServerError("common.process_issue")
-
-    # @classmethod
-    # async def generate_token(cls, jwt_payload_data: dict) -> Optional[str]:
-    #     """The ttl value in minutes"""
-    #     try:
-    #         key = await cls.bucket.get_jwt_key_file(BUCKET_NAME_KEY)
-    #         signing_key = jwk_from_dict(json.loads(key))
-    #         compact_jws = cls.instance.encode(
-    #             jwt_payload_data, signing_key, alg="RS256"
-    #         )
-    #         return compact_jws
-    #     except Exception as e:
-    #         Gladsheim.error(error=e)
-    #         raise InternalServerError("common.process_issue")
 
     @classmethod
     async def decrypt_payload(cls, encrypted_payload: str) -> Optional[dict]:
@@ -106,3 +93,4 @@ class JwtService:
             Gladsheim.error(message=str(payload))
             raise InternalServerError("common.process_issue")
         return payload
+

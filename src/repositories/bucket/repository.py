@@ -1,5 +1,5 @@
 from src.infrastructures.env_config import config
-from src.domain.exception import InternalServerError
+from src.domain.exceptions import InternalServerError
 
 from etria_logger import Gladsheim
 

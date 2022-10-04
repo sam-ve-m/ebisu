@@ -1,22 +1,26 @@
-from src.domain.abstract_classes.services.funding_and_withdrawal.money_flow_resolvers.abstract_class import (
-    MoneyFlowResolverAbstract,
-)
-from datetime import datetime, timedelta
+from datetime import datetime
 
-from src.domain.exception.model import MoneyFlowPerformedOutsideTransactionWindow
-from src.repositories.funding_and_withdrawal.realtime.repository import (
-    RealtimeFundingAndWithdrawalRepository,
-)
+from src.core.interfaces.domain.models.internal.account_transfer.interface import IAccountTransfer
+from src.domain.exceptions.model import MoneyFlowPerformedOutsideTransactionWindow
 from src.infrastructures.env_config import config
+from src.transport.bank_transfer.bifrost.transport import BankTransferBifrostTransport
 
 
-class TransferToExternalBank(MoneyFlowResolverAbstract):
+class TransferToExternalBank:
+    def __init__(
+        self,
+        origin_account: IAccountTransfer,
+        account_destination: IAccountTransfer,
+        value: float,
+    ):
+        self._origin_account = origin_account
+        self._account_destination = account_destination
+        self._value = value
 
     @staticmethod
     def _get_period():
-        # open transfer window
-        window_open_at = "10:00:00".replace(':', '')
-        window_close_at = "20:00:00".replace(':', '')
+        window_open_at = config("TRANSFER_WINDOW_START").replace(":", "")
+        window_close_at = config("TRANSFER_WINDOW_END").replace(":", "")
         return int(window_open_at), int(window_close_at)
 
     @staticmethod
@@ -42,18 +46,21 @@ class TransferToExternalBank(MoneyFlowResolverAbstract):
         if is_weekend or not time_windows_is_open:
             raise MoneyFlowPerformedOutsideTransactionWindow()
 
-    async def _get_spread(self) -> float:
-        return 0
+    @staticmethod
+    async def _send(resume: dict):
+        await BankTransferBifrostTransport.send_transfer_message_to_bifrost(message=resume)
 
-    async def _get_tax(self) -> float:
-        return 0
+    async def _build_resume(self) -> dict:
+        resume = {
+            "origin_account": await self._origin_account.resume(),
+            "account_destination": await self._account_destination.resume(),
+            "value": self._value,
+            "due_date": datetime.utcnow()
+        }
+        return resume
 
-    async def _convert_value(self) -> float:
-        base_value = await self._get_base_value()
-        return base_value
-
-    async def _calculate_due_date(self) -> datetime:
-        return datetime.utcnow() + timedelta(days=1)
-
-    def _get_topic_name(self) -> str:
-        return config("TRANSFERS_BETWEEN_SINACOR_AND_EXTERNAL_BANK")
+    async def __call__(self, *args, **kwargs) -> dict:
+        await self._apply_rule()
+        resume = await self._build_resume()
+        await self._send(resume=resume)
+        return resume
