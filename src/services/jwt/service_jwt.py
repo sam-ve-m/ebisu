@@ -39,20 +39,6 @@ class JwtService:
         except Exception:
             raise InternalServerError("common.process_issue")
 
-    # @classmethod
-    # async def generate_token(cls, jwt_payload_data: dict) -> Optional[str]:
-    #     """The ttl value in minutes"""
-    #     try:
-    #         key = await cls.bucket.get_jwt_key_file(BUCKET_NAME_KEY)
-    #         signing_key = jwk_from_dict(json.loads(key))
-    #         compact_jws = cls.instance.encode(
-    #             jwt_payload_data, signing_key, alg="RS256"
-    #         )
-    #         return compact_jws
-    #     except Exception as e:
-    #         Gladsheim.error(error=e)
-    #         raise InternalServerError("common.process_issue")
-
     @classmethod
     async def decrypt_payload(cls, encrypted_payload: str) -> Optional[dict]:
         payload, status = await cls.heimdall.decode_payload(jwt=encrypted_payload)
@@ -108,12 +94,3 @@ class JwtService:
             raise InternalServerError("common.process_issue")
         return payload
 
-    @classmethod
-    async def get_validate_electronica_signature(cls, request: Request):
-        jwt_data = await cls.get_thebes_answer_from_request(request=request)
-        valid_electronica_signature = await cls.validate_electronic_signature(
-            request, user_data=jwt_data["user"]
-        )
-        if not valid_electronica_signature:
-            raise InvalidElectronicaSignature()
-        return jwt_data

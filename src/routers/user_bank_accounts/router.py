@@ -16,11 +16,7 @@ from src.domain.models.response.create_bank_account.response_model import ListBa
 # SERVICES
 from src.services.bank_account.service import UserBankAccountService
 from src.services.bank_transfer.service import BankTransferService
-from src.domain.exceptions import InvalidElectronicaSignature
 from src.services.jwt.service_jwt import JwtService
-from src.domain.responses.http_response_model import ResponseModel
-from src.domain.enums.response.internal_code import InternalCode
-from http import HTTPStatus
 
 
 class UserBankAccountsRouter:
@@ -50,10 +46,12 @@ class UserBankAccountsRouter:
     async def create_user_bank_accounts(
         request: Request, create_bank_account: CreateUserBankAccount
     ):
-        await JwtService.get_validate_electronica_signature(
-            request=request
-        )
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        await JwtService.validate_electronic_signature(
+            request=request,
+            user_data=jwt_data["user"]
+        )
+
         jwt_data = {
             "x-thebes-answer": jwt_data,
             "bank_account": create_bank_account.dict(),
@@ -68,10 +66,11 @@ class UserBankAccountsRouter:
     async def update_bank_account(
         request: Request, update_bank_account: UpdateUserBankAccounts
     ):
-        await JwtService.get_validate_electronica_signature(
-            request=request
-        )
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        await JwtService.validate_electronic_signature(
+            request=request,
+            user_data=jwt_data["user"]
+        )
         bank_account = update_bank_account.dict()
         Sindri.dict_to_primitive_types(obj=bank_account)
         jwt_data = {
@@ -90,10 +89,11 @@ class UserBankAccountsRouter:
     async def delete_bank_account(
         request: Request, delete_bank_account: DeleteUsersBankAccount
     ):
-        await JwtService.get_validate_electronica_signature(
-            request=request
-        )
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        await JwtService.validate_electronic_signature(
+            request=request,
+            user_data=jwt_data["user"]
+        )
         bank_account = delete_bank_account.dict()
         jwt_data = {
             "x-thebes-answer": jwt_data,

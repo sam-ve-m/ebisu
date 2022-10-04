@@ -2,6 +2,7 @@
 import datetime
 from uuid import uuid4
 
+from fastapi.openapi.models import Response
 # INTERNAL LIBRARIES
 from nidavellir import Sindri
 from src.domain.enums.persephone import PersephoneSchema, PersephoneQueue
@@ -22,7 +23,7 @@ class UserBankAccountService:
     @classmethod
     async def create_user_bank_accounts(
         cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
-    ) -> ResponseModel:
+    ) -> Response:
         thebes_answer = jwt_data["x-thebes-answer"]
         unique_id = thebes_answer["user"]["unique_id"]
         bank_account = jwt_data["bank_account"]
@@ -70,14 +71,14 @@ class UserBankAccountService:
             success=True,
             internal_code=InternalCode.SUCCESS,
             message="Created",
-        )
+        ).build_http_response(status_code=HTTPStatus.OK)
 
         return result
 
     @classmethod
     async def get_user_bank_accounts(
         cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
-    ) -> ResponseModel:
+    ) -> Response:
         thebes_answer = jwt_data.get("x-thebes-answer")
         unique_id = thebes_answer["user"]["unique_id"]
         bank_accounts_from_database = (
@@ -98,7 +99,7 @@ class UserBankAccountService:
     @classmethod
     async def update_user_bank_account(
         cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
-    ) -> ResponseModel:
+    ) -> Response:
         thebes_answer = jwt_data["x-thebes-answer"]
         unique_id = thebes_answer["user"]["unique_id"]
         bank_account = jwt_data["bank_account"]
@@ -142,14 +143,14 @@ class UserBankAccountService:
             success=True,
             internal_code=InternalCode.SUCCESS,
             message="Updated",
-        )
+        ).build_http_response(status_code=HTTPStatus.OK)
 
         return result
 
     @classmethod
     async def delete_user_bank_account(
         cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
-    ) -> ResponseModel:
+    ) -> Response:
         thebes_answer = jwt_data["x-thebes-answer"]
         unique_id = thebes_answer["user"]["unique_id"]
         bank_account = jwt_data["bank_account"]
@@ -192,7 +193,7 @@ class UserBankAccountService:
             success=True,
             internal_code=InternalCode.SUCCESS,
             message="Deleted",
-        )
+        ).build_http_response(status_code=HTTPStatus.OK)
 
         return result
 

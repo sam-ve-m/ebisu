@@ -84,11 +84,13 @@ deployment:
         MONGO_DATABASE_POSEIDON: "poseidon"
         MONGO_COLLECTION_IZANAMI: "izanami"
         MONGODB_DATABASE_EBISU: "ebisu"
+        MONGODB_SNAPSHOT_DATABASE: "ebisu"
         MONGODB_SNAPSHOT_COLLECTION: "exchange_user_snapshot"
-        MONGODB_EXCHANGE_COLLECTION: ""
+        MONGODB_EXCHANGE_COLLECTION: "exchange_parameters"
         DW_AUTHENTICATION_URL: "https://bo-api.drivewealth.io/back-office/auth"
         DW_GET_ALL_TRANSACTIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
         DW_POSITIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/positions"
+        DW_BALANCE_URL: "https://bo-api:drivewealth:io/back-office/accounts/{}/summary/money"
         FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
         FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB: "2"
         AWS_ACCESS_KEY_ID: "AKIATZVFXI25USQWCS5O"
@@ -100,7 +102,6 @@ deployment:
         REDIS_HOST_URL: 'redis://ebisu:DAlnafcnmmcsa1@172.30.11.235:6379'
         REDIS_CACHE_DB: "1"
         BANK_CODE: "469"
-        # ebisu-forex
         BENEFICIARY_BANK_NAME: "JPMorgan Chase Bank, National Association"
         BENEFICIARY_SWIFT_BANK_CODE: "CHASUS33"
         BENEFICIARY_NAME: "DriveWealth LLC"
@@ -114,13 +115,13 @@ deployment:
         LIGA_INVEST_OPENING_TIME: "859"
         LIGA_INVEST_CLOSING_TIME: "1631"
         MARKET_DAYS_RANGE: "15"
-        MONGODB_EXCHANGE_COLLECTION: "exchange_parameters"
         MONGODB_PROPOSALS_EXECUTED: "exchange_proposals_executed"
         NYSE_OPENING_TIME: "859"
         NYSE_CLOSING_TIME: "1631"
         REDIS_BALANCE_DB: "0"
         REDIS_FOREX_DB: "1"
         SPREAD_DEFAULT: "0.02"
+        # Bifrost client
         BIFROST_KAFKA_BROKERS: "172.30.16.124:9094"
         # Halberd
         HALBERD_LOCK_MANAGER_REDIS_URLS: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
@@ -161,12 +162,6 @@ deployment:
         MEPHO_DW_AUTHENTICATION_URL: "https://bo-api.drivewealth.io/back-office/auth"
         MEPHO_REDIS_HOST: "redis://mepho:LndhhhII565dsaadspoi@172.30.11.235:6379"
         MEPHO_REDIS_DB: "1"
-        # bifrost
-        BIFROST_KAFKA: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
-        TRANSFERS_BETWEEN_SINACOR_AND_DRIVE_WEALTH_TOPIC: "ebisu-bifrost.transfers-between-sinacor-and-drive-wealth"
-        TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC: "ebisu-bifrost.transfers-between-drive-wealth-and-sinacor"
-        TRANSFERS_BETWEEN_SINACOR_AND_SINACOR: "ebisu-bifrost.transfers-between-sinacor-and-sinacor"
-        TRANSFERS_BETWEEN_SINACOR_AND_EXTERNAL_BANK: "ebisu-bifrost.transfers-between-sinacor-and-external-bank"
         # etria
         ETRIA_LOG_LEVEL: "INFO"
         ROOT_LOG_LEVEL: "WARNING"
@@ -257,4 +252,4 @@ deployment:
           - PATCH
           - OPTIONS
           allowHeaders:
-          - x-thebes-answer    
+          - x-thebes-answer

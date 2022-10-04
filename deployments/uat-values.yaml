@@ -146,17 +146,6 @@ containers:
       value: "redis://mepho:MueOSapfdfdPIHbwwqQa@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
     - name: MEPHO_REDIS_DB
       value: "1"
-    # bifrost
-    - name: BIFROST_KAFKA
-      value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
-    - name: TRANSFERS_BETWEEN_SINACOR_AND_DRIVE_WEALTH_TOPIC
-      value: "ebisu-bifrost.transfers-between-sinacor-and-drive-wealth"
-    - name: TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC
-      value: "ebisu-bifrost.transfers-between-drive-wealth-and-sinacor"
-    - name: TRANSFERS_BETWEEN_SINACOR_AND_SINACOR
-      value: "ebisu-bifrost.transfers-between-sinacor-and-sinacor"
-    - name: TRANSFERS_BETWEEN_SINACOR_AND_EXTERNAL_BANK
-      value: "ebisu-bifrost.transfers-between-sinacor-and-external-bank"
     # etria
     - name: ETRIA_LOG_LEVEL
       value: "DEBUG"
