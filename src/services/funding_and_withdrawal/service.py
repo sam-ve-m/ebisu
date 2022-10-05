@@ -1,11 +1,6 @@
-from typing import Type, Union
+from typing import Union
 
-from src.domain.models.account.fingerprit import Fingerprint, IsPrimaryAccount
-from src.domain.abstract_classes.services.funding_and_withdrawal.money_flow_resolvers.abstract_class import (
-    MoneyFlowResolverAbstract,
-)
 from src.domain.enums.region import Region
-from src.domain.exception.model import MoneyFlowResolverNoFoundError
 from src.domain.models.account.bank import BankAccount
 from src.domain.models.account.exchanges import ExchangeAccount
 from src.domain.validators.funding_and_withdrawal.validators import (
@@ -16,9 +11,7 @@ from src.domain.validators.funding_and_withdrawal.validators import (
 from nidavellir import Sindri
 
 from src.services.funding_and_withdrawal.money_flow_resolvers import (
-    TransferToExternalBank,
-    TransfersBetweenDriveWealthAndSinacor,
-    TransfersBetweenSinacorAndDriveWealth,
+    TransferToExternalBank
 )
 
 
@@ -51,7 +44,7 @@ class FundingAndWithdrawalService:
         )
 
         resume = await transfer_to_external_bank()
-        Sindri.dict_to_primitive_types(resume)
+
         return resume
 
     @classmethod
@@ -71,17 +64,15 @@ class FundingAndWithdrawalService:
             user_unique_id=unique_id,
         )
         await origin_account.validate_accounts_ownership()
-        origin_account_fingerprint = origin_account.get_fingerprint()
 
         await account_destination.validate_accounts_ownership()
-        account_destination_fingerprint = account_destination.get_fingerprint()
 
-        money_flow_resolver_class = (
-            await cls._get_money_flow_resolver_between_exchanges(
-                origin_account_fingerprint=origin_account_fingerprint,
-                account_destination_fingerprint=account_destination_fingerprint,
-            )
-        )
+        def money_flow_resolver_class(*args, **kwargs):
+            raise Exception()
+            # aplica logica aki de tranferian entre contas sinacor
+            async def loro():
+                pass
+            return loro
 
         money_flow_resolver = money_flow_resolver_class(
             origin_account=origin_account,
@@ -92,36 +83,3 @@ class FundingAndWithdrawalService:
         Sindri.dict_to_primitive_types(resume)
         return resume
 
-    @classmethod
-    async def _get_money_flow_resolver_between_exchanges(
-        cls,
-        origin_account_fingerprint: Fingerprint,
-        account_destination_fingerprint: Fingerprint,
-    ) -> Type[MoneyFlowResolverAbstract]:
-        money_flow_fingerprint = (
-            origin_account_fingerprint,
-            account_destination_fingerprint,
-        )
-
-        br_primary_account = (Region.BR, IsPrimaryAccount(True))
-        br_account = (Region.BR, IsPrimaryAccount(False))
-        us_primary_account = (Region.US, IsPrimaryAccount(True))
-        us_account = (Region.US, IsPrimaryAccount(False))
-
-        money_flow_resolver_map = {
-            # (br_primary_account, br_account): cls.transfers_between_sinacor_accounts,
-            (
-                br_primary_account,
-                us_primary_account,
-            ): TransfersBetweenSinacorAndDriveWealth,
-            (br_primary_account, us_account): TransfersBetweenSinacorAndDriveWealth,
-            # (br_account, br_primary_account): cls.transfers_between_sinacor_accounts,
-            (us_account, br_primary_account): TransfersBetweenDriveWealthAndSinacor,
-            (
-                us_primary_account,
-                br_primary_account,
-            ): TransfersBetweenDriveWealthAndSinacor,
-        }
-        if money_flow_resolver := money_flow_resolver_map.get(money_flow_fingerprint):
-            return money_flow_resolver
-        raise MoneyFlowResolverNoFoundError()

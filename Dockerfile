@@ -24,6 +24,9 @@ RUN mkdir -p /opt/envs/mist.lionx.com.br/
 RUN mkdir -p /opt/envs/mepho.lionx.com.br/
 RUN mkdir -p /opt/envs/persephone.client.python.lionx.com.br/
 RUN mkdir -p /opt/envs/floki_client.lionx.com.br/
+RUN mkdir -p /opt/envs/caronte.lionx.com.br/
+RUN mkdir -p /opt/envs/halberd.lionx.com.br/
+
 RUN touch /opt/envs/heimdall.lionx.com.br/.env
 RUN touch /opt/envs/ebisu.lionx.com.br/.env
 RUN touch /opt/envs/etria.lionx.com.br/.env
@@ -31,11 +34,10 @@ RUN touch /opt/envs/mist.lionx.com.br/.env
 RUN touch /opt/envs/mepho.lionx.com.br/.env
 RUN touch /opt/envs/persephone.client.python.lionx.com.br/.env
 RUN touch /opt/envs/floki_client.lionx.com.br/.env
+RUN touch /opt/envs/caronte.lionx.com.br/.env
+RUN touch /opt/envs/halberd.lionx.com.br/.env
 
 COPY . .
-
-RUN apt-get update --fix-missing
-RUN apt-get -y install wkhtmltopdf
 
 ENV PATH=/root/.local:$PATH
 

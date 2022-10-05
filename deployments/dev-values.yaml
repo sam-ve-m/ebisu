@@ -1,253 +1,256 @@
-replicaCount: 1
-name: ebisu
-namespace: develop
+---
+global:
+  application: ebisu
+  namespace: develop
 
-image:
-  repository: nexus.sigame.com.br
-  pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.1.1-0
+  image:
+    repository: "nexus.sigame.com.br"
+    pullPolicy: Always
+    pullSecret: nexus-v3
 
-ports:
-  protocol: TCP
-  containerPort: 8000
+  labels:  
+    mongo: true
+    oracle: true
+    postgres: false
+    redis: true
+    sqlserver: false
+    external: true
+    priority: 5
 
-containers:
-  env:
-    # ebisu
-    - name: ORACLE_BASE_USER
-      value: "UEBISDB001"
-    - name: ORACLE_BASE_PASSWORD
-      value: "Eb3gq7$8k7z!Sc@"
-    - name: ORACLE_BASE_DSN
-      value: "172.30.10.227"
-    - name: ORACLE_BASE_PORT
-      value: "1521"
-    - name: ORACLE_BASE_SERVICE_US
-      value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
-    - name: ORACLE_BASE_SERVICE_BR
-      value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
-    - name: ORACLE_POSITION_USER
-      value: "UEBISDB001"
-    - name: ORACLE_POSITION_PASSWORD
-      value: "Eb3gq7$8k7z!Sc@"
-    - name: ORACLE_POSITION_DSN
-      value: "172.30.10.227"
-    - name: ORACLE_POSITION_PORT
-      value: "1521"
-    - name: ORACLE_POSITION_SERVICE
-      value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
-    - name: MONGO_CONNECTION_URL
-      value: "mongodb://ebisu:DAlnafcnmmcsa1@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
-    - name: MONGODB_DATABASE_NAME
-      value: "lionx"
-    - name: MONGODB_USER_COLLECTION
-      value: "users"
-    - name: MONGODB_JWT_COLLECTION
-      value: "jwts"
-    - name: MONGO_DATABASE_POSEIDON
-      value: "poseidon"
-    - name: MONGO_COLLECTION_IZANAMI
-      value: "izanami"
-    - name: MONGODB_SNAPSHOT_DATABASE
-      value: "ebisu"
-    - name: MONGODB_SNAPSHOT_COLLECTION
-      value: "exchange_user_snapshot"
-    - name: DW_AUTHENTICATION_URL
-      value: "https://bo-api.drivewealth.io/back-office/auth"
-    - name: DW_BALANCE_URL
-      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
-    - name: DW_GET_ALL_TRANSACTIONS_URL
-      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
-    - name: DW_POSITIONS_URL
-      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/positions"
-    - name: DW_BALANCE_URL
-      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/money"
-    - name: FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL
-      value: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
-    - name: FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB
-      value: "2"
-    - name: AWS_ACCESS_KEY_ID
-      value: "AKIATZVFXI25USQWCS5O"
-    - name: AWS_SECRET_ACCESS_KEY
-      value: "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"
-    - name: REGION_NAME
-      value: "sa-east-1"
-    - name: AWS_FILE_BUCKET_NAME
-      value: "brokerage-note-and-bank-statement-dev"
-    - name: JWT_FILE_BUCKET_NAME
-      value: "heimdall_rsa"
-    - name: BUCKET_NAME_KEY
-      value: "auth-gateway-keys-dev"
-    - name: REDIS_HOST_URL
-      value: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
-    - name: REDIS_CACHE_DB
-      value: "1"
-    - name: BANK_CODE
-      value: "469"
-    # Mist
-    - name: MIST_REDIS_URL
-      value: "redis://mist:InPuaku76Jbdsa@lnxbrspkeydbdb01-dev.subpriv.vcndev.oraclevcn.com:6379?db=1"
-    - name: MIST_AWS_ACCESS_KEY_ID
-      value: "AKIATZVFXI25USQWCS5O"
-    - name: MIST_AWS_SECRET_ACCESS_KEY
-      value: "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"
-    - name: MIST_REGION_NAME
-      value: "sa-east-1"
-    - name: MIST_BUCKET_NAME_KEY
-      value: "auth-gateway-keys-dev"
-    - name: MIST_JWT_FILE_BUCKET_NAME
-      value: "mist_rsa"
-    - name: MIST_ELECTRONIC_SIGNATURE_FILE_BUCKET_NAME
-      value: "eletronic-signature-key"
-    - name: MIST_JWT_REQUIRED_FIELDS
-      value: "[]"
-    - name: MIST_MONGODB_CONNECTION
-      value: "mongodb://mist:Anm8irJdsanmdsapqoiwu@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=MongoDB%20Compass&ssl=false"
-    - name: MIST_ELECTRONIC_SIGNATURE_MAX_ATTEMPTS
-      value: "5"
-    - name: MIST_ENCRYPT_KEY
-      value: "c_-e_-e_-e_-i_-i"
-    - name: MIST_FILE_BUCKET_NAME
-      value: "mist_rsa"
-    - name: MIST_AUTH_DATABASE_NAME
-      value: "lionx"
-    - name: MIST_AUTH_DATABASE_USER_COLLECTION
-      value: "users"
-    # Heimdal
-    - name: HEIMDALL_FILE_BUCKET_NAME
-      value: "heimdall_rsa"
-    - name: HEIMDALL_AWS_ACCESS_KEY_ID
-      value: "AKIATZVFXI25USQWCS5O"
-    - name: HEIMDALL_AWS_SECRET_ACCESS_KEY
-      value: "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"
-    - name: HEIMDALL_REGION_NAME
-      value: "sa-east-1"
-    - name: HEIMDALL_BUCKET_NAME_KEY
-      value: "auth-gateway-keys-dev"
-    - name: HEIMDALL_AWS_BUCKET_USERS_FILES
-      value: "dtvm-users-files-dev"
-    - name: HEIMDALL_AWS_BUCKET_TERMS
-      value: "dtvm-terms-dev"
-    - name: HEIMDALL_JWT_REQUIRED_FIELDS
-      value: "[]"
-    - name: HEIMDALL_REDIS_URL
-      value: "redis://heimdal:LLOnmUUffhaUHnewIz@lnxbrspkeydbdb01-dev.subpriv.vcndev.oraclevcn.com:6379?db=1"
-    # Mepho DW transport
-    - name: MEPHO_DW_APP_KEY
-      value: "93d6184b-4692-4058-b32d-82624be89cb1"
-    - name: MEPHO_DW_USER
-      value: "bo.lionx.api"
-    - name: MEPHO_DW_PASSWORD
-      value: "passw0rd"
-    - name: MEPHO_DW_AUTHENTICATION_URL
-      value: "https://bo-api.drivewealth.io/back-office/auth"
-    - name: MEPHO_REDIS_HOST
-      value: "redis://mepho:MueOSapfdfdPIHbwwqQa@172.30.19.183:6379"
-    - name: MEPHO_REDIS_DB
-      value: "1"
-    # bifrost
-    - name: BIFROST_KAFKA
-      value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
-    - name: TRANSFERS_BETWEEN_SINACOR_AND_DRIVE_WEALTH_TOPIC
-      value: "ebisu-bifrost.transfers-between-sinacor-and-drive-wealth"
-    - name: TRANSFERS_BETWEEN_DRIVE_WEALTH_AND_SINACOR_TOPIC
-      value: "ebisu-bifrost.transfers-between-drive-wealth-and-sinacor"
-    - name: TRANSFERS_BETWEEN_SINACOR_AND_SINACOR
-      value: "ebisu-bifrost.transfers-between-sinacor-and-sinacor"
-    - name: TRANSFERS_BETWEEN_SINACOR_AND_EXTERNAL_BANK
-      value: "ebisu-bifrost.transfers-between-sinacor-and-external-bank"
-    # etria
-    - name: ETRIA_LOG_LEVEL
-      value: "INFO"
-    - name: ROOT_LOG_LEVEL
-      value: "WARNING"
-    # Persephone
-    - name: PERSEPHONE_KAFKA_BROKERS
-      value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
-    - name: PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT
-      value: "ebisu-persephone.client.bank_account"
-    # Floki
-    - name: FLOKI_SINACOR_BASE_IP
-      value: "172.30.19.203:25149"
-    - name: FLOKI_SINACOR_AUTHENTICATION_ROUTE
-      value: "infra/api/v1/oauth/token"
-    - name: FLOKI_SINACOR_CLIENT_ID
-      value: "1B5FEA46423D56C0EECD0CEB.SINACOR"
-    - name: FLOKI_SINACOR_CLIENT_SECRET
-      value: "b8X2xWgfxEPyBB92ni6EbJFknnETaOPW7lNQj5pqPkPzXb1NCygotdSz5/fTnRz3iTzhb3J5bnTKnuYly/R/rlhlnhEIizoN4x1gF/yRCMk="
-    - name: FLOKI_SINACOR_COMPANY_ID
-      value: "7029"
-    - name: FLOKI_REDIS_HOST_URL
-      value: "redis://bifrost:Lysjn32J65NmMhsOOm@172.30.19.183:6379?db=1"
-    - name: FLOKI_CLIENT_LOCK_MANAGER_REDIS_URLS
-      value: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
-    - name: FLOKI_CLIENT_AUTHENTICATION_RETRY_COUNT
-      value: "100"
-    - name: FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN
-      value: "0.5"
-    - name: FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX
-      value: "0.7"
-    - name: FLOKI_CLIENT_AUTHENTICATION_LOCK_MANAGER_TIMEOUT
-      value: "5"
-    - name: FLOKI_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER
-      value: "sinacor_authentication"
-    - name: PAID_EARNINGS_URL
-      value: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Pagos"
-    - name: PROVISIONED_EARNINGS_URL
-      value: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Provisionados"
-    - name: TRANSFER_WINDOW_START
-      value: "11:00:00"
-    - name: TRANSFER_WINDOW_END
-      value: "19:30:00"
-    - name: FLOKI_REDIS_TOKEN_KEY
-      value: "access_token_of_floki_to_sinacor"
+  serviceaccount:
+    enabled: false
+    annotations: []
 
-service:
-  name: ebisu-service
-  type: ClusterIP
-  ports:
-    - protocol: TCP
-      port: 8000
-      targetPort: 8000
+  configMap:
+    enabled: false
+    data: {}
 
-labels:
-  app: ebisu
+  revisionHistoryLimit: 4
 
-imagePullSecrets:
-  - name: nexus-v3
+  annotations:
+    sidecar.istio.io/inject: "true"
+    proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
 
-podAnnotations: {}
+  nameOverride: ""
+  fullnameOverride: ""
 
-serviceAnnotations: {}
+  volumes:
+    enabled: false
+    name:
+    hostPath:
 
-# securityContext:
-#   capabilities:
-#     drop:
-#     - AUDIT_WRITE
-#     - MKNOD
-#     - SETFCAP
-#     - SETPCAP
-#     - KILL
-#   # runAsNonRoot: true
-#   # runAsUser: 1000
-resources:
-  requests: #Amount of resources kube-scheduler will look into nodes to alocate the given POD
-    cpu: 500m
-    memory: 128Mi
-  limits: #Amount of resources limited by kubelet (will not exceed)
-    cpu: 500m
-    memory: 128Mi
+  nodeAffinity:
+    bff: true
 
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+certificate:
+  enabled: true
+  commonName: "ebisu"
+  issuer:
+    name: letsencrypt
+  dnsNames:
+    - ebisu.dev-lionx.com.br
 
-nodeSelector: {}
+restartPolicy: Always
 
-tolerations: []
+deployment:
+  - name: ebisu
+    enabled: true
+    containers: 
+    - name: ebisu
+      imagename: null
+      tag: 1.2.0-2
+      containerPorts: 8000
 
-affinity: {}
+      probes:
+        enabled: false
+      
+      env:
+        # ebisu
+        ORACLE_BASE_USER: "UEBISDB001"
+        ORACLE_BASE_PASSWORD: "Eb3gq7$8k7z!Sc@"
+        ORACLE_BASE_DSN: "172.30.10.227"
+        ORACLE_BASE_PORT: "1521"
+        ORACLE_BASE_SERVICE_US: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
+        ORACLE_BASE_SERVICE_BR: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
+        ORACLE_POSITION_USER: "UEBISDB001"
+        ORACLE_POSITION_PASSWORD: "Eb3gq7$8k7z!Sc@"
+        ORACLE_POSITION_DSN: "172.30.10.227"
+        ORACLE_POSITION_PORT: "1521"
+        ORACLE_POSITION_SERVICE: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
+        MONGO_CONNECTION_URL: "mongodb://ebisu:DAlnafcnmmcsa1@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
+        MONGODB_DATABASE_NAME: "lionx"
+        MONGODB_USER_COLLECTION: "users"
+        MONGODB_JWT_COLLECTION: "jwts"
+        MONGO_DATABASE_POSEIDON: "poseidon"
+        MONGO_COLLECTION_IZANAMI: "izanami"
+        MONGODB_DATABASE_EBISU: "ebisu"
+        MONGODB_SNAPSHOT_DATABASE: "ebisu"
+        MONGODB_SNAPSHOT_COLLECTION: "exchange_user_snapshot"
+        MONGODB_EXCHANGE_COLLECTION: "exchange_parameters"
+        DW_AUTHENTICATION_URL: "https://bo-api.drivewealth.io/back-office/auth"
+        DW_GET_ALL_TRANSACTIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
+        DW_POSITIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/positions"
+        DW_BALANCE_URL: "https://bo-api:drivewealth:io/back-office/accounts/{}/summary/money"
+        FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
+        FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB: "1"
+        AWS_ACCESS_KEY_ID: "AKIATZVFXI25USQWCS5O"
+        AWS_SECRET_ACCESS_KEY: "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"
+        REGION_NAME: "sa-east-1"
+        AWS_FILE_BUCKET_NAME: "brokerage-note-and-bank-statement-dev"
+        JWT_FILE_BUCKET_NAME: "heimdall_rsa"
+        BUCKET_NAME_KEY: "auth-gateway-keys-dev"
+        REDIS_HOST_URL: 'redis://ebisu:DAlnafcnmmcsa1@172.30.11.235:6379'
+        REDIS_CACHE_DB: "1"
+        BANK_CODE: "469"
+        BENEFICIARY_BANK_NAME: "JPMorgan Chase Bank, National Association"
+        BENEFICIARY_SWIFT_BANK_CODE: "CHASUS33"
+        BENEFICIARY_NAME: "DriveWealth LLC"
+        BENEFICIARY_ACCOUNT: "10000337256168"
+        BMF_OPENING_TIME: "859"
+        BMF_CLOSING_TIME: "1631"
+        BASE_URL_FROM_EXCHANGE_API: "https://sbxapi.ourinvest.com.br:43400/api/v1"
+        CURRENT_CURRENCY_QUOTE_URL: "produto/cambio/naturezaOperacao/{}/taxa/{}/{}/cliente/{}/spread/{}"
+        EXCHANGE_SIMULATION_URL: "operacao/cambio/calcular"
+        EXECUTION_URL: "operacao/cambio/remessa/token"
+        LIGA_INVEST_OPENING_TIME: "859"
+        LIGA_INVEST_CLOSING_TIME: "1631"
+        MARKET_DAYS_RANGE: "15"
+        MONGODB_PROPOSALS_EXECUTED: "exchange_proposals_executed"
+        NYSE_OPENING_TIME: "859"
+        NYSE_CLOSING_TIME: "1631"
+        REDIS_BALANCE_DB: "0"
+        REDIS_FOREX_DB: "1"
+        SPREAD_DEFAULT: "0.02"
+        PAID_EARNINGS_URL: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Pagos"
+        PROVISIONED_EARNINGS_URL: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Provisionados"
+        TRANSFER_WINDOW_START: "11:00:00"
+        TRANSFER_WINDOW_END: "19:30:00"
+        # Bifrost client
+        BIFROST_KAFKA_BROKERS: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+        # Halberd
+        HALBERD_LOCK_MANAGER_REDIS_URLS: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
+        HALBERD_BALANCE_RETRY_COUNT: "100"
+        HALBERD_BALANCE_RETRY_DELAY_MIN: "0.2"
+        HALBERD_BALANCE_RETRY_DELAY_MAX: "1"
+        HALBERD_BALANCE_LOCK_MANAGER_TIMEOUT: "15"
+        HALBERD_BALANCE_LOCK_MANAGER_IDENTIFIER: "ebisu-forex"
+        # Mist
+        MIST_REDIS_URL: "redis://mist:InPuaku76Jbdsa@172.30.11.235:6379?db=1"
+        MIST_AWS_ACCESS_KEY_ID: "AKIATZVFXI25USQWCS5O"
+        MIST_AWS_SECRET_ACCESS_KEY: "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"
+        MIST_REGION_NAME: "sa-east-1"
+        MIST_BUCKET_NAME_KEY: "auth-gateway-keys-dev"
+        MIST_JWT_FILE_BUCKET_NAME: "mist_rsa"
+        MIST_ELECTRONIC_SIGNATURE_FILE_BUCKET_NAME: "eletronic-signature-key"
+        MIST_JWT_REQUIRED_FIELDS: "[]"
+        MIST_MONGODB_CONNECTION: "mongodb://mist:Anm8irJdsanmdsapqoiwu@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=MongoDB%20Compass&ssl=false"
+        MIST_ELECTRONIC_SIGNATURE_MAX_ATTEMPTS: "5"
+        MIST_ENCRYPT_KEY: "c_-e_-e_-e_-i_-i"
+        MIST_FILE_BUCKET_NAME: "mist_rsa"
+        MIST_AUTH_DATABASE_NAME: "lionx"
+        MIST_AUTH_DATABASE_USER_COLLECTION: "users"
+        # Heimdal
+        HEIMDALL_FILE_BUCKET_NAME: "heimdall_rsa"
+        HEIMDALL_AWS_ACCESS_KEY_ID: "AKIATZVFXI25USQWCS5O"
+        HEIMDALL_AWS_SECRET_ACCESS_KEY: "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"
+        HEIMDALL_REGION_NAME: "sa-east-1"
+        HEIMDALL_BUCKET_NAME_KEY: "auth-gateway-keys-dev"
+        HEIMDALL_AWS_BUCKET_USERS_FILES: "dtvm-users-files-dev"
+        HEIMDALL_AWS_BUCKET_TERMS: "dtvm-terms-dev"
+        HEIMDALL_JWT_REQUIRED_FIELDS: "[]"
+        HEIMDALL_REDIS_URL: "redis://heimdal:LLOnmUUffhaUHnewIz@172.30.11.235:6379?db=1"
+        # Mepho DW transport
+        MEPHO_DW_APP_KEY: "93d6184b-4692-4058-b32d-82624be89cb1"
+        MEPHO_DW_USER: "bo.lionx.api"
+        MEPHO_DW_PASSWORD: "passw0rd"
+        MEPHO_DW_AUTHENTICATION_URL: "https://bo-api.drivewealth.io/back-office/auth"
+        MEPHO_REDIS_HOST: "redis://mepho:LndhhhII565dsaadspoi@172.30.11.235:6379"
+        MEPHO_REDIS_DB: "1"
+        # etria
+        ETRIA_LOG_LEVEL: "INFO"
+        ROOT_LOG_LEVEL: "WARNING"
+        # Persephone
+        PERSEPHONE_KAFKA_BROKERS: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+        PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT: "ebisu-persephone.client.bank_account"
+        # Caronte
+        CARONTE_CLIENT_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
+        CARONTE_CLIENT_AUTHENTICATION_RETRY_COUNT: "100"
+        CARONTE_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN: "0.5"
+        CARONTE_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX: "0.7"
+        CARONTE_CLIENT_AUTHENTICATION_LOCK_MANAGER_TIMEOUT: "5"
+        CARONTE_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER: "ouroinvest__authentication"
+        CARONTE_MAX_RETRY: "5"
+        CARONTE_REDIS_HOST: "redis://bnd:jkl321pqr@172.30.11.235:6379"
+        CARONTE_CACHE_KEYS_PREFIX: "caronte:"
+        CARONTE_REDIS_DB: "1"
+        # OuroInvest
+        OUROINVEST_CONTROLE_DATAHORACLIENTE: "2021-03-24T16:02:19.000Z"
+        OUROINVEST_CONTROLE_RECURSO_CODIGO: "63"
+        OUROINVEST_CONTROLE_RECURSO_SIGLA: "CAAS"
+        OUROINVEST_CONTROLE_ORIGEM_NOME: "SmartCambio.ClientAPI.LIONX"
+        OUROINVEST_CONTROLE_ORIGEM_CHAVE: "SYSTEM::API::KEY::LIONX"
+        OUROINVEST_CONTROLE_ORIGEM_ENDERECO: "IP"
+        OUROINVEST_BASE_TOKENS_CACHE_FOLDER: "Ouroinvest:tokens"
+        OUROINVEST_DEFAULT_TOKEN_CACHE_KEY: ":default"
+        OUROINVEST_USER_TOKEN_CACHE_KEY: ":{}"
+        OUROINVEST_SYSTEM_USER: "OI_USR_LIONX_MM_SBX"
+        OUROINVEST_SYSTEM_PWD: "15R53boMi3b$6YB"
+        OUROINVEST_DEFAULT_TOKEN_URL: "https://sbxapi.ourinvest.com.br:43400/api/v1/cross/usuario/login/parceiro"
+        OUROINVEST_USER_TOKEN_URL: "https://sbxapi.ourinvest.com.br:43400/api/v1/cross/servicos/autorizacao/representante"
+        # FLOKI
+        FLOKI_SINACOR_BASE_IP: "172.30.19.203:25149"
+        FLOKI_SINACOR_AUTHENTICATION_ROUTE: "infra/api/v1/oauth/token"
+        FLOKI_SINACOR_CLIENT_ID: "1B5FEA46423D56C0EECD0CEB.SINACOR"
+        FLOKI_SINACOR_CLIENT_SECRET: "b8X2xWgfxEPyBB92ni6EbJFknnETaOPW7lNQj5pqPkPzXb1NCygotdSz5/fTnRz3iTzhb3J5bnTKnuYly/R/rlhlnhEIizoN4x1gF/yRCMk="
+        FLOKI_SINACOR_COMPANY_ID: "7029"
+        FLOKI_REDIS_HOST_URL: "redis://bifrost:Lysjn32J65NmMhsOOm@172.30.19.183:6379?db=1"
+        FLOKI_REDIS_TOKEN_KEY: "access_token_of_floki_to_sinacor"
+        FLOKI_CLIENT_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
+        FLOKI_CLIENT_AUTHENTICATION_RETRY_COUNT: "100"
+        FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN: "0.5"
+        FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX: "0.7"
+        FLOKI_CLIENT_AUTHENTICATION_LOCK_MANAGER_TIMEOUT: "5"
+        FLOKI_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER: "sinacor_authentication_bifrost"
+
+      
+      resources:
+        requests:
+          cpu: 500m
+          memory: 128Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+      
+      hpa:
+        enabled: true
+        minReplicas: 1
+        maxReplicas: 5
+        metrics:
+          cpu: 80
+          memory: 80
+
+      service:
+        metaname: ebisu-service
+        enabled: true
+        name: http
+        protocol: TCP
+        annotations: []
+
+      ingress:
+        enabled: true
+        rewriteURI: /
+
+        cors:
+          enabled: false
+          allowCredentials: true
+          allowOrigins:
+          - regex: .
+          allowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - PATCH
+          - OPTIONS
+          allowHeaders:
+          - x-thebes-answer

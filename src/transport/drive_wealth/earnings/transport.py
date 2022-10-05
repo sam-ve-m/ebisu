@@ -10,7 +10,7 @@ from src.domain.date_formatters.region.date_time.model import RegionStringDateTi
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOffset
 from src.domain.earning.us.model import Earning
-from src.domain.exception.model import FailToGetDataFromTransportLayer
+from src.domain.exceptions.model import FailToGetDataFromTransportLayer
 from src.domain.statement.us.request.model import TransactionRequest
 from src.infrastructures.env_config import config
 

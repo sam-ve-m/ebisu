@@ -185,9 +185,7 @@ async def test_get_service_response_when_region_us_and_all_true(monkeypatch):
         AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps
     )
 
-    result = await AccountCloseStepsService.get_service_response(
-        closure_steps_dummy, jwt_data_dummy
-    )
+    result = await AccountCloseStepsService.get_list_client_orders(closure_steps_dummy, jwt_data_dummy)
     expected_result = {
         "regular": True,
         "steps_status": {"US": {"balance": True, "positions": True, "earnings": True}},
@@ -212,9 +210,7 @@ async def test_get_service_response_when_region_us_and_one_step_is_false(monkeyp
         AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps
     )
 
-    result = await AccountCloseStepsService.get_service_response(
-        closure_steps_dummy, jwt_data_dummy
-    )
+    result = await AccountCloseStepsService.get_list_client_orders(closure_steps_dummy, jwt_data_dummy)
     expected_result = {
         "regular": False,
         "steps_status": {"US": {"balance": False, "positions": True, "earnings": True}},
@@ -239,9 +235,7 @@ async def test_get_service_response_when_region_br_and_all_true(monkeypatch):
         AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps
     )
 
-    result = await AccountCloseStepsService.get_service_response(
-        closure_steps_dummy, jwt_data_dummy
-    )
+    result = await AccountCloseStepsService.get_list_client_orders(closure_steps_dummy, jwt_data_dummy)
     expected_result = {
         "regular": True,
         "steps_status": {
@@ -269,9 +263,7 @@ async def test_get_service_response_when_region_br_and_one_step_is_false(monkeyp
         AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps
     )
 
-    result = await AccountCloseStepsService.get_service_response(
-        closure_steps_dummy, jwt_data_dummy
-    )
+    result = await AccountCloseStepsService.get_list_client_orders(closure_steps_dummy, jwt_data_dummy)
     expected_result = {
         "regular": False,
         "steps_status": {
@@ -301,9 +293,7 @@ async def test_get_service_response_when_region_br_and_one_step_is_false_in_us(
         AccountCloseStepsService, "get_closure_steps_by_region", mock_closure_steps
     )
 
-    result = await AccountCloseStepsService.get_service_response(
-        closure_steps_dummy, jwt_data_dummy
-    )
+    result = await AccountCloseStepsService.get_list_client_orders(closure_steps_dummy, jwt_data_dummy)
     expected_result = {
         "regular": False,
         "steps_status": {
