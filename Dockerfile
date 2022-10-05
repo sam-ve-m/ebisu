@@ -39,9 +39,6 @@ RUN touch /opt/envs/halberd.lionx.com.br/.env
 
 COPY . .
 
-RUN apt-get update --fix-missing
-RUN apt-get -y install wkhtmltopdf
-
 ENV PATH=/root/.local:$PATH
 
 EXPOSE 8000
