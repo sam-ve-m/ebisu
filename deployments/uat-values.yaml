@@ -6,7 +6,7 @@ image:
   repository: nexus.sigame.com.br
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.1.0
+  tag: 1.2.0
 
 ports:
   protocol: TCP
@@ -53,6 +53,8 @@ containers:
       value: "ebisu"
     - name: MONGODB_SNAPSHOT_COLLECTION
       value: "exchange_user_snapshot"
+    - name: MONGODB_EXCHANGE_COLLECTION 
+      value: "exchange_parameters"
     - name: DW_AUTHENTICATION_URL
       value: "https://bo-api.drivewealth.io/back-office/auth"
     - name: DW_BALANCE_URL
@@ -189,6 +191,118 @@ containers:
       value: "11:00:00"
     - name: TRANSFER_WINDOW_END
       value: "19:30:00"
+    - name: CARONTE_CLIENT_LOCK_MANAGER_REDIS_URLS
+      value: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
+    - name: CARONTE_CLIENT_AUTHENTICATION_RETRY_COUNT
+      value: "100"
+    - name: CARONTE_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN
+      value: "0.5"
+    - name: CARONTE_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX
+      value: "0.7"
+    - name: CARONTE_CLIENT_AUTHENTICATION_LOCK_MANAGER_TIMEOUT
+      value: "5"
+    - name: CARONTE_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER
+      value: "ouroinvest__authentication"
+    - name: CARONTE_MAX_RETRY
+      value: "5"
+    - name: CARONTE_REDIS_HOST
+      value: "redis://bnd:93uOKu5H@172.30.19.183:6379"
+    - name: CARONTE_CACHE_KEYS_PREFIX
+      value: "caronte:"
+    - name: CARONTE_REDIS_DB
+      value: "1"
+    - name: OUROINVEST_CONTROLE_DATAHORACLIENTE
+      value: "2021-03-24T16:02:19.000Z"
+    - name: OUROINVEST_CONTROLE_RECURSO_CODIGO
+      value: "63"
+    - name: OUROINVEST_CONTROLE_RECURSO_SIGLA
+      value: "CAAS"
+    - name: OUROINVEST_CONTROLE_ORIGEM_NOME
+      value: "SmartCambio.ClientAPI.LIONX"
+    - name: OUROINVEST_CONTROLE_ORIGEM_CHAVE
+      value: "SYSTEM::API::KEY::LIONX"
+    - name: OUROINVEST_CONTROLE_ORIGEM_ENDERECO
+      value: "IP"
+    - name: OUROINVEST_BASE_TOKENS_CACHE_FOLDER
+      value: "Ouroinvest:tokens"
+    - name: OUROINVEST_DEFAULT_TOKEN_CACHE_KEY
+      value: ":default"
+    - name: OUROINVEST_USER_TOKEN_CACHE_KEY
+      value: ":{}"
+    - name: OUROINVEST_SYSTEM_USER
+      value: "OI_USR_LIONX_MM_SBX"
+    - name: OUROINVEST_SYSTEM_PWD
+      value: "15R53boMi3b$6YB"
+    - name: OUROINVEST_DEFAULT_TOKEN_URL
+      value: "https://sbxapi.ourinvest.com.br:43400/api/v1/cross/usuario/login/parceiro"
+    - name: OUROINVEST_USER_TOKEN_URL
+      value: "https://sbxapi.ourinvest.com.br:43400/api/v1/cross/servicos/autorizacao/representante"
+    - name: HALBERD_LOCK_MANAGER_REDIS_URLS
+      value: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
+    - name: HALBERD_BALANCE_RETRY_COUNT
+      value: "100"
+    - name: HALBERD_BALANCE_RETRY_DELAY_MIN
+      value: "0.2"
+    - name: HALBERD_BALANCE_RETRY_DELAY_MAX
+      value: "1"
+    - name: HALBERD_BALANCE_LOCK_MANAGER_TIMEOUT
+      value: "15"
+    - name: HALBERD_BALANCE_LOCK_MANAGER_IDENTIFIER
+      value: "ebisu-forex"
+    - name: BENEFICIARY_BANK_NAME
+      value: "JPMorgan Chase Bank, National Association"
+    - name: BENEFICIARY_SWIFT_BANK_CODE
+      value: "CHASUS33"
+    - name: BENEFICIARY_NAME
+      value: "DriveWealth LLC"
+    - name: BENEFICIARY_ACCOUNT
+      value: "10000337256168"
+    - name: BMF_OPENING_TIME
+      value: "859"
+    - name: BMF_CLOSING_TIME
+      value: "1631"
+    - name: BASE_URL_FROM_EXCHANGE_API
+      value: "https://sbxapi.ourinvest.com.br:43400/api/v1"
+    - name: CURRENT_CURRENCY_QUOTE_URL
+      value: "produto/cambio/naturezaOperacao/{}/taxa/{}/{}/cliente/{}/spread/{}"
+    - name: EXCHANGE_SIMULATION_URL
+      value: "operacao/cambio/calcular"
+    - name: EXECUTION_URL
+      value: "operacao/cambio/remessa/token"
+    - name: LIGA_INVEST_OPENING_TIME
+      value: "859"
+    - name: LIGA_INVEST_CLOSING_TIME
+      value: "1631"
+    - name: MARKET_DAYS_RANGE
+      value: "15"
+    - name: MONGODB_PROPOSALS_EXECUTED
+      value: "exchange_proposals_executed"
+    - name: NYSE_OPENING_TIME
+      value: "859"
+    - name: NYSE_CLOSING_TIME
+      value: "1631"
+    - name: REDIS_BALANCE_DB
+      value: "0"
+    - name: REDIS_FOREX_DB
+      value: "1"
+    - name: SPREAD_DEFAULT
+      value: "0.02"
+    - name: PAID_EARNINGS_URL
+      value: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Pagos"
+    - name: PROVISIONED_EARNINGS_URL
+      value: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Provisionados"
+    - name: TRANSFER_WINDOW_START
+      value: "11:00:00"
+    - name: TRANSFER_WINDOW_END
+      value: "19:30:00"
+    - name: MONGODB_DATABASE_EBISU
+      value: "ebisu"
+    - name: MONGODB_SNAPSHOT_DATABASE
+      value: "ebisu"
+    - name: MONGODB_SNAPSHOT_COLLECTION
+      value: "exchange_user_snapshot"
+    - name: MONGODB_EXCHANGE_COLLECTION
+      value: "exchange_parameters"
 
 service:
   name: ebisu-service
