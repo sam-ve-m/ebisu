@@ -123,7 +123,7 @@ class ExecutionExchangeService:
         if not unique_id:
             raise ErrorTryingToGetUniqueId()
         forex_account_data = await UserRepository.get_forex_account(unique_id=unique_id)
-        forex_account_number = forex_account_data.get("account_number")
-        if not forex_account_number:
+        if not forex_account_data and "account_number" not in forex_account_data:
             raise ErrorTryingToGetForexAccountNumber()
+        forex_account_number = forex_account_data.get("account_number")
         return int(forex_account_number)

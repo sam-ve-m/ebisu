@@ -22,9 +22,10 @@ class BankTransferBifrostTransport:
             topic=topic,
         )
         if not success:
-            msg = f"Bifrost_client::error_send_to_queue::{topic=}::{message=}"
             Gladsheim.error(
                 bifrost_status=bifrost_status,
-                message=msg
+                message="Bifrost_client::error_send_to_queue",
+                send_message=message,
+                topic=topic
             )
             raise ErrorSendingToBifrostClient()
