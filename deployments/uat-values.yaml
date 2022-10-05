@@ -303,6 +303,8 @@ containers:
       value: "exchange_user_snapshot"
     - name: MONGODB_EXCHANGE_COLLECTION
       value: "exchange_parameters"
+    - name: BIFROST_KAFKA_BROKERS
+      value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
 
 service:
   name: ebisu-service

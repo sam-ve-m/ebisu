@@ -20,6 +20,7 @@ class ProposalTokenData:
         self.exchange_hash = self.__get_exchange_combination_hash()
         self.nature_operation = self.__get_nature_operation()
         self.net_value = self.__get_net_value()
+        self.quantity_currency_traded = self.__get_quantity_currency_traded()
 
     def __get_forex_account(self):
         forex_account = self.token_decoded.get("CodigoCliente")
@@ -32,6 +33,12 @@ class ProposalTokenData:
         if not net_value:
             raise DataNotFoundInToken()
         return float(net_value)
+
+    def __get_quantity_currency_traded(self):
+        quantity_currency_traded = self.token_decoded.get("QuantidadeMoedaNegociada")
+        if not quantity_currency_traded:
+            raise DataNotFoundInToken()
+        return float(quantity_currency_traded)
 
     def __get_nature_operation(self):
         nature_operation = self.token_decoded.get("CodigoNaturezaOperacao")
@@ -151,7 +158,23 @@ class ExecutionModel:
         }
         return bifrost_template
 
-    def get_bifrost_template(self) -> dict:
+    def get_bifrost_template_to_buy_power(self) -> dict:
+        bifrost_template = {
+            "origin_account": {
+                "user_unique_id": self.jwt.unique_id,
+                "account_number": self.origin_account,
+                "country": self.origin_country
+            },
+            "account_destination": {
+                "user_unique_id": self.jwt.unique_id,
+                "account_number": self.destination_account,
+                "country": self.destination_country,
+            },
+            "value": self.token_decoded.quantity_currency_traded
+        }
+        return bifrost_template
+
+    def get_bifrost_template_to_withdraw(self) -> dict:
         bifrost_template = {
             "origin_account": {
                 "user_unique_id": self.jwt.unique_id,

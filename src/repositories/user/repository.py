@@ -21,11 +21,11 @@ class UserRepository(MongoDbBaseRepository):
             query={"unique_id": unique_id},
             project={"ouro_invest.account": 1, '_id': 0}
         )
-        return forex_account_number["ouro_invest"]["account"]
+        return forex_account_number.get("ouro_invest", {}).get("account")
 
     @classmethod
     async def get_user_portfolios(cls, unique_id: str):
         user_portfolios = await cls.find_one(
             query={"unique_id": unique_id}, project={"portfolios": True, "_id": False}
         )
-        return user_portfolios["portfolios"]
+        return user_portfolios.get("portfolios")
