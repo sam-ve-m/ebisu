@@ -91,10 +91,7 @@ class UserBankAccountService:
         )
         user_bank_accounts_result = response_model.dict()
         Sindri.dict_to_primitive_types(user_bank_accounts_result)
-        response = ResponseModel(
-            success=True, result=user_bank_accounts_result, internal_code=InternalCode.SUCCESS
-        ).build_http_response(status_code=HTTPStatus.OK)
-        return response
+        return user_bank_accounts_result
 
     @classmethod
     async def update_user_bank_account(
