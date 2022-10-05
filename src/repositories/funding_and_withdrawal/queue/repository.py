@@ -24,14 +24,14 @@ class FundingAndWithdrawalRepository:
             is_message_sent = True
         except KafkaTimeoutError as err:
             message = f"FundingAndWithdrawalRepository::send_to_persephone::KafkaTimeoutError::is_message_sent:{is_message_sent}::record metadata:{record_metadata}"
-            Gladsheim.error(msg=message, stacklevel=err, exc_info=True)
+            Gladsheim.error(msg=message, exc_info=True, error=err)
 
         except KafkaError as err:
             message = f"FundingAndWithdrawalRepository::send_to_persephone::KafkaError::is_message_sent:{is_message_sent}::record metadata:{record_metadata}"
-            Gladsheim.error(msg=message, stacklevel=err, exc_info=True)
+            Gladsheim.error(msg=message, exc_info=True, error=err)
 
         except Exception as err:
             message = f"FundingAndWithdrawalRepository::send_to_persephone::Exception::is_message_sent:{is_message_sent}::record metadata:{record_metadata}"
-            Gladsheim.error(msg=message, stacklevel=err, exc_info=True)
+            Gladsheim.error(msg=message, exc_info=True, error=err)
 
         return is_message_sent
