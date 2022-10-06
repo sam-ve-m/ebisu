@@ -14,7 +14,7 @@ class GetBrOrders:
         order_status: List[OrderStatus],
     ) -> str:
 
-        query = f"""SELECT B.SYMBOL, B.ROOTCLORDID, ORDSTATUS, B.CLORDID, B.CREATEDAT, B.CUMQTY, B.AVGPX, B.ORDTYPE, B.ORDERQTY, B.SIDE, B.PRICE, B.STOPPX
+        query = f"""SELECT B.SYMBOL, B.ROOTCLORDID, B.ORDSTATUS, B.CLORDID, B.CREATEDAT, B.CUMQTY, B.AVGPX, B.ORDTYPE, B.ORDERQTY, B.SIDE, B.PRICE, B.STOPPX
                     FROM UORDEDB001.VW_ORDER_LIST B
                     WHERE B.ACCOUNT in ('{"','".join(accounts)}')
                     {GetBrOrders.filter(order_status)}

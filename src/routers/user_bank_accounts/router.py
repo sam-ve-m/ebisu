@@ -47,10 +47,6 @@ class UserBankAccountsRouter:
         request: Request, create_bank_account: CreateUserBankAccount
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        await JwtService.validate_electronic_signature(
-            request=request,
-            user_data=jwt_data["user"]
-        )
 
         jwt_data = {
             "x-thebes-answer": jwt_data,
@@ -67,10 +63,7 @@ class UserBankAccountsRouter:
         request: Request, update_bank_account: UpdateUserBankAccounts
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        await JwtService.validate_electronic_signature(
-            request=request,
-            user_data=jwt_data["user"]
-        )
+
         bank_account = update_bank_account.dict()
         Sindri.dict_to_primitive_types(obj=bank_account)
         jwt_data = {
@@ -90,10 +83,7 @@ class UserBankAccountsRouter:
         request: Request, delete_bank_account: DeleteUsersBankAccount
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        await JwtService.validate_electronic_signature(
-            request=request,
-            user_data=jwt_data["user"]
-        )
+
         bank_account = delete_bank_account.dict()
         jwt_data = {
             "x-thebes-answer": jwt_data,

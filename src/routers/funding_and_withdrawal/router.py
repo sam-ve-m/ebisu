@@ -13,7 +13,6 @@ from src.domain.validators.funding_and_withdrawal.validators import (
 from src.services.exchange_operations.services import ExchangeOperationsService
 from src.services.funding_and_withdrawal import FundingAndWithdrawalService
 from src.services.jwt.service_jwt import JwtService
-from src.domain.exceptions.model import InvalidElectronicaSignature
 
 
 class FundingAndWithdrawalRouter:

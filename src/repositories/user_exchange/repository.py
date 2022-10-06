@@ -1,7 +1,5 @@
-# OUTSIDE LIBRARIES
-
+# Ebisu
 from src.infrastructures.env_config import config
-
 from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
 
 
@@ -11,17 +9,17 @@ class UserExchangeRepository(MongoDbBaseRepository):
     collection = config("MONGODB_EXCHANGE_COLLECTION")
 
     @classmethod
-    async def get_user_exchange_data(cls, exchange_account_id: int, base: str, quote: str) -> dict:
-        user_exchange_data = await cls.find_one(
-            query={"exchange_account_id": exchange_account_id, "base": base, "quote": quote}
+    async def get_spread_data(cls, forex_account_number: int, base: str, quote: str) -> dict:
+        spread_data = await cls.find_one(
+            query={"account_number": forex_account_number, "base": base, "quote": quote}
         )
 
-        if not user_exchange_data:
-            user_exchange_data = {
-                "exchange_account_id": exchange_account_id,
+        if not spread_data:
+            spread_data = {
+                "account_number": forex_account_number,
                 "base": base,
                 "quote": quote,
                 "spread": config("SPREAD_DEFAULT")
             }
 
-        return user_exchange_data
+        return spread_data
