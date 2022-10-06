@@ -21,7 +21,7 @@ from src.domain.exceptions import InternalServerError, UnauthorizedError
 
 
 # BUCKET_NAME_KEY = config("BUCKET_NAME_KEY")
-from src.domain.exceptions.model import InvalidElectronicaSignature
+from src.domain.exceptions.service.general_use.exception import InvalidElectronicaSignature
 
 
 class JwtService:
@@ -71,7 +71,7 @@ class JwtService:
                 and user_data["unique_id"] == mist_content["decoded_jwt"]["unique_id"]
             ):
                 return True
-        return False
+        raise InvalidElectronicaSignature()
 
     @classmethod
     async def get_thebes_answer_from_request(cls, request: Request) -> dict:

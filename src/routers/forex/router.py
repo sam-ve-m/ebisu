@@ -44,6 +44,10 @@ class ForexExchange:
     async def execute_exchange_simulation_proposal(
             request: Request, payload: ForexExecution) -> Response:
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        await JwtService.validate_electronic_signature(
+            request=request,
+            user_data=jwt_data["user"]
+        )
         success = await ExecutionExchangeService.execute_exchange_proposal(payload=payload, jwt_data=jwt_data)
         response = ResponseModel(
             success=success,

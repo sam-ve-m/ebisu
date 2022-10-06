@@ -35,8 +35,26 @@ class ErrorTryingToInsertData(RepositoryException):
 
 class ErrorTryingToGetForexAccountNumber(RepositoryException):
     def __init__(self, *args, **kwargs):
-        self.msg = 'Error trying to get forex account data'
+        self.msg = 'Error trying to get forex account number'
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+        self.internal_code = InternalCode.DATA_NOT_FOUND
+        self.success = False
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+
+
+class ErrorTryingToGetForexClientId(RepositoryException):
+    def __init__(self, *args, **kwargs):
+        self.msg = 'Error trying to get forex client id'
+        self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+        self.internal_code = InternalCode.DATA_NOT_FOUND
+        self.success = False
+        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+
+
+class ErrorTryingToGetForexAccountData(RepositoryException):
+    def __init__(self, *args, **kwargs):
+        self.msg = 'Error trying to get forex account data'
+        self.status_code = HTTPStatus.UNAUTHORIZED
         self.internal_code = InternalCode.DATA_NOT_FOUND
         self.success = False
         super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)

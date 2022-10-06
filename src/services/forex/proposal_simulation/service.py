@@ -4,7 +4,7 @@ from src.domain.exceptions.domain.forex.exception import (
 )
 from src.domain.exceptions.repository.forex.exception import (
     CustomerForexDataNotFound,
-    ErrorTryingToGetForexAccountNumber
+    ErrorTryingToGetForexAccountData, ErrorTryingToGetForexClientId, ErrorTryingToGetForexAccountNumber
 )
 from src.domain.exceptions.service.forex.exception import (
     CustomerQuotationTokenNotFound, ErrorTryingToGetUniqueId,
@@ -19,9 +19,6 @@ from src.repositories.user.repository import UserRepository
 from src.services.forex.response_map.service import ForexResponseMap
 
 
-# Standards
-from typing import Union
-
 # Third party
 from caronte import AllowedHTTPMethods, ExchangeCompanyApi
 from etria_logger import Gladsheim
@@ -32,14 +29,15 @@ class CustomerExchangeService:
     async def get_proposal_simulation(
         cls, jwt_data: dict, currency_exchange: CurrencyExchange
     ) -> dict:
-        forex_account_number = await cls.__get_forex_id(jwt_data=jwt_data)
-        customer_exchange_data = await cls.__get_customer_exchange_account_data(
-            exchange_account_id=forex_account_number, payload=currency_exchange
+        forex_client_id = await cls.__get_forex_client_id(jwt_data=jwt_data)
+        forex_account_number = await cls.__get_forex_account(jwt_data=jwt_data)
+        customer_exchange_data = await cls.__get_customer_spread_by_operation_type(
+            forex_account_number=forex_account_number, payload=currency_exchange
         )
         simulation_model = SimulationModel(
             customer_exchange_data=customer_exchange_data,
             payload=currency_exchange,
-            forex_account=forex_account_number,
+            forex_client_id=forex_client_id,
         )
         content = await cls.__get_customer_token_on_route_21(
             simulation_model=simulation_model
@@ -80,11 +78,11 @@ class CustomerExchangeService:
             raise ErrorValidatingSimulationProposalData()
 
     @staticmethod
-    async def __get_customer_exchange_account_data(
-        exchange_account_id: int, payload: CurrencyExchange
-    ) -> Union[CustomerForexDataNotFound, dict]:
-        customer_exchange_data = await UserExchangeRepository.get_user_exchange_data(
-            exchange_account_id=exchange_account_id,
+    async def __get_customer_spread_by_operation_type(
+        forex_account_number: int, payload: CurrencyExchange
+    ) -> dict:
+        customer_exchange_data = await UserExchangeRepository.get_spread_data(
+            forex_account_number=forex_account_number,
             base=payload.base,
             quote=payload.quote,
         )
@@ -102,7 +100,7 @@ class CustomerExchangeService:
         caronte_response = await ExchangeCompanyApi.request_as_client(
             method=AllowedHTTPMethods.GET,
             url=url_path,
-            exchange_account_id=simulation_model.forex_account,
+            exchange_account_id=simulation_model.forex_client_id,
         )
         customer_token = await ForexResponseMap.get_response(
             caronte_response=caronte_response
@@ -123,7 +121,7 @@ class CustomerExchangeService:
         caronte_response = await ExchangeCompanyApi.request_as_client(
             method=AllowedHTTPMethods.GET,
             url=url_path,
-            exchange_account_id=simulation_model.forex_account,
+            exchange_account_id=simulation_model.forex_client_id,
             body=body,
         )
         exchange_simulation_proposal_data = await ForexResponseMap.get_response(
@@ -139,12 +137,27 @@ class CustomerExchangeService:
         return customer_token
 
     @staticmethod
-    async def __get_forex_id(jwt_data: dict) -> int:
+    async def __get_forex_client_id(jwt_data: dict) -> int:
         unique_id = jwt_data.get("user", {}).get("unique_id")
         if not unique_id:
             raise ErrorTryingToGetUniqueId()
-        forex_account_data = await UserRepository.get_forex_account(unique_id=unique_id)
-        forex_account_number = forex_account_data.get("client_id")
+        forex_account_data = await UserRepository.get_forex_account_data(unique_id=unique_id)
+        if not forex_account_data:
+            raise ErrorTryingToGetForexAccountData()
+        forex_client_id = forex_account_data.get("ouro_invest", {}).get("account", {}).get("client_id")
+        if not forex_client_id:
+            raise ErrorTryingToGetForexClientId()
+        return int(forex_client_id)
+
+    @staticmethod
+    async def __get_forex_account(jwt_data: dict) -> int:
+        unique_id = jwt_data.get("user", {}).get("unique_id")
+        if not unique_id:
+            raise ErrorTryingToGetUniqueId()
+        forex_account_data = await UserRepository.get_forex_account_data(unique_id=unique_id)
+        if not forex_account_data:
+            raise ErrorTryingToGetForexAccountData()
+        forex_account_number = forex_account_data.get("ouro_invest", {}).get("account", {}).get("account_number")
         if not forex_account_number:
             raise ErrorTryingToGetForexAccountNumber()
         return int(forex_account_number)

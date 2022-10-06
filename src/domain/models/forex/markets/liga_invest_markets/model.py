@@ -1,5 +1,4 @@
 # Ebisu
-from pydantic import BaseModel
 
 from src.core.interfaces.domain.models.forex.markets.interface import ForexMarket
 from src.domain.enums.forex.liquidation_date import LiquidationDayOptions
@@ -11,7 +10,7 @@ from datetime import date
 from typing import List
 
 
-class LigaInvestStock(BaseModel, ForexMarket):
+class LigaInvestStock(ForexMarket):
     def __init__(self, date_time, time_zone, market_calendar):
         super().__init__(date_time, time_zone, market_calendar)
 

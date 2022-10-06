@@ -1,6 +1,6 @@
 # Ebisu
 from src.domain.exceptions.repository.forex.exception import CustomerPersonalDataNotFound, ErrorTryingToInsertData, \
-    ErrorTryingToGetForexAccountNumber
+    ErrorTryingToGetForexAccountNumber, ErrorTryingToGetForexAccountData
 from src.domain.exceptions.service.forex.exception import (
     ErrorTryingToLockResource, ErrorTryingToUnlock, InsufficientFunds, ErrorTryingToGetUniqueId
 )
@@ -122,8 +122,10 @@ class ExecutionExchangeService:
         unique_id = jwt_data.get("user", {}).get("unique_id")
         if not unique_id:
             raise ErrorTryingToGetUniqueId()
-        forex_account_data = await UserRepository.get_forex_account(unique_id=unique_id)
-        if not forex_account_data and "account_number" not in forex_account_data:
+        forex_account_data = await UserRepository.get_forex_account_data(unique_id=unique_id)
+        if not forex_account_data:
+            raise ErrorTryingToGetForexAccountData()
+        forex_account_number = forex_account_data.get("ouro_invest", {}).get("account", {}).get("account_number")
+        if not forex_account_number:
             raise ErrorTryingToGetForexAccountNumber()
-        forex_account_number = forex_account_data.get("account_number")
         return int(forex_account_number)
