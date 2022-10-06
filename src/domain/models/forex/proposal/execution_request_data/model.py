@@ -1,12 +1,17 @@
 # Ebisu
+from datetime import datetime
+
 from src.domain.enums.forex.liquidation_date import LiquidationDayOptions
 from src.domain.enums.forex.countrys import Country
 from src.domain.enums.forex.composition_hash_options import Balance, Wallet
 from src.domain.enums.forex.operations import OperationType
+from src.domain.enums.forex.time_zones import TimeZones
 from src.domain.exceptions.domain.forex.exception import (
     InvalidRedisHashCombination, DataNotFoundInToken, ErrorGettingValueByExchangeHash
 )
 from src.domain.date_formatters.region.date_time.model import RegionDateFormat
+from src.domain.models.forex.markets.calendar.model import ForexMarketCalendars
+from src.domain.models.forex.markets.liga_invest_markets.model import LigaInvestStock
 from src.domain.models.jwt_user_data.model import JwtModel
 from src.domain.validators.forex.execution_proposal import ForexExecution
 from src.infrastructures.env_config import config
@@ -58,7 +63,14 @@ class ProposalTokenData:
 class ExecutionModel:
     def __init__(self, payload: ForexExecution, jwt_data: dict, token_decoded: dict, forex_account: int):
         self.jwt = JwtModel(jwt_data=jwt_data)
-        self.stock_market = payload.liga_invest_stock_market
+        self.stock_market = LigaInvestStock(
+            date_time=datetime.now(tz=TimeZones.BR_SP.value),
+            time_zone=TimeZones.BR_SP,
+            market_calendar=ForexMarketCalendars(
+                nyse=True,
+                bmf=True
+            )
+        )
         self.token = payload.proposal_simulation_token
         self.token_decoded = ProposalTokenData(token_decoded=token_decoded)
         self.forex_account = forex_account

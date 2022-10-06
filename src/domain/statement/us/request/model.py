@@ -9,11 +9,13 @@ class QueryParams:
         to_date: RegionTimeStamp,
         offset: RegionTimeStamp,
         limit: int,
+        direction: str = "next"
     ):
         self.__from_date = from_date
         self.__to_date = to_date
         self.__offset = offset
         self.__limit = limit
+        self.__direction = direction
 
     def get_query_string_dict(self):
         query_string_dict = {
@@ -21,6 +23,7 @@ class QueryParams:
             "to": self.__to_date.get_region_string_datetime_from_timestamp(),
             "offset": self.__offset.get_region_string_datetime_from_timestamp(),
             "limit": self.__limit,
+            "direction": self.__direction
         }
 
         return query_string_dict
