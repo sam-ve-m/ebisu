@@ -8,7 +8,6 @@ from .model import (
     InvalidAccountsOwnership,
     UnableToProcessMoneyFlow,
     NotMappedCurrency,
-    InvalidElectronicaSignature,
     FailToSaveAuditingTrail,
     FailToGetDataFromTransportLayer,
     ForbiddenError,

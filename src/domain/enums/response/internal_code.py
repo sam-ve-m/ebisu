@@ -5,6 +5,7 @@ from enum import IntEnum
 class InternalCode(IntEnum):
     SUCCESS = 0
     INVALID_PARAMS = 10
+    INVALID_SIGNATURE_ELECTRONIC = 11
     JWT_INVALID = 30
     NOT_IMPLEMENTED = 90
     DATA_VALIDATION_ERROR = 97

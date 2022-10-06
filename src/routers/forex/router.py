@@ -28,6 +28,10 @@ class ForexExchange:
         request: Request, payload: CurrencyExchange = Depends()
     ) -> Response:
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        await JwtService.validate_electronic_signature(
+            request=request,
+            user_data=jwt_data["user"]
+        )
         result = await CustomerExchangeService.get_proposal_simulation(
             jwt_data=jwt_data,
             currency_exchange=payload

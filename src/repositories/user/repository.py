@@ -16,12 +16,12 @@ class UserRepository(MongoDbBaseRepository):
         return name
 
     @classmethod
-    async def get_forex_account(cls, unique_id: str) -> dict:
-        forex_account_number = await cls.find_one(
+    async def get_forex_account_data(cls, unique_id: str) -> dict:
+        forex_account_data = await cls.find_one(
             query={"unique_id": unique_id},
             project={"ouro_invest.account": 1, '_id': 0}
         )
-        return forex_account_number.get("ouro_invest", {}).get("account")
+        return forex_account_data
 
     @classmethod
     async def get_user_portfolios(cls, unique_id: str):
