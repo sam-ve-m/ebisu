@@ -12,10 +12,6 @@ from pydantic import BaseModel, root_validator
 
 class ForexExecution(BaseModel):
     proposal_simulation_token: str
-    liga_invest_stock_market: LigaInvestStock
-
-    class Config:
-        arbitrary_types_allowed = True
 
     @root_validator(pre=True)
     def check_card_number_omitted(cls, values: dict):
