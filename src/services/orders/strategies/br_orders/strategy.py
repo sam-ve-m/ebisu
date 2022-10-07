@@ -13,15 +13,17 @@ class GetBrOrders:
         limit: int,
         order_status: List[OrderStatus],
     ) -> str:
-
-        query = f"""SELECT B.SYMBOL, B.ROOTCLORDID, B.ORDSTATUS, B.CLORDID, B.CREATEDAT, B.CUMQTY, B.AVGPX, B.ORDTYPE, B.ORDERQTY, B.SIDE, B.PRICE, B.STOPPX
-                    FROM UORDEDB001.VW_ORDER_LIST B
-                    WHERE B.ACCOUNT in ('{"','".join(accounts)}')
-                    {GetBrOrders.filter(order_status)}
-                    ORDER BY B.CREATEDAT DESC
-                    offset {offset} rows
-                    fetch first {limit} row only  
-                    """
+        query = f"""
+        select * from (
+                SELECT B.SYMBOL, B.ROOTCLORDID, B.ORDSTATUS, B.CLORDID, B.CREATEDAT, B.CUMQTY, B.AVGPX, B.ORDTYPE, B.ORDERQTY, B.SIDE, B.PRICE, B.STOPPX
+                FROM UORDEDB001.VW_ORDER_LIST B
+                WHERE B.ACCOUNT in ('{"','".join(accounts)}')
+                {GetBrOrders.filter(order_status)}
+            )
+        order by CREATEDAT
+        offset {offset} rows
+        fetch first {limit} row only  
+        """
         return query
 
     @staticmethod
@@ -31,7 +33,7 @@ class GetBrOrders:
     ) -> str:
 
         query = f"""SELECT count(*) as count
-                        FROM USOLUDB001.VW_CURRENT_EXECUTION_REPORTS B
+                        FROM UORDEDB001.VW_ORDER_LIST B
                         WHERE B.ACCOUNT in ('{"','".join(accounts)}')
                         {GetBrOrders.filter(order_status)}
                         ORDER BY B.TRANSACTTIME DESC
