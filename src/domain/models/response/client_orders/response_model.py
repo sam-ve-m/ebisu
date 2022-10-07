@@ -27,7 +27,6 @@ class ClientOrdersResponse(BaseModel):
     expire_date: Optional[str]
     error_message: Optional[str]
 
-
     @classmethod
     def to_response(cls, models: List[ClientOrdersModel]):
         orders = [
