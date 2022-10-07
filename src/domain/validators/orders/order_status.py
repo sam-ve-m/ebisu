@@ -6,7 +6,7 @@ from src.domain.enums.order_status import OrderStatus
 
 
 class OrderStatusValidator(BaseModel):
-    order_status: str
+    order_status: Optional[str]
 
     @validator("order_status")
     def pipe_to_list(cls, data: str):
