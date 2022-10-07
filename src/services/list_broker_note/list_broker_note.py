@@ -1,11 +1,14 @@
 # STANDARD LIBS
 import os
+from http import HTTPStatus
 from operator import itemgetter
 from etria_logger import Gladsheim
 
 # EXTERNAL LIBS
+from src.domain.enums.response.internal_code import InternalCode
 from src.domain.models.database.list_broker_note.model import BrokerNoteModel
 from src.domain.models.response.list_broker_note.response_model import ListBrokerNoteResponse
+from src.domain.responses.http_response_model import ResponseModel
 from src.repositories.files.repository import FileRepository
 from src.domain.validators.exchange_info.list_broker_note_validator import (
     ListBrokerNoteModel,
@@ -266,7 +269,10 @@ class ListBrokerNote:
         response_model = ListBrokerNoteResponse.to_response(
             models=broker_note_response
         )
-        return response_model
+        response = ResponseModel(
+            success=True, result=response_model, internal_code=InternalCode.SUCCESS
+        ).build_http_response(status_code=HTTPStatus.OK)
+        return response
 
     @staticmethod
     def get_month_broker_notes(

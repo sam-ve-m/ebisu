@@ -18,7 +18,7 @@ class ListBrokerNoteResponse(BaseModel):
                 region=model.region,
                 day=model.day,
                 broker_note_link=model.broker_note_link,
-            )
+            ).dict()
             for model in models
         ]
         response = broker_note
