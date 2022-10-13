@@ -13,4 +13,3 @@ class NatureOperation(IntEnum):
 class OperationType(StrEnum):
     BRL_TO_USD = "OUT"
     USD_TO_BRL = "IN"
-

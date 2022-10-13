@@ -11,6 +11,3 @@ class BankAccountModel(BaseModel):
     account_name: Optional[str]
     id: Optional[str]
     status: Optional[str]
-
-
-

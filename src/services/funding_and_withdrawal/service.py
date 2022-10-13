@@ -11,7 +11,7 @@ from src.domain.validators.funding_and_withdrawal.validators import (
 from nidavellir import Sindri
 
 from src.services.funding_and_withdrawal.money_flow_resolvers import (
-    TransferToExternalBank
+    TransferToExternalBank,
 )
 
 
@@ -72,6 +72,7 @@ class FundingAndWithdrawalService:
             # aplica logica aki de tranferian entre contas sinacor
             async def loro():
                 pass
+
             return loro
 
         money_flow_resolver = money_flow_resolver_class(
@@ -82,4 +83,3 @@ class FundingAndWithdrawalService:
         resume = await money_flow_resolver()
         Sindri.dict_to_primitive_types(resume)
         return resume
-

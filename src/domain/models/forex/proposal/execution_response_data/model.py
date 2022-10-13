@@ -46,21 +46,43 @@ class ExecutionResponseModel(BaseModel):
             "exchange_operation_code": exchange_operation.get("codigo"),
             "exchange_status_code": exchange_operation.get("status", {}).get("codigo"),
             "exchange_status_name": exchange_operation.get("status", {}).get("nome"),
-            "nature_operation_code": exchange_operation.get("naturezaOperacao", {}).get("codigo"),
+            "nature_operation_code": exchange_operation.get("naturezaOperacao", {}).get(
+                "codigo"
+            ),
             "nature_name": exchange_operation.get("naturezaOperacao", {}).get("nome"),
-            "transaction_type": exchange_operation.get("naturezaOperacao", {}).get("tipoTransacao"),
-            "operation_mode": exchange_operation.get("naturezaOperacao", {}).get("modoOperacao"),
-            "agency_number": exchange_operation.get("dadosLiquidacao", {}).get("numeroAgencia"),
-            "account_number": exchange_operation.get("dadosLiquidacao", {}).get("numeroConta"),
-            "account_digit": exchange_operation.get("dadosLiquidacao", {}).get("digitoConta"),
-            "bank_number": exchange_operation.get("dadosLiquidacao", {}).get("numeroBanco"),
+            "transaction_type": exchange_operation.get("naturezaOperacao", {}).get(
+                "tipoTransacao"
+            ),
+            "operation_mode": exchange_operation.get("naturezaOperacao", {}).get(
+                "modoOperacao"
+            ),
+            "agency_number": exchange_operation.get("dadosLiquidacao", {}).get(
+                "numeroAgencia"
+            ),
+            "account_number": exchange_operation.get("dadosLiquidacao", {}).get(
+                "numeroConta"
+            ),
+            "account_digit": exchange_operation.get("dadosLiquidacao", {}).get(
+                "digitoConta"
+            ),
+            "bank_number": exchange_operation.get("dadosLiquidacao", {}).get(
+                "numeroBanco"
+            ),
             "bank_name": exchange_operation.get("dadosLiquidacao", {}).get("nomeBanco"),
             "label": exchange_operation.get("dadosLiquidacao", {}).get("rotulo"),
             "overseas_banker": exchange_operation.get("dadosBanqueiroExterior"),
-            "payment_currency_bacen_code": exchange_operation.get("moedaPagamento", {}).get("codigoBACEN"),
-            "payment_currency_symbol": exchange_operation.get("moedaPagamento", {}).get("simbolo"),
-            "traded_currency_bacen_code": exchange_operation.get("moedaNegociada", {}).get("codigoBACEN"),
-            "traded_currency_symbol": exchange_operation.get("moedaNegociada", {}).get("simbolo"),
+            "payment_currency_bacen_code": exchange_operation.get(
+                "moedaPagamento", {}
+            ).get("codigoBACEN"),
+            "payment_currency_symbol": exchange_operation.get("moedaPagamento", {}).get(
+                "simbolo"
+            ),
+            "traded_currency_bacen_code": exchange_operation.get(
+                "moedaNegociada", {}
+            ).get("codigoBACEN"),
+            "traded_currency_symbol": exchange_operation.get("moedaNegociada", {}).get(
+                "simbolo"
+            ),
             "quantity_traded": exchange_operation.get("quantidadeNegociada"),
             "payment_amount": exchange_operation.get("quantidadePagamento"),
             "total_value": exchange_operation.get("valorTotal"),
@@ -70,6 +92,8 @@ class ExecutionResponseModel(BaseModel):
             "control_code": execution_response.get("controle", {}).get("codigo"),
             "control_message": execution_response.get("controle", {}).get("mensagem"),
             "control_token": execution_response.get("controle", {}).get("token"),
-            "control_datetime": execution_response.get("controle", {}).get("dataHoraServidor")
+            "control_datetime": execution_response.get("controle", {}).get(
+                "dataHoraServidor"
+            ),
         }
         return cls(**execution_response_to_validate)

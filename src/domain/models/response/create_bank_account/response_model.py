@@ -27,7 +27,7 @@ class ListBankAccountsResponse(BaseModel):
                 account_number=model.account_number,
                 account_name=model.account_name,
                 id=model.id,
-                status=model.status
+                status=model.status,
             )
             for model in models
         ]

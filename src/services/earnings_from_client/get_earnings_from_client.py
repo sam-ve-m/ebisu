@@ -35,11 +35,16 @@ class EarningsFromClient:
         unique_id = cls.__extract_unique_id_from_jwt(jwt_data=jwt_data)
 
         from_date, to_date = await EarningsFromClient.__get_range_date_and_offset(
-            unique_id=unique_id, region=earnings_client.region, region_date_format=RegionDateFormat.BR_DATE_ISO_FORMAT
+            unique_id=unique_id,
+            region=earnings_client.region,
+            region_date_format=RegionDateFormat.BR_DATE_ISO_FORMAT,
         )
 
         paid_transactions = await cls.sinacor_earnings_transport.paid_earnings(
-            account=account, earnings_client=earnings_client, from_date=from_date, to_date=to_date
+            account=account,
+            earnings_client=earnings_client,
+            from_date=from_date,
+            to_date=to_date,
         )
 
         total_paid_earnings = sum(
@@ -72,7 +77,9 @@ class EarningsFromClient:
         )
 
         from_date, to_date = await EarningsFromClient.__get_range_date_and_offset(
-            unique_id=unique_id, region=earnings_client.region, region_date_format=RegionDateFormat.US_DATE_FORMAT
+            unique_id=unique_id,
+            region=earnings_client.region,
+            region_date_format=RegionDateFormat.US_DATE_FORMAT,
         )
 
         transaction_request = TransactionRequest(
@@ -135,7 +142,6 @@ class EarningsFromClient:
         )
 
         return from_date, to_date
-
 
     @staticmethod
     def __extract_account(portfolios: dict, region: str) -> str:

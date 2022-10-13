@@ -34,8 +34,5 @@ class BifrostTransport:
         )
         if not success:
             msg = f"Bifrost_client::error_send_to_queue::{topic=}::{message=}"
-            Gladsheim.error(
-                bifrost_status=bifrost_status,
-                message=msg
-            )
+            Gladsheim.error(bifrost_status=bifrost_status, message=msg)
             raise ErrorSendingToBifrostClient()

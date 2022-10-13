@@ -22,7 +22,11 @@ class Bmf(ForexMarket):
 
     def validate_open_market_hours(self) -> bool:
         request_time = int(self.date_time.strftime("%H%M"))
-        boolean = int(config("BMF_OPENING_TIME")) < request_time < int(config("BMF_CLOSING_TIME"))
+        boolean = (
+            int(config("BMF_OPENING_TIME"))
+            < request_time
+            < int(config("BMF_CLOSING_TIME"))
+        )
         return boolean
 
     def get_liquidation_date(self, day: LiquidationDayOptions) -> date:
@@ -34,9 +38,7 @@ class Bmf(ForexMarket):
 
     def get_valid_date_range(self, end_date: date) -> List[date]:
         valid_dates = self.forex_calendar.bmf.valid_days(
-            start_date=self.start_date,
-            end_date=end_date,
-            tz=self.time_zone
+            start_date=self.start_date, end_date=end_date, tz=self.time_zone
         )
         valid_dates_treated = [next_date for next_date in valid_dates.date]
         return valid_dates_treated

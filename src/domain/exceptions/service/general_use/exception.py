@@ -12,4 +12,11 @@ class InvalidElectronicaSignature(ServiceException):
         self.status_code = HTTPStatus.UNAUTHORIZED
         self.internal_code = InternalCode.INVALID_SIGNATURE_ELECTRONIC
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+        super().__init__(
+            self.msg,
+            self.status_code,
+            self.internal_code,
+            self.success,
+            *args,
+            **kwargs
+        )

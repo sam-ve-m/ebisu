@@ -10,7 +10,9 @@ class UserBankAccountRepository(MongoDbBaseRepository):
     collection = config("MONGODB_USER_COLLECTION")
 
     @classmethod
-    async def get_registered_user_bank_accounts(cls, unique_id: str) -> BankAccountModel:
+    async def get_registered_user_bank_accounts(
+        cls, unique_id: str
+    ) -> BankAccountModel:
         user_bank_accounts_by_unique_id = await cls.find_one(
             query={"unique_id": unique_id},
             project={
@@ -26,8 +28,7 @@ class UserBankAccountRepository(MongoDbBaseRepository):
         )
         bank_accounts_result = user_bank_accounts_by_unique_id["bank_accounts"]
         user_bank_accounts_response = [
-            BankAccountModel(**symbol)
-            for symbol in bank_accounts_result
+            BankAccountModel(**symbol) for symbol in bank_accounts_result
         ]
         return user_bank_accounts_response
 

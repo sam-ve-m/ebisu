@@ -28,8 +28,8 @@ class GetBrOrders:
 
     @staticmethod
     def build_quantity_query(
-            accounts: List[str],
-            order_status: List[OrderStatus],
+        accounts: List[str],
+        order_status: List[OrderStatus],
     ) -> str:
 
         query = f"""SELECT count(*) as count

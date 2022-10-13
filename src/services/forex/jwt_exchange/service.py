@@ -8,7 +8,6 @@ from jwt import JWT
 
 
 class JwtForexService:
-
     @staticmethod
     async def decode(jwt_token):
         instance = JWT()
@@ -20,5 +19,7 @@ class JwtForexService:
             )
             return jwt_data
         except Exception as ex:
-            Gladsheim.error(error=ex, message="error on trying to decode customer forex token")
+            Gladsheim.error(
+                error=ex, message="error on trying to decode customer forex token"
+            )
             raise ErrorTryingToDecodeJwt()
