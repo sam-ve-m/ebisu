@@ -18,10 +18,7 @@ class ForexExecution(BaseModel):
         liga_stock_market = LigaInvestStock(
             date_time=datetime.now(tz=TimeZones.BR_SP.value),
             time_zone=TimeZones.BR_SP,
-            market_calendar=ForexMarketCalendars(
-                nyse=True,
-                bmf=True
-            )
+            market_calendar=ForexMarketCalendars(nyse=True, bmf=True),
         )
 
         is_valid_open_market_hours = liga_stock_market.validate_open_market_hours()

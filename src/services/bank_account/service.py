@@ -3,6 +3,7 @@ import datetime
 from uuid import uuid4
 
 from fastapi.openapi.models import Response
+
 # INTERNAL LIBRARIES
 from nidavellir import Sindri
 from src.domain.enums.persephone import PersephoneSchema, PersephoneQueue
@@ -13,7 +14,9 @@ from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.services.get_bank_code.service import GetBankCode
 from persephone_client import Persephone
 from src.infrastructures.env_config import config
-from src.domain.models.response.create_bank_account.response_model import ListBankAccountsResponse
+from src.domain.models.response.create_bank_account.response_model import (
+    ListBankAccountsResponse,
+)
 from src.domain.responses.http_response_model import ResponseModel
 from src.domain.enums.response.internal_code import InternalCode
 from http import HTTPStatus

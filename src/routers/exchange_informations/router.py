@@ -42,8 +42,12 @@ from src.services.orders.orders import Orders
 from src.services.statement.get_statement import GetStatement
 from src.services.jwt.service_jwt import JwtService
 from src.services.list_broker_note.list_broker_note import ListBrokerNote
-from src.domain.models.response.list_client_orders.response_model import ClientListOrdersResponse
-from src.domain.models.response.client_orders_quantity.response_model import QuantityResponse
+from src.domain.models.response.list_client_orders.response_model import (
+    ClientListOrdersResponse,
+)
+from src.domain.models.response.client_orders_quantity.response_model import (
+    QuantityResponse,
+)
 
 
 class ExchangeRouter:
@@ -100,14 +104,15 @@ class ExchangeRouter:
     @__exchange_router.get(
         "/client_orders",
         tags=["Client Orders"],
-        response_model=List[ClientOrdersResponse]
-
+        response_model=List[ClientOrdersResponse],
     )
     async def get_client_orders(
         request: Request, client_order: GetClientOrderModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        client_orders_response = Orders.get_client_orders(client_order=client_order, jwt_data=jwt_data)
+        client_orders_response = Orders.get_client_orders(
+            client_order=client_order, jwt_data=jwt_data
+        )
         return client_orders_response
 
     @staticmethod
@@ -121,8 +126,7 @@ class ExchangeRouter:
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         list_client_orders_response = await Orders.get_list_client_orders(
-            jwt_data=jwt_data,
-            list_client_orders=list_client_orders
+            jwt_data=jwt_data, list_client_orders=list_client_orders
         )
         return list_client_orders_response
 
@@ -130,15 +134,14 @@ class ExchangeRouter:
     @__exchange_router.get(
         "/client_orders_quantity",
         tags=["Client Orders"],
-        response_model=QuantityResponse
+        response_model=QuantityResponse,
     )
     async def get_client_orders(
         request: Request, client_order_quantity: GetClientOrderQuantityModel = Depends()
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         response = await Orders.get_client_orders_quantity(
-            jwt_data=jwt_data,
-            client_order_quantity=client_order_quantity
+            jwt_data=jwt_data, client_order_quantity=client_order_quantity
         )
         return response
 

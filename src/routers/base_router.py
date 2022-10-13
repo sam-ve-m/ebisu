@@ -13,7 +13,10 @@ from src.domain.exceptions.model import (
     MoneyFlowPerformedOutsideTransactionWindow,
 )
 from src.domain.exceptions.base_exceptions.exceptions import (
-    ServiceException, RepositoryException, DomainException, TransportException
+    ServiceException,
+    RepositoryException,
+    DomainException,
+    TransportException,
 )
 from src.domain.exceptions import (
     ForbiddenError,

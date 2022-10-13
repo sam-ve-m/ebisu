@@ -12,7 +12,14 @@ class CaronteCantFindToken(ServiceException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.ERROR_IN_CARONTE
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+        super().__init__(
+            self.msg,
+            self.status_code,
+            self.internal_code,
+            self.success,
+            *args,
+            **kwargs
+        )
 
 
 class CustomerQuotationTokenNotFound(ServiceException):
@@ -21,7 +28,14 @@ class CustomerQuotationTokenNotFound(ServiceException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.DATA_NOT_FOUND
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+        super().__init__(
+            self.msg,
+            self.status_code,
+            self.internal_code,
+            self.success,
+            *args,
+            **kwargs
+        )
 
 
 class DroppedToken(ServiceException):
@@ -30,7 +44,14 @@ class DroppedToken(ServiceException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.DROPPED_TOKEN
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+        super().__init__(
+            self.msg,
+            self.status_code,
+            self.internal_code,
+            self.success,
+            *args,
+            **kwargs
+        )
 
 
 class ErrorTryingToGetUniqueId(ServiceException):
@@ -39,7 +60,14 @@ class ErrorTryingToGetUniqueId(ServiceException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.DATA_NOT_FOUND
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+        super().__init__(
+            self.msg,
+            self.status_code,
+            self.internal_code,
+            self.success,
+            *args,
+            **kwargs
+        )
 
 
 class ExpiredToken(ServiceException):
@@ -48,7 +76,14 @@ class ExpiredToken(ServiceException):
         self.status_code = HTTPStatus.BAD_REQUEST
         self.internal_code = InternalCode.EXPIRED_TOKEN
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+        super().__init__(
+            self.msg,
+            self.status_code,
+            self.internal_code,
+            self.success,
+            *args,
+            **kwargs
+        )
 
 
 class ErrorTryingToLockResource(ServiceException):
@@ -57,7 +92,14 @@ class ErrorTryingToLockResource(ServiceException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.ERROR_IN_HALBERD
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+        super().__init__(
+            self.msg,
+            self.status_code,
+            self.internal_code,
+            self.success,
+            *args,
+            **kwargs
+        )
 
 
 class ErrorTryingToUnlock(ServiceException):
@@ -66,7 +108,14 @@ class ErrorTryingToUnlock(ServiceException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.ERROR_IN_HALBERD
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+        super().__init__(
+            self.msg,
+            self.status_code,
+            self.internal_code,
+            self.success,
+            *args,
+            **kwargs
+        )
 
 
 class InvalidToken(ServiceException):
@@ -75,7 +124,14 @@ class InvalidToken(ServiceException):
         self.status_code = HTTPStatus.UNAUTHORIZED
         self.internal_code = InternalCode.JWT_INVALID
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+        super().__init__(
+            self.msg,
+            self.status_code,
+            self.internal_code,
+            self.success,
+            *args,
+            **kwargs
+        )
 
 
 class InsufficientFunds(ServiceException):
@@ -84,7 +140,14 @@ class InsufficientFunds(ServiceException):
         self.status_code = HTTPStatus.OK
         self.internal_code = InternalCode.INSUFFICIENT_FUNDS
         self.success = True
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+        super().__init__(
+            self.msg,
+            self.status_code,
+            self.internal_code,
+            self.success,
+            *args,
+            **kwargs
+        )
 
 
 class UnexpectedErrorInExchangeAPI(ServiceException):
@@ -93,7 +156,14 @@ class UnexpectedErrorInExchangeAPI(ServiceException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.INTERNAL_SERVER_ERROR
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+        super().__init__(
+            self.msg,
+            self.status_code,
+            self.internal_code,
+            self.success,
+            *args,
+            **kwargs
+        )
 
 
 class ErrorTryingToDecodeJwt(ServiceException):
@@ -102,4 +172,11 @@ class ErrorTryingToDecodeJwt(ServiceException):
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.JWT_INVALID
         self.success = False
-        super().__init__(self.msg, self.status_code, self.internal_code, self.success, *args, **kwargs)
+        super().__init__(
+            self.msg,
+            self.status_code,
+            self.internal_code,
+            self.success,
+            *args,
+            **kwargs
+        )

@@ -1,6 +1,8 @@
 from datetime import datetime
 
-from src.core.interfaces.domain.models.internal.account_transfer.interface import IAccountTransfer
+from src.core.interfaces.domain.models.internal.account_transfer.interface import (
+    IAccountTransfer,
+)
 from src.domain.exceptions.model import MoneyFlowPerformedOutsideTransactionWindow
 from src.infrastructures.env_config import config
 from src.transport.bank_transfer.bifrost.transport import BankTransferBifrostTransport
@@ -48,14 +50,16 @@ class TransferToExternalBank:
 
     @staticmethod
     async def _send(resume: dict):
-        await BankTransferBifrostTransport.send_transfer_message_to_bifrost(message=resume)
+        await BankTransferBifrostTransport.send_transfer_message_to_bifrost(
+            message=resume
+        )
 
     async def _build_resume(self) -> dict:
         resume = {
             "origin_account": await self._origin_account.resume(),
             "account_destination": await self._account_destination.resume(),
             "value": self._value,
-            "due_date": datetime.utcnow()
+            "due_date": datetime.utcnow(),
         }
         return resume
 

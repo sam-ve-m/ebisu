@@ -3,7 +3,15 @@ from src.domain.enums.response.internal_code import InternalCode
 
 
 class DomainException(Exception):
-    def __init__(self, msg: str, status_code: int, internal_code: InternalCode, success: bool, *args, **kwargs):
+    def __init__(
+        self,
+        msg: str,
+        status_code: int,
+        internal_code: InternalCode,
+        success: bool,
+        *args,
+        **kwargs
+    ):
         self.internal_code = internal_code
         self.success = success
         self.msg = msg
@@ -12,7 +20,15 @@ class DomainException(Exception):
 
 
 class RepositoryException(Exception):
-    def __init__(self, msg: str, status_code: int, internal_code: InternalCode, success: bool, *args, **kwargs):
+    def __init__(
+        self,
+        msg: str,
+        status_code: int,
+        internal_code: InternalCode,
+        success: bool,
+        *args,
+        **kwargs
+    ):
         self.internal_code = internal_code
         self.success = success
         self.msg = msg
@@ -21,7 +37,15 @@ class RepositoryException(Exception):
 
 
 class ServiceException(Exception):
-    def __init__(self, msg: str, status_code: int, internal_code: InternalCode, success: bool, *args, **kwargs):
+    def __init__(
+        self,
+        msg: str,
+        status_code: int,
+        internal_code: InternalCode,
+        success: bool,
+        *args,
+        **kwargs
+    ):
         self.internal_code = internal_code
         self.success = success
         self.msg = msg
@@ -30,7 +54,15 @@ class ServiceException(Exception):
 
 
 class TransportException(Exception):
-    def __init__(self, msg: str, status_code: int, internal_code: InternalCode, success: bool, *args, **kwargs):
+    def __init__(
+        self,
+        msg: str,
+        status_code: int,
+        internal_code: InternalCode,
+        success: bool,
+        *args,
+        **kwargs
+    ):
         self.internal_code = internal_code
         self.success = success
         self.msg = msg

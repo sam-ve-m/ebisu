@@ -1,14 +1,24 @@
 # Ebisu
-from src.domain.validators.forex.currency_options import CurrencyExchange, CurrencyOptions
+from src.domain.validators.forex.currency_options import (
+    CurrencyExchange,
+    CurrencyOptions,
+)
 from src.domain.enums.forex.operations import NatureOperation
 from src.domain.exceptions.domain.forex.exception import (
-    InvalidOperation, SpreadTaxNotFound, OperationNotImplemented
+    InvalidOperation,
+    SpreadTaxNotFound,
+    OperationNotImplemented,
 )
 from src.infrastructures.env_config import config
 
 
 class SimulationModel:
-    def __init__(self, customer_exchange_data: dict, payload: CurrencyExchange, forex_client_id: int):
+    def __init__(
+        self,
+        customer_exchange_data: dict,
+        payload: CurrencyExchange,
+        forex_client_id: int,
+    ):
         self.base = payload.base
         self.forex_client_id = forex_client_id
         self.quote = payload.quote
@@ -27,7 +37,7 @@ class SimulationModel:
         return url_path
 
     def __get_operation_value(self) -> NatureOperation:
-        operation_key = f'{self.base}_TO_{self.quote}'
+        operation_key = f"{self.base}_TO_{self.quote}"
         map_of_operation_compositions = {
             "BRL_TO_USD": NatureOperation.BRL_TO_USD,
             "USD_TO_BRL": NatureOperation.USD_TO_BRL,
@@ -37,11 +47,10 @@ class SimulationModel:
             raise InvalidOperation()
         return operation_value
 
-    async def get_body_template_to_request_exchange_simulation(self, customer_token: str) -> dict:
-        body = {
-            "quantidadeMoedaBase": self.quantity,
-            "token": customer_token
-        }
+    async def get_body_template_to_request_exchange_simulation(
+        self, customer_token: str
+    ) -> dict:
+        body = {"quantidadeMoedaBase": self.quantity, "token": customer_token}
         return body
 
     @staticmethod

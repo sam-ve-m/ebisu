@@ -26,8 +26,8 @@ class GetUsOrders:
 
     @staticmethod
     def build_quantity_query(
-            accounts: List[str],
-            order_status: List[OrderStatus],
+        accounts: List[str],
+        order_status: List[OrderStatus],
     ) -> str:
         query = f"""SELECT count(*) as count
                         FROM UDRIVDB001.VW_CURRENT_EXECUTION_REPORTS B

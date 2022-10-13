@@ -39,13 +39,17 @@ class SimulationResponseModel(BaseModel):
         commercial_tax = values.get("taxaComercial")
         currency_quote_price = values.get("valorCotacaoCambio")
         exchange_account_id = values.get("codigoCliente")
-        expiration_date = cls.__convert_date_to_time_stamp(date=values.get("dataValidade"))
+        expiration_date = cls.__convert_date_to_time_stamp(
+            date=values.get("dataValidade")
+        )
         gross_value = values.get("valorBruto")
         iof_percentage = values.get("percentualIOF")
         iof_value = values.get("valorIOF")
         net_value = values.get("valorLiquido")
         operation_nature_code = values.get("codigoNaturezaOperacao")
-        payment_date = cls.__convert_date_to_time_stamp(date=values.get("dataPagamento"))
+        payment_date = cls.__convert_date_to_time_stamp(
+            date=values.get("dataPagamento")
+        )
         proposal_token = exchange_simulation_proposal_data.get("token")
         quote_currency_symbol = values.get("simboloMoedaCotacao")
         quote_date = cls.__convert_date_to_time_stamp(date=values.get("dataCotacao"))
@@ -72,7 +76,7 @@ class SimulationResponseModel(BaseModel):
             "quantity_currency_traded": quantity_currency_traded,
             "spread_percentage": spread_percentage,
             "tax_value": tax_value,
-            "vet": vet
+            "vet": vet,
         }
 
         return cls(**exchange_data_to_validate)
@@ -82,6 +86,6 @@ class SimulationResponseModel(BaseModel):
         converted_date = RegionStringDateTime(
             region_date_format=RegionDateFormat.BR_DATE_ZULU_FORMAT,
             date=date,
-            utc_offset=ExchangeUtcOffset.BR_UTC_OFFSET
+            utc_offset=ExchangeUtcOffset.BR_UTC_OFFSET,
         )
         return converted_date.get_date_in_time_stamp_with_timezone_replace()
