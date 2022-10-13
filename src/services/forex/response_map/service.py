@@ -16,7 +16,6 @@ from caronte import CaronteStatus, CaronteStatusResponse
 
 
 class ForexResponseMap:
-
     @classmethod
     async def get_response(
         cls, caronte_response: CaronteStatusResponse
@@ -34,7 +33,6 @@ class ForexResponseMap:
         """
         response_map = {
             CaronteStatus.BAD_REQUEST: ExpiredToken,
-
             CaronteStatus.UNAUTHORIZED: InvalidToken,
             CaronteStatus.FORBIDDEN: DroppedToken,
             CaronteStatus.TOKEN_NOT_FOUND: CaronteCantFindToken,

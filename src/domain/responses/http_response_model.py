@@ -10,7 +10,11 @@ from fastapi import Response
 
 class ResponseModel:
     def __init__(
-        self, success: bool, internal_code: InternalCode, message: str = None, result: any = None
+        self,
+        success: bool,
+        internal_code: InternalCode,
+        message: str = None,
+        result: any = None,
     ):
         self.internal_code = internal_code
         self.message = message
@@ -30,11 +34,12 @@ class ResponseModel:
         return response_model
 
     def build_http_response(
-        self, status_code: int,
+        self,
+        status_code: int,
     ) -> Response:
         http_response = Response(
             content=self.response,
             status_code=status_code,
-            headers={"Content-type": "application/json"}
+            headers={"Content-type": "application/json"},
         )
         return http_response

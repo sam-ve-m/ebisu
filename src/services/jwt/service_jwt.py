@@ -21,7 +21,9 @@ from src.domain.exceptions import InternalServerError, UnauthorizedError
 
 
 # BUCKET_NAME_KEY = config("BUCKET_NAME_KEY")
-from src.domain.exceptions.service.general_use.exception import InvalidElectronicaSignature
+from src.domain.exceptions.service.general_use.exception import (
+    InvalidElectronicaSignature,
+)
 
 
 class JwtService:
@@ -93,4 +95,3 @@ class JwtService:
             Gladsheim.error(message=str(payload))
             raise InternalServerError("common.process_issue")
         return payload
-

@@ -11,7 +11,9 @@ from src.domain.validators.user_account.bank_account import (
     UpdateUserBankAccounts,
     DeleteUsersBankAccount,
 )
-from src.domain.models.response.create_bank_account.response_model import ListBankAccountsResponse
+from src.domain.models.response.create_bank_account.response_model import (
+    ListBankAccountsResponse,
+)
 
 # SERVICES
 from src.services.bank_account.service import UserBankAccountService
@@ -31,13 +33,13 @@ class UserBankAccountsRouter:
     @__bank_account_router.get(
         "/user/list_bank_accounts",
         tags=["User Bank Account"],
-        response_model=ListBankAccountsResponse
+        response_model=ListBankAccountsResponse,
     )
     async def get_user_bank_accounts(request: Request):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         jwt_data = {"x-thebes-answer": jwt_data}
-        user_bank_accounts = (
-            await UserBankAccountService.get_user_bank_accounts(jwt_data)
+        user_bank_accounts = await UserBankAccountService.get_user_bank_accounts(
+            jwt_data
         )
         return user_bank_accounts
 
@@ -85,10 +87,7 @@ class UserBankAccountsRouter:
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
 
         bank_account = delete_bank_account.dict()
-        jwt_data = {
-            "x-thebes-answer": jwt_data,
-            "bank_account": bank_account
-        }
+        jwt_data = {"x-thebes-answer": jwt_data, "bank_account": bank_account}
         delete_bank_account_response = (
             await UserBankAccountService.delete_user_bank_account(jwt_data=jwt_data)
         )

@@ -10,12 +10,18 @@ from datetime import datetime, date, timedelta
 
 
 class ForexMarket(ABC):
-
-    def __init__(self, date_time: datetime, time_zone: TimeZones, market_calendar: ForexMarketCalendars):
+    def __init__(
+        self,
+        date_time: datetime,
+        time_zone: TimeZones,
+        market_calendar: ForexMarketCalendars,
+    ):
         self.date_time = date_time
         self.time_zone = time_zone.value
         self.start_date = date_time.date()
-        self.end_date = self.start_date + timedelta(days=int(config("MARKET_DAYS_RANGE")))
+        self.end_date = self.start_date + timedelta(
+            days=int(config("MARKET_DAYS_RANGE"))
+        )
         self.forex_calendar = market_calendar
 
     @abstractmethod

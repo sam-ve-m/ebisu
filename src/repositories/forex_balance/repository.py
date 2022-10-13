@@ -9,9 +9,7 @@ class ForexBalanceRepository(RedisInfrastructure):
     db = config("REDIS_BALANCE_DB")
 
     @classmethod
-    async def get_allowed_to_withdraw(
-        cls, redis_hash: str
-    ) -> AllowedWithdraw:
+    async def get_allowed_to_withdraw(cls, redis_hash: str) -> AllowedWithdraw:
         redis = await cls.get_redis()
         keys = await redis.keys(redis_hash)
         values = await redis.mget(keys)

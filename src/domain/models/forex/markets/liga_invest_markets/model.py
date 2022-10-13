@@ -16,7 +16,11 @@ class LigaInvestStock(ForexMarket):
 
     def validate_open_market_hours(self) -> bool:
         request_time = self.date_time.strftime("%H%M")
-        boolean = int(config("LIGA_INVEST_OPENING_TIME")) < int(request_time) < int(config("LIGA_INVEST_CLOSING_TIME"))
+        boolean = (
+            int(config("LIGA_INVEST_OPENING_TIME"))
+            < int(request_time)
+            < int(config("LIGA_INVEST_CLOSING_TIME"))
+        )
         return boolean
 
     def validate_forex_business_day(self) -> bool:
@@ -33,16 +37,14 @@ class LigaInvestStock(ForexMarket):
 
     def get_valid_date_range(self, end_date: date) -> List[date]:
         bmf_opening_dates = self.forex_calendar.bmf.valid_days(
-            start_date=self.start_date,
-            end_date=end_date,
-            tz=self.time_zone
+            start_date=self.start_date, end_date=end_date, tz=self.time_zone
         )
         nyse_opening_dates = self.forex_calendar.nyse.valid_days(
-            start_date=self.start_date,
-            end_date=end_date,
-            tz=self.time_zone
+            start_date=self.start_date, end_date=end_date, tz=self.time_zone
         )
         bmf_valid_dates_treated = [next_date for next_date in bmf_opening_dates.date]
         nyse_valid_dates_treated = [next_date for next_date in nyse_opening_dates.date]
-        intersection_opening_dates = sorted(list(set(nyse_valid_dates_treated) & set(bmf_valid_dates_treated)))
+        intersection_opening_dates = sorted(
+            list(set(nyse_valid_dates_treated) & set(bmf_valid_dates_treated))
+        )
         return intersection_opening_dates

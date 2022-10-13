@@ -26,6 +26,6 @@ class BankTransferBifrostTransport:
                 bifrost_status=bifrost_status,
                 message="Bifrost_client::error_send_to_queue",
                 send_message=message,
-                topic=topic
+                topic=topic,
             )
             raise ErrorSendingToBifrostClient()

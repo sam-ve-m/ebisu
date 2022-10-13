@@ -9,9 +9,15 @@ from src.domain.enums.region import Region
 from src.domain.models.database.client_orders.model import ClientOrdersModel
 from src.domain.models.database.client_orders_quantity.model import QuantityModel
 from src.domain.models.response.client_orders.response_model import ClientOrdersResponse
-from src.domain.models.response.client_orders_quantity.response_model import QuantityResponse
-from src.domain.validators.exchange_info.client_orders_validator import GetClientOrderModel
-from src.domain.validators.exchange_info.count_client_order_validator import GetClientOrderQuantityModel
+from src.domain.models.response.client_orders_quantity.response_model import (
+    QuantityResponse,
+)
+from src.domain.validators.exchange_info.client_orders_validator import (
+    GetClientOrderModel,
+)
+from src.domain.validators.exchange_info.count_client_order_validator import (
+    GetClientOrderQuantityModel,
+)
 from src.domain.validators.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
 )
@@ -20,7 +26,9 @@ from src.domain.validators.orders.order_status import OrderStatusValidator
 from src.repositories.companies_data.repository import CompanyInformationRepository
 from src.domain.time_formatter.time_formatter import str_to_timestamp
 from src.domain.currency_map.country_to_currency.map import country_to_currency
-from src.domain.models.response.list_client_orders.response_model import ClientListOrdersResponse
+from src.domain.models.response.list_client_orders.response_model import (
+    ClientListOrdersResponse,
+)
 from src.domain.responses.http_response_model import ResponseModel
 from src.domain.enums.response.internal_code import InternalCode
 from http import HTTPStatus
@@ -39,7 +47,9 @@ class Orders:
         return 0
 
     @staticmethod
-    async def normalize_list_open_order(user_trade: dict, region: Region) -> ClientListOrdersModel:
+    async def normalize_list_open_order(
+        user_trade: dict, region: Region
+    ) -> ClientListOrdersModel:
         currency = country_to_currency[region]
         accumulated_quantity = user_trade.get("CUMQTY")
         side = user_trade.get("SIDE")
@@ -60,8 +70,8 @@ class Orders:
             "stop": user_trade.get("STOPPX"),
             "side": side.lower() if side else side,
             "total_spent": (
-                    (accumulated_quantity if accumulated_quantity else float(0.0))
-                    * Orders.decimal_128_converter(user_trade, "AVGPX")
+                (accumulated_quantity if accumulated_quantity else float(0.0))
+                * Orders.decimal_128_converter(user_trade, "AVGPX")
             ),
         }
         response_model = ClientListOrdersModel(**normalized_data)
@@ -103,17 +113,17 @@ class Orders:
         )
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
         data = [
-            await Orders.normalize_list_open_order(user_open_order, list_client_orders.region)
+            await Orders.normalize_list_open_order(
+                user_open_order, list_client_orders.region
+            )
             for user_open_order in user_open_orders
         ]
-        response_model = ClientListOrdersResponse.to_response(
-            models=data
-        )
+        response_model = ClientListOrdersResponse.to_response(models=data)
         return response_model
 
     @classmethod
     async def get_client_orders_quantity(
-            cls, jwt_data: dict, client_order_quantity: GetClientOrderQuantityModel
+        cls, jwt_data: dict, client_order_quantity: GetClientOrderQuantityModel
     ) -> ResponseModel:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
@@ -146,7 +156,9 @@ class Orders:
         return OrderTifs.NOT_AVAILABLE.value
 
     @staticmethod
-    def normalize_client_orders_open_order(user_trade: dict, region: Region) -> ClientOrdersModel:
+    def normalize_client_orders_open_order(
+        user_trade: dict, region: Region
+    ) -> ClientOrdersModel:
         side = user_trade.get("SIDE")
         accumulated_quantity = user_trade.get("CUMQTY")
         currency = country_to_currency[region]
@@ -166,8 +178,8 @@ class Orders:
             "status": user_trade.get("ORDSTATUS"),
             "tif": Orders.tiff_response_converter(user_trade.get("TIMEINFORCE")),
             "total_spent": (
-                    (accumulated_quantity if accumulated_quantity else float(0.0))
-                    * Orders.decimal_128_converter(user_trade, "AVGPX")
+                (accumulated_quantity if accumulated_quantity else float(0.0))
+                * Orders.decimal_128_converter(user_trade, "AVGPX")
             ),
             "quantity_filled": (
                 accumulated_quantity if accumulated_quantity else float(0.0)
@@ -187,7 +199,7 @@ class Orders:
 
     @classmethod
     def get_client_orders(
-            cls, client_order: GetClientOrderModel, jwt_data: dict
+        cls, client_order: GetClientOrderModel, jwt_data: dict
     ) -> ResponseModel:
         user = jwt_data.get("user", {})
         portfolios = user.get("portfolios", {})
@@ -203,10 +215,10 @@ class Orders:
         )
         user_open_orders = open_orders.oracle_singleton_instance.get_data(sql=query)
         data = [
-            Orders.normalize_client_orders_open_order(user_open_order, client_order.region)
+            Orders.normalize_client_orders_open_order(
+                user_open_order, client_order.region
+            )
             for user_open_order in user_open_orders
         ]
-        response_model = ClientOrdersResponse.to_response(
-            models=data
-        )
+        response_model = ClientOrdersResponse.to_response(models=data)
         return response_model

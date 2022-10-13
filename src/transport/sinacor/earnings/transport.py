@@ -25,7 +25,11 @@ class SinacorEarningsTransport:
 
     @classmethod
     async def paid_earnings(
-        cls, account: str, earnings_client: EarningsClientModel, from_date: RegionTimeStamp, to_date: RegionTimeStamp
+        cls,
+        account: str,
+        earnings_client: EarningsClientModel,
+        from_date: RegionTimeStamp,
+        to_date: RegionTimeStamp,
     ) -> List[EarningBr]:
         try:
             url = config("PAID_EARNINGS_URL")
@@ -34,9 +38,23 @@ class SinacorEarningsTransport:
                 "filtro.contaAte": account,
             }
             if earnings_client.earnings_types:
-                query_params.update({"filtro.tipoProvento": [i.value for i in earnings_client.earnings_types]})
-            query_params.update({"filtro.pagamentoAte": to_date.get_region_string_datetime_from_timestamp()})
-            query_params.update({"filtro.pagamentoDe": from_date.get_region_string_datetime_from_timestamp()})
+                query_params.update(
+                    {
+                        "filtro.tipoProvento": [
+                            i.value for i in earnings_client.earnings_types
+                        ]
+                    }
+                )
+            query_params.update(
+                {
+                    "filtro.pagamentoAte": to_date.get_region_string_datetime_from_timestamp()
+                }
+            )
+            query_params.update(
+                {
+                    "filtro.pagamentoDe": from_date.get_region_string_datetime_from_timestamp()
+                }
+            )
             response = await cls._floki_client.get(
                 url,
                 query_params=query_params,
@@ -59,7 +77,13 @@ class SinacorEarningsTransport:
                 "filtro.contaAte": account,
             }
             if earnings_client.earnings_types:
-                query_params.update({"filtro.tipoProvento": [i.value for i in earnings_client.earnings_types]})
+                query_params.update(
+                    {
+                        "filtro.tipoProvento": [
+                            i.value for i in earnings_client.earnings_types
+                        ]
+                    }
+                )
             response = await cls._floki_client.get(
                 url,
                 query_params=query_params,

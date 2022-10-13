@@ -4,6 +4,7 @@ from typing import Tuple
 
 # PROJECT IMPORTS
 from src.domain.date_formatters.region.timestamp.model import RegionTimeStamp
+from src.domain.enums.region import Region
 from src.domain.enums.statement_type import StatementType
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.statement.us.request.model import TransactionRequest, QueryParams
@@ -121,7 +122,7 @@ class GetStatement:
 
         from_raw_date = (
             await UserPortfoliosRepository.get_default_portfolio_created_at_by_region(
-                unique_id=unique_id, region="US"
+                unique_id=unique_id, region=Region.US
             )
         )
 

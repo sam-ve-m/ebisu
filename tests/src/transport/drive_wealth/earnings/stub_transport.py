@@ -39,7 +39,7 @@ get_transactions_model_stub = Earning(
         "date": RegionStringDateTime(
             date="2019-06-03T15:12:00.345Z",
             region_date_format=RegionDateFormat.US_DATE_FORMAT,
-            utc_offset=ExchangeUtcOffset.US_UTC_OFFSET
+            utc_offset=ExchangeUtcOffset.US_UTC_OFFSET,
         ),
         "amount": 0,
     }
