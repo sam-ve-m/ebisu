@@ -11,9 +11,7 @@ global:
   labels:  
     mongo: true
     oracle: true
-    postgres: false
     redis: true
-    sqlserver: false
     external: true
     priority: 5
 
