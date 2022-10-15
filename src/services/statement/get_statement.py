@@ -172,7 +172,6 @@ class GetStatement:
 
     @staticmethod
     def __get_offset(requested_offset: int, from_date: int):
-        if requested_offset is None:
+        if not requested_offset:
             requested_offset = from_date
-
         return requested_offset
