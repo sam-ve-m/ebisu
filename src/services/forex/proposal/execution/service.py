@@ -2,27 +2,28 @@
 from src.domain.exceptions.repository.forex.exception import (
     CustomerPersonalDataNotFound,
     ErrorTryingToInsertData,
-    ErrorTryingToGetForexAccountNumber,
-    ErrorTryingToGetForexAccountData,
 )
 from src.domain.exceptions.service.forex.exception import (
     ErrorTryingToLockResource,
     ErrorTryingToUnlock,
     InsufficientFunds,
-    ErrorTryingToGetUniqueId,
 )
 from src.domain.models.forex.balance.model import AllowedWithdraw
 from src.domain.models.forex.proposal.execution_request_data.model import ExecutionModel
 from src.domain.models.forex.proposal.execution_response_data.model import (
     ExecutionResponseModel,
 )
-from src.domain.validators.forex.execution_proposal import ForexExecution
+from src.domain.validators.forex.execution_proposal import ForexSimulationToken
 from src.repositories.user.repository import UserRepository
 from src.repositories.forex_balance.repository import ForexBalanceRepository
 from src.repositories.forex_executions.repository import ProposalExecutionRepository
-from src.services.forex.jwt_exchange.service import JwtForexService
-from src.services.forex.response_map.service import ForexResponseMap
+from src.services.forex.account.service import ForexAccount
+from src.services.forex.decrypt_token.service import DecryptService
+from src.services.forex.response_mapping.service import ForexResponseMap
 from src.transport.forex.bifrost.transport import BifrostTransport
+
+# Standards
+from typing import Union
 
 # Third party
 from caronte import ExchangeCompanyApi, AllowedHTTPMethods
@@ -30,20 +31,20 @@ from etria_logger import Gladsheim
 from halberd import BalanceLockManagerService, Resource
 
 
-class ExecutionExchangeService:
+class ForexExecution:
     @classmethod
-    async def execute_exchange_proposal(
-        cls, payload: ForexExecution, jwt_data: dict
+    async def execute_proposal(
+        cls, payload: ForexSimulationToken, jwt_data: dict
     ) -> True:
-        token_decoded = await JwtForexService.decode(
+        token_decoded = await DecryptService.decode(
             jwt_token=payload.proposal_simulation_token
         )
-        forex_account = await cls.__get_forex_account(jwt_data=jwt_data)
+        account_number = await ForexAccount.get_account_number(jwt_data=jwt_data)
         execution_model = ExecutionModel(
             jwt_data=jwt_data,
             token_decoded=token_decoded,
             payload=payload,
-            forex_account=forex_account,
+            account_number=account_number,
         )
         await cls.check_customer_has_enough_balance(execution_model=execution_model)
         content = await cls.execute_proposal_on_route_23(
@@ -75,7 +76,7 @@ class ExecutionExchangeService:
                 )
             )
             if not exchange_proposal_value <= allowed_to_withdraw.total:
-                raise InsufficientFunds
+                raise InsufficientFunds()
         except Exception as ex:
             Gladsheim.error(error=ex)
             raise ex
@@ -108,7 +109,7 @@ class ExecutionExchangeService:
         return lock
 
     @staticmethod
-    async def __unlock_balance(lock) -> True:
+    async def __unlock_balance(lock) -> Union[True, ErrorTryingToUnlock]:
         if not lock:
             return True
         success, unlock_status = await BalanceLockManagerService.unlock_balance(
@@ -119,7 +120,9 @@ class ExecutionExchangeService:
         return True
 
     @staticmethod
-    async def __get_customer_name(execution_model: ExecutionModel) -> dict:
+    async def __get_customer_name(
+        execution_model: ExecutionModel,
+    ) -> Union[dict, CustomerPersonalDataNotFound]:
         unique_id = execution_model.jwt.unique_id
         name = await UserRepository.get_customer_name(unique_id=unique_id)
         if not name:
@@ -129,29 +132,10 @@ class ExecutionExchangeService:
     @staticmethod
     async def __insert_execution_response_data(
         execution_response_model: ExecutionResponseModel,
-    ):
+    ) -> Union[True, ErrorTryingToInsertData]:
         result = await ProposalExecutionRepository.insert_exchange_proposal(
             execution_response_model=execution_response_model
         )
         if not result:
             raise ErrorTryingToInsertData()
         return True
-
-    @staticmethod
-    async def __get_forex_account(jwt_data: dict) -> int:
-        unique_id = jwt_data.get("user", {}).get("unique_id")
-        if not unique_id:
-            raise ErrorTryingToGetUniqueId()
-        forex_account_data = await UserRepository.get_forex_account_data(
-            unique_id=unique_id
-        )
-        if not forex_account_data:
-            raise ErrorTryingToGetForexAccountData()
-        forex_account_number = (
-            forex_account_data.get("ouro_invest", {})
-            .get("account", {})
-            .get("account_number")
-        )
-        if not forex_account_number:
-            raise ErrorTryingToGetForexAccountNumber()
-        return int(forex_account_number)

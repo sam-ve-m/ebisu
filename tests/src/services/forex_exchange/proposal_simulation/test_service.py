@@ -12,7 +12,7 @@ from src.domain.exceptions.service.forex.exception import (
     CustomerQuotationTokenNotFound,
 )
 
-from src.services.forex.proposal_simulation.service import (
+from src.services.forex.proposal.simulation import (
     CustomerExchangeService,
 )
 
@@ -45,7 +45,7 @@ import pytest
 
 @pytest.mark.asyncio
 @patch(
-    "src.services.forex.proposal_simulation.service.UserRepository.get_user_exchange_data",
+    "src.services.forex.simulation.service.UserRepository.get_user_exchange_data",
     return_value=stub_customer_exchange_data,
 )
 async def test_when_customer_have_exchange_data_then_return_expected_values(
@@ -60,7 +60,7 @@ async def test_when_customer_have_exchange_data_then_return_expected_values(
 
 @pytest.mark.asyncio
 @patch(
-    "src.services.forex.proposal_simulation.service.UserRepository.get_user_exchange_data",
+    "src.services.forex.simulation.service.UserRepository.get_user_exchange_data",
     return_value=None,
 )
 async def test_when_customer_not_have_exchange_data_then_raises(mock_user_repository):
@@ -76,7 +76,7 @@ async def test_when_customer_not_have_exchange_data_then_raises(mock_user_reposi
     side_effect=stub_config_path_quotation,
 )
 @patch(
-    "src.services.forex.proposal_simulation.service.ExchangeCompanyApi.request_as_client",
+    "src.services.forex.simulation.service.ExchangeCompanyApi.request_as_client",
     return_value=stub_caronte_response_success_21,
 )
 async def test_when_get_customer_token_with_successfully_then_return_token_data(
@@ -95,7 +95,7 @@ async def test_when_get_customer_token_with_successfully_then_return_token_data(
     side_effect=stub_config_path_quotation,
 )
 @patch(
-    "src.services.forex.proposal_simulation.service.ExchangeCompanyApi.request_as_client",
+    "src.services.forex.simulation.service.ExchangeCompanyApi.request_as_client",
     return_value=stub_caronte_response_bad_request,
 )
 async def test_when_get_customer_token_result_is_bad_request_then_raises(
@@ -113,7 +113,7 @@ async def test_when_get_customer_token_result_is_bad_request_then_raises(
     side_effect=stub_config_path_quotation,
 )
 @patch(
-    "src.services.forex.proposal_simulation.service.ExchangeCompanyApi.request_as_client",
+    "src.services.forex.simulation.service.ExchangeCompanyApi.request_as_client",
     return_value=stub_caronte_response_unauthorized,
 )
 async def test_when_get_customer_token_result_is_unauthorized_then_raises(
@@ -131,7 +131,7 @@ async def test_when_get_customer_token_result_is_unauthorized_then_raises(
     side_effect=stub_config_path_quotation,
 )
 @patch(
-    "src.services.forex.proposal_simulation.service.ExchangeCompanyApi.request_as_client",
+    "src.services.forex.simulation.service.ExchangeCompanyApi.request_as_client",
     return_value=stub_caronte_response_forbidden,
 )
 async def test_when_get_customer_token_result_is_forbidden_then_raises(
@@ -149,7 +149,7 @@ async def test_when_get_customer_token_result_is_forbidden_then_raises(
     side_effect=stub_config_path_quotation,
 )
 @patch(
-    "src.services.forex.proposal_simulation.service.ExchangeCompanyApi.request_as_client",
+    "src.services.forex.simulation.service.ExchangeCompanyApi.request_as_client",
     return_value=stub_caronte_response_token_not_found,
 )
 async def test_when_get_customer_token_result_is_token_not_found_then_raises(
@@ -167,7 +167,7 @@ async def test_when_get_customer_token_result_is_token_not_found_then_raises(
     side_effect=stub_config_path_quotation,
 )
 @patch(
-    "src.services.forex.proposal_simulation.service.ExchangeCompanyApi.request_as_client",
+    "src.services.forex.simulation.service.ExchangeCompanyApi.request_as_client",
     return_value=stub_caronte_response_unexpected_error,
 )
 async def test_when_get_customer_token_result_is_unexpected_error_found_then_raises(
@@ -185,7 +185,7 @@ async def test_when_get_customer_token_result_is_unexpected_error_found_then_rai
     side_effect=stub_config_path_exchange_simulation,
 )
 @patch(
-    "src.services.forex.proposal_simulation.service.ExchangeCompanyApi.request_as_client",
+    "src.services.forex.simulation.service.ExchangeCompanyApi.request_as_client",
     return_value=stub_caronte_response_success_22,
 )
 async def test_when_get_exchange_simulation_with_success_then_return_exchange_simulation_data(
@@ -205,7 +205,7 @@ async def test_when_get_exchange_simulation_with_success_then_return_exchange_si
     side_effect=stub_config_path_exchange_simulation,
 )
 @patch(
-    "src.services.forex.proposal_simulation.service.ExchangeCompanyApi.request_as_client",
+    "src.services.forex.simulation.service.ExchangeCompanyApi.request_as_client",
     return_value=stub_caronte_response_bad_request,
 )
 async def test_when_get_exchange_simulation_result_is_bad_request_then_raises(
@@ -224,7 +224,7 @@ async def test_when_get_exchange_simulation_result_is_bad_request_then_raises(
     side_effect=stub_config_path_exchange_simulation,
 )
 @patch(
-    "src.services.forex.proposal_simulation.service.ExchangeCompanyApi.request_as_client",
+    "src.services.forex.simulation.service.ExchangeCompanyApi.request_as_client",
     return_value=stub_caronte_response_forbidden,
 )
 async def test_when_get_exchange_simulation_result_is_forbidden_then_raises(
@@ -243,7 +243,7 @@ async def test_when_get_exchange_simulation_result_is_forbidden_then_raises(
     side_effect=stub_config_path_exchange_simulation,
 )
 @patch(
-    "src.services.forex.proposal_simulation.service.ExchangeCompanyApi.request_as_client",
+    "src.services.forex.simulation.service.ExchangeCompanyApi.request_as_client",
     return_value=stub_caronte_response_unauthorized,
 )
 async def test_when_get_exchange_simulation_result_is_unauthorized_then_raises(
@@ -262,7 +262,7 @@ async def test_when_get_exchange_simulation_result_is_unauthorized_then_raises(
     side_effect=stub_config_path_exchange_simulation,
 )
 @patch(
-    "src.services.forex.proposal_simulation.service.ExchangeCompanyApi.request_as_client",
+    "src.services.forex.simulation.service.ExchangeCompanyApi.request_as_client",
     return_value=stub_caronte_response_token_not_found,
 )
 async def test_when_get_exchange_simulation_result_is_token_not_found_then_raises(
@@ -281,7 +281,7 @@ async def test_when_get_exchange_simulation_result_is_token_not_found_then_raise
     side_effect=stub_config_path_exchange_simulation,
 )
 @patch(
-    "src.services.forex.proposal_simulation.service.ExchangeCompanyApi.request_as_client",
+    "src.services.forex.simulation.service.ExchangeCompanyApi.request_as_client",
     return_value=stub_caronte_response_unexpected_error,
 )
 async def test_when_get_exchange_simulation_result_is_unexpected_error_then_raises(

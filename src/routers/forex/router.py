@@ -2,12 +2,10 @@
 from src.domain.enums.response.internal_code import InternalCode
 from src.domain.responses.http_response_model import ResponseModel
 from src.domain.validators.forex.currency_options import CurrencyExchange
-from src.domain.validators.forex.execution_proposal import ForexExecution
+from src.domain.validators.forex.execution_proposal import ForexSimulationToken
 from src.services.jwt.service_jwt import JwtService
-from src.services.forex.proposal_simulation.service import CustomerExchangeService
-from src.services.forex.execute_proposal_simulation.service import (
-    ExecutionExchangeService,
-)
+from src.services.forex.proposal.simulation.service import ForexSimulation
+from src.services.forex.proposal.execution.service import ForexExecution
 
 # Third party
 from fastapi import Request, APIRouter, Depends, Response
@@ -30,7 +28,7 @@ class ForexExchange:
         request: Request, payload: CurrencyExchange = Depends()
     ) -> Response:
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        result = await CustomerExchangeService.get_proposal_simulation(
+        result = await ForexSimulation.get_proposal_simulation(
             jwt_data=jwt_data, currency_exchange=payload
         )
         response = ResponseModel(
@@ -41,13 +39,13 @@ class ForexExchange:
     @staticmethod
     @__forex_exchange_router.post("/execute_proposal")
     async def execute_exchange_simulation_proposal(
-        request: Request, payload: ForexExecution
+        request: Request, payload: ForexSimulationToken
     ) -> Response:
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         await JwtService.validate_electronic_signature(
             request=request, user_data=jwt_data["user"]
         )
-        success = await ExecutionExchangeService.execute_exchange_proposal(
+        success = await ForexExecution.execute_proposal(
             payload=payload, jwt_data=jwt_data
         )
         response = ResponseModel(

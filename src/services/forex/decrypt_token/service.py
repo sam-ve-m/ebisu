@@ -2,14 +2,17 @@
 from src.domain.enums.forex.jwt_algorithms import Algorithms
 from src.domain.exceptions.service.forex.exception import ErrorTryingToDecodeJwt
 
+# Standards
+from typing import Union
+
 # Third party
 from etria_logger import Gladsheim
 from jwt import JWT
 
 
-class JwtForexService:
+class DecryptService:
     @staticmethod
-    async def decode(jwt_token):
+    async def decode(jwt_token) -> Union[dict, ErrorTryingToDecodeJwt]:
         instance = JWT()
         try:
             jwt_data = instance.decode(
