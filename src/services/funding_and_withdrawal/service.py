@@ -1,7 +1,7 @@
 from typing import Union
 
 from src.domain.enums.region import Region
-from src.domain.models.account.bank import BankAccount
+from src.domain.models.account.bank.model import BankAccount
 from src.domain.models.account.broker.model import BrokerAccount
 from src.domain.models.thebes_answer.model import ThebesAnswer
 from src.domain.validators.funding_and_withdrawal.validators import (
