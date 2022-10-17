@@ -5,19 +5,19 @@ from pydantic import ValidationError
 
 # INTERNAL LIBS
 from src.domain.enums.region import Region
-from src.domain.validators.exchange_info.client_orders_validator import (
+from src.domain.request.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
-from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
-from src.domain.validators.exchange_info.get_statement_validator import (
+from src.domain.request.exchange_info.get_earnings_client import EarningsClientModel
+from src.domain.request.exchange_info.get_statement_validator import (
     GetBrStatement,
 )
-from src.domain.validators.exchange_info.list_broker_note_validator import (
+from src.domain.request.exchange_info.list_broker_note_validator import (
     BrokerNoteRegion,
     BrokerNoteMarket,
     ListBrokerNoteModel,
 )
-from src.domain.validators.exchange_info.list_client_order_validator import (
+from src.domain.request.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
 )
 

@@ -1,10 +1,10 @@
 # Ebisu
-from src.domain.validators.forex.currency_options import (
+from src.domain.request.forex.currency_options import (
     CurrencyExchange,
     CurrencyOptions,
 )
 from src.domain.enums.forex.operations import NatureOperation
-from src.domain.exceptions.domain.forex.model import (
+from src.domain.exceptions.domain.model.forex.model import (
     InvalidOperation,
     SpreadTaxNotFound,
     OperationNotImplemented,

@@ -5,12 +5,12 @@ from nidavellir import Sindri
 
 from src.domain.enums.response.internal_code import InternalCode
 from src.domain.responses.http_response_model import ResponseModel
-from src.domain.validators.funding_and_withdrawal.validators import (
+from src.domain.request.funding_and_withdrawal.validators import (
     UserMoneyFlowSameExchange,
     UserMoneyFlowToExternalBank,
 )
 from src.services.exchange_operations.services import ExchangeOperationsService
-from src.services.funding_and_withdrawal import FundingAndWithdrawalService
+from src.services.funding_and_withdraw import FundingAndWithdrawalService
 from src.services.jwt.service import JwtService
 
 

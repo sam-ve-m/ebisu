@@ -2,7 +2,7 @@
 from fastapi import Request, APIRouter, Depends
 
 from src.services.stock_portfolios_list.service import UserPortfoliosList
-from src.domain.validators.stock_portfolios.validators import UserPortfoliosModel
+from src.domain.request.stock_portfolios.validators import UserPortfoliosModel
 from src.services.jwt.service import JwtService
 
 

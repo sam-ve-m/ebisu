@@ -5,7 +5,7 @@ from unittest import mock
 
 # Internal Libs
 from src.domain.enums.region import Region
-from src.domain.validators.exchange_info.get_statement_validator import (
+from src.domain.request.exchange_info.get_statement_validator import (
     GetBrStatement,
 )
 from src.services.statement.get_statement import GetStatement

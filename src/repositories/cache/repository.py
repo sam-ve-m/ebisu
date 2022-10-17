@@ -3,7 +3,6 @@ import pickle
 from typing import Union, Optional
 
 from src.core.interfaces.repositories.redis.interface import IRedis
-from src.domain.exceptions import InternalServerError
 from src.infrastructures.redis.infraestructure import RedisInfrastructure
 from src.infrastructures.env_config import config
 
@@ -32,8 +31,6 @@ class RepositoryRedis(IRedis, RedisInfrastructure):
     @classmethod
     async def get(cls, key: str) -> Union[dict, str, bytes]:
         redis = cls.get_redis()
-        if type(key) != str:
-            raise InternalServerError("cache.error.key")
         key = f"{cls.prefix}{key}"
         value = await redis.get(name=key)
         return value and pickle.loads(value) or value

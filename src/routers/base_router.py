@@ -1,27 +1,16 @@
 # Internal Libs
-from fastapi import FastAPI, Request, Response
-from starlette import status
-import json
+from http import HTTPStatus
+from fastapi import FastAPI, Request
 
 # ERRORS
 from etria_logger import Gladsheim
-from src.domain.exceptions.model import (
-    FailToSaveAuditingTrail,
-    MoneyFlowPerformedOutsideTransactionWindow,
-)
+
+from src.domain.enums.response.internal_code import InternalCode
 from src.domain.exceptions.base_exceptions.model import (
     ServiceException,
     RepositoryException,
     DomainException,
     TransportException,
-)
-from src.domain.exceptions import (
-    BadRequestError,
-    InternalServerError,
-    InvalidAccountsOwnership,
-    NotMappedCurrency,
-    UnauthorizedError,
-    FailToGetDataFromTransportLayer,
 )
 
 # ROUTERS
@@ -92,115 +81,38 @@ class BaseRouter:
 
     @staticmethod
     async def __add_process_time_header(request: Request, call_next):
+        response = None
+
         try:
             response = await call_next(request)
-
         except ServiceException as err:
             Gladsheim.error(error=err, message=err.msg)
             response = ResponseModel(
                 success=err.success, message=err.msg, internal_code=err.internal_code
             ).build_http_response(status_code=err.status_code)
-            return response
 
         except DomainException as err:
             Gladsheim.error(error=err, message=err.msg)
             response = ResponseModel(
                 success=err.success, message=err.msg, internal_code=err.internal_code
             ).build_http_response(status_code=err.status_code)
-            return response
 
         except TransportException as err:
             Gladsheim.error(error=err, message=err.msg)
             response = ResponseModel(
                 success=err.success, message=err.msg, internal_code=err.internal_code
             ).build_http_response(status_code=err.status_code)
-            return response
 
         except RepositoryException as err:
             Gladsheim.error(error=err, message=err.msg)
             response = ResponseModel(
                 success=err.success, message=err.msg, internal_code=err.internal_code
             ).build_http_response(status_code=err.status_code)
-            return response
-
-        except UnauthorizedError as e:
-            Gladsheim.error(erro=e)
-            return Response(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                content=json.dumps(
-                    {"request_status": False, "status": 2, "msg": e.args[0]}
-                ),
-            )
-
-        except BadRequestError as e:
-            return Response(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                content=json.dumps(
-                    {"request_status": False, "status": 4, "msg": e.args[0]}
-                ),
-            )
-        except InternalServerError as e:
-            return Response(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                content=json.dumps(
-                    {"request_status": False, "status": 5, "msg": e.args[0]}
-                ),
-            )
-
-        except InvalidAccountsOwnership as e:
-            return Response(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                content=json.dumps(
-                    {"request_status": False, "status": 8, "msg": e.args[0]}
-                ),
-            )
-
-        except NotMappedCurrency as e:
-            return Response(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                content=json.dumps(
-                    {"request_status": False, "status": 9, "msg": e.args[0]}
-                ),
-            )
-
-        except FailToSaveAuditingTrail as e:
-            Gladsheim.error(erro=e)
-            return Response(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                content=json.dumps(
-                    {"request_status": False, "status": 11, "msg": e.args[0]}
-                ),
-            )
-
-        except FailToGetDataFromTransportLayer as e:
-            Gladsheim.error(erro=e)
-            return Response(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                content=json.dumps(
-                    {"request_status": False, "status": 12, "msg": e.args[0]}
-                ),
-            )
-
-        except MoneyFlowPerformedOutsideTransactionWindow as e:
-            Gladsheim.error(erro=e)
-            return Response(
-                status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                content=json.dumps(
-                    {"request_status": False, "status": 15, "msg": e.args[0]}
-                ),
-            )
 
         except Exception as err:
             Gladsheim.error(erro=err)
-            return Response(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                content=json.dumps(
-                    {
-                        "request_status": False,
-                        "status": 6,
-                        "msg": "An unexpected error ocurred",
-                    }
-                ),
-            )
-
-        return response
+            response = ResponseModel(
+                success=False, message="An unexpected error occurred", internal_code=InternalCode.INTERNAL_SERVER_ERROR
+            ).build_http_response(status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
+        finally:
+            return response

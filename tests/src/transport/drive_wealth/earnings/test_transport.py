@@ -34,7 +34,7 @@ async def test_get_us_transaction_earnings_when_sending_right_params_then_return
     mock_get_transactions, mock_build_earning_model
 ):
     Iterable.__next__ = mock_get_transactions
-    response = await DwEarningsTransport.get_us_transaction_earnings(
+    response = await DwEarningsTransport.get_transaction_earnings(
         transaction_request=TransactionRequest(
             account="89c69304-018a-40b7-be5b-2121c16e109e.1651525277006",
             query_params=QueryParams(
@@ -62,7 +62,7 @@ async def test_get_us_transaction_earnings_when_sending_right_params_then_return
 @pytest.mark.asyncio
 async def test_get_us_transaction_earnings_when_sending_wrong_params_then_return_the_expected():
     with pytest.raises(AttributeError):
-        await DwEarningsTransport.get_us_transaction_earnings(
+        await DwEarningsTransport.get_transaction_earnings(
             transaction_request=TransactionRequest(
                 account=None,
                 query_params=QueryParams(

@@ -15,7 +15,7 @@ from src.domain.statement.us.response.model import (
     StatementModelToResponse as UsStatementModelToResponse,
     StatementResponse as UsStatementResponse,
 )
-from src.domain.validators.exchange_info.get_statement_validator import (
+from src.domain.request.exchange_info.get_statement_validator import (
     GetBrStatement,
     GetUsStatement,
 )

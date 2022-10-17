@@ -12,24 +12,24 @@ from src.domain.statement.br.response.model import (
 from src.domain.statement.us.response.model import (
     StatementResponse as UsStatementResponse,
 )
-from src.domain.validators.exchange_info.client_orders_validator import (
+from src.domain.request.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
-from src.domain.validators.exchange_info.count_client_order_validator import (
+from src.domain.request.exchange_info.count_client_order_validator import (
     GetClientOrderQuantityModel,
 )
-from src.domain.validators.exchange_info.get_closure_steps_validator import (
+from src.domain.request.exchange_info.get_closure_steps_validator import (
     AccountCloseStepsRequest,
 )
-from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
-from src.domain.validators.exchange_info.get_statement_validator import (
+from src.domain.request.exchange_info.get_earnings_client import EarningsClientModel
+from src.domain.request.exchange_info.get_statement_validator import (
     GetBrStatement,
     GetUsStatement,
 )
-from src.domain.validators.exchange_info.list_broker_note_validator import (
+from src.domain.request.exchange_info.list_broker_note_validator import (
     ListBrokerNoteModel,
 )
-from src.domain.validators.exchange_info.list_client_order_validator import (
+from src.domain.request.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
 )
 

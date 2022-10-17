@@ -5,7 +5,7 @@ from unittest.mock import patch, MagicMock
 # External Libs
 from src.repositories.files.repository import FileRepository
 from src.services.list_broker_note.list_broker_note import ListBrokerNote
-from src.domain.validators.exchange_info.list_broker_note_validator import (
+from src.domain.request.exchange_info.list_broker_note_validator import (
     BrokerNoteMarket,
     BrokerNoteRegion,
 )

@@ -1,8 +1,8 @@
 # Ebisu
 from src.domain.enums.response.internal_code import InternalCode
 from src.domain.responses.http_response_model import ResponseModel
-from src.domain.validators.forex.currency_options import CurrencyExchange
-from src.domain.validators.forex.execution_proposal import ForexExecution
+from src.domain.request.forex.currency_options import CurrencyExchange
+from src.domain.request.forex.execution_proposal import ForexExecution
 from src.services.jwt.service import JwtService
 from src.services.forex.proposal_simulation.service import CustomerExchangeService
 from src.services.forex.execute_proposal_simulation.service import (

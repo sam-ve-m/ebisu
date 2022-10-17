@@ -5,18 +5,15 @@ from src.domain.exceptions.repository.forex.model import (
     ErrorTryingToGetForexAccountNumber,
     ErrorTryingToGetForexAccountData,
 )
-from src.domain.exceptions.service.forex.exception import (
-    ErrorTryingToLockResource,
-    ErrorTryingToUnlock,
-    InsufficientFunds,
-    ErrorTryingToGetUniqueId,
-)
+from src.domain.exceptions.service.forex.model import InsufficientFunds, ErrorTryingToLockResource, ErrorTryingToUnlock, \
+    ErrorTryingToGetUniqueId
+
 from src.domain.models.forex.balance.model import AllowedWithdraw
 from src.domain.models.forex.proposal.execution_request_data.model import ExecutionModel
 from src.domain.models.forex.proposal.execution_response_data.model import (
     ExecutionResponseModel,
 )
-from src.domain.validators.forex.execution_proposal import ForexExecution
+from src.domain.request.forex.execution_proposal import ForexExecution
 from src.repositories.user.repository import UserRepository
 from src.repositories.forex_balance.repository import ForexBalanceRepository
 from src.repositories.forex_executions.repository import ProposalExecutionRepository
@@ -75,7 +72,7 @@ class ExecutionExchangeService:
                 )
             )
             if not exchange_proposal_value <= allowed_to_withdraw.total:
-                raise InsufficientFunds
+                raise InsufficientFunds()
         except Exception as ex:
             Gladsheim.error(error=ex)
             raise ex

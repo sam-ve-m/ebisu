@@ -2,7 +2,7 @@ from src.domain.balance.base.model import BaseBalance
 from src.domain.enums.region import Region
 from src.repositories.balance.repository import BalanceRepository
 from src.transport.drive_wealth.balance.transport import DwBalanceTransport
-from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
+from src.domain.request.exchange_info.get_balance_validator import GetBalanceModel
 
 
 class BalanceService:

@@ -1,5 +1,5 @@
 # Ebisu
-from src.domain.exceptions.domain.forex.model import DataNotFoundInJwt
+from src.domain.exceptions.domain.model.forex.model import DataNotFoundInJwt
 
 
 class ThebesAnswer:

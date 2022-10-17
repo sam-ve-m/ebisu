@@ -12,17 +12,17 @@ from src.domain.models.response.client_orders.response_model import ClientOrders
 from src.domain.models.response.client_orders_quantity.response_model import (
     QuantityResponse,
 )
-from src.domain.validators.exchange_info.client_orders_validator import (
+from src.domain.request.exchange_info.client_orders_validator import (
     GetClientOrderModel,
 )
-from src.domain.validators.exchange_info.count_client_order_validator import (
+from src.domain.request.exchange_info.count_client_order_validator import (
     GetClientOrderQuantityModel,
 )
-from src.domain.validators.exchange_info.list_client_order_validator import (
+from src.domain.request.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
 )
 from src.domain.models.database.list_client_orders.model import ClientListOrdersModel
-from src.domain.validators.orders.order_status import OrderStatusValidator
+from src.domain.request.orders.order_status import OrderStatusValidator
 from src.repositories.companies_data.repository import CompanyInformationRepository
 from src.domain.time_formatter.time_formatter import str_to_timestamp
 from src.domain.currency_map.country_to_currency.map import country_to_currency

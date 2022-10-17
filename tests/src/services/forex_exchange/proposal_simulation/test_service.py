@@ -1,9 +1,9 @@
 # Ebisu
-from src.domain.exceptions.domain.forex.model import (
+from src.domain.exceptions.domain.model.forex import (
     ErrorValidatingSimulationProposalData,
 )
 from src.domain.exceptions.repository.forex.model import CustomerForexDataNotFound
-from src.domain.exceptions.service.forex.exception import (
+from src.domain.exceptions.service import (
     InvalidToken,
     ExpiredToken,
     DroppedToken,

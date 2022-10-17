@@ -1,11 +1,4 @@
 # Ebisu
-from src.domain.exceptions.service.forex.exception import (
-    UnexpectedErrorInExchangeAPI,
-    ExpiredToken,
-    InvalidToken,
-    DroppedToken,
-    CaronteCantFindToken,
-)
 
 # Standards
 from typing import Union
@@ -13,6 +6,9 @@ from typing import Union
 
 # Third party
 from caronte import CaronteStatus, CaronteStatusResponse
+
+from src.domain.exceptions.service.forex.model import ExpiredToken, InvalidToken, DroppedToken, CaronteCantFindToken, \
+    UnexpectedErrorInExchangeAPI
 
 
 class ForexResponseMap:
@@ -27,7 +23,7 @@ class ForexResponseMap:
             Alguns erros estão retornando de forma incorreta pela OuroInvest, trazendo o  status code 400 Bad Request
             para diversas situações das quais não deveriam, exemplos:
                 - Ao dropar o token batendo pelo postman e continuar a execução do código, retorna bad_request, deveria ser um forbidden
-                - Ao alterar o JWT/TOKEN da OuroInvest, deixando ele inválido, retorna bad_reqquest, deveria ser unauthorized
+                - Ao alterar o JWT/TOKEN da OuroInvest, deixando ele inválido, retorna bad_reqquest, deveria ser thebes_answer
                 - Um cenário muito específico retorna erro de natureza de operação com status bad_request (mesmo ela não sendo alterada),
                  deveria ser forbidden para token dropado       
         """

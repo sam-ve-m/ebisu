@@ -5,7 +5,7 @@ from fastapi import Request, APIRouter, Depends
 from nidavellir import Sindri
 from src.core.interfaces.bank_transfer.interface import IBankTransfer
 from src.services.get_bank_code.service import GetBankCode
-from src.domain.validators.user_account.bank_account import (
+from src.domain.request.user_account.bank_account import (
     CreateUserBankAccount,
     UpdateUserBankAccounts,
     DeleteUsersBankAccount,
