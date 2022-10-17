@@ -4,7 +4,7 @@ from src.domain.validators.forex.currency_options import (
     CurrencyOptions,
 )
 from src.domain.enums.forex.operations import NatureOperation
-from src.domain.exceptions.domain.forex.exception import (
+from src.domain.exceptions.domain.forex.model import (
     InvalidOperation,
     SpreadTaxNotFound,
     OperationNotImplemented,

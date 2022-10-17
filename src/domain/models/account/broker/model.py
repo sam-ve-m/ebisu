@@ -1,17 +1,16 @@
 from src.core.interfaces.domain.models.internal.account_transfer.interface import (
     IAccountTransfer,
 )
-from src.domain.models.account.fingerprit import Fingerprint, IsPrimaryAccount
+from src.domain.models.account.fingerprint.model import Fingerprint, IsPrimaryAccount
 from src.domain.enums.region import Region
 from src.domain.exceptions.model import InvalidAccountsOwnership
 from src.domain.currency_map.country_to_currency.map import country_to_currency
 from src.domain.exceptions.model import NotMappedCurrency
 from src.domain.enums.currency import Currency
 from src.repositories.user.repository import UserRepository
-from src.repositories.user_exchange.repository import UserExchangeRepository
 
 
-class ExchangeAccount(IAccountTransfer):
+class BrokerAccount(IAccountTransfer):
     def __init__(self, account_number: str, country: Region, user_unique_id: str):
         self._account_number = account_number
         self._country = country

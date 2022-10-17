@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from src.domain.enums.currency import Currency
-from src.domain.models.account.fingerprit import Fingerprint
+from src.domain.models.account.fingerprint.model import Fingerprint
 
 
 class IAccountTransfer(ABC):

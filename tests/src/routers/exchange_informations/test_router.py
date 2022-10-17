@@ -35,7 +35,7 @@ with patch.object(Config, "get", return_value="info"):
             )
             from src.domain.exceptions import UnauthorizedError
             from src.services.orders.orders import Orders
-            from src.services.jwt.service_jwt import JwtService
+            from src.services.jwt.service import JwtService
             from src.services.list_broker_note.list_broker_note import ListBrokerNote
 
 # STUB IMPORTS

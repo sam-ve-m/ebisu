@@ -1,5 +1,5 @@
 # Ebisu
-from src.domain.exceptions.repository.forex.exception import (
+from src.domain.exceptions.repository.forex.model import (
     CustomerPersonalDataNotFound,
     ErrorTryingToInsertData,
     ErrorTryingToGetForexAccountNumber,

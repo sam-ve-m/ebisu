@@ -19,7 +19,7 @@ from src.routers.user_bank_accounts.router import UserBankAccountsRouter
 from src.routers.user_portfolios.router import UserPortfoliosRouter
 from src.services.bank_account.service import UserBankAccountService
 from src.services.get_bank_code.service import GetBankCode
-from src.services.jwt.service_jwt import JwtService
+from src.services.jwt.service import JwtService
 from src.services.stock_portfolios_list.service import UserPortfoliosList
 
 # stubs

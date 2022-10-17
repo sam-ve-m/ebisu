@@ -1,5 +1,5 @@
 # Ebisu
-from src.domain.exceptions.base_exceptions.exceptions import ServiceException
+from src.domain.exceptions.base_exceptions.model import ServiceException
 from src.domain.enums.response.internal_code import InternalCode
 
 # Standards

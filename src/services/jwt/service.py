@@ -1,41 +1,64 @@
-import json
-from typing import Optional, Union
-from fastapi import Response, Request, status
-from heimdall_client.bifrost import Heimdall
-from src.domain.exceptions.model import IntegrityJwtError, AuthenticationJwtError
+# STANDARD LIBS
+from typing import Optional
+from etria_logger import Gladsheim
 
-heimdall = Heimdall()
-CLIENT_JWT_NAME = "x-thebes-answer"
+# OUTSIDE LIBRARIES
+from fastapi import Request
+from jwt import JWT
 
-
-def validate_jwt(request: Request) -> Optional[Response]:
-    jwt_is_valid = heimdall.validate_jwt(jwt=request.headers.get("x-thebs-answer"))
-    if not jwt_is_valid:
-        return Response(
-            content=json.dumps(
-                {"success": False, "msg": "Authentication is not valid"}
-            ),
-            status_code=status.HTTP_401_UNAUTHORIZED,
-        )
-
-    return
+from heimdall_client import Heimdall, HeimdallStatusResponses
+from mist_client import Mist, MistStatusResponses
+from src.domain.exceptions import InternalServerError, UnauthorizedError
+from src.domain.exceptions.service.general_use.exception import (
+    InvalidElectronicaSignature,
+)
 
 
-async def verify_jwt_token_by_string(jwt: str) -> Union[Exception, dict]:
-    jwt_content, heimdall_status = await Heimdall.decode_payload(jwt=jwt)
-    jwt_heimdall = await Heimdall.validate_jwt_integrity(jwt, fields=["portfolios"])
-    jwt_check_integrity = jwt_heimdall[0]["jwt_integrity"]
+class JwtService:
 
-    if jwt_check_integrity:
-        return jwt_content["decoded_jwt"]
+    instance = JWT()
+    heimdall = Heimdall
+    mist = Mist
 
-    raise IntegrityJwtError(msg=f"Jwt not allowed")
+    @staticmethod
+    def __get_mist_from_request(request: Request):
+        mist_token = None
+        for header_tuple in request.headers.raw:
+            if b"x-mist" in header_tuple:
+                mist_token = header_tuple[1].decode()
+                break
+        return mist_token
 
+    @staticmethod
+    async def validate_mist(request: Request, user_data: dict) -> bool:
+        mist_token = JwtService.__get_mist_from_request(request=request)
+        is_valid = await JwtService.mist.validate_jwt(jwt=mist_token)
+        mist_content, status = await JwtService.mist.decode_payload(jwt=mist_token)
+        if is_valid and status == MistStatusResponses.SUCCESS and user_data["unique_id"] == mist_content["decoded_jwt"]["unique_id"]:
+            return True
+        raise InvalidElectronicaSignature()
 
-async def jwt_validator_and_decompile(request: Request) -> Union[Exception, dict]:
+    @staticmethod
+    def __get_thebes_answer_from_request(request: Request):
+        thebes_answer = None
+        for header_tuple in request.headers.raw:
+            if b"x-thebes-answer" in header_tuple:
+                thebes_answer = header_tuple[1].decode()
+                break
+        return thebes_answer
 
-    jwt: str = request.headers.get(CLIENT_JWT_NAME)
-    if jwt is None:
-        raise AuthenticationJwtError(msg=f"Jwt not allowed")
+    @classmethod
+    async def __decode_thebes_answer(cls, encrypted_payload: str) -> Optional[dict]:
+        payload, status = await cls.heimdall.decode_payload(jwt=encrypted_payload)
+        if status != HeimdallStatusResponses.SUCCESS:
+            Gladsheim.error(message=str(payload))
+            raise InternalServerError("common.process_issue")
+        return payload["decoded_jwt"]
 
-    return await verify_jwt_token_by_string(jwt)
+    @classmethod
+    async def validate_and_decode_thebes_answer(cls, request: Request) -> dict:
+        jwt = JwtService.__get_thebes_answer_from_request(request=request)
+        if jwt is None:
+            raise UnauthorizedError("Token not supplied")
+        decoded_jwt = dict(await cls.__decode_thebes_answer(jwt))
+        return decoded_jwt

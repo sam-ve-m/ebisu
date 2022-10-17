@@ -1,8 +1,8 @@
 # Ebisu
-from src.domain.exceptions.domain.forex.exception import (
+from src.domain.exceptions.domain.forex.model import (
     ErrorValidatingSimulationProposalData,
 )
-from src.domain.exceptions.repository.forex.exception import (
+from src.domain.exceptions.repository.forex.model import (
     CustomerForexDataNotFound,
     ErrorTryingToGetForexAccountData,
     ErrorTryingToGetForexClientId,

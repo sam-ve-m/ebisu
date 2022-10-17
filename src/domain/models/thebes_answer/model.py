@@ -1,8 +1,8 @@
 # Ebisu
-from src.domain.exceptions.domain.forex.exception import DataNotFoundInJwt
+from src.domain.exceptions.domain.forex.model import DataNotFoundInJwt
 
 
-class JwtModel:
+class ThebesAnswer:
     def __init__(self, jwt_data: dict):
         self.jwt_data = jwt_data
         self.unique_id = self.__get_unique_id()
@@ -40,3 +40,15 @@ class JwtModel:
         if not unique_id:
             raise DataNotFoundInJwt()
         return unique_id
+
+    def account_br_is_blocked(self):
+        account_br_is_blocked = self.jwt_data.get("user", {}).get("account_br_is_blocked")
+        if account_br_is_blocked is None:
+            raise DataNotFoundInJwt()
+
+        if account_br_is_blocked is False:
+            raise
+
+
+
+        return account_br_is_blocked

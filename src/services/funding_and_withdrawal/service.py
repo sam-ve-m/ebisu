@@ -2,7 +2,8 @@ from typing import Union
 
 from src.domain.enums.region import Region
 from src.domain.models.account.bank import BankAccount
-from src.domain.models.account.exchanges import ExchangeAccount
+from src.domain.models.account.broker.model import BrokerAccount
+from src.domain.models.thebes_answer.model import ThebesAnswer
 from src.domain.validators.funding_and_withdrawal.validators import (
     UserMoneyFlowSameExchange,
     UserMoneyFlowDifferentExchange,
@@ -20,10 +21,11 @@ class FundingAndWithdrawalService:
     async def withdrawal_to_external_bank(
         cls, money_flow: UserMoneyFlowToExternalBank, jwt_data: dict
     ):
-        unique_id = jwt_data["user"]["unique_id"]
+        jwt = ThebesAnswer(jwt_data=jwt_data)
+        unique_id = jwt.unique_id
 
-        origin_account = ExchangeAccount(
-            account_number=jwt_data["user"]["portfolios"]["br"]["bmf_account"],
+        origin_account = BrokerAccount(
+            account_number=jwt.bmf_account,
             user_unique_id=unique_id,
             country=Region.BR,
         )
@@ -53,13 +55,15 @@ class FundingAndWithdrawalService:
         money_flow: Union[UserMoneyFlowSameExchange, UserMoneyFlowDifferentExchange],
         jwt_data: dict,
     ):
-        unique_id = jwt_data["user"]["unique_id"]
+        jwt = ThebesAnswer(jwt_data=jwt_data)
+        jwt.account_br_is_blocked()
+        unique_id = jwt.unique_id
 
-        origin_account = ExchangeAccount(
+        origin_account = BrokerAccount(
             **money_flow.origin_account.dict(),
             user_unique_id=unique_id,
         )
-        account_destination = ExchangeAccount(
+        account_destination = BrokerAccount(
             **money_flow.account_destination.dict(),
             user_unique_id=unique_id,
         )

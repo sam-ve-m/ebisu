@@ -7,12 +7,11 @@ from src.domain.enums.response.internal_code import InternalCode
 from src.domain.responses.http_response_model import ResponseModel
 from src.domain.validators.funding_and_withdrawal.validators import (
     UserMoneyFlowSameExchange,
-    UserMoneyFlowDifferentExchange,
     UserMoneyFlowToExternalBank,
 )
 from src.services.exchange_operations.services import ExchangeOperationsService
 from src.services.funding_and_withdrawal import FundingAndWithdrawalService
-from src.services.jwt.service_jwt import JwtService
+from src.services.jwt.service import JwtService
 
 
 class FundingAndWithdrawalRouter:
@@ -21,7 +20,6 @@ class FundingAndWithdrawalRouter:
 
     @staticmethod
     def get_user_account_router():
-
         return FundingAndWithdrawalRouter.__funding_and_withdrawal_router
 
     @staticmethod
@@ -31,8 +29,8 @@ class FundingAndWithdrawalRouter:
     )
     async def add_funding(request: Request, user_money_flow: UserMoneyFlowSameExchange):
 
-        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        await JwtService.validate_electronic_signature(
+        jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
+        await JwtService.validate_mist(
             request=request, user_data=jwt_data["user"]
         )
         get_user_bank_accounts_response = (
@@ -56,8 +54,8 @@ class FundingAndWithdrawalRouter:
     async def withdrawal_to_external_bank(
         request: Request, user_withdrawal: UserMoneyFlowToExternalBank, resume=None
     ):
-        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        await JwtService.validate_electronic_signature(
+        jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
+        await JwtService.validate_mist(
             request=request, user_data=jwt_data["user"]
         )
 

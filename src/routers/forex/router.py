@@ -3,7 +3,7 @@ from src.domain.enums.response.internal_code import InternalCode
 from src.domain.responses.http_response_model import ResponseModel
 from src.domain.validators.forex.currency_options import CurrencyExchange
 from src.domain.validators.forex.execution_proposal import ForexExecution
-from src.services.jwt.service_jwt import JwtService
+from src.services.jwt.service import JwtService
 from src.services.forex.proposal_simulation.service import CustomerExchangeService
 from src.services.forex.execute_proposal_simulation.service import (
     ExecutionExchangeService,
@@ -29,7 +29,7 @@ class ForexExchange:
     async def get_exchange_simulation_proposal(
         request: Request, payload: CurrencyExchange = Depends()
     ) -> Response:
-        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
         result = await CustomerExchangeService.get_proposal_simulation(
             jwt_data=jwt_data, currency_exchange=payload
         )
@@ -43,8 +43,8 @@ class ForexExchange:
     async def execute_exchange_simulation_proposal(
         request: Request, payload: ForexExecution
     ) -> Response:
-        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
-        await JwtService.validate_electronic_signature(
+        jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
+        await JwtService.validate_mist(
             request=request, user_data=jwt_data["user"]
         )
         success = await ExecutionExchangeService.execute_exchange_proposal(

@@ -1,6 +1,6 @@
 # Ebisu
 from src.domain.enums.forex.operations import OperationType
-from src.domain.exceptions.transport.forex.exception import ErrorSendingToBifrostClient
+from src.domain.exceptions.transport.forex.model import ErrorSendingToBifrostClient
 from src.domain.models.forex.proposal.execution_request_data.model import ExecutionModel
 
 # Third party

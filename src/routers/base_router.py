@@ -6,25 +6,19 @@ import json
 # ERRORS
 from etria_logger import Gladsheim
 from src.domain.exceptions.model import (
-    IntegrityJwtError,
-    AuthenticationJwtError,
     FailToSaveAuditingTrail,
-    DataNotFoundError,
     MoneyFlowPerformedOutsideTransactionWindow,
 )
-from src.domain.exceptions.base_exceptions.exceptions import (
+from src.domain.exceptions.base_exceptions.model import (
     ServiceException,
     RepositoryException,
     DomainException,
     TransportException,
 )
 from src.domain.exceptions import (
-    ForbiddenError,
     BadRequestError,
     InternalServerError,
-    MoneyFlowResolverNoFoundError,
     InvalidAccountsOwnership,
-    UnableToProcessMoneyFlow,
     NotMappedCurrency,
     UnauthorizedError,
     FailToGetDataFromTransportLayer,
@@ -129,39 +123,12 @@ class BaseRouter:
             ).build_http_response(status_code=err.status_code)
             return response
 
-        except IntegrityJwtError as err:
-            Gladsheim.error(erro=err)
-
-            return Response(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                content=json.dumps(
-                    {"request_status": False, "status": 1, "msg": err.args[0]}
-                ),
-            )
-
-        except AuthenticationJwtError as err:
-            Gladsheim.error(erro=err)
-            return Response(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                content=json.dumps(
-                    {"request_status": False, "status": 2, "msg": err.args[0]}
-                ),
-            )
-
         except UnauthorizedError as e:
             Gladsheim.error(erro=e)
             return Response(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 content=json.dumps(
                     {"request_status": False, "status": 2, "msg": e.args[0]}
-                ),
-            )
-
-        except ForbiddenError as e:
-            return Response(
-                status_code=status.HTTP_403_FORBIDDEN,
-                content=json.dumps(
-                    {"request_status": False, "status": 3, "msg": e.args[0]}
                 ),
             )
 
@@ -177,14 +144,6 @@ class BaseRouter:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 content=json.dumps(
                     {"request_status": False, "status": 5, "msg": e.args[0]}
-                ),
-            )
-
-        except MoneyFlowResolverNoFoundError as e:
-            return Response(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                content=json.dumps(
-                    {"request_status": False, "status": 7, "msg": e.args[0]}
                 ),
             )
 
@@ -219,23 +178,6 @@ class BaseRouter:
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 content=json.dumps(
                     {"request_status": False, "status": 12, "msg": e.args[0]}
-                ),
-            )
-
-        except UnableToProcessMoneyFlow as e:
-            return Response(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                content=json.dumps(
-                    {"request_status": False, "status": 13, "msg": e.args[0]}
-                ),
-            )
-
-        except DataNotFoundError as e:
-            Gladsheim.error(erro=e)
-            return Response(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                content=json.dumps(
-                    {"request_status": False, "status": 14, "msg": e.args[0]}
                 ),
             )
 

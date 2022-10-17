@@ -1,5 +1,5 @@
 # Ebisu
-from src.domain.exceptions.base_exceptions.exceptions import TransportException
+from src.domain.exceptions.base_exceptions.model import TransportException
 from src.domain.enums.response.internal_code import InternalCode
 
 # Standards
