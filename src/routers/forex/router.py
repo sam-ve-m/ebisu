@@ -29,7 +29,7 @@ class ForexExchange:
     ) -> Response:
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         result = await ForexSimulation.get_proposal_simulation(
-            jwt_data=jwt_data, currency_exchange=payload
+            jwt_data=jwt_data, payload=payload
         )
         response = ResponseModel(
             success=True, result=result, internal_code=InternalCode.SUCCESS

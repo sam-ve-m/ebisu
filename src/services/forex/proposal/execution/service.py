@@ -109,7 +109,7 @@ class ForexExecution:
         return lock
 
     @staticmethod
-    async def __unlock_balance(lock) -> Union[True, ErrorTryingToUnlock]:
+    async def __unlock_balance(lock) -> Union[bool, ErrorTryingToUnlock]:
         if not lock:
             return True
         success, unlock_status = await BalanceLockManagerService.unlock_balance(
@@ -132,7 +132,7 @@ class ForexExecution:
     @staticmethod
     async def __insert_execution_response_data(
         execution_response_model: ExecutionResponseModel,
-    ) -> Union[True, ErrorTryingToInsertData]:
+    ) -> Union[bool, ErrorTryingToInsertData]:
         result = await ProposalExecutionRepository.insert_exchange_proposal(
             execution_response_model=execution_response_model
         )

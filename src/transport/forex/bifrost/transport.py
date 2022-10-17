@@ -30,7 +30,7 @@ class BifrostTransport:
         return True
 
     @staticmethod
-    async def send_to_queue(message: dict, topic: BifrostTopics) -> Union[True, ErrorSendingToBifrostClient]:
+    async def send_to_queue(message: dict, topic: BifrostTopics) -> Union[bool, ErrorSendingToBifrostClient]:
         success, bifrost_status = await BifrostClient.send_to_bifrost(
             message=message,
             topic=topic,

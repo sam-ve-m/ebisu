@@ -51,8 +51,10 @@ import pytest
 async def test_when_customer_have_exchange_data_then_return_expected_values(
     mock_user_repository,
 ):
-    result = await ForexSimulation._ForexSimulation__get_customer_spread_by_operation_type(
-        account_number=12345, payload=stub_currency_exchange
+    result = (
+        await ForexSimulation._ForexSimulation__get_customer_spread_by_operation_type(
+            account_number=12345, payload=stub_currency_exchange
+        )
     )
     assert isinstance(result, dict)
     assert result.get("account_number") == 12345
@@ -296,8 +298,10 @@ async def test_when_get_exchange_simulation_result_is_unexpected_error_then_rais
 
 @pytest.mark.asyncio
 async def test_when_have_token_data_then_return_customer_token_data():
-    result = await ForexSimulation._ForexSimulation__validate_if_token_exists_in_content(
-        content=stub_response_rote_21
+    result = (
+        await ForexSimulation._ForexSimulation__validate_if_token_exists_in_content(
+            content=stub_response_rote_21
+        )
     )
 
     assert isinstance(result, str)
