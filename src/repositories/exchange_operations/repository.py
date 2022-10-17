@@ -1,9 +1,9 @@
 # EXTERNAL LIBS
-from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
+from src.repositories.base_repositories.mongo_db.base import MongoBaseRepository
 from src.infrastructures.env_config import config
 
 
-class UserExchangeOperationsRepository(MongoDbBaseRepository):
+class UserExchangeOperationsRepository(MongoBaseRepository):
     database = config("MONGODB_SNAPSHOT_DATABASE")
     collection = config("MONGODB_SNAPSHOT_COLLECTION")
 

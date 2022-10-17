@@ -3,10 +3,10 @@ from src.domain.models.forex.proposal.execution_response_data.model import (
     ExecutionResponseModel,
 )
 from src.infrastructures.env_config import config
-from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
+from src.repositories.base_repositories.mongo_db.base import MongoBaseRepository
 
 
-class ProposalExecutionRepository(MongoDbBaseRepository):
+class ProposalExecutionRepository(MongoBaseRepository):
     database = config("MONGODB_DATABASE_EBISU")
     collection = config("MONGODB_PROPOSALS_EXECUTED")
 

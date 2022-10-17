@@ -1,7 +1,7 @@
 from abc import ABC
 
 
-class IInfrastructure(ABC):
+class IOracleInfrastructure(ABC):
     @staticmethod
     def get_connection(**kwargs):
         pass

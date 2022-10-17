@@ -6,7 +6,7 @@ from typing import Optional
 from pymongo.cursor import Cursor
 
 
-class IRepository(ABC):
+class IMongoBaseRepository(ABC):
     @abstractmethod
     def insert(self, data: dict) -> bool:
         pass

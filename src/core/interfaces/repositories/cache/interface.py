@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 
-class IRedis(ABC):
+class ICacheRepository(ABC):
     @staticmethod
     @abstractmethod
     async def set(key: str, value: dict, ttl: int = 0) -> None:

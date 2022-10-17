@@ -2,12 +2,12 @@
 import pickle
 from typing import Union, Optional
 
-from src.core.interfaces.repositories.redis.interface import IRedis
+from src.core.interfaces.repositories.cache.interface import ICacheRepository
 from src.infrastructures.redis.infraestructure import RedisInfrastructure
 from src.infrastructures.env_config import config
 
 
-class RepositoryRedis(IRedis, RedisInfrastructure):
+class CacheRepository(ICacheRepository, RedisInfrastructure):
     prefix = "ebisu:"
     host = config("REDIS_HOST_URL")
     db = config("REDIS_CACHE_DB")

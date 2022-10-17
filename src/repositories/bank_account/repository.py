@@ -1,11 +1,11 @@
 # EXTERNAL LIBS
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
 from src.infrastructures.env_config import config
-from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
+from src.repositories.base_repositories.mongo_db.base import MongoBaseRepository
 from src.domain.models.database.bank_account.model import BankAccountModel
 
 
-class UserBankAccountRepository(MongoDbBaseRepository):
+class UserBankAccountRepository(MongoBaseRepository):
     database = config("MONGODB_DATABASE_NAME")
     collection = config("MONGODB_USER_COLLECTION")
 
