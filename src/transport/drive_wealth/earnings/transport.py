@@ -64,6 +64,7 @@ class DwEarningsTransport:
         response = await DWApiTransport.execute_get(
             url=url_formatted, query_params=query_params
         )
+        body = await response.text()
         if response.status == 200:
             body = await response.text()
             transactions = json.loads(body)

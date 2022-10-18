@@ -54,7 +54,7 @@ class FundingAndWithdrawalRouter:
         tags=["User Funding And Withdrawal"],
     )
     async def withdrawal_to_external_bank(
-        request: Request, user_withdrawal: UserMoneyFlowToExternalBank, resume=None
+        request: Request, user_withdrawal: UserMoneyFlowToExternalBank
     ):
         jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
         await JwtService.validate_electronic_signature(
