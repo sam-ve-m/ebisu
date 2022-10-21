@@ -6,7 +6,7 @@ image:
   repository: nexus.sigame.com.br
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.2.6
+  tag: 1.2.10
 
 ports:
   protocol: TCP
@@ -143,9 +143,21 @@ containers:
     - name: MEPHO_DW_AUTHENTICATION_URL
       value: "https://bo-api.drivewealth.io/back-office/auth"
     - name: MEPHO_REDIS_HOST
-      value: "redis://mepho:MueOSapfdfdPIHbwwqQa@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379"
+      value: "redis://mepho:MueOSapfdfdPIHbwwqQa@172.30.11.235:6379"
     - name: MEPHO_REDIS_DB
       value: "1"
+    - name: MEPHO_CLIENT_LOCK_MANAGER_REDIS_URLS
+      value: '["redis://:foobared@127.0.0.1:6379?db=1", "redis://:foobared@127.0.0.1:6378?db=1", "redis://:foobared@127.0.0.1:6377?db=1", "redis://:foobared@127.0.0.1:6376?db=1", "redis://:foobared@127.0.0.1:6375?db=1"]'
+    - name: MEPHO_CLIENT_AUTHENTICATION_RETRY_COUNT
+      value: "3"
+    - name: MEPHO_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN
+      value: "10"
+    - name: MEPHO_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX
+      value: "15"
+    - name: MEPHO_CLIENT_AUTHENTICATION_LOCK_MANAGER_TIMEOUT
+      value: "20"
+    - name: MEPHO_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER
+      value: "mepho_authentication_ebisu"
     # etria
     - name: ETRIA_LOG_LEVEL
       value: "DEBUG"

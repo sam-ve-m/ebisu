@@ -112,7 +112,7 @@ class SinacorEarningsTransport:
             if body and isinstance(body, list):
                 for entity in body:
                     quantity = entity.get("quantidade", 0)
-                    value = entity.get("valor", 0)
+                    value = entity.get("valorBruto", 0)
                     amount_per_share = 0
                     if quantity and value:
                         amount_per_share = value / quantity
