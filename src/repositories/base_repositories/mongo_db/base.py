@@ -7,16 +7,16 @@ from datetime import datetime
 from pymongo.cursor import Cursor
 from nidavellir import Sindri
 
-from src.core.interfaces.repositories.base_repository.interface import IRepository
+from src.core.interfaces.repositories.base_mongo.interface import IMongoBaseRepository
 from src.infrastructures.mongo_db.infraestructure import MongoDBInfrastructure
-from src.repositories.cache.repository import RepositoryRedis
+from src.repositories.cache.repository import CacheRepository
 from src.domain.models.model_decorator.generate_id import hash_field
 
 
-class MongoDbBaseRepository(IRepository):
+class MongoBaseRepository(IMongoBaseRepository):
 
     infra = MongoDBInfrastructure
-    cache = RepositoryRedis
+    cache = CacheRepository
     database = None
     collection = None
 

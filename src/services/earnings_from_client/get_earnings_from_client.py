@@ -7,7 +7,7 @@ from src.domain.date_formatters.region.timestamp.model import RegionTimeStamp
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.earning.br.response.model import BrEarningsModelToResponse
 from src.domain.enums.region import Region
-from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
+from src.domain.request.exchange_info.get_earnings_client import EarningsClientModel
 from src.repositories.user_portfolios.repository import UserPortfoliosRepository
 from src.domain.earning.us.response.model import (
     EarningsRecordResponse,
@@ -90,7 +90,7 @@ class EarningsFromClient:
         )
 
         earnings_us_transactions = (
-            await DwEarningsTransport.get_us_transaction_earnings(
+            await DwEarningsTransport.get_transaction_earnings(
                 transaction_request=transaction_request
             )
         )

@@ -13,7 +13,7 @@ with patch.object(Config, "get", return_value="info"):
                 UserBankAccountRepository,
             )
             from src.repositories.base_repositories.mongo_db.base import (
-                MongoDbBaseRepository,
+                MongoBaseRepository,
             )
             from src.services.bank_account.service import UserBankAccountService
             from src.services.get_bank_code.service import GetBankCode
@@ -35,7 +35,7 @@ from tests.src.stubs.bank_account_stubs.stub_get_account import (
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_all", return_value=find_all_response_dummy)
+@patch.object(MongoBaseRepository, "find_all", return_value=find_all_response_dummy)
 async def test_when_sending_the_right_params_to_registered_user_bank_account_then_return_the_expected_response(
     mock_find_all,
 ):
@@ -47,7 +47,7 @@ async def test_when_sending_the_right_params_to_registered_user_bank_account_the
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_all", return_value=None)
+@patch.object(MongoBaseRepository, "find_all", return_value=None)
 async def test_when_sending_the_right_params_to_registered_user_bank_account_then_return_none(
     mock_find_all,
 ):
@@ -59,7 +59,7 @@ async def test_when_sending_the_right_params_to_registered_user_bank_account_the
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "add_one_in_array", return_value=True)
+@patch.object(MongoBaseRepository, "add_one_in_array", return_value=True)
 async def test_when_sending_valid_params_to_save_register_accounts_then_return_the_expected(
     mock_add_one_in_array,
 ):
@@ -75,7 +75,7 @@ existing_account_repository_2_stub = {"bank_account": None}
 
 @pytest.mark.asyncio
 @patch.object(
-    MongoDbBaseRepository, "find_one", return_value=existing_account_repository_stub
+    MongoBaseRepository, "find_one", return_value=existing_account_repository_stub
 )
 async def test_when_sending_the_right_params_then_return_the_expect_which_is_true(
     mock_find_one,
@@ -89,7 +89,7 @@ async def test_when_sending_the_right_params_then_return_the_expect_which_is_tru
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=None)
+@patch.object(MongoBaseRepository, "find_one", return_value=None)
 async def test_when_sending_the_right_params_then_return_the_expect_which_is_false(
     mock_find_one,
 ):
@@ -104,7 +104,7 @@ async def test_when_sending_the_right_params_then_return_the_expect_which_is_fal
 
 @pytest.mark.asyncio
 @patch.object(
-    MongoDbBaseRepository, "find_one", return_value=existing_account_repository_stub
+    MongoBaseRepository, "find_one", return_value=existing_account_repository_stub
 )
 async def test_when_sending_the_right_params_to_account_id_exists_then_return_the_expected_which_is_true(
     mock_find_one,
@@ -116,7 +116,7 @@ async def test_when_sending_the_right_params_to_account_id_exists_then_return_th
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=None)
+@patch.object(MongoBaseRepository, "find_one", return_value=None)
 async def test_when_sending_the_right_params_to_account_id_exists_then_return_the_expected_which_is_false(
     mock_find_one,
 ):
@@ -127,7 +127,7 @@ async def test_when_sending_the_right_params_to_account_id_exists_then_return_th
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "update_one", return_value=True)
+@patch.object(MongoBaseRepository, "update_one", return_value=True)
 async def test_when_sending_the_right_params_to_update_registered_bank_account_then_return_the_expected(
     mock_update_one,
 ):
@@ -139,7 +139,7 @@ async def test_when_sending_the_right_params_to_update_registered_bank_account_t
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "update_one", return_value=False)
+@patch.object(MongoBaseRepository, "update_one", return_value=False)
 async def test_when_sending_the_right_params_to_update_registered_bank_account_then_return_false(
     mock_update_one,
 ):
@@ -151,7 +151,7 @@ async def test_when_sending_the_right_params_to_update_registered_bank_account_t
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "update_one", return_value=True)
+@patch.object(MongoBaseRepository, "update_one", return_value=True)
 async def test_when_sending_the_right_params_to_update_registered_bank_account_then_return_false(
     mock_update_one,
 ):
@@ -164,7 +164,7 @@ async def test_when_sending_the_right_params_to_update_registered_bank_account_t
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "update_one", return_value=True)
+@patch.object(MongoBaseRepository, "update_one", return_value=True)
 async def test_when_sending_the_right_params_to_delete_registered_bank_account_then_return_true(
     mock_update_one,
 ):
@@ -177,7 +177,7 @@ async def test_when_sending_the_right_params_to_delete_registered_bank_account_t
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "update_one", return_value=False)
+@patch.object(MongoBaseRepository, "update_one", return_value=False)
 async def test_when_sending_the_right_params_to_delete_registered_bank_account_then_return_true(
     mock_update_one,
 ):
@@ -210,7 +210,7 @@ find_one_stub = {"name": "Teste Teste", "identifier_document": {"cpf": "40340423
 
 # test get_cpf_and_name_from_user
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=find_one_stub)
+@patch.object(MongoBaseRepository, "find_one", return_value=find_one_stub)
 async def test_when_sending_right_params_then_return_the_expected(mock_find_one):
     response = await UserBankAccountRepository.get_cpf_and_name_from_user(
         unique_id="1384f391-ceb6-444b-b649-db55cbcc0f9f"

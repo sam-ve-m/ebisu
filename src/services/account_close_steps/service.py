@@ -6,13 +6,13 @@ from src.domain.account_close_steps.model import AccountCloseSteps
 from src.domain.account_close_steps.response.model import AccountCloseStepsToResponse
 from src.domain.balance.base.model import BaseBalance
 from src.domain.enums.region import Region
-from src.domain.exceptions import UnauthorizedError
+from src.domain.exceptions.service.account_close_steps.model import AccountCloseStepsForbidden
 from src.domain.positions.model import Position
-from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
-from src.domain.validators.exchange_info.get_closure_steps_validator import (
+from src.domain.request.exchange_info.get_balance_validator import GetBalanceModel
+from src.domain.request.exchange_info.get_closure_steps_validator import (
     AccountCloseStepsRequest,
 )
-from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
+from src.domain.request.exchange_info.get_earnings_client import EarningsClientModel
 from src.services.earnings_from_client.get_earnings_from_client import (
     EarningsFromClient,
 )
@@ -103,7 +103,7 @@ class AccountCloseStepsService:
         if (is_br_account and not has_br_account) or (
             is_us_account and not has_us_account
         ):
-            raise UnauthorizedError()
+            raise AccountCloseStepsForbidden()
 
         account_close_steps = await cls.get_closure_steps_by_region(region, jwt_data)
         accounts_close_steps: List[AccountCloseSteps] = []

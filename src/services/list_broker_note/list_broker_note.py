@@ -5,7 +5,7 @@ from etria_logger import Gladsheim
 
 # EXTERNAL LIBS
 from src.repositories.files.repository import FileRepository
-from src.domain.validators.exchange_info.list_broker_note_validator import (
+from src.domain.request.exchange_info.list_broker_note_validator import (
     ListBrokerNoteModel,
     BrokerNoteMarket,
     BrokerNoteRegion,

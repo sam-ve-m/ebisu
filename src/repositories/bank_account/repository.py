@@ -1,11 +1,11 @@
 # EXTERNAL LIBS
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
 from src.infrastructures.env_config import config
-from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
+from src.repositories.base_repositories.mongo_db.base import MongoBaseRepository
 from src.domain.models.database.bank_account.model import BankAccountModel
 
 
-class UserBankAccountRepository(MongoDbBaseRepository):
+class UserBankAccountRepository(MongoBaseRepository):
     database = config("MONGODB_DATABASE_NAME")
     collection = config("MONGODB_USER_COLLECTION")
 
@@ -26,7 +26,7 @@ class UserBankAccountRepository(MongoDbBaseRepository):
                 },
             },
         )
-        bank_accounts_result = user_bank_accounts_by_unique_id["bank_accounts"]
+        bank_accounts_result = user_bank_accounts_by_unique_id.get("bank_accounts") or []
         user_bank_accounts_response = [
             BankAccountModel(**symbol) for symbol in bank_accounts_result
         ]

@@ -1,24 +1,22 @@
 # Ebisu
-from src.domain.exceptions.domain.forex.exception import (
+from src.domain.exceptions.domain.model.forex.model import (
     ErrorValidatingSimulationProposalData,
 )
-from src.domain.exceptions.repository.forex.exception import (
+from src.domain.exceptions.repository.forex.model import (
     CustomerForexDataNotFound,
     ErrorTryingToGetForexAccountData,
     ErrorTryingToGetForexClientId,
     ErrorTryingToGetForexAccountNumber,
 )
-from src.domain.exceptions.service.forex.exception import (
-    CustomerQuotationTokenNotFound,
-    ErrorTryingToGetUniqueId,
-)
+from src.domain.exceptions.service.forex.model import CustomerQuotationTokenNotFound, ErrorTryingToGetUniqueId
+
 from src.domain.models.forex.proposal.simulation_request_data.model import (
     SimulationModel,
 )
 from src.domain.models.forex.proposal.simulation_response_data.model import (
     SimulationResponseModel,
 )
-from src.domain.validators.forex.currency_options import CurrencyExchange
+from src.domain.request.forex.currency_options import CurrencyExchange
 from src.repositories.user_exchange.repository import UserExchangeRepository
 from src.repositories.user.repository import UserRepository
 from src.services.forex.response_map.service import ForexResponseMap

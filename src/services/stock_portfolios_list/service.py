@@ -1,5 +1,5 @@
 # INTERNAL LIBS
-from src.domain.validators.stock_portfolios.validators import UserPortfoliosModel
+from src.domain.request.stock_portfolios.validators import UserPortfoliosModel
 from src.repositories.user_portfolios.repository import UserPortfoliosRepository
 
 

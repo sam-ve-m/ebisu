@@ -1,16 +1,18 @@
 # Standard Libs
 import decouple
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 # INTERNAL LIBS
 from persephone_client import Persephone
+
+from src.domain.exceptions.service.bank_account.model import BankAccountNotExists
+from src.domain.exceptions.service.auditing_trail import FailToSaveAuditingTrail
 from tests.src.stubs.bank_account_stubs.stub_get_account import (
     jwt_with_bank_account_to_update,
 )
 from src.services.bank_account.service import UserBankAccountService
 from src.repositories.bank_account.repository import UserBankAccountRepository
-from src.domain.exceptions import BadRequestError, FailToSaveAuditingTrail
 from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
 
 
@@ -73,7 +75,7 @@ async def test_when_bank_account_and_register_account_are_false_then_raise_the_e
     mock_update_registered_user_bank_accounts,
     mock_send_to_persephone,
 ):
-    with pytest.raises(BadRequestError):
+    with pytest.raises(BankAccountNotExists):
         await UserBankAccountService.update_user_bank_account(
             jwt_data=jwt_with_bank_account_to_update,
             bank_account_repository=UserBankAccountRepository,

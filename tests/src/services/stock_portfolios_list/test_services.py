@@ -3,7 +3,7 @@ import pytest
 from unittest.mock import patch
 
 # EXTERNAL LIBS
-from src.domain.validators.stock_portfolios.validators import UserPortfoliosModel
+from src.domain.request.stock_portfolios.validators import UserPortfoliosModel
 from src.repositories.user_portfolios.repository import UserPortfoliosRepository
 from src.services.stock_portfolios_list.service import UserPortfoliosList
 from tests.src.stubs.bank_account_stubs.stub_get_account import (

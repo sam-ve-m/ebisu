@@ -5,7 +5,7 @@ from unittest.mock import patch, MagicMock
 # Internal Libs
 from src.domain.enums.order_status import OrderStatus
 from src.domain.enums.region import Region
-from src.domain.validators.exchange_info.list_client_order_validator import (
+from src.domain.request.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
 )
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository

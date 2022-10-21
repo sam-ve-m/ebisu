@@ -1,9 +1,9 @@
 # Ebisu
 from src.infrastructures.env_config import config
-from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
+from src.repositories.base_repositories.mongo_db.base import MongoBaseRepository
 
 
-class UserExchangeRepository(MongoDbBaseRepository):
+class UserExchangeRepository(MongoBaseRepository):
 
     database = config("MONGODB_SNAPSHOT_DATABASE")
     collection = config("MONGODB_EXCHANGE_COLLECTION")

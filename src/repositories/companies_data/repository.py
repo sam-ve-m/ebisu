@@ -1,8 +1,8 @@
 from src.infrastructures.env_config import config
-from src.repositories.base_repositories.mongo_db.base import MongoDbBaseRepository
+from src.repositories.base_repositories.mongo_db.base import MongoBaseRepository
 
 
-class CompanyInformationRepository(MongoDbBaseRepository):
+class CompanyInformationRepository(MongoBaseRepository):
 
     database = config("MONGO_DATABASE_POSEIDON")
     collection = config("MONGO_COLLECTION_IZANAMI")

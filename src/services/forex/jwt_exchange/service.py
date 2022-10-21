@@ -1,10 +1,11 @@
 # Ebisu
 from src.domain.enums.forex.jwt_algorithms import Algorithms
-from src.domain.exceptions.service.forex.exception import ErrorTryingToDecodeJwt
 
 # Third party
 from etria_logger import Gladsheim
 from jwt import JWT
+
+from src.domain.exceptions.service.forex.model import ErrorTryingToDecodeJwt
 
 
 class JwtForexService:

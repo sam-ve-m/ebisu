@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 # External Libs
 from src.domain.enums.region import Region
-from src.domain.validators.exchange_info.get_balance_validator import GetBalanceModel
+from src.domain.request.exchange_info.get_balance_validator import GetBalanceModel
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from tests.src.stubs.project_stubs.stub_data import (
     payload_data_dummy,

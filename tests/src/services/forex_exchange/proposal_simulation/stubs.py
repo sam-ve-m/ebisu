@@ -1,5 +1,5 @@
 # Ebisu
-from src.domain.validators.forex.currency_options import CurrencyExchange
+from src.domain.request.forex.currency_options import CurrencyExchange
 from src.domain.models.forex.proposal.simulation_request_data.model import (
     SimulationModel,
 )

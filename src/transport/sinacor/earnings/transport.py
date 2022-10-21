@@ -12,7 +12,7 @@ from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOf
 from src.domain.date_formatters.region.timestamp.model import RegionTimeStamp
 from src.domain.earning.br.model import EarningBr
 from src.domain.enums.earnings_types import EarningsTypes
-from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
+from src.domain.request.exchange_info.get_earnings_client import EarningsClientModel
 from src.infrastructures.env_config import config
 
 

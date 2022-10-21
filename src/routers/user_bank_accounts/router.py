@@ -5,8 +5,7 @@ from fastapi import Request, APIRouter, Depends
 from nidavellir import Sindri
 from src.core.interfaces.bank_transfer.interface import IBankTransfer
 from src.services.get_bank_code.service import GetBankCode
-from src.services.jwt.service_jwt import JwtService
-from src.domain.validators.user_account.bank_account import (
+from src.domain.request.user_account.bank_account import (
     CreateUserBankAccount,
     UpdateUserBankAccounts,
     DeleteUsersBankAccount,
@@ -18,7 +17,7 @@ from src.domain.models.response.create_bank_account.response_model import (
 # SERVICES
 from src.services.bank_account.service import UserBankAccountService
 from src.services.bank_transfer.service import BankTransferService
-from src.services.jwt.service_jwt import JwtService
+from src.services.jwt.service import JwtService
 
 
 class UserBankAccountsRouter:
@@ -36,7 +35,7 @@ class UserBankAccountsRouter:
         response_model=ListBankAccountsResponse,
     )
     async def get_user_bank_accounts(request: Request):
-        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
         jwt_data = {"x-thebes-answer": jwt_data}
         user_bank_accounts = await UserBankAccountService.get_user_bank_accounts(
             jwt_data
@@ -48,7 +47,7 @@ class UserBankAccountsRouter:
     async def create_user_bank_accounts(
         request: Request, create_bank_account: CreateUserBankAccount
     ):
-        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
 
         jwt_data = {
             "x-thebes-answer": jwt_data,
@@ -64,7 +63,7 @@ class UserBankAccountsRouter:
     async def update_bank_account(
         request: Request, update_bank_account: UpdateUserBankAccounts
     ):
-        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
 
         bank_account = update_bank_account.dict()
         Sindri.dict_to_primitive_types(obj=bank_account)
@@ -84,7 +83,7 @@ class UserBankAccountsRouter:
     async def delete_bank_account(
         request: Request, delete_bank_account: DeleteUsersBankAccount
     ):
-        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
 
         bank_account = delete_bank_account.dict()
         jwt_data = {"x-thebes-answer": jwt_data, "bank_account": bank_account}
