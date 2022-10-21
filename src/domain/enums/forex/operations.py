@@ -6,8 +6,8 @@ from strenum import StrEnum
 
 
 class NatureOperation(IntEnum):
-    BRL_TO_USD = 4
-    USD_TO_BRL = 54
+    BRL_TO_USD = 68
+    USD_TO_BRL = 167
 
 
 class OperationType(StrEnum):
