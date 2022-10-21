@@ -164,8 +164,14 @@ deployment:
         MEPHO_DW_USER: "bo.lionx.api"
         MEPHO_DW_PASSWORD: "passw0rd"
         MEPHO_DW_AUTHENTICATION_URL: "https://bo-api.drivewealth.io/back-office/auth"
-        MEPHO_REDIS_HOST: "redis://mepho:LndhhhII565dsaadspoi@172.30.11.235:6379"
+        MEPHO_REDIS_HOST: "redis://mepho:LndhhhII565dsaadspoi@172.30.19.183:6379"
         MEPHO_REDIS_DB: "1"
+        MEPHO_CLIENT_LOCK_MANAGER_REDIS_URLS: '["redis://:foobared@127.0.0.1:6379?db=1", "redis://:foobared@127.0.0.1:6378?db=1", "redis://:foobared@127.0.0.1:6377?db=1", "redis://:foobared@127.0.0.1:6376?db=1", "redis://:foobared@127.0.0.1:6375?db=1"]'
+        MEPHO_CLIENT_AUTHENTICATION_RETRY_COUNT: "3"
+        MEPHO_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN: "10"
+        MEPHO_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX: "15"
+        MEPHO_CLIENT_AUTHENTICATION_LOCK_MANAGER_TIMEOUT: "20"
+        MEPHO_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER: "mepho_authentication_ebisu"
         # etria
         ETRIA_LOG_LEVEL: "INFO"
         ROOT_LOG_LEVEL: "WARNING"
