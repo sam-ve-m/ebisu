@@ -71,6 +71,7 @@ class ExecutionModel:
         forex_account: int,
     ):
         self.jwt = ThebesAnswer(jwt_data=jwt_data)
+        self.jwt.account_br_is_blocked()
         self.stock_market = LigaInvestStock(
             date_time=datetime.now(tz=TimeZones.BR_SP.value),
             time_zone=TimeZones.BR_SP,

@@ -1,5 +1,5 @@
 # Ebisu
-from src.domain.exceptions.domain.model.forex.model import DataNotFoundInJwt
+from src.domain.exceptions.domain.model.thebes_answer.model import BrAccountIsBlocked, DataNotFoundInJwt
 
 
 class ThebesAnswer:
@@ -46,9 +46,7 @@ class ThebesAnswer:
         if account_br_is_blocked is None:
             raise DataNotFoundInJwt()
 
-        if account_br_is_blocked is False:
-            raise
-
-
+        if account_br_is_blocked:
+            raise BrAccountIsBlocked()
 
         return account_br_is_blocked

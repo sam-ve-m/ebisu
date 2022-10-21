@@ -8,7 +8,7 @@ from http import HTTPStatus
 
 class InvalidElectronicSignature(ServiceException):
     def __init__(self, *args, **kwargs):
-        self.msg = "Invalid electronica signature"
+        self.msg = "Invalid electronic signature"
         self.status_code = HTTPStatus.UNAUTHORIZED
         self.internal_code = InternalCode.INVALID_SIGNATURE_ELECTRONIC
         self.success = False

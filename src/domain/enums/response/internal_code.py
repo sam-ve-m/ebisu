@@ -22,6 +22,7 @@ class InternalCode(IntEnum):
     OUTSIDE_THE_OPERATION_WINDOW = 600
     INVALID_BANK_CODE = 700
     ERROR_IN_US_PARTNER = 800
+    ACCOUNT_BR_IS_BLOCKED = 900
 
     def __repr__(self):
         return self.value

@@ -22,6 +22,7 @@ class FundingAndWithdrawalService:
         cls, money_flow: UserMoneyFlowToExternalBank, jwt_data: dict
     ):
         jwt = ThebesAnswer(jwt_data=jwt_data)
+        jwt.account_br_is_blocked()
         unique_id = jwt.unique_id
 
         origin_account = BrokerAccount(
