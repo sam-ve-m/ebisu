@@ -190,7 +190,6 @@ class ExecutionModel:
         }
         return bifrost_template
 
-
     def get_execute_proposal_body(self, customer_data: dict) -> dict:
         next_d2 = self.stock_market.get_liquidation_date(day=LiquidationDayOptions.D2)
         next_d2_date_time_formatted = next_d2.strftime(RegionDateFormat.BR_DATE_ZULU_FORMAT.value)
@@ -204,7 +203,7 @@ class ExecutionModel:
                 "codigoSWIFTBanco": config("BENEFICIARY_SWIFT_BANK_CODE"),
                 "nomeBeneficiario": config("BENEFICIARY_NAME"),
                 "contaBeneficiario": config("BENEFICIARY_ACCOUNT"),
-                "infoComplementar": f"/{self.origin_account}/{name}"
+                "infoComplementar": f"/{self.jwt.dw_display_account}/{name}"
             },
             "dataLiquidacaoFutura": next_d2_date_time_formatted,
         }
