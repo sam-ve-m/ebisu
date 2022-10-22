@@ -9,7 +9,7 @@ with patch.object(Config, "get", return_value="info"):
     with patch.object(logging.config, "dictConfig"):
         with patch.object(RepositoryEnv, "__init__", return_value=None):
             from src.repositories.base_repositories.mongo_db.base import (
-                MongoDbBaseRepository,
+                MongoBaseRepository,
             )
             from src.repositories.exchange_operations.repository import (
                 UserExchangeOperationsRepository,
@@ -20,7 +20,7 @@ from tests.src.repositories.exchange_operations.stubs import exchange_template_s
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "insert", return_value=True)
+@patch.object(MongoBaseRepository, "insert", return_value=True)
 async def test_when_sending_the_right_params_then_return_the_expected_which_is_true(
     mock_insert,
 ):
@@ -31,7 +31,7 @@ async def test_when_sending_the_right_params_then_return_the_expected_which_is_t
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "insert", return_value=False)
+@patch.object(MongoBaseRepository, "insert", return_value=False)
 async def test_when_sending_the_right_params_then_return_the_expected_which_is_false(
     mock_insert,
 ):

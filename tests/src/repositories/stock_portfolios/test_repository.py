@@ -10,7 +10,7 @@ with patch.object(Config, "get", return_value="info"):
     with patch.object(logging.config, "dictConfig"):
         with patch.object(RepositoryEnv, "__init__", return_value=None):
             from src.repositories.base_repositories.mongo_db.base import (
-                MongoDbBaseRepository,
+                MongoBaseRepository,
             )
             from src.repositories.user_portfolios.repository import (
                 UserPortfoliosRepository,
@@ -25,7 +25,7 @@ from tests.src.repositories.stock_portfolios.stub import (
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=find_one_response_stub)
+@patch.object(MongoBaseRepository, "find_one", return_value=find_one_response_stub)
 async def test_when_sending_the_right_params_to_get_all_portfolios_list_then_return_the_expected(
     mock_find_one,
 ):
@@ -37,7 +37,7 @@ async def test_when_sending_the_right_params_to_get_all_portfolios_list_then_ret
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=None)
+@patch.object(MongoBaseRepository, "find_one", return_value=None)
 async def test_when_sending_the_right_params_to_get_all_portfolios_list_then_return_the_expected_for_no_data(
     mock_find_one,
 ):
@@ -61,7 +61,7 @@ find_one_region_stub = {
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=find_one_region_stub)
+@patch.object(MongoBaseRepository, "find_one", return_value=find_one_region_stub)
 async def test_when_sending_the_right_params_to_get_portfolios_by_region_then_return_the_expected(
     mock_find_one,
 ):
@@ -76,7 +76,7 @@ response_portfolios_stub = {"portfolios": {"default": {}, "vnc": {}}}
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=response_portfolios_stub)
+@patch.object(MongoBaseRepository, "find_one", return_value=response_portfolios_stub)
 async def test_when_sending_the_right_params_to_get_portfolios_by_region_then_return_no_data_which_is_the_expected(
     mock_find_one,
 ):
@@ -88,7 +88,7 @@ async def test_when_sending_the_right_params_to_get_portfolios_by_region_then_re
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=find_one_by_type_stub)
+@patch.object(MongoBaseRepository, "find_one", return_value=find_one_by_type_stub)
 async def test_when_sending_the_right_params_to_get_portfolios_by_type_then_return_the_expected(
     mock_find_one,
 ):
@@ -103,7 +103,7 @@ find_one_type_stub = {"portfolios": {"vnc": {}}}
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=find_one_type_stub)
+@patch.object(MongoBaseRepository, "find_one", return_value=find_one_type_stub)
 async def test_when_sending_the_right_params_to_portfolios_by_type_then_return_no_data_response(
     mock_find_one,
 ):
@@ -119,7 +119,7 @@ find_one_type_and_class_stub = {"portfolios": {"vnc": {}}}
 
 @pytest.mark.asyncio
 @patch.object(
-    MongoDbBaseRepository, "find_one", return_value=find_one_type_and_class_stub
+    MongoBaseRepository, "find_one", return_value=find_one_type_and_class_stub
 )
 async def test_when_sending_the_right_params_to_portfolios_by_type_and_region_then_return_no_data_response(
     mock_find_one,
@@ -141,7 +141,7 @@ find_stub_by_type_and_region = {
 
 
 @pytest.mark.asyncio
-@patch.object(MongoDbBaseRepository, "find_one", return_value=find_type_and_class_stub)
+@patch.object(MongoBaseRepository, "find_one", return_value=find_type_and_class_stub)
 async def test_when_sending_the_right_params_to_type_and_region_then_return_the_expected(
     mock_find_one,
 ):

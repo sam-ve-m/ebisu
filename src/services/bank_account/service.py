@@ -7,9 +7,10 @@ from fastapi.openapi.models import Response
 # INTERNAL LIBRARIES
 from nidavellir import Sindri
 from src.domain.enums.persephone import PersephoneSchema, PersephoneQueue
-from src.domain.exceptions import FailToSaveAuditingTrail
+from src.domain.exceptions.service.bank_account.model import BankAccountAlreadyExists, BankAccountNotExists
+from src.domain.exceptions.service.auditing_trail.model import FailToSaveAuditingTrail
+from src.domain.exceptions.service.unexpected.internal_server_error.model import InternalServerError
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
-from src.domain.exceptions import BadRequestError, InternalServerError
 from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.services.get_bank_code.service import GetBankCode
 from persephone_client import Persephone
@@ -38,7 +39,7 @@ class UserBankAccountService:
             )
         )
         if bank_account_exists_and_is_activated:
-            raise BadRequestError("common.register_exists")
+            raise BankAccountAlreadyExists("common.register_exists")
 
         bank_account.update(
             {"id": uuid4(), "status": UserBankAccountStatus.ACTIVE.value}
@@ -112,7 +113,7 @@ class UserBankAccountService:
             )
         )
         if not user_bank_account_id_exists:
-            raise BadRequestError("common.register_not_exists")
+            raise BankAccountNotExists()
 
         (
             sent_to_persephone,
@@ -162,7 +163,7 @@ class UserBankAccountService:
             )
         )
         if not user_bank_account_id_exists:
-            raise BadRequestError("common.register_not_exists")
+            raise BankAccountNotExists()
 
         (
             sent_to_persephone,

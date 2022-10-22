@@ -4,7 +4,7 @@ from pytest import mark
 
 from src.domain.earning.us.response.model import EarningsRecordResponse
 from src.domain.enums.region import Region
-from src.domain.validators.exchange_info.get_closure_steps_validator import (
+from src.domain.request.exchange_info.get_closure_steps_validator import (
     AccountCloseStepsRequest,
 )
 from src.repositories.user_portfolios.repository import UserPortfoliosRepository

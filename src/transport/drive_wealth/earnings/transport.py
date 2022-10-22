@@ -10,12 +10,12 @@ from src.domain.date_formatters.region.date_time.model import RegionStringDateTi
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOffset
 from src.domain.earning.us.model import Earning
-from src.domain.exceptions.model import FailToGetDataFromTransportLayer
 from src.domain.statement.us.request.model import TransactionRequest
 from src.infrastructures.env_config import config
+from src.transport.drive_wealth.base.transport import DwBaseTransport
 
 
-class DwEarningsTransport:
+class DwEarningsTransport(DwBaseTransport):
 
     transaction_url = config("DW_GET_ALL_TRANSACTIONS_URL")
     balance_url = config("DW_BALANCE_URL")
@@ -39,7 +39,7 @@ class DwEarningsTransport:
         return earning_model
 
     @staticmethod
-    async def get_us_transaction_earnings(
+    async def get_transaction_earnings(
         transaction_request: TransactionRequest,
     ) -> List[Earning]:
         earnings_transactions = await DwEarningsTransport.__get_transactions(
@@ -55,8 +55,8 @@ class DwEarningsTransport:
 
         return earnings_model
 
-    @staticmethod
-    async def __get_transactions(transaction_request: TransactionRequest) -> dict:
+    @classmethod
+    async def __get_transactions(cls, transaction_request: TransactionRequest) -> dict:
         query_params = transaction_request.get_query_params()
         account = transaction_request.get_account()
         url_formatted = DwEarningsTransport.transaction_url.format(account)
@@ -65,8 +65,13 @@ class DwEarningsTransport:
             url=url_formatted, query_params=query_params
         )
         body = await response.text()
-        if response.status == 200:
-            body = await response.text()
-            transactions = json.loads(body)
-            return transactions
-        raise FailToGetDataFromTransportLayer()
+        transactions = json.loads(body)
+
+        cls._handle_dw_error_status_from_response(
+            request=url_formatted, response=transactions
+        )
+
+        cls._handle_http_error_from_drive_wealth_request(
+            request=url_formatted, response=response
+        )
+        return transactions

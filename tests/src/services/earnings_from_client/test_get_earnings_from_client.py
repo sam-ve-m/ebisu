@@ -8,7 +8,7 @@ from pydantic import ValidationError
 # PROJECT IMPORTS
 from src.domain.earning.br.response.model import BrEarningsModelToResponse
 from src.repositories.earnings.repository import EarningsBrRecord
-from src.domain.validators.exchange_info.get_earnings_client import EarningsClientModel
+from src.domain.request.exchange_info.get_earnings_client import EarningsClientModel
 from src.services.earnings_from_client.get_earnings_from_client import (
     EarningsFromClient,
 )

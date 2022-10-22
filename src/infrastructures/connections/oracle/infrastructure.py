@@ -1,10 +1,10 @@
 import cx_Oracle
 
-from src.core.interfaces.infrastructures.oracle.interface import IInfrastructure
+from src.core.interfaces.infrastructures.oracle.interface import IOracleInfrastructure
 from etria_logger import Gladsheim
 
 
-class OracleInfrastructure(IInfrastructure):
+class OracleInfrastructure(IOracleInfrastructure):
     @staticmethod
     def get_connection(service, user, password, base_dns, port):
         try:

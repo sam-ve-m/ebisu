@@ -101,5 +101,4 @@ class DwStatementTransport(DwBaseTransport):
         cls._handle_http_error_from_drive_wealth_request(
             request=url_formatted, response=response
         )
-
         return transactions
