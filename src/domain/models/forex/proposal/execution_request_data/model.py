@@ -80,6 +80,7 @@ class ExecutionModel:
         self.token = payload.proposal_simulation_token
         self.token_decoded = ProposalTokenData(token_decoded=token_decoded)
         self.forex_account = forex_account
+        self.exchange_proposal_value = self.__get_exchange_proposal_value()
         self.operation_type = self.__get_operation_type()
         self.redis_hash = self.get_redis_hash()
         self.origin_country = self.__get_origin_country()
@@ -87,6 +88,16 @@ class ExecutionModel:
         self.halberd_country = self.__get_halberd_country()
         self.destination_country = self.__get_destination_country()
         self.destination_account = self.__get_destination_account()
+
+    def __get_exchange_proposal_value(self) -> float:
+        map_exchange_proposal_value_per_hash = {
+            "BRL_TO_USD": self.token_decoded.net_value,
+            "USD_TO_BRL": self.token_decoded.quantity_currency_traded,
+        }
+        exchange_proposal_value = map_exchange_proposal_value_per_hash.get(self.token_decoded.exchange_hash)
+        if not exchange_proposal_value:
+            raise ErrorGettingValueByExchangeHash()
+        return exchange_proposal_value
 
     def __get_operation_type(self) -> OperationType:
         map_operation_types_per_hash = {
