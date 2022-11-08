@@ -58,7 +58,7 @@ class ExecutionExchangeService:
 
     @classmethod
     async def check_customer_has_enough_balance(cls, execution_model: ExecutionModel):
-        exchange_proposal_value = execution_model.token_decoded.net_value
+        allowed_to_withdraw = None
         resource = Resource(
             unique_id=execution_model.jwt.unique_id,
             country=execution_model.origin_country,
@@ -71,10 +71,14 @@ class ExecutionExchangeService:
                     redis_hash=execution_model.redis_hash
                 )
             )
-            if not exchange_proposal_value <= allowed_to_withdraw.total:
+            if not execution_model.exchange_proposal_value <= allowed_to_withdraw.total:
                 raise InsufficientFunds()
         except Exception as ex:
-            Gladsheim.error(error=ex)
+            Gladsheim.error(
+                error=ex,
+                allowed_to_withdraw=allowed_to_withdraw,
+                execution_model=execution_model.__dict__
+            )
             raise ex
         finally:
             await cls.__unlock_balance(lock=lock)
