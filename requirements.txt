@@ -3,8 +3,8 @@ bifrost-client==0.1.3
 boto3==1.20.24
 cx-oracle==8.3.0
 fastapi==0.66.0
-floki-client==1.0.7
-halberd==0.1.2
+floki-client==1.0.8
+halberd==0.1.3
 heimdall-client==2.3.2
 motor==2.5.1
 pandas-market-calendars==4.0
@@ -16,8 +16,8 @@ redis==4.3.4
 uvicorn==0.14.0
 mist-client==2.3.4
 python-i18n==0.3.9
-mepho==0.2.1
+mepho==0.2.2
 wkhtmltopdf==0.2
 aiohttp==3.8.1
-caronte==0.2.3
+caronte==0.2.4
 strenum==0.4.8
