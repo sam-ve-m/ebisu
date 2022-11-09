@@ -9,10 +9,11 @@ from copy import deepcopy
 # PROJECT IMPORTS
 from decouple import Config, RepositoryEnv
 
+from src.domain.exceptions.service.auditing_trail.model import FailToSaveAuditingTrail
+from src.domain.exceptions.service.unexpected.internal_server_error.model import InternalServerError
 # INTERNAL LIBS
 from src.services.bank_account.service import UserBankAccountService
 from src.repositories.bank_account.repository import UserBankAccountRepository
-from src.domain.exceptions import InternalServerError, FailToSaveAuditingTrail
 
 # STUB FILES
 from tests.src.stubs.bank_account_stubs.stub_get_account import (

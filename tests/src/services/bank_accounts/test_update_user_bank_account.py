@@ -6,8 +6,8 @@ from unittest.mock import patch
 # INTERNAL LIBS
 from persephone_client import Persephone
 
+from src.domain.exceptions.service.auditing_trail.model import FailToSaveAuditingTrail
 from src.domain.exceptions.service.bank_account.model import BankAccountNotExists
-from src.domain.exceptions.service.auditing_trail import FailToSaveAuditingTrail
 from tests.src.stubs.bank_account_stubs.stub_get_account import (
     jwt_with_bank_account_to_update,
 )

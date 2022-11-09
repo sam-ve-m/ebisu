@@ -10,7 +10,7 @@ from datetime import datetime
 from pydantic import BaseModel, root_validator
 
 
-class ForexExecution(BaseModel):
+class ForexSimulationToken(BaseModel):
     proposal_simulation_token: str
 
     @root_validator(pre=True)
@@ -29,5 +29,4 @@ class ForexExecution(BaseModel):
         if not is_valid_forex_business_day:
             raise ClosedForexOperations()
 
-        values.update(liga_invest_stock_market=liga_stock_market)
         return values

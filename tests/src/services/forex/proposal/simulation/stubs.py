@@ -43,15 +43,15 @@ stub_current_quote_url = (
     "produto/cambio/naturezaOperacao/{}/taxa/{}/{}/cliente/{}/spread/{}"
 )
 stub_customer_exchange_data = {
-    "exchange_account_id": 12345,
+    "account_number": 12345,
     "base_currency": "BRL",
     "quote_currency": "USD",
     "spread": 0.02,
 }
 
-stub_customer_exchange_request_model = SimulationModel(
-    exchange_account_id=12345,
-    currency_exchange=stub_currency_exchange,
+stub_simulation_model = SimulationModel(
+    client_id=12345,
+    payload=stub_currency_exchange,
     customer_exchange_data=stub_customer_exchange_data,
 )
 

@@ -8,67 +8,25 @@ from src.domain.enums.forex.operations import OperationType
 from src.domain.enums.forex.time_zones import TimeZones
 from src.domain.exceptions.domain.model.forex.model import (
     InvalidRedisHashCombination,
-    DataNotFoundInToken,
     ErrorGettingValueByExchangeHash,
 )
 from src.domain.date_formatters.region.date_time.model import RegionDateFormat
 from src.domain.models.forex.markets.calendar.model import ForexMarketCalendars
 from src.domain.models.forex.markets.liga_invest_markets.model import LigaInvestStock
 from src.domain.models.thebes_answer.model import ThebesAnswer
-from src.domain.request.forex.execution_proposal import ForexExecution
+from src.domain.models.forex.proposal.simulation_token.model import SimulationTokenModel
+from src.domain.request.forex.execution_proposal import ForexSimulationToken
 from src.infrastructures.env_config import config
 from halberd import Country as HalberdCountry
-
-
-class ProposalTokenData:
-    def __init__(self, token_decoded: dict):
-        self.token_decoded = token_decoded
-        self.forex_account = self.__get_forex_account()
-        self.exchange_hash = self.__get_exchange_combination_hash()
-        self.nature_operation = self.__get_nature_operation()
-        self.net_value = self.__get_net_value()
-        self.quantity_currency_traded = self.__get_quantity_currency_traded()
-
-    def __get_forex_account(self):
-        forex_account = self.token_decoded.get("CodigoCliente")
-        if not forex_account:
-            raise DataNotFoundInToken()
-        return forex_account
-
-    def __get_net_value(self):
-        net_value = self.token_decoded.get("ValorLiquido")
-        if not net_value:
-            raise DataNotFoundInToken()
-        return float(net_value)
-
-    def __get_quantity_currency_traded(self):
-        quantity_currency_traded = self.token_decoded.get("QuantidadeMoedaNegociada")
-        if not quantity_currency_traded:
-            raise DataNotFoundInToken()
-        return float(quantity_currency_traded)
-
-    def __get_nature_operation(self):
-        nature_operation = self.token_decoded.get("CodigoNaturezaOperacao")
-        if not nature_operation:
-            raise DataNotFoundInToken()
-        return int(nature_operation)
-
-    def __get_exchange_combination_hash(self):
-        base = self.token_decoded.get("SimboloMoedaBase")
-        quote = self.token_decoded.get("SimboloMoedaCotacao")
-        if not all([base, quote]):
-            raise DataNotFoundInToken()
-        exchange_combination_hash = f"{base}_TO_{quote}"
-        return exchange_combination_hash
 
 
 class ExecutionModel:
     def __init__(
         self,
-        payload: ForexExecution,
+        payload: ForexSimulationToken,
         jwt_data: dict,
         token_decoded: dict,
-        forex_account: int,
+        account_number: int,
     ):
         self.jwt = ThebesAnswer(jwt_data=jwt_data)
         self.jwt.account_br_is_blocked()
@@ -78,9 +36,11 @@ class ExecutionModel:
             market_calendar=ForexMarketCalendars(nyse=True, bmf=True),
         )
         self.token = payload.proposal_simulation_token
-        self.token_decoded = ProposalTokenData(token_decoded=token_decoded)
-        self.forex_account = forex_account
+
+        self.token_decoded = SimulationTokenModel(token_decoded=token_decoded)
+        self.account_number = account_number
         self.exchange_proposal_value = self.__get_exchange_proposal_value()
+
         self.operation_type = self.__get_operation_type()
         self.redis_hash = self.get_redis_hash()
         self.origin_country = self.__get_origin_country()
@@ -184,7 +144,7 @@ class ExecutionModel:
             },
             "account_destination": {
                 "user_unique_id": self.jwt.unique_id,
-                "account_number": self.forex_account,
+                "account_number": self.account_number,
                 "country": self.destination_country,
             },
             "value": self.token_decoded.net_value,
@@ -245,6 +205,6 @@ class ExecutionModel:
         return body
 
     @staticmethod
-    def get_execution_url():
+    def get_execution_url() -> str:
         url_path = f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("EXECUTION_URL")}'
         return url_path
