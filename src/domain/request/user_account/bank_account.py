@@ -22,7 +22,6 @@ class CreateUserBankAccount(BankCode):
     agency: constr(max_length=5)
     account_number: str
     account_name: Optional[str]
-    device_info: DeviceInformationOptional
 
 
 class UpdateUserBankAccounts(BankCode):
@@ -32,12 +31,10 @@ class UpdateUserBankAccounts(BankCode):
     account_number: Optional[str]
     account_name: Optional[str]
     id: UUID4
-    device_info: DeviceInformationOptional
 
 
 class DeleteUsersBankAccount(BaseModel):
     id: str
-    device_info: DeviceInformationOptional
 
 
 class GetUserBankAccount(BaseModel):

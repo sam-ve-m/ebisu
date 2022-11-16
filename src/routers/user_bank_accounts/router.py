@@ -1,9 +1,9 @@
-# STANDARD LIBS
 from fastapi import Request, APIRouter, Depends
 
 # INTERNAL LIBS
 from nidavellir import Sindri
 from src.core.interfaces.bank_transfer.interface import IBankTransfer
+from src.services.device_info.service import DeviceInfoService
 from src.services.get_bank_code.service import GetBankCode
 from src.domain.request.user_account.bank_account import (
     CreateUserBankAccount,
@@ -53,8 +53,12 @@ class UserBankAccountsRouter:
             "x-thebes-answer": jwt_data,
             "bank_account": create_bank_account.dict(),
         }
+        device_info = await DeviceInfoService.get_device_info(request)
         create_user_bank_accounts_response = (
-            await UserBankAccountService.create_user_bank_accounts(jwt_data=jwt_data)
+            await UserBankAccountService.create_user_bank_accounts(
+                jwt_data=jwt_data,
+                device_info=device_info,
+            )
         )
         return create_user_bank_accounts_response
 
@@ -71,8 +75,12 @@ class UserBankAccountsRouter:
             "x-thebes-answer": jwt_data,
             "bank_account": bank_account,
         }
+        device_info = await DeviceInfoService.get_device_info(request)
         update_bank_account_response = (
-            await UserBankAccountService.update_user_bank_account(jwt_data=jwt_data)
+            await UserBankAccountService.update_user_bank_account(
+                jwt_data=jwt_data,
+                device_info=device_info,
+        )
         )
         return update_bank_account_response
 
@@ -87,8 +95,12 @@ class UserBankAccountsRouter:
 
         bank_account = delete_bank_account.dict()
         jwt_data = {"x-thebes-answer": jwt_data, "bank_account": bank_account}
+        device_info = await DeviceInfoService.get_device_info(request)
         delete_bank_account_response = (
-            await UserBankAccountService.delete_user_bank_account(jwt_data=jwt_data)
+            await UserBankAccountService.delete_user_bank_account(
+                jwt_data=jwt_data,
+                device_info=device_info,
+            )
         )
         return delete_bank_account_response
 
