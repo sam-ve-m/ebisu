@@ -2,12 +2,22 @@
 from src.domain.exceptions.repository.forex.model import CustomerForexDataNotFound
 from src.domain.exceptions.service.forex.model import ExpiredToken, InvalidToken, DroppedToken, CaronteCantFindToken, \
     UnexpectedErrorInExchangeAPI, InconsistentResultInRoute21
+from unittest.mock import patch, MagicMock
+from decouple import Config
 
-from src.services.forex.account.service import ForexAccount
-from src.services.forex.proposal.simulation.service import ForexSimulation
+from src.domain.models.thebes_answer.model import ThebesAnswer
+
+with patch.object(Config, "get"):
+    from persephone_client import Persephone
+    from src.domain.exceptions.domain.model.forex.model import ErrorValidatingSimulationProposalData
+    from src.domain.exceptions.repository.forex.model import CustomerForexDataNotFound
+    from src.domain.exceptions.service.forex.model import ExpiredToken, InvalidToken, DroppedToken, CaronteCantFindToken, \
+        UnexpectedErrorInExchangeAPI, CustomerQuotationTokenNotFound
+
+    from src.services.forex.account.service import ForexAccount
+    from src.services.forex.proposal.simulation.service import ForexSimulation
 
 
-# Stubs
 from .stubs import (
     stub_currency_exchange,
     stub_customer_exchange_data,
@@ -34,6 +44,7 @@ from unittest.mock import patch
 import pytest
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.services.forex.proposal.simulation.service.UserExchangeRepository.get_spread_data",
@@ -51,6 +62,7 @@ async def test_when_customer_have_exchange_data_then_return_expected_values(
     assert result.get("account_number") == 12345
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.services.forex.proposal.simulation.service.UserExchangeRepository.get_spread_data",
@@ -63,6 +75,7 @@ async def test_when_customer_not_have_exchange_data_then_raises(mock_user_reposi
         )
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.domain.models.forex.proposal.simulation_request_data.model.config",
@@ -82,6 +95,7 @@ async def test_when_get_customer_token_with_successfully_then_return_token_data(
     assert isinstance(result, dict)
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.domain.models.forex.proposal.simulation_request_data.model.config",
@@ -100,6 +114,7 @@ async def test_when_get_customer_token_result_is_bad_request_then_raises(
         )
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.domain.models.forex.proposal.simulation_request_data.model.config",
@@ -118,6 +133,7 @@ async def test_when_get_customer_token_result_is_unauthorized_then_raises(
         )
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.domain.models.forex.proposal.simulation_request_data.model.config",
@@ -136,6 +152,7 @@ async def test_when_get_customer_token_result_is_forbidden_then_raises(
         )
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.domain.models.forex.proposal.simulation_request_data.model.config",
@@ -154,6 +171,7 @@ async def test_when_get_customer_token_result_is_token_not_found_then_raises(
         )
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.domain.models.forex.proposal.simulation_request_data.model.config",
@@ -172,6 +190,7 @@ async def test_when_get_customer_token_result_is_unexpected_error_found_then_rai
         )
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.domain.models.forex.proposal.simulation_request_data.model.config",
@@ -192,6 +211,7 @@ async def test_when_get_exchange_simulation_with_success_then_return_exchange_si
     assert isinstance(result, dict)
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.domain.models.forex.proposal.simulation_request_data.model.config",
@@ -211,6 +231,7 @@ async def test_when_get_exchange_simulation_result_is_bad_request_then_raises(
         )
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.domain.models.forex.proposal.simulation_request_data.model.config",
@@ -230,6 +251,7 @@ async def test_when_get_exchange_simulation_result_is_forbidden_then_raises(
         )
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.domain.models.forex.proposal.simulation_request_data.model.config",
@@ -249,6 +271,7 @@ async def test_when_get_exchange_simulation_result_is_unauthorized_then_raises(
         )
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.domain.models.forex.proposal.simulation_request_data.model.config",
@@ -268,6 +291,7 @@ async def test_when_get_exchange_simulation_result_is_token_not_found_then_raise
         )
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 @patch(
     "src.domain.models.forex.proposal.simulation_request_data.model.config",
@@ -287,6 +311,7 @@ async def test_when_get_exchange_simulation_result_is_unexpected_error_then_rais
         )
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 async def test_when_have_token_data_then_return_customer_token_data():
     result = (
@@ -298,6 +323,7 @@ async def test_when_have_token_data_then_return_customer_token_data():
     assert isinstance(result, str)
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 async def test_when_have_token_data_then_return_customer_token_data():
     with pytest.raises(InconsistentResultInRoute21):
@@ -306,6 +332,7 @@ async def test_when_have_token_data_then_return_customer_token_data():
         )
 
 
+@pytest.mark.exchange
 @pytest.mark.asyncio
 async def test_when_treatment_and_validation_with_success_then_return_exchange_simulation_data():
     result = await ForexSimulation._ForexSimulation__treatment_and_validation_exchange_simulation_data(
@@ -313,6 +340,15 @@ async def test_when_treatment_and_validation_with_success_then_return_exchange_s
     )
 
     assert isinstance(result, dict)
+
+
+@pytest.mark.exchange
+@pytest.mark.asyncio
+async def test_when_treatment_and_validation_failed_then_raises():
+    with pytest.raises(ErrorValidatingSimulationProposalData):
+        await ForexSimulation._ForexSimulation__treatment_and_validation_exchange_simulation_data(
+            exchange_simulation_proposal_data=stub_response_missing_data_rote_22
+        )
 
 
 @pytest.mark.asyncio
@@ -333,11 +369,20 @@ async def test_when_treatment_and_validation_with_success_then_return_exchange_s
 )
 @patch.object(ForexAccount, "get_account_number", return_value=67890)
 @patch.object(ForexAccount, "get_client_id", return_value=12345)
+@patch.object(Config, "get")
+@patch.object(ThebesAnswer, "unique_id")
+@patch.object(Persephone, "send_to_persephone", return_value=(True, None))
 async def test_when_get_exchange_proposal_with_success_then_return_validated_exchange_simulation_proposal(
-    mock_cliend_id, mock_account_number, mock_data, mock_route_21, mock_route_22
+    mock_persephone,
+    mock_model,
+    mocked_env,
+    mock_cliend_id,
+    mock_account_number,
+    mock_data,
+    mock_route_21,
+    mock_route_22,
 ):
     result = await ForexSimulation.get_proposal_simulation(
-        jwt_data={}, payload=stub_currency_exchange
+        jwt_data={}, payload=stub_currency_exchange, device_info=MagicMock()
     )
-
     assert isinstance(result, dict)

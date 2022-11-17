@@ -72,7 +72,7 @@ stub_token_generated_in_route_21 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDb2R
 stub_response_rote_22 = {
     "valores": {
         "codigoCliente": 208785,
-        "codigoNaturezaOperacao": 4,
+        "codigoNaturezaOperacao": 68,
         "simboloMoedaBase": "BRL",
         "simboloMoedaCotacao": "USD",
         "quantidadeMoedaNegociada": 18.53,
