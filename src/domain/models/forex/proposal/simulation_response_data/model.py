@@ -1,91 +1,81 @@
 # Ebisu
-from src.domain.date_formatters.region.date_time.model import RegionStringDateTime
-from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
-from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOffset
-from src.domain.enums.forex.currency import CurrencyOptions
-from src.domain.enums.forex.operations import NatureOperation
+from src.domain.validators.forex.proposal.simulation.validator import ContentRoute22, ContentRoute21
 
 # Standards
 from datetime import datetime
 
-# Third party
-from pydantic import BaseModel
 
+class SimulationResponseModel:
+    def __init__(self, content_21_validated: ContentRoute21, content_22_validated: ContentRoute22, unique_id: str):
+        self.commercial_fee = content_21_validated.taxa.taxaComercial
+        self.client_fee = content_21_validated.taxa.valorTotal
+        self.base_currency_symbol = content_22_validated.valores.simboloMoedaBase,
+        self.commercial_fee = content_22_validated.valores.taxaComercial
+        self.currency_quote_price = content_22_validated.valores.valorCotacaoCambio
+        self.client_id = content_22_validated.valores.codigoCliente
+        self.expiration_date = content_22_validated.valores.dataValidade
+        self.gross_value = content_22_validated.valores.valorBruto
+        self.iof_percentage = content_22_validated.valores.percentualIOF
+        self.iof_value = content_22_validated.valores.valorIOF
+        self.net_value = content_22_validated.valores.valorLiquido
+        self.nature_operation_code = content_22_validated.valores.codigoNaturezaOperacao
+        self.payment_date = content_22_validated.valores.dataPagamento
+        self.simulation_token = content_22_validated.token
+        self.quote_currency_symbol = content_22_validated.valores.simboloMoedaCotacao
+        self.quote_date = content_22_validated.valores.dataCotacao
+        self.quantity_currency_traded = content_22_validated.valores.quantidadeMoedaNegociada
+        self.spread_percentage = content_22_validated.valores.percentualSpread
+        self.tax_value = content_22_validated.valores.valorTarifa
+        self.total_effective_value = content_22_validated.valores.vet
+        self.unique_id = unique_id
 
-class SimulationResponseModel(BaseModel):
-    exchange_account_id: int
-    operation_nature_code: NatureOperation
-    base_currency_symbol: CurrencyOptions
-    quote_currency_symbol: CurrencyOptions
-    quantity_currency_traded: float
-    currency_quote_price: float
-    tax_value: float
-    gross_value: float
-    iof_percentage: float
-    iof_value: float
-    net_value: float
-    vet: float
-    quote_date: int
-    expiration_date: int
-    payment_date: int
-    spread_percentage: float
-    commercial_tax: float
-    proposal_token: str
-
-    @classmethod
-    async def get_customer_exchange_model(cls, exchange_simulation_proposal_data: dict):
-        values = exchange_simulation_proposal_data.get("valores", {})
-        base_currency_symbol = values.get("simboloMoedaBase")
-        commercial_tax = values.get("taxaComercial")
-        currency_quote_price = values.get("valorCotacaoCambio")
-        exchange_account_id = values.get("codigoCliente")
-        expiration_date = cls.__convert_date_to_time_stamp(
-            date=values.get("dataValidade")
-        )
-        gross_value = values.get("valorBruto")
-        iof_percentage = values.get("percentualIOF")
-        iof_value = values.get("valorIOF")
-        net_value = values.get("valorLiquido")
-        operation_nature_code = values.get("codigoNaturezaOperacao")
-        payment_date = cls.__convert_date_to_time_stamp(
-            date=values.get("dataPagamento")
-        )
-        proposal_token = exchange_simulation_proposal_data.get("token")
-        quote_currency_symbol = values.get("simboloMoedaCotacao")
-        quote_date = cls.__convert_date_to_time_stamp(date=values.get("dataCotacao"))
-        quantity_currency_traded = values.get("quantidadeMoedaNegociada")
-        spread_percentage = values.get("percentualSpread")
-        tax_value = values.get("valorTarifa")
-        vet = values.get("vet")
-
-        exchange_data_to_validate = {
-            "base_currency_symbol": base_currency_symbol,
-            "commercial_tax": commercial_tax,
-            "currency_quote_price": currency_quote_price,
-            "exchange_account_id": exchange_account_id,
-            "expiration_date": expiration_date,
-            "gross_value": gross_value,
-            "iof_percentage": iof_percentage,
-            "iof_value": iof_value,
-            "net_value": net_value,
-            "operation_nature_code": operation_nature_code,
-            "payment_date": payment_date,
-            "proposal_token": proposal_token,
-            "quote_currency_symbol": quote_currency_symbol,
-            "quote_date": quote_date,
-            "quantity_currency_traded": quantity_currency_traded,
-            "spread_percentage": spread_percentage,
-            "tax_value": tax_value,
-            "vet": vet,
+    def get_simulation_proposal_template(self):
+        exchange_proposal_template = {
+            "exchange_simulation_proposal": {
+                "base_currency_symbol": self.base_currency_symbol,
+                "commercial_fee": self.commercial_fee,
+                "currency_quote_price": self.currency_quote_price,
+                "client_id": self.client_id,
+                "expiration_date": int(datetime.timestamp(self.expiration_date)),
+                "client_fee": self.client_fee,
+                "total_brl": self.gross_value,
+                "iof_percentage": self.iof_percentage,
+                "iof_value": self.iof_value,
+                "net_value": self.net_value,
+                "nature_operation_code": self.nature_operation_code,
+                "payment_date": int(datetime.timestamp(self.payment_date)),
+                "simulation_token": self.simulation_token,
+                "quote_currency_symbol": self.quote_currency_symbol,
+                "quote_date": int(datetime.timestamp(self.quote_date)),
+                "total_usd": self.quantity_currency_traded,
+                "spread_percentage": self.spread_percentage,
+                "tax_value": self.tax_value,
+                "total_effective_value": self.total_effective_value
+            }
         }
+        return exchange_proposal_template
 
-        return cls(**exchange_data_to_validate)
-
-    @staticmethod
-    def __convert_date_to_time_stamp(date: datetime):
-        converted_date = RegionStringDateTime(
-            region_date_format=RegionDateFormat.BR_DATE_ZULU_FORMAT,
-            date=date,
-            utc_offset=ExchangeUtcOffset.BR_UTC_OFFSET,
-        )
-        return converted_date.get_date_in_time_stamp_with_timezone_replace()
+    def get_simulation_proposal_to_save_template(self):
+        save_template = {
+                "unique_id": self.unique_id,
+                "base_currency_symbol": self.base_currency_symbol,
+                "commercial_fee": self.commercial_fee,
+                "currency_quote_price": self.currency_quote_price,
+                "total_brl": self.gross_value,
+                "client_id": self.client_id,
+                "expiration_date": self.expiration_date,
+                "client_fee": self.client_fee,
+                "iof_percentage": self.iof_percentage,
+                "iof_value": self.iof_value,
+                "net_value": self.net_value,
+                "nature_operation_code": self.nature_operation_code,
+                "payment_date": self.payment_date,
+                "simulation_token": self.simulation_token,
+                "quote_currency_symbol": self.quote_currency_symbol,
+                "quote_date": self.quote_date,
+                "total_usd": self.quantity_currency_traded,
+                "spread_percentage": self.spread_percentage,
+                "tax_value": self.tax_value,
+                "total_effective_value": self.total_effective_value
+        }
+        return save_template
