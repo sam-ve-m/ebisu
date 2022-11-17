@@ -87,6 +87,31 @@ class ForexSimulation:
         return simulation_proposal_template
 
     @staticmethod
+    def __get_unique_id(jwt_data: dict) -> str:
+        unique_id = jwt_data.get("user", {}).get("unique_id")
+        if not unique_id:
+            raise ErrorTryingToGetUniqueId()
+        return unique_id
+
+    @staticmethod
+    async def __treatment_and_validation_exchange_simulation_data(
+        exchange_simulation_proposal_data: dict,
+    ) -> Union[dict, ErrorValidatingSimulationProposalData]:
+        try:
+            exchange_simulation_model = (
+                await SimulationResponseModel.get_customer_exchange_model(
+                    exchange_simulation_proposal_data=exchange_simulation_proposal_data
+                )
+            )
+            exchange_simulation_proposal_response = {
+                "exchange_simulation_proposal": exchange_simulation_model.dict()
+            }
+            return exchange_simulation_proposal_response
+        except Exception as ex:
+            Gladsheim.error(error=ex)
+            raise ErrorValidatingSimulationProposalData()
+
+    @staticmethod
     async def __log_in_persephone_to_audit(
         exchange_simulation_proposal_data: dict,
         device_info: DeviceInfo,

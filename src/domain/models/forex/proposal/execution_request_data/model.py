@@ -36,6 +36,7 @@ class ExecutionModel:
             time_zone=TimeZones.BR_SP,
             market_calendar=ForexMarketCalendars(nyse=True, bmf=True),
         )
+        self.next_d2 = self.stock_market.get_liquidation_date(day=LiquidationDayOptions.D2)
         self.token = payload.proposal_simulation_token
 
         self.token_decoded = SimulationTokenModel(token_decoded=token_decoded)
@@ -188,10 +189,11 @@ class ExecutionModel:
         }
         return bifrost_template
 
-    def get_execute_proposal_body(self, customer_name: dict) -> dict:
-
-        name = customer_name.get("name")
-
+    def get_execute_proposal_body(self, customer_data: dict) -> dict:
+        next_d2_date_time_formatted = self.next_d2.strftime(
+            RegionDateFormat.BR_DATE_ZULU_FORMAT.value
+        )
+        name = customer_data.get("name")
         out_body = {
             "token": self.token,
             "dadosBeneficiario": {
@@ -200,9 +202,9 @@ class ExecutionModel:
                 "codigoSWIFTBanco": config("BENEFICIARY_SWIFT_BANK_CODE"),
                 "nomeBeneficiario": config("BENEFICIARY_NAME"),
                 "contaBeneficiario": config("BENEFICIARY_ACCOUNT"),
-                "infoComplementar": f"/{self.thebes_answer.dw_display_account}/{name}",
+                "infoComplementar": f"/{self.thebes_answer.dw_display_account}/{name}"
             },
-            "dataLiquidacaoFutura": self.next_d2,
+            "dataLiquidacaoFutura": next_d2_date_time_formatted,
         }
 
         in_body = {

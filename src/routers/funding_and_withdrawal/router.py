@@ -72,7 +72,7 @@ class FundingAndWithdrawalRouter:
             account_number=jwt.bmf_account,
             user_unique_id=unique_id,
             country=Region.BR,
-        )
+        )  # TODO: Validat se vale a pena trazer as validações para a camada de router, desviando da arquitetura para impedir requisições sem sentido nos endpoints de device info
         await origin_account.validate_accounts_ownership()
 
         account_destination = BankAccount(
