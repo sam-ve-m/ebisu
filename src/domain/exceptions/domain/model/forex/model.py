@@ -54,24 +54,6 @@ class ErrorGettingValueByExchangeHash(DomainException):
         )
 
 
-class ErrorValidatingSimulationProposalData(DomainException):
-    def __init__(self, *args, **kwargs):
-        self.msg = (
-            "Error when trying to validate the customer exchange simulation proposal"
-        )
-        self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
-        self.internal_code = InternalCode.DATA_VALIDATION_ERROR
-        self.success = False
-        super().__init__(
-            self.msg,
-            self.status_code,
-            self.internal_code,
-            self.success,
-            *args,
-            **kwargs
-        )
-
-
 class InvalidOperation(DomainException):
     def __init__(self, *args, **kwargs):
         self.msg = "Invalid combination of base currency to quote currency"

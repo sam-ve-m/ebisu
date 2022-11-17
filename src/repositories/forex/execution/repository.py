@@ -6,12 +6,12 @@ from src.infrastructures.env_config import config
 from src.repositories.base_repositories.mongo_db.base import MongoBaseRepository
 
 
-class ProposalExecutionRepository(MongoBaseRepository):
+class ExchangeExecutionRepository(MongoBaseRepository):
     database = config("MONGODB_DATABASE_EBISU")
     collection = config("MONGODB_PROPOSALS_EXECUTED")
 
     @classmethod
-    async def insert_exchange_proposal(
+    async def insert_exchange_proposal_executed(
         cls, execution_response_model: ExecutionResponseModel
     ):
         data = execution_response_model.dict()

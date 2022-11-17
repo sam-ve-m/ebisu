@@ -6,10 +6,11 @@ from src.domain.models.forex.proposal.execution_request_data.model import Execut
 from src.domain.models.forex.proposal.execution_response_data.model import (
     ExecutionResponseModel,
 )
+from src.domain.models.thebes_answer.model import ThebesAnswer
 from src.domain.request.forex.execution_proposal import ForexSimulationToken
 from src.repositories.user.repository import UserRepository
-from src.repositories.forex_balance.repository import ForexBalanceRepository
-from src.repositories.forex_executions.repository import ProposalExecutionRepository
+from src.repositories.forex.balance.repository import ForexBalanceRepository
+from src.repositories.forex.execution.repository import ExchangeExecutionRepository
 from src.services.forex.account.service import ForexAccount
 from src.services.forex.decrypt_token.service import DecryptService
 from src.services.forex.response_mapping.service import ForexResponseMap
@@ -29,12 +30,14 @@ class ForexExecution:
     async def execute_proposal(
         cls, payload: ForexSimulationToken, jwt_data: dict
     ) -> True:
+
         token_decoded = await DecryptService.decode(
             jwt_token=payload.proposal_simulation_token
         )
-        account_number = await ForexAccount.get_account_number(jwt_data=jwt_data)
+        thebes_answer = ThebesAnswer(jwt_data=jwt_data)
+        account_number = await ForexAccount.get_account_number(unique_id=thebes_answer.unique_id)
         execution_model = ExecutionModel(
-            jwt_data=jwt_data,
+            thebes_answer=thebes_answer,
             token_decoded=token_decoded,
             payload=payload,
             account_number=account_number,
@@ -46,7 +49,7 @@ class ForexExecution:
 
         await BifrostTransport.build_template_and_send(execution_model=execution_model)
         execution_response_model = ExecutionResponseModel.get_model(
-            execution_response=content, unique_id=execution_model.jwt.unique_id
+            execution_response=content, unique_id=execution_model.thebes_answer.unique_id
         )
         await cls.__insert_execution_response_data(
             execution_response_model=execution_response_model
@@ -57,7 +60,7 @@ class ForexExecution:
     async def check_customer_has_enough_balance(cls, execution_model: ExecutionModel):
         allowed_to_withdraw = None
         resource = Resource(
-            unique_id=execution_model.jwt.unique_id,
+            unique_id=execution_model.thebes_answer.unique_id,
             country=execution_model.origin_country,
             account=execution_model.origin_account,
         )
@@ -85,7 +88,7 @@ class ForexExecution:
         cls, execution_model: ExecutionModel
     ) -> dict:
         customer_name = await cls.__get_customer_name(execution_model=execution_model)
-        body = execution_model.get_execute_proposal_body(customer_data=customer_name)
+        body = execution_model.get_execute_proposal_body(customer_name=customer_name)
         url = execution_model.get_execution_url()
         caronte_response = await ExchangeCompanyApi.request_as_client(
             exchange_account_id=execution_model.token_decoded.forex_account,
@@ -120,7 +123,7 @@ class ForexExecution:
     async def __get_customer_name(
         execution_model: ExecutionModel,
     ) -> Union[dict, CustomerPersonalDataNotFound]:
-        unique_id = execution_model.jwt.unique_id
+        unique_id = execution_model.thebes_answer.unique_id
         name = await UserRepository.get_customer_name(unique_id=unique_id)
         if not name:
             raise CustomerPersonalDataNotFound()
@@ -130,7 +133,7 @@ class ForexExecution:
     async def __insert_execution_response_data(
         execution_response_model: ExecutionResponseModel,
     ) -> Union[bool, ErrorTryingToInsertData]:
-        result = await ProposalExecutionRepository.insert_exchange_proposal(
+        result = await ExchangeExecutionRepository.insert_exchange_proposal_executed(
             execution_response_model=execution_response_model
         )
         if not result:
