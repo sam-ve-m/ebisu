@@ -1,6 +1,14 @@
 # Ebisu
-from src.domain.exceptions.repository.forex.model import CustomerPersonalDataNotFound, ErrorTryingToInsertData
-from src.domain.exceptions.service.forex.model import InsufficientFunds, ErrorTryingToLockResource, ErrorTryingToUnlock
+from src.domain.exceptions.repository.forex.model import (
+    CustomerPersonalDataNotFound,
+    ErrorTryingToInsertData,
+)
+from src.domain.exceptions.service.forex.model import (
+    InsufficientFunds,
+    ErrorTryingToLockResource,
+    ErrorTryingToUnlock,
+    InconsistentResultInRoute23,
+)
 from src.domain.models.forex.balance.model import AllowedWithdraw
 from src.domain.models.forex.proposal.execution_request_data.model import ExecutionModel
 from src.domain.models.forex.proposal.execution_response_data.model import (
@@ -8,6 +16,7 @@ from src.domain.models.forex.proposal.execution_response_data.model import (
 )
 from src.domain.models.thebes_answer.model import ThebesAnswer
 from src.domain.request.forex.execution_proposal import ForexSimulationToken
+from src.domain.validators.forex.proposal.execution.validator import ContentRoute23
 from src.repositories.user.repository import UserRepository
 from src.repositories.forex.balance.repository import ForexBalanceRepository
 from src.repositories.forex.execution.repository import ExchangeExecutionRepository
@@ -35,7 +44,9 @@ class ForexExecution:
             jwt_token=payload.proposal_simulation_token
         )
         thebes_answer = ThebesAnswer(jwt_data=jwt_data)
-        account_number = await ForexAccount.get_account_number(unique_id=thebes_answer.unique_id)
+        account_number = await ForexAccount.get_account_number(
+            unique_id=thebes_answer.unique_id
+        )
         execution_model = ExecutionModel(
             thebes_answer=thebes_answer,
             token_decoded=token_decoded,
@@ -46,11 +57,16 @@ class ForexExecution:
         content = await cls.execute_proposal_on_route_23(
             execution_model=execution_model
         )
-
-        await BifrostTransport.build_template_and_send(execution_model=execution_model)
-        execution_response_model = ExecutionResponseModel.get_model(
-            execution_response=content, unique_id=execution_model.thebes_answer.unique_id
+        content_validated = await cls.__validate_route_23_result_content(
+            content=content
         )
+        await BifrostTransport.build_template_and_send(execution_model=execution_model)
+        execution_response_model = ExecutionResponseModel(
+            unique_id=thebes_answer.unique_id,
+            execution_model=execution_model,
+            content_validated=content_validated,
+        )
+
         await cls.__insert_execution_response_data(
             execution_response_model=execution_response_model
         )
@@ -77,7 +93,7 @@ class ForexExecution:
             Gladsheim.error(
                 error=ex,
                 allowed_to_withdraw=allowed_to_withdraw,
-                execution_model=execution_model.__dict__
+                execution_model=execution_model.__dict__,
             )
             raise ex
         finally:
@@ -139,3 +155,14 @@ class ForexExecution:
         if not result:
             raise ErrorTryingToInsertData()
         return True
+
+    @staticmethod
+    async def __validate_route_23_result_content(
+        content: dict,
+    ) -> ContentRoute23:
+        try:
+            content_validated = ContentRoute23(**content)
+            return content_validated
+        except Exception as ex:
+            Gladsheim.info(message=(str(ex)))
+            raise InconsistentResultInRoute23()

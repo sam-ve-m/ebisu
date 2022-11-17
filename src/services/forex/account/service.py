@@ -1,6 +1,8 @@
 # Ebisu
 from src.domain.exceptions.repository.forex.model import (
-    ErrorTryingToGetForexClientId, ErrorTryingToGetForexAccountNumber, ErrorTryingToGetForexAccountData
+    ErrorTryingToGetForexClientId,
+    ErrorTryingToGetForexAccountNumber,
+    ErrorTryingToGetForexAccountData,
 )
 from src.repositories.user.repository import UserRepository
 

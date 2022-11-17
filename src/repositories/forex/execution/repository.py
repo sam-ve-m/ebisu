@@ -14,6 +14,6 @@ class ExchangeExecutionRepository(MongoBaseRepository):
     async def insert_exchange_proposal_executed(
         cls, execution_response_model: ExecutionResponseModel
     ):
-        data = execution_response_model.dict()
+        data = execution_response_model.get_execution_template_to_save()
         result = await cls.insert(data=data)
         return result

@@ -1,15 +1,23 @@
 # Ebisu
-from src.domain.validators.forex.proposal.simulation.validator import ContentRoute22, ContentRoute21
+from src.domain.validators.forex.proposal.simulation.validator import (
+    ContentRoute22,
+    ContentRoute21,
+)
 
 # Standards
 from datetime import datetime
 
 
 class SimulationResponseModel:
-    def __init__(self, content_21_validated: ContentRoute21, content_22_validated: ContentRoute22, unique_id: str):
+    def __init__(
+        self,
+        content_21_validated: ContentRoute21,
+        content_22_validated: ContentRoute22,
+        unique_id: str,
+    ):
         self.commercial_fee = content_21_validated.taxa.taxaComercial
         self.client_fee = content_21_validated.taxa.valorTotal
-        self.base_currency_symbol = content_22_validated.valores.simboloMoedaBase,
+        self.base_currency_symbol = (content_22_validated.valores.simboloMoedaBase,)
         self.commercial_fee = content_22_validated.valores.taxaComercial
         self.currency_quote_price = content_22_validated.valores.valorCotacaoCambio
         self.client_id = content_22_validated.valores.codigoCliente
@@ -23,7 +31,9 @@ class SimulationResponseModel:
         self.simulation_token = content_22_validated.token
         self.quote_currency_symbol = content_22_validated.valores.simboloMoedaCotacao
         self.quote_date = content_22_validated.valores.dataCotacao
-        self.quantity_currency_traded = content_22_validated.valores.quantidadeMoedaNegociada
+        self.quantity_currency_traded = (
+            content_22_validated.valores.quantidadeMoedaNegociada
+        )
         self.spread_percentage = content_22_validated.valores.percentualSpread
         self.tax_value = content_22_validated.valores.valorTarifa
         self.total_effective_value = content_22_validated.valores.vet
@@ -50,32 +60,32 @@ class SimulationResponseModel:
                 "total_usd": self.quantity_currency_traded,
                 "spread_percentage": self.spread_percentage,
                 "tax_value": self.tax_value,
-                "total_effective_value": self.total_effective_value
+                "total_effective_value": self.total_effective_value,
             }
         }
         return exchange_proposal_template
 
     def get_simulation_proposal_to_save_template(self):
         save_template = {
-                "unique_id": self.unique_id,
-                "base_currency_symbol": self.base_currency_symbol,
-                "commercial_fee": self.commercial_fee,
-                "currency_quote_price": self.currency_quote_price,
-                "total_brl": self.gross_value,
-                "client_id": self.client_id,
-                "expiration_date": self.expiration_date,
-                "client_fee": self.client_fee,
-                "iof_percentage": self.iof_percentage,
-                "iof_value": self.iof_value,
-                "net_value": self.net_value,
-                "nature_operation_code": self.nature_operation_code,
-                "payment_date": self.payment_date,
-                "simulation_token": self.simulation_token,
-                "quote_currency_symbol": self.quote_currency_symbol,
-                "quote_date": self.quote_date,
-                "total_usd": self.quantity_currency_traded,
-                "spread_percentage": self.spread_percentage,
-                "tax_value": self.tax_value,
-                "total_effective_value": self.total_effective_value
+            "unique_id": self.unique_id,
+            "base_currency_symbol": self.base_currency_symbol,
+            "commercial_fee": self.commercial_fee,
+            "currency_quote_price": self.currency_quote_price,
+            "total_brl": self.gross_value,
+            "client_id": self.client_id,
+            "expiration_date": self.expiration_date,
+            "client_fee": self.client_fee,
+            "iof_percentage": self.iof_percentage,
+            "iof_value": self.iof_value,
+            "net_value": self.net_value,
+            "nature_operation_code": self.nature_operation_code,
+            "payment_date": self.payment_date,
+            "simulation_token": self.simulation_token,
+            "quote_currency_symbol": self.quote_currency_symbol,
+            "quote_date": self.quote_date,
+            "total_usd": self.quantity_currency_traded,
+            "spread_percentage": self.spread_percentage,
+            "tax_value": self.tax_value,
+            "total_effective_value": self.total_effective_value,
         }
         return save_template

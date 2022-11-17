@@ -24,7 +24,9 @@ class CaronteCantFindToken(ServiceException):
 
 class InconsistentResultInRoute21(ServiceException):
     def __init__(self, *args, **kwargs):
-        self.msg = "Different or invalid content than expected from route 21 in OuroInvest API"
+        self.msg = (
+            "Different or invalid content than expected from route 21 in OuroInvest API"
+        )
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.DATA_VALIDATION_ERROR
         self.success = False
@@ -42,6 +44,24 @@ class InconsistentResultInRoute22(ServiceException):
     def __init__(self, *args, **kwargs):
         self.msg = (
             "Different or invalid content than expected from route 22 in OuroInvest API"
+        )
+        self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+        self.internal_code = InternalCode.DATA_VALIDATION_ERROR
+        self.success = False
+        super().__init__(
+            self.msg,
+            self.status_code,
+            self.internal_code,
+            self.success,
+            *args,
+            **kwargs
+        )
+
+
+class InconsistentResultInRoute23(ServiceException):
+    def __init__(self, *args, **kwargs):
+        self.msg = (
+            "Different or invalid content than expected from route 23 in OuroInvest API"
         )
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
         self.internal_code = InternalCode.DATA_VALIDATION_ERROR

@@ -42,8 +42,12 @@ class Values(BaseModel):
 
     @validator("dataCotacao", "dataValidade", "dataPagamento", pre=True)
     def parse_datetime_to_sao_paulo_timezone(cls, value):
-        utc_datetime = datetime.strptime(value, RegionDateFormat.BR_DATE_ZULU_FORMAT.value)
-        br_utc_datetime = pytz.utc.localize(utc_datetime).astimezone(tz=TimeZones.BR_SP.value)
+        utc_datetime = datetime.strptime(
+            value, RegionDateFormat.BR_DATE_ZULU_FORMAT.value
+        )
+        br_utc_datetime = pytz.utc.localize(utc_datetime).astimezone(
+            tz=TimeZones.BR_SP.value
+        )
         return br_utc_datetime
 
 

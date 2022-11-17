@@ -7,7 +7,6 @@ from src.services.jwt.service import JwtService
 from src.services.forex.proposal.simulation.service import ForexSimulation
 from src.services.forex.proposal.execution.service import ForexExecution
 
-
 # Third party
 from fastapi import Request, APIRouter, Depends, Response
 
@@ -43,9 +42,7 @@ class ForexExchange:
         request: Request, payload: ForexSimulationToken
     ) -> Response:
         jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
-        await JwtService.validate_mist(
-            request=request, user_data=jwt_data["user"]
-        )
+        await JwtService.validate_mist(request=request, user_data=jwt_data["user"])
         success = await ForexExecution.execute_proposal(
             payload=payload, jwt_data=jwt_data
         )

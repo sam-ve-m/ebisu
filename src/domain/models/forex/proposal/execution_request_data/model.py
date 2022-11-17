@@ -41,7 +41,9 @@ class ExecutionModel:
         self.token_decoded = SimulationTokenModel(token_decoded=token_decoded)
         self.account_number = account_number
         self.exchange_proposal_value = self.__get_exchange_proposal_value()
-        self.next_d2 = self.stock_market.get_liquidation_date(day=LiquidationDayOptions.D2)
+        self.next_d2 = self.stock_market.get_liquidation_date(
+            day=LiquidationDayOptions.D2
+        ).strftime(RegionDateFormat.BR_DATE_ZULU_FORMAT.value)
         self.operation_type = self.__get_operation_type()
         self.redis_hash = self.get_redis_hash()
         self.origin_country = self.__get_origin_country()
@@ -55,7 +57,9 @@ class ExecutionModel:
             "BRL_TO_USD": self.token_decoded.net_value,
             "USD_TO_BRL": self.token_decoded.quantity_currency_traded,
         }
-        exchange_proposal_value = map_exchange_proposal_value_per_hash.get(self.token_decoded.exchange_hash)
+        exchange_proposal_value = map_exchange_proposal_value_per_hash.get(
+            self.token_decoded.exchange_hash
+        )
         if not exchange_proposal_value:
             raise ErrorGettingValueByExchangeHash()
         return exchange_proposal_value
@@ -185,9 +189,7 @@ class ExecutionModel:
         return bifrost_template
 
     def get_execute_proposal_body(self, customer_name: dict) -> dict:
-        next_d2_date_time_formatted = self.next_d2.strftime(
-            RegionDateFormat.BR_DATE_ZULU_FORMAT.value
-        )
+
         name = customer_name.get("name")
 
         out_body = {
@@ -198,9 +200,9 @@ class ExecutionModel:
                 "codigoSWIFTBanco": config("BENEFICIARY_SWIFT_BANK_CODE"),
                 "nomeBeneficiario": config("BENEFICIARY_NAME"),
                 "contaBeneficiario": config("BENEFICIARY_ACCOUNT"),
-                "infoComplementar": f"/{self.thebes_answer.dw_display_account}/{name}"
+                "infoComplementar": f"/{self.thebes_answer.dw_display_account}/{name}",
             },
-            "dataLiquidacaoFutura": next_d2_date_time_formatted,
+            "dataLiquidacaoFutura": self.next_d2,
         }
 
         in_body = {
@@ -211,7 +213,7 @@ class ExecutionModel:
                 "codigoConta": self.thebes_answer.bmf_account,
                 "digitoConta": self.thebes_answer.bmf_account_digit,
             },
-            "dataLiquidacaoFutura": next_d2_date_time_formatted,
+            "dataLiquidacaoFutura": self.next_d2,
         }
 
         map_execute_body = {

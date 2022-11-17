@@ -1,6 +1,9 @@
 # Ebisu
 from src.domain.exceptions.repository.forex.model import CustomerForexDataNotFound
-from src.domain.exceptions.service.forex.model import InconsistentResultInRoute21, InconsistentResultInRoute22
+from src.domain.exceptions.service.forex.model import (
+    InconsistentResultInRoute21,
+    InconsistentResultInRoute22,
+)
 from src.domain.models.forex.proposal.simulation_request_data.model import (
     SimulationModel,
 )
@@ -9,7 +12,10 @@ from src.domain.models.forex.proposal.simulation_response_data.model import (
 )
 from src.domain.models.thebes_answer.model import ThebesAnswer
 from src.domain.request.forex.currency_options import CurrencyExchange
-from src.domain.validators.forex.proposal.simulation.validator import ContentRoute21, ContentRoute22
+from src.domain.validators.forex.proposal.simulation.validator import (
+    ContentRoute21,
+    ContentRoute22,
+)
 from src.repositories.user_exchange.repository import UserExchangeRepository
 from src.repositories.forex.simulation.repository import ExchangeSimulationRepository
 from src.services.forex.account.service import ForexAccount
@@ -42,20 +48,24 @@ class ForexSimulation:
         content_21_validated = await cls.__validate_route_21_result_content(
             content=content_21
         )
-        content_22 = (
-            await cls.__get_exchange_simulation_proposal_data_on_route_22(
-                customer_token=content_21_validated.token,
-                simulation_model=simulation_model,
-            )
+        content_22 = await cls.__get_exchange_simulation_proposal_data_on_route_22(
+            customer_token=content_21_validated.token,
+            simulation_model=simulation_model,
         )
-        content_22_validated = await cls.__validate_route_22_result_content(content=content_22)
+        content_22_validated = await cls.__validate_route_22_result_content(
+            content=content_22
+        )
         simulation_response_model = SimulationResponseModel(
             content_21_validated=content_21_validated,
             content_22_validated=content_22_validated,
-            unique_id=unique_id
+            unique_id=unique_id,
         )
-        await ExchangeSimulationRepository.insert_proposal(simulation_response_model=simulation_response_model)
-        simulation_proposal_template = simulation_response_model.get_simulation_proposal_template()
+        await ExchangeSimulationRepository.insert_proposal(
+            simulation_response_model=simulation_response_model
+        )
+        simulation_proposal_template = (
+            simulation_response_model.get_simulation_proposal_template()
+        )
         return simulation_proposal_template
 
     @staticmethod

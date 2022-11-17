@@ -7,8 +7,13 @@ from typing import Union
 # Third party
 from caronte import CaronteStatus, CaronteStatusResponse
 
-from src.domain.exceptions.service.forex.model import ExpiredToken, InvalidToken, DroppedToken, CaronteCantFindToken, \
-    UnexpectedErrorInExchangeAPI
+from src.domain.exceptions.service.forex.model import (
+    ExpiredToken,
+    InvalidToken,
+    DroppedToken,
+    CaronteCantFindToken,
+    UnexpectedErrorInExchangeAPI,
+)
 
 
 class ForexResponseMap:
