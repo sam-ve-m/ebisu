@@ -17,7 +17,7 @@ class SimulationResponseModel:
     ):
         self.commercial_fee = content_21_validated.taxa.taxaComercial
         self.client_fee = content_21_validated.taxa.valorTotal
-        self.base_currency_symbol = (content_22_validated.valores.simboloMoedaBase,)
+        self.base_currency_symbol = content_22_validated.valores.simboloMoedaBase
         self.commercial_fee = content_22_validated.valores.taxaComercial
         self.currency_quote_price = content_22_validated.valores.valorCotacaoCambio
         self.client_id = content_22_validated.valores.codigoCliente
@@ -28,12 +28,10 @@ class SimulationResponseModel:
         self.net_value = content_22_validated.valores.valorLiquido
         self.nature_operation_code = content_22_validated.valores.codigoNaturezaOperacao
         self.payment_date = content_22_validated.valores.dataPagamento
-        self.simulation_token = content_22_validated.token
+        self.token = content_22_validated.token
         self.quote_currency_symbol = content_22_validated.valores.simboloMoedaCotacao
         self.quote_date = content_22_validated.valores.dataCotacao
-        self.quantity_currency_traded = (
-            content_22_validated.valores.quantidadeMoedaNegociada
-        )
+        self.quantity_currency_traded = content_22_validated.valores.quantidadeMoedaNegociada
         self.spread_percentage = content_22_validated.valores.percentualSpread
         self.tax_value = content_22_validated.valores.valorTarifa
         self.total_effective_value = content_22_validated.valores.vet
@@ -54,7 +52,7 @@ class SimulationResponseModel:
                 "net_value": self.net_value,
                 "nature_operation_code": self.nature_operation_code,
                 "payment_date": int(datetime.timestamp(self.payment_date)),
-                "simulation_token": self.simulation_token,
+                "token": self.token,
                 "quote_currency_symbol": self.quote_currency_symbol,
                 "quote_date": int(datetime.timestamp(self.quote_date)),
                 "total_usd": self.quantity_currency_traded,
@@ -80,7 +78,7 @@ class SimulationResponseModel:
             "net_value": self.net_value,
             "nature_operation_code": self.nature_operation_code,
             "payment_date": self.payment_date,
-            "simulation_token": self.simulation_token,
+            "token": self.token,
             "quote_currency_symbol": self.quote_currency_symbol,
             "quote_date": self.quote_date,
             "total_usd": self.quantity_currency_traded,
