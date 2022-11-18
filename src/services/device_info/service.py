@@ -1,5 +1,6 @@
 from fastapi import Request
 
+from src.domain.exceptions.service.device_info.exception import InvalidDeviceInfo
 from src.domain.models.device_info.dto import DeviceInfo
 from src.transport.device_info.transport import DeviceSecurity
 
@@ -12,7 +13,7 @@ class DeviceInfoService:
             if b"x-device-info" in header_tuple:
                 device_info = header_tuple[1].decode()
                 return device_info
-        raise
+        raise InvalidDeviceInfo()
 
     @staticmethod
     async def get_device_info(request: Request) -> DeviceInfo:

@@ -34,11 +34,37 @@ class FundingAndWithdrawalService:
         device_info: DeviceInfo,
     ):
 
+        await cls._log_in_persephone_to_audit(
+            money_flow=money_flow,
+            jwt=jwt,
+            origin_account=origin_account,
+            account_destination=account_destination,
+            device_info=device_info,
+        )
+
+        transfer_to_external_bank = TransferToExternalBank(
+            origin_account=origin_account,
+            account_destination=account_destination,
+            value=money_flow.value,
+        )
+
+        resume = await transfer_to_external_bank()
+
+        return resume
+
+    @staticmethod
+    async def _log_in_persephone_to_audit(
+            money_flow: UserMoneyFlowToExternalBank,
+            jwt: ThebesAnswer,
+            origin_account: BrokerAccount,
+            account_destination: BankAccount,
+            device_info: DeviceInfo,
+    ):
         (
             sent_to_persephone,
             status_sent_to_persephone,
         ) = await Persephone.send_to_persephone(
-            topic=config("PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT"),
+            topic=config("PERSEPHONE_TOPIC_MONEY_MOVEMENT_TRANSFERENCE"),
             partition=PersephoneQueue.CASH_FLOW_WITHDRAWAL_TO_EXTERNAL_BANK.value,
             message={
                 "unique_id": jwt.unique_id,
@@ -52,16 +78,6 @@ class FundingAndWithdrawalService:
         )
         if sent_to_persephone is False:
             raise FailToSaveAuditingTrail("common.process_issue")
-
-        transfer_to_external_bank = TransferToExternalBank(
-            origin_account=origin_account,
-            account_destination=account_destination,
-            value=money_flow.value,
-        )
-
-        resume = await transfer_to_external_bank()
-
-        return resume
 
     @classmethod
     async def money_flow_between_user_dtvm_accounts(

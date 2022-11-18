@@ -107,7 +107,7 @@ class ForexExecution:
             sent_to_persephone,
             status_sent_to_persephone,
         ) = await Persephone.send_to_persephone(
-            topic=config("PERSEPHONE_EXCHANGE_PROPOSAL_SIMULATION"),
+            topic=config("PERSEPHONE_TOPIC_MONEY_MOVEMENT_EXCHANGE"),
             partition=PersephoneQueue.EXCHANGE_PROPOSAL_PRE_EXECUTION.value,
             message=persephone_template,
             schema_name=PersephoneSchema.EXCHANGE_PROPOSAL_PRE_EXECUTION.value,
@@ -141,7 +141,7 @@ class ForexExecution:
             sent_to_persephone,
             status_sent_to_persephone,
         ) = await Persephone.send_to_persephone(
-            topic=config("PERSEPHONE_EXCHANGE_PROPOSAL_SIMULATION"),
+            topic=config("PERSEPHONE_TOPIC_MONEY_MOVEMENT_EXCHANGE"),
             partition=PersephoneQueue.EXCHANGE_PROPOSAL_EXECUTION.value,
             message=persephone_template,
             schema_name=PersephoneSchema.EXCHANGE_PROPOSAL_EXECUTION.value,
