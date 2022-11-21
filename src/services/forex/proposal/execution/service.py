@@ -4,6 +4,8 @@ from src.domain.exceptions.repository.forex.model import (
 )
     InconsistentResultInRoute23,
 )
+from datetime import datetime
+
 from src.domain.enums.persephone import PersephoneQueue, PersephoneSchema
 from src.domain.exceptions.repository.forex.model import CustomerPersonalDataNotFound, ErrorTryingToInsertData
 from src.domain.exceptions.service.auditing_trail.model import FailToSaveAuditingTrail
@@ -83,12 +85,8 @@ class ForexExecution:
         )
         return True
 
-    @classmethod
-    async def __log_in_persephone_to_audit_before_executing(
-            cls,
-            execution_model: ExecutionModel,
-            device_info: DeviceInfo
-    ):
+    @staticmethod
+    def _get_persephone_template(execution_model: ExecutionModel, device_info: DeviceInfo):
         persephone_template = {
             "unique_id": execution_model.thebes_answer.unique_id,
             "origin_account_number": execution_model.origin_account,
@@ -96,13 +94,22 @@ class ForexExecution:
             "destination_account_number": execution_model.destination_account,
             "destination_country": execution_model.destination_country,
             "exchange_proposal_value": execution_model.exchange_proposal_value,
-            "halberd_country": execution_model.halberd_country,
+            "balance_country": execution_model.halberd_country,
             "operation_type": execution_model.operation_type,
-            "next_d2": execution_model.next_d2,
+            "next_d2": datetime.strptime(execution_model.next_d2.strftime("%Y/%m/%d"), "%Y/%m/%d").timestamp(),
             "token": execution_model.token,
             "device_id": device_info.device_id,
             "device_info": device_info.decrypted_device_info,
         }
+        return persephone_template
+
+    @classmethod
+    async def __log_in_persephone_to_audit_before_executing(
+            cls,
+            execution_model: ExecutionModel,
+            device_info: DeviceInfo
+    ):
+        persephone_template = cls._get_persephone_template(execution_model, device_info)
         (
             sent_to_persephone,
             status_sent_to_persephone,
@@ -122,21 +129,9 @@ class ForexExecution:
             device_info: DeviceInfo,
             execution_report: dict,
     ):
-        persephone_template = {
-            "unique_id": execution_model.thebes_answer.unique_id,
-            "origin_account_number": execution_model.origin_account,
-            "origin_country": execution_model.origin_country,
-            "destination_account_number": execution_model.destination_account,
-            "destination_country": execution_model.destination_country,
-            "exchange_proposal_value": execution_model.exchange_proposal_value,
-            "halberd_country": execution_model.halberd_country,
-            "operation_type": execution_model.operation_type,
-            "next_d2": execution_model.next_d2,
-            "token": execution_model.token,
-            "device_id": device_info.device_id,
-            "device_info": device_info.decrypted_device_info,
-            "execution_report": execution_report,
-        }
+        persephone_template = cls._get_persephone_template(execution_model, device_info)
+        persephone_template["execution_report"] = execution_report
+
         (
             sent_to_persephone,
             status_sent_to_persephone,

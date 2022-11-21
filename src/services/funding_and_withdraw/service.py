@@ -68,8 +68,8 @@ class FundingAndWithdrawalService:
             partition=PersephoneQueue.CASH_FLOW_WITHDRAWAL_TO_EXTERNAL_BANK.value,
             message={
                 "unique_id": jwt.unique_id,
-                "origin_account": origin_account.resume(),
-                "account_destination": account_destination.resume(),
+                "origin_account": await origin_account.resume(),
+                "account_destination": await account_destination.resume(),
                 "value": money_flow.value,
                 "device_id": device_info.device_id,
                 "device_info": device_info.decrypted_device_info,
