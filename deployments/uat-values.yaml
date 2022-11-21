@@ -6,7 +6,7 @@ image:
   repository: nexus.sigame.com.br
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.3.5
+  tag: 1.3.6
 
 ports:
   protocol: TCP
@@ -285,6 +285,10 @@ containers:
       value: "859"
     - name: LIGA_INVEST_CLOSING_TIME
       value: "1631"
+    - name: LIGA_BANK_CODE
+      value: "469"
+    - name: LIGA_AGENCY_NUMBER
+      value: "0001"
     - name: MARKET_DAYS_RANGE
       value: "15"
     - name: MONGODB_PROPOSALS_EXECUTED
