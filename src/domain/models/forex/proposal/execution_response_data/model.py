@@ -15,11 +15,11 @@ class ExecutionResponseModel(BaseModel):
     nature_name: Optional[str]
     transaction_type: str
     operation_mode: str
-    agency_number: int
-    account_number: int
-    account_digit: int
-    bank_number: str
-    bank_name: str
+    agency_number: Optional[int]
+    account_number: Optional[int]
+    account_digit: Optional[int]
+    bank_number: Optional[str]
+    bank_name: Optional[str]
     label: Optional[Any]
     overseas_banker: Optional[Any]
     payment_currency_bacen_code: int
@@ -27,7 +27,7 @@ class ExecutionResponseModel(BaseModel):
     traded_currency_bacen_code: int
     traded_currency_symbol: str
     quantity_traded: Optional[Any]
-    payment_amount: float
+    payment_amount: Optional[float]
     total_value: float
     documents: Optional[List]
     IOF_percentage: float
@@ -57,19 +57,17 @@ class ExecutionResponseModel(BaseModel):
                 "modoOperacao"
             ),
             "agency_number": exchange_operation.get("dadosLiquidacao", {}).get(
-                "numeroAgencia"
-            ),
+                "numeroAgencia") if exchange_operation.get("dadosLiquidacao") else None,
             "account_number": exchange_operation.get("dadosLiquidacao", {}).get(
-                "numeroConta"
-            ),
+                "numeroConta") if exchange_operation.get("dadosLiquidacao") else None,
             "account_digit": exchange_operation.get("dadosLiquidacao", {}).get(
-                "digitoConta"
-            ),
-            "bank_number": exchange_operation.get("dadosLiquidacao", {}).get(
-                "numeroBanco"
-            ),
-            "bank_name": exchange_operation.get("dadosLiquidacao", {}).get("nomeBanco"),
-            "label": exchange_operation.get("dadosLiquidacao", {}).get("rotulo"),
+                "digitoConta") if exchange_operation.get("dadosLiquidacao") else None,
+            "bank_number": exchange_operation.get("dadosLiquidacao").get(
+                "numeroBanco") if exchange_operation.get("dadosLiquidacao") else None,
+            "bank_name": exchange_operation.get("dadosLiquidacao", {}).get("nomeBanco")
+            if exchange_operation.get("dadosLiquidacao") else None,
+            "label": exchange_operation.get("dadosLiquidacao", {}).get("rotulo")
+            if exchange_operation.get("dadosLiquidacao") else None,
             "overseas_banker": exchange_operation.get("dadosBanqueiroExterior"),
             "payment_currency_bacen_code": exchange_operation.get(
                 "moedaPagamento", {}

@@ -190,7 +190,7 @@ class ExecutionModel:
         )
         name = customer_data.get("name")
 
-        body = {
+        out_body = {
             "token": self.token,
             "dadosBeneficiario": {
                 "siglaPaisBanco": Country.US,
@@ -202,6 +202,25 @@ class ExecutionModel:
             },
             "dataLiquidacaoFutura": next_d2_date_time_formatted,
         }
+
+        in_body = {
+            "token": self.token,
+            "dadosContaRecebimento": {
+                "codigoAgencia": config("LIGA_AGENCY_NUMBER"),
+                "codigoBanco": config("LIGA_BANK_CODE"),
+                "codigoConta": self.jwt.bmf_account,
+                "digitoConta": self.jwt.bmf_account_digit,
+            },
+            "dataLiquidacaoFutura": next_d2_date_time_formatted,
+        }
+
+        map_execute_body = {
+            "BRL_TO_USD": out_body,
+            "USD_TO_BRL": in_body,
+        }
+
+        body = map_execute_body.get(self.token_decoded.exchange_hash)
+
         return body
 
     @staticmethod

@@ -114,6 +114,8 @@ deployment:
         EXECUTION_URL: "operacao/cambio/remessa/token"
         LIGA_INVEST_OPENING_TIME: "859"
         LIGA_INVEST_CLOSING_TIME: "1631"
+        LIGA_AGENCY_NUMBER: "0001"
+        LIGA_BANK_CODE: "469"
         MARKET_DAYS_RANGE: "15"
         MONGODB_PROPOSALS_EXECUTED: "exchange_proposals_executed"
         NYSE_OPENING_TIME: "859"
