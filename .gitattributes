@@ -1,1 +1,2 @@
-**prod-values* filter=git-crypt diff=git-crypt
+**prd* filter=git-crypt diff=git-crypt
+**drp* filter=git-crypt diff=git-crypt
