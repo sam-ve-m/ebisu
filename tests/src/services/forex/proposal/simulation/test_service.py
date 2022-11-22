@@ -1,8 +1,7 @@
 # Ebisu
-from src.domain.exceptions.domain.model.forex.model import ErrorValidatingSimulationProposalData
 from src.domain.exceptions.repository.forex.model import CustomerForexDataNotFound
 from src.domain.exceptions.service.forex.model import ExpiredToken, InvalidToken, DroppedToken, CaronteCantFindToken, \
-    UnexpectedErrorInExchangeAPI, CustomerQuotationTokenNotFound
+    UnexpectedErrorInExchangeAPI, InconsistentResultInRoute21
 
 from src.services.forex.account.service import ForexAccount
 from src.services.forex.proposal.simulation.service import ForexSimulation
@@ -301,7 +300,7 @@ async def test_when_have_token_data_then_return_customer_token_data():
 
 @pytest.mark.asyncio
 async def test_when_have_token_data_then_return_customer_token_data():
-    with pytest.raises(CustomerQuotationTokenNotFound):
+    with pytest.raises(InconsistentResultInRoute21):
         await ForexSimulation._ForexSimulation__validate_if_token_exists_in_content(
             content={}
         )
@@ -314,14 +313,6 @@ async def test_when_treatment_and_validation_with_success_then_return_exchange_s
     )
 
     assert isinstance(result, dict)
-
-
-@pytest.mark.asyncio
-async def test_when_treatment_and_validation_failed_then_raises():
-    with pytest.raises(ErrorValidatingSimulationProposalData):
-        await ForexSimulation._ForexSimulation__treatment_and_validation_exchange_simulation_data(
-            exchange_simulation_proposal_data=stub_response_missing_data_rote_22
-        )
 
 
 @pytest.mark.asyncio

@@ -118,6 +118,7 @@ deployment:
         LIGA_BANK_CODE: "469"
         MARKET_DAYS_RANGE: "15"
         MONGODB_PROPOSALS_EXECUTED: "exchange_proposals_executed"
+        MONGODB_PROPOSALS_SIMULATED: "exchange_proposals_simulated"
         NYSE_OPENING_TIME: "859"
         NYSE_CLOSING_TIME: "1631"
         REDIS_BALANCE_DB: "0"
