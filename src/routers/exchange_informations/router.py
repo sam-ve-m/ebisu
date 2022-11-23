@@ -68,7 +68,7 @@ class ExchangeRouter:
     async def get_broker_note(
         request: Request, broker_note: ListBrokerNoteModel = Depends()
     ):
-        jwt_data = await JwtService.get_thebes_answer_from_request(request=request)
+        jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
         broker_note_response = ListBrokerNote.get_list_broker_note(jwt_data=jwt_data, broker_note=broker_note)
         return broker_note_response
 
