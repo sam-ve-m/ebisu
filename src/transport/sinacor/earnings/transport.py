@@ -59,7 +59,7 @@ class SinacorEarningsTransport:
                 url,
                 query_params=query_params,
             )
-            process_response = await cls._build_earnings_models(response=response)
+            process_response = await cls._build_paid_earnings_models(response=response)
             return process_response
         except Exception as err:
             message = f"{cls.__class__}:paid_earnings"
@@ -88,7 +88,7 @@ class SinacorEarningsTransport:
                 url,
                 query_params=query_params,
             )
-            process_response = await cls._build_earnings_models(response=response)
+            process_response = await cls._build_payable_and_record_date_earnings_models(response=response)
             payable_earnings = list()
             record_date_earnings = list()
             for earning in process_response:
@@ -105,7 +105,7 @@ class SinacorEarningsTransport:
             raise
 
     @staticmethod
-    async def _build_earnings_models(response: ClientResponse) -> List[EarningBr]:
+    async def _build_paid_earnings_models(response: ClientResponse) -> List[EarningBr]:
         earnings = list()
         if response.status in [HTTPStatus.OK, HTTPStatus.CREATED]:
             body = await response.json()
@@ -113,6 +113,35 @@ class SinacorEarningsTransport:
                 for entity in body:
                     quantity = entity.get("quantidade", 0)
                     value = entity.get("valorBruto", 0)
+                    amount_per_share = 0
+                    if quantity and value:
+                        amount_per_share = value / quantity
+                    earning = EarningBr(
+                        symbol=entity.get("codigoNegociacao"),
+                        description=entity.get("descricaoProvento", "NOT INFORMED"),
+                        amount_per_share=amount_per_share,
+                        share_quantity=quantity,
+                        total=value,
+                        date=RegionStringDateTime(
+                            date=datetime.datetime.fromisoformat(
+                                entity.get("pagamento")
+                            ),
+                            utc_offset=ExchangeUtcOffset.BR_UTC_OFFSET,
+                            region_date_format=RegionDateFormat.BR_DATE_FORMAT,
+                        ),
+                    )
+                    earnings.append(earning)
+        return earnings
+
+    @staticmethod
+    async def _build_payable_and_record_date_earnings_models(response: ClientResponse) -> List[EarningBr]:
+        earnings = list()
+        if response.status in [HTTPStatus.OK, HTTPStatus.CREATED]:
+            body = await response.json()
+            if body and isinstance(body, list):
+                for entity in body:
+                    quantity = entity.get("quantidade", 0)
+                    value = entity.get("valorLiquido", 0)
                     amount_per_share = 0
                     if quantity and value:
                         amount_per_share = value / quantity
