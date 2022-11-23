@@ -1,14 +1,9 @@
 # STANDARD LIBS
 import os
-from http import HTTPStatus
 from operator import itemgetter
 from etria_logger import Gladsheim
 
 # EXTERNAL LIBS
-from src.domain.enums.response.internal_code import InternalCode
-from src.domain.models.database.list_broker_note.model import BrokerNoteModel
-from src.domain.models.response.list_broker_note.response_model import ListBrokerNoteResponse
-from src.domain.responses.http_response_model import ResponseModel
 from src.repositories.files.repository import FileRepository
 from src.domain.request.exchange_info.list_broker_note_validator import (
     ListBrokerNoteModel,
@@ -42,6 +37,7 @@ class ListBrokerNote:
             region=region,
             month_broker_notes_directories=month_broker_notes_directories,
         )
+
         return bovespa_files_data
 
     @staticmethod
@@ -184,6 +180,7 @@ class ListBrokerNote:
         all_broker_note_from_all_markets = (
             us_files_data + bovespa_files_data + bmf_files_data
         )
+
         return all_broker_note_from_all_markets
 
     @staticmethod
@@ -235,7 +232,7 @@ class ListBrokerNote:
         return all_broker_note_from_all_markets
 
     @staticmethod
-    def get_list_broker_note(jwt_data: dict, broker_note: ListBrokerNoteModel):
+    def get_service_response(jwt_data: dict, broker_note: ListBrokerNoteModel):
 
         map_keys = (broker_note.market, broker_note.region)
 
@@ -266,13 +263,7 @@ class ListBrokerNote:
             ): ListBrokerNote.get_all_market_files_of_all_regions,
         }.get(map_keys, [])(jwt_data=jwt_data, broker_note=broker_note)
 
-        response_model = ListBrokerNoteResponse.to_response(
-            models=broker_note_response
-        )
-        response = ResponseModel(
-            success=True, result=response_model, internal_code=InternalCode.SUCCESS
-        ).build_http_response(status_code=HTTPStatus.OK)
-        return response
+        return broker_note_response
 
     @staticmethod
     def get_month_broker_notes(
@@ -307,11 +298,8 @@ class ListBrokerNote:
                     )
 
         broker_notes = sorted(broker_notes, key=itemgetter("day"), reverse=True)
-        symbols_financial_indicators = [
-            BrokerNoteModel(**symbol)
-            for symbol in broker_notes
-        ]
-        return symbols_financial_indicators
+
+        return broker_notes
 
     @classmethod
     def get_broker_note_file_name(cls, directory: dict):
