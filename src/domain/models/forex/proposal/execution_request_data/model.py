@@ -1,6 +1,6 @@
 # Ebisu
 from datetime import datetime
-
+from etria_logger import Gladsheim
 from src.domain.enums.forex.liquidation_date import LiquidationDayOptions
 from src.domain.enums.forex.countrys import Country
 from src.domain.enums.forex.composition_hash_options import Balance, Wallet
