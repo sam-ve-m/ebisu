@@ -1,4 +1,6 @@
 # Ebisu
+from typing import Union
+
 from persephone_client import Persephone
 
 from src.domain.enums.persephone import PersephoneQueue, PersephoneSchema
@@ -66,7 +68,6 @@ class ForexSimulation:
             content=content_22
         )
 
-        
         await cls.__log_in_persephone_to_audit(
             exchange_simulation_proposal_data=content_22,
             device_info=device_info,

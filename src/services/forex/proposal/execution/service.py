@@ -1,15 +1,17 @@
-from src.domain.exceptions.repository.forex.model import (
-    CustomerPersonalDataNotFound,
-    ErrorTryingToInsertData,
-)
-    InconsistentResultInRoute23,
-)
 from datetime import datetime
+from typing import Union
 
+from caronte import ExchangeCompanyApi, AllowedHTTPMethods
+from etria_logger import Gladsheim
+from halberd import BalanceLockManagerService, Resource
+from persephone_client import Persephone
+
+from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.enums.persephone import PersephoneQueue, PersephoneSchema
 from src.domain.exceptions.repository.forex.model import CustomerPersonalDataNotFound, ErrorTryingToInsertData
 from src.domain.exceptions.service.auditing_trail.model import FailToSaveAuditingTrail
-from src.domain.exceptions.service.forex.model import InsufficientFunds, ErrorTryingToLockResource, ErrorTryingToUnlock
+from src.domain.exceptions.service.forex.model import InsufficientFunds, ErrorTryingToLockResource, ErrorTryingToUnlock, \
+    InconsistentResultInRoute23
 from src.domain.models.device_info.dto import DeviceInfo
 from src.domain.models.forex.balance.model import AllowedWithdraw
 from src.domain.models.forex.proposal.execution_request_data.model import ExecutionModel
@@ -20,20 +22,13 @@ from src.domain.models.thebes_answer.model import ThebesAnswer
 from src.domain.request.forex.execution_proposal import ForexSimulationToken
 from src.domain.validators.forex.proposal.execution.validator import ContentRoute23
 from src.infrastructures.env_config import config
-from src.repositories.user.repository import UserRepository
 from src.repositories.forex.balance.repository import ForexBalanceRepository
 from src.repositories.forex.execution.repository import ExchangeExecutionRepository
+from src.repositories.user.repository import UserRepository
 from src.services.forex.account.service import ForexAccount
 from src.services.forex.decrypt_token.service import DecryptService
 from src.services.forex.response_mapping.service import ForexResponseMap
 from src.transport.forex.bifrost.transport import BifrostTransport
-
-from typing import Union
-
-from caronte import ExchangeCompanyApi, AllowedHTTPMethods
-from persephone_client import Persephone
-from etria_logger import Gladsheim
-from halberd import BalanceLockManagerService, Resource
 
 
 class ForexExecution:
@@ -96,7 +91,7 @@ class ForexExecution:
             "exchange_proposal_value": execution_model.exchange_proposal_value,
             "balance_country": execution_model.halberd_country,
             "operation_type": execution_model.operation_type,
-            "next_d2": datetime.strptime(execution_model.next_d2.strftime("%Y/%m/%d"), "%Y/%m/%d").timestamp(),
+            "next_d2": datetime.strptime(execution_model.next_d2, RegionDateFormat.BR_DATE_ZULU_FORMAT.value).timestamp(),
             "token": execution_model.token,
             "device_id": device_info.device_id,
             "device_info": device_info.decrypted_device_info,
@@ -176,7 +171,7 @@ class ForexExecution:
         cls, execution_model: ExecutionModel
     ) -> dict:
         customer_name = await cls.__get_customer_name(execution_model=execution_model)
-        body = execution_model.get_execute_proposal_body(customer_name=customer_name)
+        body = execution_model.get_execute_proposal_body(customer_data=customer_name)
         url = execution_model.get_execution_url()
         caronte_response = await ExchangeCompanyApi.request_as_client(
             exchange_account_id=execution_model.token_decoded.forex_account,
