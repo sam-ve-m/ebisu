@@ -49,20 +49,3 @@ class LigaInvestStock(ForexMarket):
             list(set(nyse_valid_dates_treated) & set(bmf_valid_dates_treated))
         )
         return intersection_opening_dates
-
-if __name__ == "__main__":
-    from datetime import datetime
-    from src.domain.enums.forex.time_zones import TimeZones
-    from src.domain.models.forex.markets.calendar.model import ForexMarketCalendars
-
-    from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
-
-    a = LigaInvestStock(
-        date_time=datetime.now(tz=TimeZones.BR_SP.value),
-        time_zone=TimeZones.BR_SP,
-        market_calendar=ForexMarketCalendars(nyse=True, bmf=True),
-    )
-    b = a.get_liquidation_date(LiquidationDayOptions.D2)
-    print(b.strftime(
-            RegionDateFormat.BR_DATE_ZULU_FORMAT.value
-        ))
