@@ -58,7 +58,7 @@ deployment:
     containers: 
     - name: ebisu
       imagename: null
-      tag: 1.3.4-0
+      tag: 1.3.7-0
       containerPorts: 8000
 
       probes:
