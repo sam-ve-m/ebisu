@@ -88,6 +88,16 @@ class ExecutionModel:
         self.halberd_country = self.__get_halberd_country()
         self.destination_country = self.__get_destination_country()
         self.destination_account = self.__get_destination_account()
+        self.liquidation_date = self.__get_liquidation_date_by_operation()
+
+    def __get_liquidation_date_by_operation(self) -> str:
+        map_operation_type = {
+            "BRL_TO_USD": self.stock_market.get_liquidation_date(day=LiquidationDayOptions.D1),
+            "USD_TO_BRL": self.stock_market.get_liquidation_date(day=LiquidationDayOptions.D2),
+        }
+        liquidation_date = map_operation_type.get(self.token_decoded.exchange_hash)
+        liquidation_date_formatted = liquidation_date.strftime(RegionDateFormat.BR_DATE_ZULU_FORMAT.value)
+        return liquidation_date_formatted
 
     def __get_exchange_proposal_value(self) -> float:
         map_exchange_proposal_value_per_hash = {
@@ -224,10 +234,7 @@ class ExecutionModel:
         return bifrost_template
 
     def get_execute_proposal_body(self, customer_data: dict) -> dict:
-        next_d2 = self.stock_market.get_liquidation_date(day=LiquidationDayOptions.D2)
-        next_d2_date_time_formatted = next_d2.strftime(
-            RegionDateFormat.BR_DATE_ZULU_FORMAT.value
-        )
+
         name = customer_data.get("name")
 
         out_body = {
@@ -240,7 +247,7 @@ class ExecutionModel:
                 "contaBeneficiario": config("BENEFICIARY_ACCOUNT"),
                 "infoComplementar": f"/{self.jwt.dw_display_account}/{name}"
             },
-            "dataLiquidacaoFutura": next_d2_date_time_formatted,
+            "dataLiquidacaoFutura": self.liquidation_date,
         }
 
         in_body = {
@@ -251,7 +258,7 @@ class ExecutionModel:
                 "codigoConta": self.jwt.bmf_account,
                 "digitoConta": self.jwt.bmf_account_digit,
             },
-            "dataLiquidacaoFutura": next_d2_date_time_formatted,
+            "dataLiquidacaoFutura": self.liquidation_date,
         }
 
         map_execute_body = {

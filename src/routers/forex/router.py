@@ -44,9 +44,7 @@ class ForexExchange:
         request: Request, payload: ForexExecution
     ) -> Response:
         jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
-        await JwtService.validate_mist(
-            request=request, user_data=jwt_data["user"]
-        )
+        await JwtService.validate_mist(request=request, user_data=jwt_data["user"])
         success = await ExecutionExchangeService.execute_exchange_proposal(
             payload=payload, jwt_data=jwt_data
         )
