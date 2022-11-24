@@ -107,6 +107,7 @@ class ForexSimulation:
         body = await simulation_model.get_body_template_to_request_exchange_simulation(
             customer_token=customer_token
         )
+        Gladsheim.debug(message="Calling route 22", body=body)
         caronte_response = await ExchangeCompanyApi.request_as_client(
             method=AllowedHTTPMethods.GET,
             url=url_path,

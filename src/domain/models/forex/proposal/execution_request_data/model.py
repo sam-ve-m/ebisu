@@ -1,4 +1,6 @@
 # Ebisu
+from datetime import datetime
+from etria_logger import Gladsheim
 from src.domain.enums.forex.liquidation_date import LiquidationDayOptions
 from src.domain.enums.forex.countrys import Country
 from src.domain.enums.forex.composition_hash_options import Balance, Wallet
@@ -51,6 +53,16 @@ class ExecutionModel:
         self.halberd_country = self.__get_halberd_country()
         self.destination_country = self.__get_destination_country()
         self.destination_account = self.__get_destination_account()
+        self.liquidation_date = self.__get_liquidation_date_by_operation()
+
+    def __get_liquidation_date_by_operation(self) -> str:
+        map_operation_type = {
+            "BRL_TO_USD": self.stock_market.get_liquidation_date(day=LiquidationDayOptions.D1),
+            "USD_TO_BRL": self.stock_market.get_liquidation_date(day=LiquidationDayOptions.D2),
+        }
+        liquidation_date = map_operation_type.get(self.token_decoded.exchange_hash)
+        liquidation_date_formatted = liquidation_date.strftime(RegionDateFormat.BR_DATE_ZULU_FORMAT.value)
+        return liquidation_date_formatted
 
     def __get_exchange_proposal_value(self) -> float:
         map_exchange_proposal_value_per_hash = {
@@ -188,7 +200,9 @@ class ExecutionModel:
         }
         return bifrost_template
 
-    def get_execute_proposal_body(self, customer_name: dict) -> dict:
+    def get_execute_proposal_body(self, customer_data: dict) -> dict:
+
+        name = customer_data.get("name")
 
         name = customer_name.get("name")
 
@@ -202,7 +216,7 @@ class ExecutionModel:
                 "contaBeneficiario": config("BENEFICIARY_ACCOUNT"),
                 "infoComplementar": f"/{self.thebes_answer.dw_display_account}/{name}",
             },
-            "dataLiquidacaoFutura": self.next_d2,
+            "dataLiquidacaoFutura": self.liquidation_date,
         }
 
         in_body = {
@@ -213,7 +227,7 @@ class ExecutionModel:
                 "codigoConta": self.thebes_answer.bmf_account,
                 "digitoConta": self.thebes_answer.bmf_account_digit,
             },
-            "dataLiquidacaoFutura": self.next_d2,
+            "dataLiquidacaoFutura": self.liquidation_date,
         }
 
         map_execute_body = {

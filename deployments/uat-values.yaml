@@ -6,7 +6,7 @@ image:
   repository: nexus.sigame.com.br
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.3.5
+  tag: 1.3.4
 
 ports:
   protocol: TCP
@@ -293,8 +293,6 @@ containers:
       value: "15"
     - name: MONGODB_PROPOSALS_EXECUTED
       value: "exchange_proposals_executed"
-    - name: MONGODB_PROPOSALS_SIMULATED
-      value: "exchange_proposals_simulated"
     - name: NYSE_OPENING_TIME
       value: "859"
     - name: NYSE_CLOSING_TIME
