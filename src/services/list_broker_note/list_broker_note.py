@@ -7,7 +7,9 @@ from etria_logger import Gladsheim
 # EXTERNAL LIBS
 from src.domain.enums.response.internal_code import InternalCode
 from src.domain.models.database.list_broker_note.model import BrokerNoteModel
-from src.domain.models.response.list_broker_note.response_model import ListBrokerNoteResponse
+from src.domain.models.response.list_broker_note.response_model import (
+    ListBrokerNoteResponse,
+)
 from src.domain.responses.http_response_model import ResponseModel
 from src.repositories.files.repository import FileRepository
 from src.domain.request.exchange_info.list_broker_note_validator import (
@@ -266,9 +268,7 @@ class ListBrokerNote:
             ): ListBrokerNote.get_all_market_files_of_all_regions,
         }.get(map_keys, [])(jwt_data=jwt_data, broker_note=broker_note)
 
-        response_model = ListBrokerNoteResponse.to_response(
-            models=broker_note_response
-        )
+        response_model = ListBrokerNoteResponse.to_response(models=broker_note_response)
         response = ResponseModel(
             success=True, result=response_model, internal_code=InternalCode.SUCCESS
         ).build_http_response(status_code=HTTPStatus.OK)
@@ -308,8 +308,7 @@ class ListBrokerNote:
 
         broker_notes = sorted(broker_notes, key=itemgetter("day"), reverse=True)
         symbols_financial_indicators = [
-            BrokerNoteModel(**symbol)
-            for symbol in broker_notes
+            BrokerNoteModel(**symbol) for symbol in broker_notes
         ]
         return symbols_financial_indicators
 

@@ -10,6 +10,7 @@ from src.domain.request.exchange_info.list_client_order_validator import (
 )
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from src.services.orders.strategies import GetBrOrders
+
 # from src.services.list_client_orders.list_client_orders import ListOrders
 # from src.services.list_client_orders.strategies import GetBrOrders
 from tests.src.stubs.project_stubs.stub_data import (

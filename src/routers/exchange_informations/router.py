@@ -6,7 +6,9 @@ from fastapi import Request, APIRouter, Depends
 # MODELS
 from src.domain.account_close_steps.response.model import AccountCloseStepsResponse
 from src.domain.models.response.client_orders.response_model import ClientOrdersResponse
-from src.domain.models.response.list_broker_note.response_model import ListBrokerNoteResponse
+from src.domain.models.response.list_broker_note.response_model import (
+    ListBrokerNoteResponse,
+)
 from src.domain.statement.br.response.model import (
     StatementResponse as BrStatementResponse,
 )
@@ -63,13 +65,15 @@ class ExchangeRouter:
     @__exchange_router.get(
         "/list_broker_note",
         tags=["Broker Note"],
-        response_model=List[ListBrokerNoteResponse]
+        response_model=List[ListBrokerNoteResponse],
     )
     async def get_broker_note(
         request: Request, broker_note: ListBrokerNoteModel = Depends()
     ):
         jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
-        broker_note_response = ListBrokerNote.get_list_broker_note(jwt_data=jwt_data, broker_note=broker_note)
+        broker_note_response = ListBrokerNote.get_list_broker_note(
+            jwt_data=jwt_data, broker_note=broker_note
+        )
         return broker_note_response
 
     @staticmethod

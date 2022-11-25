@@ -4,7 +4,6 @@ from http import HTTPStatus
 
 
 class InvalidAccountsOwnership(DomainException):
-
     def __init__(self, *args, **kwargs):
         self.msg = "Opening hours for currency exchange operations are from 9:00 am to 4:30 pm."
         self.status_code = HTTPStatus.BAD_REQUEST
@@ -21,11 +20,7 @@ class InvalidAccountsOwnership(DomainException):
 
 
 class NotMappedCurrency(DomainException):
-    def __init__(
-        self,
-        *args,
-        **kwargs
-    ):
+    def __init__(self, *args, **kwargs):
         self.msg = "Unable to process money flow, because currency is not mapped"
         self.status_code = HTTPStatus.BAD_REQUEST
         self.internal_code = InternalCode.INVALID_PARAMS

@@ -119,6 +119,7 @@ class ExecutionResponseModel:
             return None
         overseas_banker_model = OverseasBanker(content_validated=content_validated)
         return overseas_banker_model
+
     @staticmethod
     def build_liquidation_if_have_data(
         content_validated: ContentRoute23,

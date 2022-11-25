@@ -4,9 +4,10 @@ from http import HTTPStatus
 
 
 class AccountCloseStepsForbidden(ServiceException):
-
     def __init__(self, *args, **kwargs):
-        self.msg = "User is authorized but not has properties to access account close steps"
+        self.msg = (
+            "User is authorized but not has properties to access account close steps"
+        )
         self.status_code = HTTPStatus.FORBIDDEN
         self.internal_code = InternalCode.UNAUTHORIZED
         self.success = False

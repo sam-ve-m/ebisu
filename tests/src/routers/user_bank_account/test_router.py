@@ -3,12 +3,13 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 from src.domain.exceptions.service.bank_account.model import BankAccountAlreadyExists
+
 # INTERNAL LIBS
 
 # PROJECT IMPORTS
 from src.domain.request.user_account.bank_account import (
     CreateUserBankAccount,
-    UpdateUserBankAccounts
+    UpdateUserBankAccounts,
 )
 from src.routers.user_bank_accounts.router import UserBankAccountsRouter
 from src.routers.user_portfolios.router import UserPortfoliosRouter
@@ -94,6 +95,7 @@ async def test_when_getting_the_bank_account_with_a_valid_jwt_then_return_no_ban
     assert response == {"bank_accounts": []}
     assert isinstance(response, dict)
     assert response.get("bank_accounts") == []
+
 
 # TODO: fix this tests
 # @pytest.mark.asyncio

@@ -4,7 +4,6 @@ from http import HTTPStatus
 
 
 class InvalidBankCode(DomainException):
-
     def __init__(self, *args, **kwargs):
         self.msg = "Invalid bank code"
         self.status_code = HTTPStatus.BAD_REQUEST
