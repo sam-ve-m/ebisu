@@ -14,7 +14,6 @@ ports:
 
 containers:
   env:
-    # ebisu
     - name: ORACLE_BASE_USER
       value: "UEBISDB001"
     - name: ORACLE_BASE_PASSWORD
@@ -38,7 +37,7 @@ containers:
     - name: ORACLE_POSITION_SERVICE
       value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
     - name: MONGO_CONNECTION_URL
-      value: "mongodb://ebisu:FAoqdk31Ljdn@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
+      value: "mongodb://ebisu:FAoqdk31Ljdn@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=ebisu"
     - name: MONGODB_DATABASE_NAME
       value: "lionx"
     - name: MONGODB_USER_COLLECTION
@@ -85,7 +84,6 @@ containers:
       value: "1"
     - name: BANK_CODE
       value: "469"
-    # Mist
     - name: MIST_REDIS_URL
       value: "redis://mist:panOeimdiaODkjn34@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
     - name: MIST_AWS_ACCESS_KEY_ID
@@ -103,7 +101,7 @@ containers:
     - name: MIST_JWT_REQUIRED_FIELDS
       value: "[]"
     - name: MIST_MONGODB_CONNECTION
-      value: "mongodb://mist:LLNnmsi9WEQuhdsamn@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=MongoDB%20Compass&ssl=false"
+      value: "mongodb://mist:LLNnmsi9WEQuhdsamn@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=mist"
     - name: MIST_ELECTRONIC_SIGNATURE_MAX_ATTEMPTS
       value: "5"
     - name: MIST_ENCRYPT_KEY
@@ -114,7 +112,6 @@ containers:
       value: "lionx"
     - name: MIST_AUTH_DATABASE_USER_COLLECTION
       value: "users"
-    # Heimdal
     - name: HEIMDALL_FILE_BUCKET_NAME
       value: "heimdall_rsa"
     - name: HEIMDALL_AWS_ACCESS_KEY_ID
@@ -133,7 +130,6 @@ containers:
       value: "[]"
     - name: HEIMDALL_REDIS_URL
       value: "redis://heimdal:FBJAnjkqw21yjewkDSA@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
-    # Mepho DW transport
     - name: MEPHO_DW_APP_KEY
       value: "93d6184b-4692-4058-b32d-82624be89cb1"
     - name: MEPHO_DW_USER
@@ -158,17 +154,14 @@ containers:
       value: "20"
     - name: MEPHO_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER
       value: "mepho_authentication_ebisu"
-    # etria
     - name: ETRIA_LOG_LEVEL
       value: "DEBUG"
     - name: ROOT_LOG_LEVEL
       value: "INFO"
-    # Persephone
     - name: PERSEPHONE_KAFKA_BROKERS
       value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
     - name: PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT
       value: "ebisu-persephone.client.bank_account"
-    # Floki
     - name: FLOKI_SINACOR_BASE_IP
       value: "172.30.19.203:25149"
     - name: FLOKI_SINACOR_AUTHENTICATION_ROUTE
@@ -336,37 +329,17 @@ labels:
 imagePullSecrets:
   - name: nexus-v3
 
-podAnnotations: {}
-
-serviceAnnotations: {}
-
-# securityContext:
-#   capabilities:
-#     drop:
-#     - AUDIT_WRITE
-#     - MKNOD
-#     - SETFCAP
-#     - SETPCAP
-#     - KILL
-#   # runAsNonRoot: true
-#   # runAsUser: 1000
 resources:
-  requests: #Amount of resources kube-scheduler will look into nodes to alocate the given POD
+  requests:
     cpu: 500m
     memory: 512Mi
-  limits: #Amount of resources limited by kubelet (will not exceed)
+  limits:
     cpu: 500m
     memory: 512Mi
 
 autoscaling:
   enabled: false
   minReplicas: 1
-  maxReplicas: 100
+  maxReplicas: 1
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
+  targetMemoryUtilizationPercentage: 80
