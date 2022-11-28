@@ -11,33 +11,12 @@ global:
   labels:  
     mongo: true
     oracle: true
-    postgres: false
     redis: true
-    sqlserver: false
-    external: true
     priority: 5
-
-  serviceaccount:
-    enabled: false
-    annotations: []
-
-  configMap:
-    enabled: false
-    data: {}
-
-  revisionHistoryLimit: 4
 
   annotations:
     sidecar.istio.io/inject: "true"
     proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
-
-  nameOverride: ""
-  fullnameOverride: ""
-
-  volumes:
-    enabled: false
-    name:
-    hostPath:
 
   nodeAffinity:
     bff: true
@@ -77,7 +56,7 @@ deployment:
         ORACLE_POSITION_DSN: "172.30.10.227"
         ORACLE_POSITION_PORT: "1521"
         ORACLE_POSITION_SERVICE: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
-        MONGO_CONNECTION_URL: "mongodb://ebisu:DAlnafcnmmcsa1@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
+        MONGO_CONNECTION_URL: "mongodb://ebisu:DAlnafcnmmcsa1@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=ebisu"
         MONGODB_DATABASE_NAME: "lionx"
         MONGODB_USER_COLLECTION: "users"
         MONGODB_JWT_COLLECTION: "jwts"
@@ -127,16 +106,13 @@ deployment:
         PROVISIONED_EARNINGS_URL: "http://172.30.19.203:25149/custodia/api/EventosCorporativos/Proventos/Provisionados"
         TRANSFER_WINDOW_START: "11:00:00"
         TRANSFER_WINDOW_END: "19:30:00"
-        # Bifrost client
         BIFROST_KAFKA_BROKERS: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
-        # Halberd
         HALBERD_LOCK_MANAGER_REDIS_URLS: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
         HALBERD_BALANCE_RETRY_COUNT: "100"
         HALBERD_BALANCE_RETRY_DELAY_MIN: "0.2"
         HALBERD_BALANCE_RETRY_DELAY_MAX: "1"
         HALBERD_BALANCE_LOCK_MANAGER_TIMEOUT: "15"
         HALBERD_BALANCE_LOCK_MANAGER_IDENTIFIER: "ebisu-forex"
-        # Mist
         MIST_REDIS_URL: "redis://mist:InPuaku76Jbdsa@172.30.11.235:6379?db=1"
         MIST_AWS_ACCESS_KEY_ID: "AKIATZVFXI25USQWCS5O"
         MIST_AWS_SECRET_ACCESS_KEY: "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"
@@ -145,13 +121,12 @@ deployment:
         MIST_JWT_FILE_BUCKET_NAME: "mist_rsa"
         MIST_ELECTRONIC_SIGNATURE_FILE_BUCKET_NAME: "eletronic-signature-key"
         MIST_JWT_REQUIRED_FIELDS: "[]"
-        MIST_MONGODB_CONNECTION: "mongodb://mist:Anm8irJdsanmdsapqoiwu@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=MongoDB%20Compass&ssl=false"
+        MIST_MONGODB_CONNECTION: "mongodb://mist:Anm8irJdsanmdsapqoiwu@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=mist"
         MIST_ELECTRONIC_SIGNATURE_MAX_ATTEMPTS: "5"
         MIST_ENCRYPT_KEY: "c_-e_-e_-e_-i_-i"
         MIST_FILE_BUCKET_NAME: "mist_rsa"
         MIST_AUTH_DATABASE_NAME: "lionx"
         MIST_AUTH_DATABASE_USER_COLLECTION: "users"
-        # Heimdal
         HEIMDALL_FILE_BUCKET_NAME: "heimdall_rsa"
         HEIMDALL_AWS_ACCESS_KEY_ID: "AKIATZVFXI25USQWCS5O"
         HEIMDALL_AWS_SECRET_ACCESS_KEY: "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"
@@ -161,7 +136,6 @@ deployment:
         HEIMDALL_AWS_BUCKET_TERMS: "dtvm-terms-dev"
         HEIMDALL_JWT_REQUIRED_FIELDS: "[]"
         HEIMDALL_REDIS_URL: "redis://heimdal:LLOnmUUffhaUHnewIz@172.30.11.235:6379?db=1"
-        # Mepho DW transport
         MEPHO_DW_APP_KEY: "93d6184b-4692-4058-b32d-82624be89cb1"
         MEPHO_DW_USER: "bo.lionx.api"
         MEPHO_DW_PASSWORD: "passw0rd"
@@ -174,13 +148,10 @@ deployment:
         MEPHO_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX: "15"
         MEPHO_CLIENT_AUTHENTICATION_LOCK_MANAGER_TIMEOUT: "20"
         MEPHO_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER: "mepho_authentication_ebisu"
-        # etria
         ETRIA_LOG_LEVEL: "INFO"
         ROOT_LOG_LEVEL: "WARNING"
-        # Persephone
         PERSEPHONE_KAFKA_BROKERS: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
         PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT: "ebisu-persephone.client.bank_account"
-        # Caronte
         CARONTE_CLIENT_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
         CARONTE_CLIENT_AUTHENTICATION_RETRY_COUNT: "100"
         CARONTE_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN: "0.5"
@@ -191,7 +162,6 @@ deployment:
         CARONTE_REDIS_HOST: "redis://bnd:jkl321pqr@172.30.11.235:6379"
         CARONTE_CACHE_KEYS_PREFIX: "caronte:"
         CARONTE_REDIS_DB: "1"
-        # OuroInvest
         OUROINVEST_CONTROLE_DATAHORACLIENTE: "2021-03-24T16:02:19.000Z"
         OUROINVEST_CONTROLE_RECURSO_CODIGO: "63"
         OUROINVEST_CONTROLE_RECURSO_SIGLA: "CAAS"
@@ -205,7 +175,6 @@ deployment:
         OUROINVEST_SYSTEM_PWD: "15R53boMi3b$6YB"
         OUROINVEST_DEFAULT_TOKEN_URL: "https://sbxapi.ourinvest.com.br:43400/api/v1/cross/usuario/login/parceiro"
         OUROINVEST_USER_TOKEN_URL: "https://sbxapi.ourinvest.com.br:43400/api/v1/cross/servicos/autorizacao/representante"
-        # FLOKI
         FLOKI_SINACOR_BASE_IP: "172.30.19.203:25149"
         FLOKI_SINACOR_AUTHENTICATION_ROUTE: "infra/api/v1/oauth/token"
         FLOKI_SINACOR_CLIENT_ID: "1B5FEA46423D56C0EECD0CEB.SINACOR"
@@ -220,7 +189,6 @@ deployment:
         FLOKI_CLIENT_AUTHENTICATION_LOCK_MANAGER_TIMEOUT: "5"
         FLOKI_CLIENT_AUTHENTICATION_LOCK_MANAGER_IDENTIFIER: "sinacor_authentication_bifrost"
 
-      
       resources:
         requests:
           cpu: 500m
@@ -228,7 +196,7 @@ deployment:
         limits:
           cpu: 500m
           memory: 128Mi
-      
+
       hpa:
         enabled: true
         minReplicas: 1
@@ -242,23 +210,9 @@ deployment:
         enabled: true
         name: http
         protocol: TCP
-        annotations: []
 
       ingress:
         enabled: true
         rewriteURI: /
-
         cors:
           enabled: false
-          allowCredentials: true
-          allowOrigins:
-          - regex: .
-          allowMethods:
-          - GET
-          - POST
-          - PUT
-          - DELETE
-          - PATCH
-          - OPTIONS
-          allowHeaders:
-          - x-thebes-answer
