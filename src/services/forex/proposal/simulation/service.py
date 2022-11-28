@@ -1,9 +1,18 @@
 # Ebisu
+from typing import Union
+
+from persephone_client import Persephone
+
+from src.domain.enums.persephone import PersephoneQueue, PersephoneSchema
+from src.domain.exceptions.domain.model.forex.model import ErrorValidatingSimulationProposalData
 from src.domain.exceptions.repository.forex.model import CustomerForexDataNotFound
 from src.domain.exceptions.service.forex.model import (
     InconsistentResultInRoute21,
     InconsistentResultInRoute22,
 )
+from src.domain.exceptions.service.auditing_trail.model import FailToSaveAuditingTrail
+from src.domain.exceptions.service.forex.model import CustomerQuotationTokenNotFound, ErrorTryingToGetUniqueId
+from src.domain.models.device_info.dto import DeviceInfo
 from src.domain.models.forex.proposal.simulation_request_data.model import (
     SimulationModel,
 )
@@ -16,6 +25,7 @@ from src.domain.validators.forex.proposal.simulation.validator import (
     ContentRoute21,
     ContentRoute22,
 )
+from src.infrastructures.env_config import config
 from src.repositories.user_exchange.repository import UserExchangeRepository
 from src.repositories.forex.simulation.repository import ExchangeSimulationRepository
 from src.services.forex.account.service import ForexAccount
@@ -29,7 +39,8 @@ from etria_logger import Gladsheim
 class ForexSimulation:
     @classmethod
     async def get_proposal_simulation(
-        cls, jwt_data: dict, payload: CurrencyExchange
+        cls, jwt_data: dict, payload: CurrencyExchange,
+            device_info: DeviceInfo
     ) -> dict:
         unique_id = ThebesAnswer(jwt_data=jwt_data).unique_id
         client_id = await ForexAccount.get_client_id(unique_id=unique_id)
@@ -52,9 +63,17 @@ class ForexSimulation:
             customer_token=content_21_validated.token,
             simulation_model=simulation_model,
         )
+        
         content_22_validated = await cls.__validate_route_22_result_content(
             content=content_22
         )
+
+        await cls.__log_in_persephone_to_audit(
+            exchange_simulation_proposal_data=content_22,
+            device_info=device_info,
+            unique_id=unique_id,
+        )
+
         simulation_response_model = SimulationResponseModel(
             content_21_validated=content_21_validated,
             content_22_validated=content_22_validated,
@@ -67,6 +86,54 @@ class ForexSimulation:
             simulation_response_model.get_simulation_proposal_template()
         )
         return simulation_proposal_template
+
+    @staticmethod
+    def __get_unique_id(jwt_data: dict) -> str:
+        unique_id = jwt_data.get("user", {}).get("unique_id")
+        if not unique_id:
+            raise ErrorTryingToGetUniqueId()
+        return unique_id
+
+    @staticmethod
+    async def __treatment_and_validation_exchange_simulation_data(
+        exchange_simulation_proposal_data: dict,
+    ) -> Union[dict, ErrorValidatingSimulationProposalData]:
+        try:
+            exchange_simulation_model = (
+                await SimulationResponseModel.get_customer_exchange_model(
+                    exchange_simulation_proposal_data=exchange_simulation_proposal_data
+                )
+            )
+            exchange_simulation_proposal_response = {
+                "exchange_simulation_proposal": exchange_simulation_model.dict()
+            }
+            return exchange_simulation_proposal_response
+        except Exception as ex:
+            Gladsheim.error(error=ex)
+            raise ErrorValidatingSimulationProposalData()
+
+    @staticmethod
+    async def __log_in_persephone_to_audit(
+        exchange_simulation_proposal_data: dict,
+        device_info: DeviceInfo,
+        unique_id: str
+    ):
+        (
+            sent_to_persephone,
+            status_sent_to_persephone,
+        ) = await Persephone.send_to_persephone(
+            topic=config("PERSEPHONE_TOPIC_MONEY_MOVEMENT_EXCHANGE"),
+            partition=PersephoneQueue.EXCHANGE_PROPOSAL_SIMULATION.value,
+            message={
+                "unique_id": unique_id,
+                "device_id": device_info.device_id,
+                "device_info": device_info.decrypted_device_info,
+                "proposal_data": exchange_simulation_proposal_data,
+            },
+            schema_name=PersephoneSchema.EXCHANGE_PROPOSAL_SIMULATION.value,
+        )
+        if sent_to_persephone is False:
+            raise FailToSaveAuditingTrail("common.process_issue")
 
     @staticmethod
     async def __get_customer_spread_by_operation_type(

@@ -201,11 +201,7 @@ class ExecutionModel:
         return bifrost_template
 
     def get_execute_proposal_body(self, customer_data: dict) -> dict:
-
         name = customer_data.get("name")
-
-        name = customer_name.get("name")
-
         out_body = {
             "token": self.token,
             "dadosBeneficiario": {
@@ -214,7 +210,7 @@ class ExecutionModel:
                 "codigoSWIFTBanco": config("BENEFICIARY_SWIFT_BANK_CODE"),
                 "nomeBeneficiario": config("BENEFICIARY_NAME"),
                 "contaBeneficiario": config("BENEFICIARY_ACCOUNT"),
-                "infoComplementar": f"/{self.thebes_answer.dw_display_account}/{name}",
+                "infoComplementar": f"/{self.thebes_answer.dw_display_account}/{name}"
             },
             "dataLiquidacaoFutura": self.liquidation_date,
         }
