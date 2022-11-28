@@ -196,7 +196,7 @@ class ExecutionModel:
                 "account_number": self.destination_account,
                 "country": self.destination_country,
             },
-            "value": self.token_decoded.net_value,
+            "value": self.token_decoded.quantity_currency_traded,
         }
         return bifrost_template
 
