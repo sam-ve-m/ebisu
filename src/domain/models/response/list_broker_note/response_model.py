@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from src.domain.models.database.list_broker_note.model import BrokerNoteModel
 
 
-class ListBrokerNoteResponse(BaseModel):
+class ListBrokerNoteBrResponse(BaseModel):
     market: Optional[str]
     region: Optional[str]
     day: Optional[int]
@@ -13,7 +13,7 @@ class ListBrokerNoteResponse(BaseModel):
     @classmethod
     def to_response(cls, models: List[BrokerNoteModel]):
         broker_note = [
-            ListBrokerNoteResponse(
+            ListBrokerNoteBrResponse(
                 market=model.market,
                 region=model.region,
                 day=model.day,
@@ -23,3 +23,12 @@ class ListBrokerNoteResponse(BaseModel):
         ]
         response = broker_note
         return response
+
+
+class ListBrokerNoteUsResponse(BaseModel):
+    description: Optional[str]
+    file_key: Optional[str]
+
+
+class GetBrokerNoteUsResponse(BaseModel):
+    broker_note_link: Optional[str]

@@ -103,7 +103,7 @@ async def test_when_getting_the_bank_account_with_a_valid_jwt_then_return_no_ban
 #
 #     with pytest.raises(UnauthorizedError):
 #         await UserBankAccountsRouter.get_user_bank_accounts(
-#             request=MagicMock(scope=scope_wrong_stub)
+#             broker_note=MagicMock(scope=scope_wrong_stub)
 #         )
 
 
@@ -191,7 +191,7 @@ async def test_when_getting_the_bank_account_with_a_valid_jwt_then_return_the_ba
 #
 #     with pytest.raises(BadRequestError):
 #         await UserBankAccountsRouter.update_bank_account(
-#             request=MagicMock(
+#             broker_note=MagicMock(
 #                 scope=scope_correct_stub, headers=MagicMock(raw=[scope_stub])
 #             ),
 #             update_bank_account=UpdateUserBankAccounts(**update_router_account_stub),
@@ -245,7 +245,7 @@ async def test_when_getting_the_bank_account_with_a_valid_jwt_then_return_the_ba
 #
 #     with pytest.raises(UnauthorizedError):
 #         await UserBankAccountsRouter.delete_bank_account(
-#             request=MagicMock(
+#             broker_note=MagicMock(
 #                 scope=scope_correct_stub, headers=MagicMock(raw=[scope_stub])
 #             ),
 #             delete_bank_account=MagicMock(
@@ -294,7 +294,7 @@ async def test_when_getting_the_stock_portfolios_with_a_valid_jwt_then_return_th
 #
 #     with pytest.raises(UnauthorizedError):
 #         await UserPortfoliosRouter.user_portfolios_list(
-#             request=MagicMock(
+#             broker_note=MagicMock(
 #                 scope=scope_wrong_stub, headers=MagicMock(raw=[scope_stub])
 #             )
 #         )

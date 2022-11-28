@@ -91,6 +91,8 @@ deployment:
         DW_GET_ALL_TRANSACTIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
         DW_POSITIONS_URL: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/positions"
         DW_BALANCE_URL: "https://bo-api:drivewealth:io/back-office/accounts/{}/summary/money"
+        DW_CONFIRMATION_URL: "https://bo-api:drivewealth:io/back-office/accounts/{}/confirms"
+        DW_STATEMENT_URL: "https://bo-api:drivewealth:io/back-office/statements/{}/{}"
         FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL: 'redis://bnd:93uOKu5H@172.30.19.183:6379'
         FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB: "1"
         AWS_ACCESS_KEY_ID: "AKIATZVFXI25USQWCS5O"

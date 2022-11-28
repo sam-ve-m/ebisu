@@ -15,7 +15,7 @@ from src.domain.request.exchange_info.get_statement_validator import (
 from src.domain.request.exchange_info.list_broker_note_validator import (
     BrokerNoteRegion,
     BrokerNoteMarket,
-    ListBrokerNoteModel,
+    ListBrokerNoteBrModel,
 )
 from src.domain.request.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
@@ -71,7 +71,7 @@ async def test_when_sending_the_right_params_to_get_list_broker_note_then_return
 
     response = await ExchangeRouter.get_broker_note(
         request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
-        broker_note=ListBrokerNoteModel(
+        broker_note=ListBrokerNoteBrModel(
             **{
                 "region": BrokerNoteRegion.BR.value,
                 "market": BrokerNoteMarket.BMF.value,
@@ -94,7 +94,7 @@ async def test_when_sending_the_right_params_to_get_list_broker_note_then_return
 ):
     list_broker_response = await ExchangeRouter.get_broker_note(
         request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
-        broker_note=ListBrokerNoteModel(
+        broker_note=ListBrokerNoteBrModel(
             **{
                 "region": BrokerNoteRegion.BR.value,
                 "market": BrokerNoteMarket.BOVESPA.value,
@@ -115,7 +115,7 @@ async def test_when_sending_wrong_params_of_list_broker_note_model_to_get_broker
             request=MagicMock(
                 scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)
             ),
-            broker_note=ListBrokerNoteModel(
+            broker_note=ListBrokerNoteBrModel(
                 **{"region": None, "market": None, "year": 2018, "month": 1}
             ),
         )
@@ -127,8 +127,8 @@ async def test_when_sending_wrong_params_of_list_broker_note_model_to_get_broker
 #
 #     with pytest.raises(UnauthorizedError):
 #         await ExchangeRouter.get_broker_note(
-#             request=MagicMock(scope=scope_stub),
-#             broker_note=ListBrokerNoteModel(
+#             broker_note=MagicMock(scope=scope_stub),
+#             broker_note=ListBrokerNoteBrModel(
 #                 **{
 #                     "region": BrokerNoteRegion.BR.value,
 #                     "market": BrokerNoteMarket.BOVESPA.value,
@@ -149,7 +149,7 @@ async def test_when_sending_wrong_params_of_list_broker_note_model_to_get_broker
 #     mock_get_thebes_answer_from_request, mock_get_service_response
 # ):
 #     response_statement = await ExchangeRouter.get_br_bank_statement(
-#         request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
+#         broker_note=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
 #         statement=GetBrStatement(
 #             **{
 #                 "region": BrokerNoteRegion.BR.value,
@@ -187,7 +187,7 @@ async def test_when_sending_wrong_params_of_get_statement_model_then_raise_valid
 #
 #     with pytest.raises(UnauthorizedError):
 #         await ExchangeRouter.get_bank_statement(
-#             request=MagicMock(scope=scope_stub_2),
+#             broker_note=MagicMock(scope=scope_stub_2),
 #             statement=GetBrStatement(
 #                 **{
 #                     "region": BrokerNoteRegion.BR.value,
@@ -242,7 +242,7 @@ async def test_when_sending_wrong_params_to_get_client_orders_router_then_raise_
 #
 #     with pytest.raises(UnauthorizedError):
 #         await ExchangeRouter.get_client_orders(
-#             request=MagicMock(scope=scope_stub),
+#             broker_note=MagicMock(scope=scope_stub),
 #             client_order=GetClientOrderModel(
 #                 **{
 #                     "region": Region.BR.value,
@@ -263,7 +263,7 @@ async def test_when_sending_wrong_params_to_get_client_orders_router_then_raise_
 #     mock_get_thebes_answer_from_request, mock_get_service_response
 # ):
 #     response = await ExchangeRouter.list_client_orders(
-#         request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
+#         broker_note=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
 #         list_client_orders=ListClientOrderModel(
 #             **{
 #                 "region": Region.BR.value,
@@ -298,7 +298,7 @@ async def test_when_sending_wrong_params_to_list_client_orders_router_then_raise
 #
 #     with pytest.raises(UnauthorizedError):
 #         await ExchangeRouter.list_client_orders(
-#             request=MagicMock(scope=scope_stub_2),
+#             broker_note=MagicMock(scope=scope_stub_2),
 #             list_client_orders=ListClientOrderModel(
 #                 **{
 #                     "region": Region.BR.value,
@@ -374,7 +374,7 @@ async def test_when_sending_wrong_params_to_earnings_client_router_then_raise_va
 # async def test_when_sending_the_wrong_payload_jwt_invalid_to_earnings_client_router_then_raise_unauthorized_error():
 #     with pytest.raises(UnauthorizedError):
 #         await ExchangeRouter.get_earnings_from_client(
-#             request=MagicMock(scope=scope_stub),
+#             broker_note=MagicMock(scope=scope_stub),
 #             earnings_client=EarningsClientModel(
 #                 **{
 #                     "region": Region.BR.value,
