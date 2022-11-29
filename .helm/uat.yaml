@@ -118,6 +118,8 @@ deployment:
         ROOT_LOG_LEVEL: "INFO"
         PERSEPHONE_KAFKA_BROKERS: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
         PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT: "ebisu-persephone.client.bank_account"
+        PERSEPHONE_TOPIC_MONEY_MOVEMENT_EXCHANGE: "ebisu-persephone.money_movement.exchange_forex"
+        PERSEPHONE_TOPIC_MONEY_MOVEMENT_TRANSFERENCE: "ebisu-persephone.money_movement.transference"
         FLOKI_SINACOR_BASE_IP: "172.30.19.203:25149"
         FLOKI_SINACOR_AUTHENTICATION_ROUTE: "infra/api/v1/oauth/token"
         FLOKI_SINACOR_CLIENT_ID: "1B5FEA46423D56C0EECD0CEB.SINACOR"

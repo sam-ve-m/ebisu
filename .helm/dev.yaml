@@ -152,6 +152,8 @@ deployment:
         ROOT_LOG_LEVEL: "WARNING"
         PERSEPHONE_KAFKA_BROKERS: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
         PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT: "ebisu-persephone.client.bank_account"
+        PERSEPHONE_TOPIC_MONEY_MOVEMENT_EXCHANGE: "ebisu-persephone.money_movement.exchange_forex"
+        PERSEPHONE_TOPIC_MONEY_MOVEMENT_TRANSFERENCE: "ebisu-persephone.money_movement.transference"
         CARONTE_CLIENT_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
         CARONTE_CLIENT_AUTHENTICATION_RETRY_COUNT: "100"
         CARONTE_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN: "0.5"
