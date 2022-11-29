@@ -64,9 +64,9 @@ containers:
     - name: DW_POSITIONS_URL
       value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/positions"
     - name: DW_CONFIRMATION_URL
-      value: "https://bo-api:drivewealth:io/back-office/accounts/{}/confirms"
+      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/confirms"
     - name: DW_STATEMENT_URL
-      value: "https://bo-api:drivewealth:io/back-office/statements/{}/{}"
+      value: "https://bo-api.drivewealth.io/back-office/statements/{}/{}"
     - name: FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL
       value: 'redis://ebisu:Vddnjer321F@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379'
     - name: FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB

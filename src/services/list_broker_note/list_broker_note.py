@@ -104,12 +104,10 @@ class ListBrokerNote:
             *zip(
                 (
                     br_account.get("bmf_account"),
-                    BrokerNoteRegion.BR,
                     broker_note,
                 ),
                 (
                     br_account.get("bovespa_account"),
-                    BrokerNoteRegion.BR,
                     broker_note,
                 ),
             ),
@@ -228,7 +226,7 @@ class ListBrokerNote:
         account = (
             jwt_data.get("user", {})
             .get("portfolios", {})
-            .get("br", {})
+            .get("us", {})
             .get("dw_account")
         )
 
@@ -274,7 +272,7 @@ class ListBrokerNote:
         account = (
             jwt_data.get("user", {})
             .get("portfolios", {})
-            .get("br", {})
+            .get("us", {})
             .get("dw_account")
         )
         statement_request = GetStatementRequest(

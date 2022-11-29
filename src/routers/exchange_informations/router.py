@@ -90,7 +90,7 @@ class ExchangeRouter:
         request: Request, broker_note: ListBrokerNoteUsModel = Depends()
     ):
         jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
-        broker_note_response = ListBrokerNote.list_broker_notes_us(
+        broker_note_response = await ListBrokerNote.list_broker_notes_us(
             jwt_data=jwt_data, broker_note=broker_note
         )
         return broker_note_response
@@ -105,7 +105,7 @@ class ExchangeRouter:
         request: Request, broker_note: GetBrokerNoteUsModel = Depends()
     ):
         jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
-        broker_note_response = ListBrokerNote.get_broker_note_us(
+        broker_note_response = await ListBrokerNote.get_broker_note_us(
             jwt_data=jwt_data, broker_note=broker_note
         )
         return broker_note_response
