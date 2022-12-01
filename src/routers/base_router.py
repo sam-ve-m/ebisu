@@ -112,7 +112,9 @@ class BaseRouter:
         except Exception as err:
             Gladsheim.error(erro=err)
             response = ResponseModel(
-                success=False, message="An unexpected error occurred", internal_code=InternalCode.INTERNAL_SERVER_ERROR
+                success=False,
+                message="An unexpected error occurred",
+                internal_code=InternalCode.INTERNAL_SERVER_ERROR,
             ).build_http_response(status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
         finally:
             return response

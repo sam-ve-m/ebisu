@@ -6,7 +6,11 @@ from fastapi import Request, APIRouter, Depends
 # MODELS
 from src.domain.account_close_steps.response.model import AccountCloseStepsResponse
 from src.domain.models.response.client_orders.response_model import ClientOrdersResponse
-from src.domain.models.response.list_broker_note.response_model import ListBrokerNoteResponse
+from src.domain.models.response.list_broker_note.response_model import (
+    ListBrokerNoteBrResponse,
+    ListBrokerNoteUsResponse,
+    GetBrokerNoteUsResponse,
+)
 from src.domain.statement.br.response.model import (
     StatementResponse as BrStatementResponse,
 )
@@ -28,7 +32,9 @@ from src.domain.request.exchange_info.get_statement_validator import (
     GetUsStatement,
 )
 from src.domain.request.exchange_info.list_broker_note_validator import (
-    ListBrokerNoteModel,
+    ListBrokerNoteBrModel,
+    ListBrokerNoteUsModel,
+    GetBrokerNoteUsModel,
 )
 from src.domain.request.exchange_info.list_client_order_validator import (
     ListClientOrderModel,
@@ -61,15 +67,47 @@ class ExchangeRouter:
 
     @staticmethod
     @__exchange_router.get(
-        "/list_broker_note",
+        "/list_broker_notes_br",
         tags=["Broker Note"],
-        response_model=List[ListBrokerNoteResponse]
+        response_model=List[ListBrokerNoteBrResponse],
     )
-    async def get_broker_note(
-        request: Request, broker_note: ListBrokerNoteModel = Depends()
+    async def get_broker_notes_br(
+        request: Request, broker_note: ListBrokerNoteBrModel = Depends()
     ):
         jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
-        broker_note_response = ListBrokerNote.get_list_broker_note(jwt_data=jwt_data, broker_note=broker_note)
+        broker_note_response = ListBrokerNote.get_list_broker_notes_br(
+            jwt_data=jwt_data, broker_note=broker_note
+        )
+        return broker_note_response
+
+    @staticmethod
+    @__exchange_router.get(
+        "/list_broker_notes_us",
+        tags=["Broker Note"],
+        response_model=List[ListBrokerNoteUsResponse],
+    )
+    async def list_broker_notes_us(
+        request: Request, broker_note: ListBrokerNoteUsModel = Depends()
+    ):
+        jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
+        broker_note_response = await ListBrokerNote.list_broker_notes_us(
+            jwt_data=jwt_data, broker_note=broker_note
+        )
+        return broker_note_response
+
+    @staticmethod
+    @__exchange_router.get(
+        "/get_broker_note_us",
+        tags=["Broker Note"],
+        response_model=GetBrokerNoteUsResponse,
+    )
+    async def get_broker_note_us(
+        request: Request, broker_note: GetBrokerNoteUsModel = Depends()
+    ):
+        jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
+        broker_note_response = await ListBrokerNote.get_broker_note_us(
+            jwt_data=jwt_data, broker_note=broker_note
+        )
         return broker_note_response
 
     @staticmethod

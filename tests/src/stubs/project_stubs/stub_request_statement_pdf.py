@@ -18,7 +18,7 @@ file_upload_response = {
         "HTTPStatusCode": 200,
         "HTTPHeaders": {
             "x-amz-id-2": "qlLi121o24mvY7a6wt+UOF/+jjRSnjs1wjigKmMPXBoBgaJTZjsQxZZ8t2Ef+JxL4Zr+VBTzThE=",
-            "x-amz-request-id": "HYAR9MEP80BA602T",
+            "x-amz-broker_note-id": "HYAR9MEP80BA602T",
             "date": "Mon, 02 May 2022 23:26:32 GMT",
             "etag": '"9ed2d0609edb7de1bc406ef0c51f933d"',
             "server": "AmazonS3",

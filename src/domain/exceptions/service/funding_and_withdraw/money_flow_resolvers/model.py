@@ -5,7 +5,6 @@ from src.domain.exceptions.base_exceptions.model import ServiceException
 
 
 class MoneyFlowPerformedOutsideTransactionWindow(ServiceException):
-
     def __init__(self, *args, **kwargs):
         self.msg = "Money flow performed outside the transaction window"
         self.status_code = HTTPStatus.NOT_ACCEPTABLE

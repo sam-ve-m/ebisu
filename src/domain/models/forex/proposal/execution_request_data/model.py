@@ -57,11 +57,17 @@ class ExecutionModel:
 
     def __get_liquidation_date_by_operation(self) -> str:
         map_operation_type = {
-            "BRL_TO_USD": self.stock_market.get_liquidation_date(day=LiquidationDayOptions.D1),
-            "USD_TO_BRL": self.stock_market.get_liquidation_date(day=LiquidationDayOptions.D2),
+            "BRL_TO_USD": self.stock_market.get_liquidation_date(
+                day=LiquidationDayOptions.D1
+            ),
+            "USD_TO_BRL": self.stock_market.get_liquidation_date(
+                day=LiquidationDayOptions.D2
+            ),
         }
         liquidation_date = map_operation_type.get(self.token_decoded.exchange_hash)
-        liquidation_date_formatted = liquidation_date.strftime(RegionDateFormat.BR_DATE_ZULU_FORMAT.value)
+        liquidation_date_formatted = liquidation_date.strftime(
+            RegionDateFormat.BR_DATE_ZULU_FORMAT.value
+        )
         return liquidation_date_formatted
 
     def __get_exchange_proposal_value(self) -> float:
