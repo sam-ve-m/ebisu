@@ -59,7 +59,7 @@ from tests.src.stubs.project_stubs.stub_data import payload_data_dummy
 #     mock_earnings_response,
 # ):
 #     response = await EarningsFromClient.get_earnings_client_br_account(
-#         jwt_data=payload_data_dummy,
+#         thebes_answer=payload_data_dummy,
 #         earnings_client=EarningsClientModel(**{"region": "BR", "limit": 2}),
 #     )
 #     assert response == get_earnings_response_stub
