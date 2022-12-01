@@ -11,6 +11,7 @@ from src.domain.models.response.list_broker_note.response_model import (
     ListBrokerNoteUsResponse,
     GetBrokerNoteUsResponse,
 )
+from src.domain.models.thebes_answer.model import ThebesAnswer
 from src.domain.statement.br.response.model import (
     StatementResponse as BrStatementResponse,
 )
@@ -75,8 +76,9 @@ class ExchangeRouter:
         request: Request, broker_note: ListBrokerNoteBrModel = Depends()
     ):
         jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
+        thebes_answer = ThebesAnswer(jwt_data)
         broker_note_response = ListBrokerNote.get_list_broker_notes_br(
-            jwt_data=jwt_data, broker_note=broker_note
+            thebes_answer=thebes_answer, broker_note=broker_note
         )
         return broker_note_response
 
@@ -90,8 +92,9 @@ class ExchangeRouter:
         request: Request, broker_note: ListBrokerNoteUsModel = Depends()
     ):
         jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
+        thebes_answer = ThebesAnswer(jwt_data)
         broker_note_response = await ListBrokerNote.list_broker_notes_us(
-            jwt_data=jwt_data, broker_note=broker_note
+            thebes_answer=thebes_answer, broker_note=broker_note
         )
         return broker_note_response
 
@@ -105,8 +108,9 @@ class ExchangeRouter:
         request: Request, broker_note: GetBrokerNoteUsModel = Depends()
     ):
         jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
+        thebes_answer = ThebesAnswer(jwt_data)
         broker_note_response = await ListBrokerNote.get_broker_note_us(
-            jwt_data=jwt_data, broker_note=broker_note
+            thebes_answer=thebes_answer, broker_note=broker_note
         )
         return broker_note_response
 

@@ -20,6 +20,7 @@ from src.domain.models.database.list_broker_note.model import BrokerNoteModel
 from src.domain.models.response.list_broker_note.response_model import (
     ListBrokerNoteBrResponse,
 )
+from src.domain.models.thebes_answer.model import ThebesAnswer
 from src.domain.responses.http_response_model import ResponseModel
 from src.repositories.files.repository import FileRepository
 from src.domain.request.exchange_info.list_broker_note_validator import (
@@ -59,14 +60,9 @@ class ListBrokerNote:
 
     @staticmethod
     def get_bovespa_files_data_of_br_region(
-        jwt_data: dict, broker_note: ListBrokerNoteBrModel
+        thebes_answer: ThebesAnswer, broker_note: ListBrokerNoteBrModel
     ):
-        account = (
-            jwt_data.get("user", {})
-            .get("portfolios", {})
-            .get("br", {})
-            .get("bovespa_account")
-        )
+        account = thebes_answer.bmf_account_digit
 
         bovespa_response = ListBrokerNote.get_broker_file_notes(
             account=account,
@@ -77,14 +73,9 @@ class ListBrokerNote:
 
     @staticmethod
     def get_bmf_files_data_of_br_region(
-        jwt_data: dict, broker_note: ListBrokerNoteBrModel
+        thebes_answer: ThebesAnswer, broker_note: ListBrokerNoteBrModel
     ):
-        account = (
-            jwt_data.get("user", {})
-            .get("portfolios", {})
-            .get("br", {})
-            .get("bmf_account")
-        )
+        account = thebes_answer.bmf_account
 
         bmf_response = ListBrokerNote.get_broker_file_notes(
             account=account,
@@ -95,19 +86,17 @@ class ListBrokerNote:
 
     @staticmethod
     def get_all_market_files_of_br_regions(
-        jwt_data: dict, broker_note: ListBrokerNoteBrModel
+        thebes_answer: ThebesAnswer, broker_note: ListBrokerNoteBrModel
     ):
-        br_account = jwt_data.get("user", {}).get("portfolios", {}).get("br", {})
-
         bmf_path, bovespa_path = map(
             ListBrokerNote.generate_path,
             *zip(
                 (
-                    br_account.get("bmf_account"),
+                    thebes_answer.bmf_account,
                     broker_note,
                 ),
                 (
-                    br_account.get("bovespa_account"),
+                    thebes_answer.bmf_account_digit,
                     broker_note,
                 ),
             ),
@@ -139,7 +128,7 @@ class ListBrokerNote:
 
     @staticmethod
     def get_list_broker_notes_br(
-        jwt_data: dict, broker_note: ListBrokerNoteBrModel
+        thebes_answer: ThebesAnswer, broker_note: ListBrokerNoteBrModel
     ) -> Response:
         map_key = broker_note.market
         broker_note_possibilities = {
@@ -150,7 +139,7 @@ class ListBrokerNote:
         try:
             broker_note_option = broker_note_possibilities[map_key]
             broker_note_option = broker_note_option(
-                jwt_data=jwt_data, broker_note=broker_note
+                thebes_answer=thebes_answer, broker_note=broker_note
             )
         except KeyError:
             raise MarketOptionNotImplemented()
@@ -221,14 +210,9 @@ class ListBrokerNote:
 
     @staticmethod
     async def list_broker_notes_us(
-        jwt_data: dict, broker_note: ListBrokerNoteUsModel
+        thebes_answer: ThebesAnswer, broker_note: ListBrokerNoteUsModel
     ) -> Response:
-        account = (
-            jwt_data.get("user", {})
-            .get("portfolios", {})
-            .get("us", {})
-            .get("dw_account")
-        )
+        account = thebes_answer.dw_account
 
         from_date = datetime.strftime(
             datetime(year=broker_note.year, month=broker_note.month, day=1),
@@ -267,14 +251,9 @@ class ListBrokerNote:
 
     @staticmethod
     async def get_broker_note_us(
-        jwt_data: dict, broker_note: GetBrokerNoteUsModel
+        thebes_answer: ThebesAnswer, broker_note: GetBrokerNoteUsModel
     ) -> Response:
-        account = (
-            jwt_data.get("user", {})
-            .get("portfolios", {})
-            .get("us", {})
-            .get("dw_account")
-        )
+        account = thebes_answer.dw_account
         statement_request = GetStatementRequest(
             account=account, file_key=broker_note.file_key
         )
