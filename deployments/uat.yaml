@@ -14,12 +14,16 @@ ports:
 
 containers:
   env:
+    - name: ORACLE_BASE_CONNECTION_USER
+      value: "UEBISDB001"
+    - name: ORACLE_BASE_CONNECTION_PASS
+      value: "Eb3gq7$8k7z!Sc@"
     - name: ORACLE_BASE_CONNECTION_STRING_BR
-      value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
+      value: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
     - name: ORACLE_BASE_CONNECTION_STRING_US
-      value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
+      value: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
     - name: ORACLE_POSITION_CONNECTION_STRING
-      value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
+      value: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
     - name: MONGO_CONNECTION_URL
       value: "mongodb://ebisu:FAoqdk31Ljdn@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=ebisu"
     - name: MONGODB_DATABASE_NAME
@@ -131,7 +135,7 @@ containers:
     - name: MEPHO_REDIS_DB
       value: "1"
     - name: MEPHO_CLIENT_LOCK_MANAGER_REDIS_URLS
-      value: '["redis://:foobared@127.0.0.1:6379?db=1", "redis://:foobared@127.0.0.1:6378?db=1", "redis://:foobared@127.0.0.1:6377?db=1", "redis://:foobared@127.0.0.1:6376?db=1", "redis://:foobared@127.0.0.1:6375?db=1"]'
+      value: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
     - name: MEPHO_CLIENT_AUTHENTICATION_RETRY_COUNT
       value: "3"
     - name: MEPHO_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN
