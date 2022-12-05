@@ -50,9 +50,12 @@ def test_when_params_are_valid_for_us_market_then_get_broker_note_link_as_expect
     mock_generate_path,
 ):
 
-    response = ListBrokerNote.get_list_broker_note(jwt_data=payload_data_us_gringa_dummy, broker_note=MagicMock(
-        region=BrokerNoteRegion.US, market=BrokerNoteMarket.US, year=2022, month=4
-    ))
+    response = ListBrokerNote.get_list_broker_notes_br(
+        thebes_answer=payload_data_us_gringa_dummy,
+        broker_note=MagicMock(
+            region=BrokerNoteRegion.US, market=BrokerNoteMarket.US, year=2022, month=4
+        ),
+    )
     mock_get_month_broker_notes.assert_called_with(
         market=BrokerNoteMarket.US,
         region=BrokerNoteRegion.US,
@@ -79,9 +82,12 @@ def test_when_jwt_data_and_broker_note_is_valid_to_bmf_market_then_return_the_re
     mock_generate_file_link,
     mock_generate_path,
 ):
-    response_bmf = ListBrokerNote.get_list_broker_note(jwt_data=payload_data_dummy, broker_note=MagicMock(
-        region=BrokerNoteRegion.BR, market=BrokerNoteMarket.BMF, year=2022, month=4
-    ))
+    response_bmf = ListBrokerNote.get_list_broker_notes_br(
+        thebes_answer=payload_data_dummy,
+        broker_note=MagicMock(
+            region=BrokerNoteRegion.BR, market=BrokerNoteMarket.BMF, year=2022, month=4
+        ),
+    )
     mock_get_month_broker_notes.assert_called_with(
         market=BrokerNoteMarket.BMF,
         region=BrokerNoteRegion.BR,
@@ -108,9 +114,12 @@ def test_when_jwt_data_and_broker_note_is_valid_to_bovespa_market_then_return_th
     mock_generate_file_link,
     mock_generate_path,
 ):
-    response = ListBrokerNote.get_list_broker_note(jwt_data=payload_data_dummy, broker_note=MagicMock(
-        region="BR", market=BrokerNoteMarket.BOVESPA, year=2022, month=4
-    ))
+    response = ListBrokerNote.get_list_broker_notes_br(
+        thebes_answer=payload_data_dummy,
+        broker_note=MagicMock(
+            region="BR", market=BrokerNoteMarket.BOVESPA, year=2022, month=4
+        ),
+    )
     mock_get_month_broker_notes.assert_called_with(
         market=BrokerNoteMarket.BOVESPA,
         region="BR",
@@ -141,9 +150,12 @@ def test_when_jwt_data_and_broker_note_is_valid_to_bovespa_market_then_return_th
     mock_generate_file_link,
     mock_generate_path,
 ):
-    response = ListBrokerNote.get_list_broker_note(jwt_data=payload_data_us_gringa_dummy, broker_note=MagicMock(
-        region=BrokerNoteRegion.ALL, market=BrokerNoteMarket.ALL, year=2022, month=4
-    ))
+    response = ListBrokerNote.get_list_broker_notes_br(
+        thebes_answer=payload_data_us_gringa_dummy,
+        broker_note=MagicMock(
+            region=BrokerNoteRegion.ALL, market=BrokerNoteMarket.ALL, year=2022, month=4
+        ),
+    )
 
     assert response == all_broker_note_from_all_markets_dummy
     assert response[0]["market"] == "us"
@@ -167,9 +179,12 @@ def test_when_jwt_data_and_broker_note_is_valid_to_all_market_and_br_then_return
     mock_generate_file_link,
     mock_generate_path,
 ):
-    response = ListBrokerNote.get_list_broker_note(jwt_data=payload_data_dummy, broker_note=MagicMock(
-        region=BrokerNoteRegion.BR, market=BrokerNoteMarket.ALL, year=2022, month=4
-    ))
+    response = ListBrokerNote.get_list_broker_notes_br(
+        thebes_answer=payload_data_dummy,
+        broker_note=MagicMock(
+            region=BrokerNoteRegion.BR, market=BrokerNoteMarket.ALL, year=2022, month=4
+        ),
+    )
 
     assert response == broker_note_from_br_markets_dummy
     assert response[0]["market"] == "all"
@@ -193,9 +208,12 @@ def test_when_jwt_data_and_broker_note_is_valid_to_bovespa_market_then_return_th
     mock_generate_file_link,
     mock_generate_path,
 ):
-    response = ListBrokerNote.get_list_broker_note(jwt_data=payload_data_us_gringa_dummy, broker_note=MagicMock(
-        region=BrokerNoteRegion.ALL, market=BrokerNoteMarket.US, year=2022, month=4
-    ))
+    response = ListBrokerNote.get_list_broker_notes_br(
+        thebes_answer=payload_data_us_gringa_dummy,
+        broker_note=MagicMock(
+            region=BrokerNoteRegion.ALL, market=BrokerNoteMarket.US, year=2022, month=4
+        ),
+    )
 
     assert response == month_broker_note_us_dummy
     assert response[0]["market"] == "us"
@@ -247,11 +265,13 @@ async def test_when_sending_the_right_file_path_then_return_a_valid_generated_fi
 
 def test_when_not_passing_either_jwt_and_broker_note_params_to_request_body_then_return_attr_error():
     with pytest.raises(AttributeError) as err:
-        ListBrokerNote.get_list_broker_note(jwt_data="", broker_note="")
+        ListBrokerNote.get_list_broker_notes_br(thebes_answer="", broker_note="")
         assert err == "'str' object has no attribute 'get'"
 
 
 def test_when_params_of_broker_note_pydantic_are_invalid_then_raise_attr_error():
     with pytest.raises(AttributeError) as err:
-        ListBrokerNote.get_list_broker_note(jwt_data=payload_data_dummy, broker_note="")
+        ListBrokerNote.get_list_broker_notes_br(
+            thebes_answer=payload_data_dummy, broker_note=""
+        )
         assert err == "AttributeError: 'str' object has no attribute 'region'"

@@ -33,7 +33,7 @@ from tests.src.stubs.project_stubs.stub_get_statement import (
 #     mock_get_data,
 # ):
 #     statement_response = await GetStatement.get_br_bank_statement(
-#         jwt_data=payload_data_dummy, statement=statement_valid_params
+#         thebes_answer=payload_data_dummy, statement=statement_valid_params
 #     )
 #     assert statement_response == dummy_bank_statement_response
 #     assert statement_response.get("balance") == 10000.2
@@ -50,7 +50,7 @@ from tests.src.stubs.project_stubs.stub_get_statement import (
 #     mock_get_data,
 # ):
 #     statement_response = await GetStatement.get_br_bank_statement(
-#         jwt_data=payload_data_dummy, statement=statement_params
+#         thebes_answer=payload_data_dummy, statement=statement_params
 #     )
 #     assert statement_response == {"balance": None, "statements": []}
 
@@ -62,7 +62,7 @@ from tests.src.stubs.project_stubs.stub_get_statement import (
 #     mock_get_dw_statement,
 # ):
 #     statement_response = await GetStatement.get_br_bank_statement(
-#         jwt_data=payload_data_us_gringa_dummy,
+#         thebes_answer=payload_data_us_gringa_dummy,
 #         statement=GetBrStatement(
 #             **{
 #                 "region": Region.US,

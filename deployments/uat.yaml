@@ -14,28 +14,12 @@ ports:
 
 containers:
   env:
-    - name: ORACLE_BASE_USER
-      value: "UEBISDB001"
-    - name: ORACLE_BASE_PASSWORD
-      value: "JLhvdjkhbfacdui32uhj"
-    - name: ORACLE_BASE_DSN
-      value: "172.30.18.44"
-    - name: ORACLE_BASE_PORT
-      value: "1521"
-    - name: ORACLE_BASE_SERVICE_US
-      value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
-    - name: ORACLE_BASE_SERVICE_BR
-      value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
-    - name: ORACLE_POSITION_USER
-      value: "UEBISDB001"
-    - name: ORACLE_POSITION_PASSWORD
-      value: "JLhvdjkhbfacdui32uhj"
-    - name: ORACLE_POSITION_DSN
-      value: "172.30.18.44"
-    - name: ORACLE_POSITION_PORT
-      value: "1521"
-    - name: ORACLE_POSITION_SERVICE
-      value: "OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM"
+    - name: ORACLE_BASE_CONNECTION_STRING_BR
+      value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
+    - name: ORACLE_BASE_CONNECTION_STRING_US
+      value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
+    - name: ORACLE_POSITION_CONNECTION_STRING
+      value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
     - name: MONGO_CONNECTION_URL
       value: "mongodb://ebisu:FAoqdk31Ljdn@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=ebisu"
     - name: MONGODB_DATABASE_NAME
@@ -62,6 +46,10 @@ containers:
       value: "https://bo-api.drivewealth.io/back-office/accounts/{}/transactions"
     - name: DW_POSITIONS_URL
       value: "https://bo-api.drivewealth.io/back-office/accounts/{}/summary/positions"
+    - name: DW_CONFIRMATION_URL
+      value: "https://bo-api.drivewealth.io/back-office/accounts/{}/confirms"
+    - name: DW_STATEMENT_URL
+      value: "https://bo-api.drivewealth.io/back-office/statements/{}/{}"
     - name: FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL
       value: 'redis://ebisu:Vddnjer321F@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379'
     - name: FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB

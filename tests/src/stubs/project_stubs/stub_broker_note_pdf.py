@@ -52,7 +52,7 @@ month_broker_notes_dirs_bmf_br = {
         "HTTPStatusCode": 200,
         "HTTPHeaders": {
             "x-amz-id-2": "PXZYLrTWpywLF56MwUy2Y25uPx0MwvxMYCUBoFN05AqPH96TQuK9WCBtlwNz+RXoTCJjstWyoDs=",
-            "x-amz-request-id": "XR6HMV9M30YVDS2Q",
+            "x-amz-broker_note-id": "XR6HMV9M30YVDS2Q",
             "date": "Wed, 04 May 2022 13:43:12 GMT",
             "x-amz-bucket-region": "sa-east-1",
             "content-type": "application/xml",

@@ -174,28 +174,12 @@ spec:
               value: "mongodb://ebisu:DAlnafcnmmcsa1@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary"
             - name: MONGO_DATABASE_POSEIDON
               value: "poseidon"
-            - name: ORACLE_BASE_DSN
-              value: "172.30.10.227"
-            - name: ORACLE_BASE_PASSWORD
-              value: "Eb3gq7$8k7z!Sc@"
-            - name: ORACLE_BASE_PORT
-              value: "1521"
-            - name: ORACLE_BASE_SERVICE_BR
-              value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
-            - name: ORACLE_BASE_SERVICE_US
-              value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
-            - name: ORACLE_BASE_USER
-              value: "UEBISDB001"
-            - name: ORACLE_POSITION_DSN
-              value: "172.30.10.227"
-            - name: ORACLE_POSITION_PASSWORD
-              value: "Eb3gq7$8k7z!Sc@"
-            - name: ORACLE_POSITION_PORT
-              value: "1521"
-            - name: ORACLE_POSITION_SERVICE
-              value: "OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM"
-            - name: ORACLE_POSITION_USER
-              value: "UEBISDB001"
+            - name: ORACLE_BASE_CONNECTION_STRING_BR
+              value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
+            - name: ORACLE_BASE_CONNECTION_STRING_US
+              value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
+            - name: ORACLE_POSITION_CONNECTION_STRING
+              value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
             - name: PERSEPHONE_KAFKA_BROKERS
               value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
             - name: PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT

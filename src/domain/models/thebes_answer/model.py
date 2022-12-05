@@ -1,5 +1,8 @@
 # Ebisu
-from src.domain.exceptions.domain.model.thebes_answer.model import BrAccountIsBlocked, DataNotFoundInJwt
+from src.domain.exceptions.domain.model.thebes_answer.model import (
+    BrAccountIsBlocked,
+    DataNotFoundInJwt,
+)
 
 
 class ThebesAnswer:
@@ -48,7 +51,9 @@ class ThebesAnswer:
         return unique_id
 
     def account_br_is_blocked(self):
-        account_br_is_blocked = self.jwt_data.get("user", {}).get("account_br_is_blocked")
+        account_br_is_blocked = self.jwt_data.get("user", {}).get(
+            "account_br_is_blocked"
+        )
         if account_br_is_blocked is None:
             raise DataNotFoundInJwt()
 

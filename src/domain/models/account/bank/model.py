@@ -1,7 +1,10 @@
 from src.core.interfaces.domain.models.internal.account_transfer.interface import (
     IAccountTransfer,
 )
-from src.domain.exceptions.domain.model.account.model import InvalidAccountsOwnership, NotMappedCurrency
+from src.domain.exceptions.domain.model.account.model import (
+    InvalidAccountsOwnership,
+    NotMappedCurrency,
+)
 from src.domain.models.account.fingerprint.model import Fingerprint, IsPrimaryAccount
 from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.domain.enums.region import Region

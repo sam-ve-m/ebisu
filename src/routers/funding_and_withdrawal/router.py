@@ -35,9 +35,7 @@ class FundingAndWithdrawalRouter:
     async def add_funding(request: Request, user_money_flow: UserMoneyFlowSameExchange):
 
         jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
-        await JwtService.validate_mist(
-            request=request, user_data=jwt_data["user"]
-        )
+        await JwtService.validate_mist(request=request, user_data=jwt_data["user"])
         get_user_bank_accounts_response = (
             await FundingAndWithdrawalService.money_flow_between_user_dtvm_accounts(
                 money_flow=user_money_flow, jwt_data=jwt_data
@@ -60,9 +58,7 @@ class FundingAndWithdrawalRouter:
         request: Request, user_withdrawal: UserMoneyFlowToExternalBank
     ):
         jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
-        await JwtService.validate_mist(
-            request=request, user_data=jwt_data["user"]
-        )
+        await JwtService.validate_mist(request=request, user_data=jwt_data["user"])
 
         jwt = ThebesAnswer(jwt_data=jwt_data)
         jwt.account_br_is_blocked()

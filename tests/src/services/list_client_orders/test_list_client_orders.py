@@ -10,6 +10,7 @@ from src.domain.request.exchange_info.list_client_order_validator import (
 )
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 from src.services.orders.strategies import GetBrOrders
+
 # from src.services.list_client_orders.list_client_orders import ListOrders
 # from src.services.list_client_orders.strategies import GetBrOrders
 from tests.src.stubs.project_stubs.stub_data import (
@@ -110,7 +111,7 @@ list_data_dummy = [OrderStatus.NEW, OrderStatus.FILLED]
 # ):
 #     mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrders)
 #     response = await ListOrders.get_list_client_orders(
-#         jwt_data=payload_data_dummy,
+#         thebes_answer=payload_data_dummy,
 #         list_client_orders=MagicMock(
 #             region=MagicMock(value="BR"), order_status=["NEW", "CANCELLED"]
 #         ),
@@ -141,7 +142,7 @@ list_data_dummy = [OrderStatus.NEW, OrderStatus.FILLED]
 # ):
 #     mock_order_region.__getitem__ = MagicMock(return_value=GetBrOrders)
 #     response = await Orders.get_service_response(
-#         jwt_data=payload_data_dummy,
+#         thebes_answer=payload_data_dummy,
 #         list_client_orders=MagicMock(
 #             region=MagicMock(value="BR"), order_status=["FILLED"]
 #         ),
@@ -156,7 +157,7 @@ list_data_dummy = [OrderStatus.NEW, OrderStatus.FILLED]
 # async def test_when_sending_wrong_params_then_return_an_empty_object():
 #     with pytest.raises(AttributeError) as err:
 #         response = await ListOrders.get_list_client_orders(
-#             jwt_data=MagicMock(),
+#             thebes_answer=MagicMock(),
 #             list_client_orders=MagicMock(region=MagicMock(value=None), order_status=[]),
 #         )
 #         assert response == "'NoneType' object has no attribute 'lower'"
@@ -166,7 +167,7 @@ list_data_dummy = [OrderStatus.NEW, OrderStatus.FILLED]
 # async def test_when_jwt_data_payload_is_invalid_then_check_if_portfolios_is_in_the_payload_response():
 #     with pytest.raises(AttributeError) as err:
 #         response = await ListOrders.get_list_client_orders(
-#             jwt_data=payload_invalid_data_dummy,
+#             thebes_answer=payload_invalid_data_dummy,
 #             list_client_orders=MagicMock(region="BR", order_status=MagicMock()),
 #         )
 #         assert response == AttributeError
@@ -176,7 +177,7 @@ list_data_dummy = [OrderStatus.NEW, OrderStatus.FILLED]
 # async def test_when_jwt_data_payload_is_none_then_raise_attribute_error():
 #     with pytest.raises(AttributeError) as err:
 #         response = await ListOrders.get_list_client_orders(
-#             jwt_data="",
+#             thebes_answer="",
 #             list_client_orders=MagicMock(region="BR", order_status=MagicMock()),
 #         )
 #         assert response == AttributeError

@@ -1,7 +1,13 @@
 # Ebisu
 from src.domain.exceptions.repository.forex.model import CustomerForexDataNotFound
-from src.domain.exceptions.service.forex.model import ExpiredToken, InvalidToken, DroppedToken, CaronteCantFindToken, \
-    UnexpectedErrorInExchangeAPI, InconsistentResultInRoute21
+from src.domain.exceptions.service.forex.model import (
+    ExpiredToken,
+    InvalidToken,
+    DroppedToken,
+    CaronteCantFindToken,
+    UnexpectedErrorInExchangeAPI,
+    InconsistentResultInRoute21,
+)
 from unittest.mock import patch, MagicMock
 from decouple import Config
 

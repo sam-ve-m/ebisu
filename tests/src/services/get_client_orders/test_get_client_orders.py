@@ -58,7 +58,7 @@ def test_tiff_response_converter_when_sending_no_params_then_return_the_expected
 #         client_order=MagicMock(
 #             region=Region.BR, cl_order_id="008cf873-ee2a-4b08-b277-74b8b17f6e64"
 #         ),
-#         jwt_data=payload_data_dummy,
+#         thebes_answer=payload_data_dummy,
 #     )
 #
 #     assert response == client_order_response_dummy

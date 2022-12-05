@@ -26,7 +26,9 @@ class UserBankAccountRepository(MongoBaseRepository):
                 },
             },
         )
-        bank_accounts_result = user_bank_accounts_by_unique_id.get("bank_accounts") or []
+        bank_accounts_result = (
+            user_bank_accounts_by_unique_id.get("bank_accounts") or []
+        )
         user_bank_accounts_response = [
             BankAccountModel(**symbol) for symbol in bank_accounts_result
         ]

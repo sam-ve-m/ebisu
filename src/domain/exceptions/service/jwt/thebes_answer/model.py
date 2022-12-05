@@ -4,7 +4,6 @@ from http import HTTPStatus
 
 
 class InvalidJwt(ServiceException):
-
     def __init__(self, *args, **kwargs):
         self.msg = "Unauthorized user"
         self.status_code = HTTPStatus.UNAUTHORIZED

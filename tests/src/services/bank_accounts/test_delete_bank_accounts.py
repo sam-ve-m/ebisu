@@ -80,10 +80,10 @@ async def test_delete_user_when_sending_an_invalid_bank_repository_and_invalid_j
 #     mock_update_registered_user_bank_accounts,
 #     mock_send_to_persephone,
 # ):
-#     jwt_data = deepcopy(jwt_with_bank_account_to_delete)
+#     thebes_answer = deepcopy(jwt_with_bank_account_to_delete)
 #     with pytest.raises(BadRequestError):
 #         await UserBankAccountService.delete_user_bank_account(
-#             jwt_data=jwt_data,
+#             thebes_answer=thebes_answer,
 #             bank_account_repository=UserBankAccountRepository,
 #         )
 

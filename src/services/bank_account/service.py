@@ -5,7 +5,10 @@ from fastapi.openapi.models import Response
 
 from nidavellir import Sindri
 from src.domain.enums.persephone import PersephoneSchema, PersephoneQueue
-from src.domain.exceptions.service.bank_account.model import BankAccountAlreadyExists, BankAccountNotExists
+from src.domain.exceptions.service.bank_account.model import (
+    BankAccountAlreadyExists,
+    BankAccountNotExists,
+)
 from src.domain.exceptions.service.auditing_trail.model import FailToSaveAuditingTrail
 from src.domain.exceptions.service.unexpected.internal_server_error.model import InternalServerError
 from src.domain.models.device_info.dto import DeviceInfo

@@ -3,8 +3,9 @@ from datetime import datetime
 from src.core.interfaces.domain.models.internal.account_transfer.interface import (
     IAccountTransfer,
 )
-from src.domain.exceptions.service.funding_and_withdraw.money_flow_resolvers.model import \
-    MoneyFlowPerformedOutsideTransactionWindow
+from src.domain.exceptions.service.funding_and_withdraw.money_flow_resolvers.model import (
+    MoneyFlowPerformedOutsideTransactionWindow,
+)
 
 from src.infrastructures.env_config import config
 from src.transport.bank_transfer.bifrost.transport import BankTransferBifrostTransport

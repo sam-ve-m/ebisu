@@ -31,7 +31,9 @@ class SimulationResponseModel:
         self.token = content_22_validated.token
         self.quote_currency_symbol = content_22_validated.valores.simboloMoedaCotacao
         self.quote_date = content_22_validated.valores.dataCotacao
-        self.quantity_currency_traded = content_22_validated.valores.quantidadeMoedaNegociada
+        self.quantity_currency_traded = (
+            content_22_validated.valores.quantidadeMoedaNegociada
+        )
         self.spread_percentage = content_22_validated.valores.percentualSpread
         self.tax_value = content_22_validated.valores.valorTarifa
         self.total_effective_value = content_22_validated.valores.vet

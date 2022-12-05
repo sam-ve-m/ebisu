@@ -89,10 +89,8 @@ class EarningsFromClient:
             ),
         )
 
-        earnings_us_transactions = (
-            await DwEarningsTransport.get_transaction_earnings(
-                transaction_request=transaction_request
-            )
+        earnings_us_transactions = await DwEarningsTransport.get_transaction_earnings(
+            transaction_request=transaction_request
         )
 
         earnings_us_transactions_response = EarningsModelToResponse.earnings_response(
