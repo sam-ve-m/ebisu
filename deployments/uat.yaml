@@ -150,6 +150,10 @@ containers:
       value: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
     - name: PERSEPHONE_TOPIC_CLIENT_BANK_ACCOUNT
       value: "ebisu-persephone.client.bank_account"
+    - name: PERSEPHONE_TOPIC_MONEY_MOVEMENT_EXCHANGE
+      value: "ebisu-persephone.money_movement.exchange_forex"
+    - name: PERSEPHONE_TOPIC_MONEY_MOVEMENT_TRANSFERENCE
+      value: "ebisu-persephone.money_movement.transference"
     - name: FLOKI_SINACOR_BASE_IP
       value: "172.30.19.203:25149"
     - name: FLOKI_SINACOR_AUTHENTICATION_ROUTE
