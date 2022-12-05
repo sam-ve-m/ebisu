@@ -14,23 +14,32 @@ class OracleInfrastructure(IOracleInfrastructure):
     @classmethod
     def get_base_connection_br(cls):
         dsn = config("ORACLE_BASE_CONNECTION_STRING_BR")
-        return cls._get_connection(dsn, cls._base_connection_br)
+        if cls._base_connection_br is None:
+            cls._base_connection_br = cls._get_connection(dsn)
+        return cls._base_connection_br
 
     @classmethod
     def get_base_connection_us(cls):
         dsn = config("ORACLE_BASE_CONNECTION_STRING_US")
-        return cls._get_connection(dsn, cls._base_connection_us)
+        if cls._base_connection_us is None:
+            cls._base_connection_us = cls._get_connection(dsn)
+        return cls._base_connection_us
 
     @classmethod
     def get_position_connection(cls):
         dsn = config("ORACLE_POSITION_CONNECTION_STRING")
-        return cls._get_connection(dsn, cls._position_connection)
+        if cls._position_connection is None:
+            cls._position_connection = cls._get_connection(dsn)
+        return cls._position_connection
 
     @staticmethod
-    def _get_connection(dsn, connection):
+    def _get_connection(dsn):
         try:
-            if connection is None:
-                connection = cx_Oracle.SessionPool(dsn)
+            connection = cx_Oracle.SessionPool(
+                user=config("ORACLE_BASE_CONNECTION_USER"),
+                password=config("ORACLE_BASE_CONNECTION_PASS"),
+                dsn=dsn
+            )
             return connection
         except Exception as exception:
             Gladsheim.error(
@@ -38,3 +47,7 @@ class OracleInfrastructure(IOracleInfrastructure):
                 error=exception,
             )
             raise exception
+
+
+if __name__ == "__main__":
+    OracleInfrastructure.get_position_connection()
