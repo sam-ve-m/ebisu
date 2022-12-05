@@ -1,6 +1,6 @@
 # STANDARD LIBS
 from enum import Enum
-from fastapi import Query
+
 from pydantic import BaseModel, Extra, validator
 
 
@@ -18,8 +18,8 @@ class BrokerNoteRegion(Enum):
 
 class ListBrokerNoteBrModel(BaseModel):
     market: BrokerNoteMarket
-    year: int = Query(None)
-    month: int = Query(None)
+    year: int
+    month: int
 
     @validator("year")
     def validate_year(cls, value):
@@ -38,8 +38,8 @@ class ListBrokerNoteBrModel(BaseModel):
 
 
 class ListBrokerNoteUsModel(BaseModel):
-    year: int = Query(None)
-    month: int = Query(None)
+    year: int
+    month: int
 
     @validator("year")
     def validate_year(cls, value):
@@ -58,7 +58,7 @@ class ListBrokerNoteUsModel(BaseModel):
 
 
 class GetBrokerNoteUsModel(BaseModel):
-    file_key: str = Query(None)
+    file_key: str
 
     class Config:
         extra = Extra.forbid
