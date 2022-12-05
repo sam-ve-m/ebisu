@@ -6,7 +6,6 @@ from src.transport.device_info.transport import DeviceSecurity
 
 
 class DeviceInfoService:
-
     @staticmethod
     def __get_device_info_from_headers(request: Request) -> str:
         for header_tuple in request.headers.raw:
@@ -21,7 +20,6 @@ class DeviceInfoService:
         decrypted_device_info = await DeviceSecurity.decrypt_device_info(device_info)
         device_id = await DeviceSecurity.generate_device_id(device_info)
         device_info_dto = DeviceInfo(
-            decrypted_device_info=decrypted_device_info,
-            device_id=device_id
+            decrypted_device_info=decrypted_device_info, device_id=device_id
         )
         return device_info_dto

@@ -10,7 +10,9 @@ from src.domain.exceptions.service.bank_account.model import (
     BankAccountNotExists,
 )
 from src.domain.exceptions.service.auditing_trail.model import FailToSaveAuditingTrail
-from src.domain.exceptions.service.unexpected.internal_server_error.model import InternalServerError
+from src.domain.exceptions.service.unexpected.internal_server_error.model import (
+    InternalServerError,
+)
 from src.domain.models.device_info.dto import DeviceInfo
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
 from src.repositories.bank_account.repository import UserBankAccountRepository
@@ -28,8 +30,10 @@ from http import HTTPStatus
 class UserBankAccountService:
     @classmethod
     async def create_user_bank_accounts(
-        cls, jwt_data: dict, device_info: DeviceInfo,
-            bank_account_repository=UserBankAccountRepository
+        cls,
+        jwt_data: dict,
+        device_info: DeviceInfo,
+        bank_account_repository=UserBankAccountRepository,
     ) -> Response:
         thebes_answer = jwt_data["x-thebes-answer"]
         unique_id = thebes_answer["user"]["unique_id"]
@@ -102,8 +106,10 @@ class UserBankAccountService:
 
     @classmethod
     async def update_user_bank_account(
-        cls, jwt_data: dict, device_info: DeviceInfo,
-            bank_account_repository=UserBankAccountRepository
+        cls,
+        jwt_data: dict,
+        device_info: DeviceInfo,
+        bank_account_repository=UserBankAccountRepository,
     ) -> Response:
         thebes_answer = jwt_data["x-thebes-answer"]
         unique_id = thebes_answer["user"]["unique_id"]
@@ -154,8 +160,10 @@ class UserBankAccountService:
 
     @classmethod
     async def delete_user_bank_account(
-        cls, jwt_data: dict, device_info: DeviceInfo,
-            bank_account_repository=UserBankAccountRepository
+        cls,
+        jwt_data: dict,
+        device_info: DeviceInfo,
+        bank_account_repository=UserBankAccountRepository,
     ) -> Response:
         thebes_answer = jwt_data["x-thebes-answer"]
         unique_id = thebes_answer["user"]["unique_id"]

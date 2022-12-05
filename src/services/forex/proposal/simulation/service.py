@@ -4,14 +4,19 @@ from typing import Union
 from persephone_client import Persephone
 
 from src.domain.enums.persephone import PersephoneQueue, PersephoneSchema
-from src.domain.exceptions.domain.model.forex.model import ErrorValidatingSimulationProposalData
+from src.domain.exceptions.domain.model.forex.model import (
+    ErrorValidatingSimulationProposalData,
+)
 from src.domain.exceptions.repository.forex.model import CustomerForexDataNotFound
 from src.domain.exceptions.service.forex.model import (
     InconsistentResultInRoute21,
     InconsistentResultInRoute22,
 )
 from src.domain.exceptions.service.auditing_trail.model import FailToSaveAuditingTrail
-from src.domain.exceptions.service.forex.model import CustomerQuotationTokenNotFound, ErrorTryingToGetUniqueId
+from src.domain.exceptions.service.forex.model import (
+    CustomerQuotationTokenNotFound,
+    ErrorTryingToGetUniqueId,
+)
 from src.domain.models.device_info.dto import DeviceInfo
 from src.domain.models.forex.proposal.simulation_request_data.model import (
     SimulationModel,
@@ -39,8 +44,7 @@ from etria_logger import Gladsheim
 class ForexSimulation:
     @classmethod
     async def get_proposal_simulation(
-        cls, jwt_data: dict, payload: CurrencyExchange,
-            device_info: DeviceInfo
+        cls, jwt_data: dict, payload: CurrencyExchange, device_info: DeviceInfo
     ) -> dict:
         unique_id = ThebesAnswer(jwt_data=jwt_data).unique_id
         client_id = await ForexAccount.get_client_id(unique_id=unique_id)
@@ -63,7 +67,7 @@ class ForexSimulation:
             customer_token=content_21_validated.token,
             simulation_model=simulation_model,
         )
-        
+
         content_22_validated = await cls.__validate_route_22_result_content(
             content=content_22
         )
@@ -114,9 +118,7 @@ class ForexSimulation:
 
     @staticmethod
     async def __log_in_persephone_to_audit(
-        exchange_simulation_proposal_data: dict,
-        device_info: DeviceInfo,
-        unique_id: str
+        exchange_simulation_proposal_data: dict, device_info: DeviceInfo, unique_id: str
     ):
         (
             sent_to_persephone,

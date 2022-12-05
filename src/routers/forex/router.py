@@ -31,8 +31,7 @@ class ForexExchange:
         jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
         device_info = await DeviceInfoService.get_device_info(request)
         result = await ForexSimulation.get_proposal_simulation(
-            jwt_data=jwt_data, payload=payload,
-            device_info=device_info
+            jwt_data=jwt_data, payload=payload, device_info=device_info
         )
         response = ResponseModel(
             success=True, result=result, internal_code=InternalCode.SUCCESS
@@ -45,12 +44,11 @@ class ForexExchange:
         request: Request, payload: ForexSimulationToken
     ) -> Response:
         jwt_data = await JwtService.validate_and_decode_thebes_answer(request=request)
-        await JwtService.validate_mist(
-            request=request, user_data=jwt_data["user"]
-        )
+        await JwtService.validate_mist(request=request, user_data=jwt_data["user"])
         device_info = await DeviceInfoService.get_device_info(request)
         success = await ForexExecution.execute_proposal(
-            payload=payload, jwt_data=jwt_data,
+            payload=payload,
+            jwt_data=jwt_data,
             device_info=device_info,
         )
         response = ResponseModel(

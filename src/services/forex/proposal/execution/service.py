@@ -8,10 +8,17 @@ from persephone_client import Persephone
 
 from src.domain.date_formatters.region.enum.date_format.enum import RegionDateFormat
 from src.domain.enums.persephone import PersephoneQueue, PersephoneSchema
-from src.domain.exceptions.repository.forex.model import CustomerPersonalDataNotFound, ErrorTryingToInsertData
+from src.domain.exceptions.repository.forex.model import (
+    CustomerPersonalDataNotFound,
+    ErrorTryingToInsertData,
+)
 from src.domain.exceptions.service.auditing_trail.model import FailToSaveAuditingTrail
-from src.domain.exceptions.service.forex.model import InsufficientFunds, ErrorTryingToLockResource, ErrorTryingToUnlock, \
-    InconsistentResultInRoute23
+from src.domain.exceptions.service.forex.model import (
+    InsufficientFunds,
+    ErrorTryingToLockResource,
+    ErrorTryingToUnlock,
+    InconsistentResultInRoute23,
+)
 from src.domain.models.device_info.dto import DeviceInfo
 from src.domain.models.forex.balance.model import AllowedWithdraw
 from src.domain.models.forex.proposal.execution_request_data.model import ExecutionModel
@@ -34,8 +41,10 @@ from src.transport.forex.bifrost.transport import BifrostTransport
 class ForexExecution:
     @classmethod
     async def execute_proposal(
-        cls, payload: ForexSimulationToken, jwt_data: dict,
-            device_info: DeviceInfo,
+        cls,
+        payload: ForexSimulationToken,
+        jwt_data: dict,
+        device_info: DeviceInfo,
     ) -> True:
         token_decoded = await DecryptService.decode(
             jwt_token=payload.proposal_simulation_token
@@ -61,7 +70,8 @@ class ForexExecution:
         )
 
         await cls.__log_in_persephone_to_audit_after_execution(
-            execution_model, device_info,
+            execution_model,
+            device_info,
             content,
         )
 
@@ -81,7 +91,9 @@ class ForexExecution:
         return True
 
     @staticmethod
-    def _get_persephone_template(execution_model: ExecutionModel, device_info: DeviceInfo):
+    def _get_persephone_template(
+        execution_model: ExecutionModel, device_info: DeviceInfo
+    ):
         persephone_template = {
             "unique_id": execution_model.thebes_answer.unique_id,
             "origin_account_number": execution_model.origin_account,
@@ -91,7 +103,9 @@ class ForexExecution:
             "exchange_proposal_value": execution_model.exchange_proposal_value,
             "balance_country": execution_model.halberd_country,
             "operation_type": execution_model.operation_type,
-            "next_d2": datetime.strptime(execution_model.next_d2, RegionDateFormat.BR_DATE_ZULU_FORMAT.value).timestamp(),
+            "next_d2": datetime.strptime(
+                execution_model.next_d2, RegionDateFormat.BR_DATE_ZULU_FORMAT.value
+            ).timestamp(),
             "token": execution_model.token,
             "device_id": device_info.device_id,
             "device_info": device_info.decrypted_device_info,
@@ -100,9 +114,7 @@ class ForexExecution:
 
     @classmethod
     async def __log_in_persephone_to_audit_before_executing(
-            cls,
-            execution_model: ExecutionModel,
-            device_info: DeviceInfo
+        cls, execution_model: ExecutionModel, device_info: DeviceInfo
     ):
         persephone_template = cls._get_persephone_template(execution_model, device_info)
         (
@@ -119,10 +131,10 @@ class ForexExecution:
 
     @classmethod
     async def __log_in_persephone_to_audit_after_execution(
-            cls,
-            execution_model: ExecutionModel,
-            device_info: DeviceInfo,
-            execution_report: dict,
+        cls,
+        execution_model: ExecutionModel,
+        device_info: DeviceInfo,
+        execution_report: dict,
     ):
         persephone_template = cls._get_persephone_template(execution_model, device_info)
         persephone_template["execution_report"] = execution_report

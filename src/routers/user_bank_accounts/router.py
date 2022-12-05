@@ -80,7 +80,7 @@ class UserBankAccountsRouter:
             await UserBankAccountService.update_user_bank_account(
                 jwt_data=jwt_data,
                 device_info=device_info,
-        )
+            )
         )
         return update_bank_account_response
 

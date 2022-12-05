@@ -12,7 +12,9 @@ from src.domain.broker_note.us.request.model import (
     ConfirmationRequest,
     GetStatementRequest,
 )
-from src.domain.exceptions.transport.drive_wealth.base.model import FailToGetDataFromTransportLayer
+from src.domain.exceptions.transport.drive_wealth.base.model import (
+    FailToGetDataFromTransportLayer,
+)
 from src.infrastructures.env_config import config
 from src.transport.drive_wealth.base.transport import DwBaseTransport
 
@@ -21,7 +23,9 @@ class DwConfirmationTransport(DwBaseTransport):
     @staticmethod
     async def __execute_get(url: str, query_params: dict):
         try:
-            response = await DWApiTransport.execute_get(url=url, query_params=query_params)
+            response = await DWApiTransport.execute_get(
+                url=url, query_params=query_params
+            )
         except Exception as error:
             Gladsheim.error(
                 error=error,
@@ -70,9 +74,7 @@ class DwConfirmationTransport(DwBaseTransport):
         account = confirmation_request.get_account()
         url_formatted = confirmation_url.format(account)
 
-        response = await cls.__execute_get(
-            url=url_formatted, query_params=query_params
-        )
+        response = await cls.__execute_get(url=url_formatted, query_params=query_params)
 
         body = await response.text()
         confirmations = json.loads(body)
@@ -116,4 +118,3 @@ class DwConfirmationTransport(DwBaseTransport):
             request=final_url, response=response
         )
         return statement
-
