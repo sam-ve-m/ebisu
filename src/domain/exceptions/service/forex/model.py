@@ -37,6 +37,7 @@ class CustomerQuotationTokenNotFound(ServiceException):
             **kwargs
         )
 
+
 class InconsistentResultInRoute21(ServiceException):
     def __init__(self, *args, **kwargs):
         self.msg = (

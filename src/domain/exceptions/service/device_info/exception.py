@@ -4,7 +4,6 @@ from http import HTTPStatus
 
 
 class InvalidDeviceInfo(ServiceException):
-
     def __init__(self, *args, **kwargs):
         self.msg = "Invalid DeviceInfo"
         self.status_code = HTTPStatus.UNAUTHORIZED

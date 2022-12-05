@@ -38,7 +38,7 @@ class OracleInfrastructure(IOracleInfrastructure):
             connection = cx_Oracle.SessionPool(
                 user=config("ORACLE_BASE_CONNECTION_USER"),
                 password=config("ORACLE_BASE_CONNECTION_PASS"),
-                dsn=dsn
+                dsn=dsn,
             )
             return connection
         except Exception as exception:

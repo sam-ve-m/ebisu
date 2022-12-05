@@ -15,10 +15,18 @@ from src.domain.models.thebes_answer.model import ThebesAnswer
 
 with patch.object(Config, "get"):
     from persephone_client import Persephone
-    from src.domain.exceptions.domain.model.forex.model import ErrorValidatingSimulationProposalData
+    from src.domain.exceptions.domain.model.forex.model import (
+        ErrorValidatingSimulationProposalData,
+    )
     from src.domain.exceptions.repository.forex.model import CustomerForexDataNotFound
-    from src.domain.exceptions.service.forex.model import ExpiredToken, InvalidToken, DroppedToken, CaronteCantFindToken, \
-        UnexpectedErrorInExchangeAPI, CustomerQuotationTokenNotFound
+    from src.domain.exceptions.service.forex.model import (
+        ExpiredToken,
+        InvalidToken,
+        DroppedToken,
+        CaronteCantFindToken,
+        UnexpectedErrorInExchangeAPI,
+        CustomerQuotationTokenNotFound,
+    )
 
     from src.services.forex.account.service import ForexAccount
     from src.services.forex.proposal.simulation.service import ForexSimulation

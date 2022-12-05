@@ -91,8 +91,8 @@ async def test_when_sending_the_right_params_to_get_list_broker_note_then_return
 )
 @patch.object(ListBrokerNote, "get_service_response", return_value=[])
 @patch.object(Config, "get", return_value="info")
-async def test_when_sending_the_right_params_to_get_list_broker_note_then_return_the_an_empty_list(mocked_env,
-    mock_mock_validate_and_decode_thebes_answer, mock_get_service_response
+async def test_when_sending_the_right_params_to_get_list_broker_note_then_return_the_an_empty_list(
+    mocked_env, mock_mock_validate_and_decode_thebes_answer, mock_get_service_response
 ):
     list_broker_response = await ExchangeRouter.get_broker_note(
         request=MagicMock(scope=scope_stub_2, headers=MagicMock(raw=x_thebes_tuple)),
@@ -111,7 +111,9 @@ async def test_when_sending_the_right_params_to_get_list_broker_note_then_return
 
 @pytest.mark.asyncio
 @patch.object(Config, "get", return_value="info")
-async def test_when_sending_wrong_params_of_list_broker_note_model_to_get_broker_note_then_raise_validation_error(mocked_env,):
+async def test_when_sending_wrong_params_of_list_broker_note_model_to_get_broker_note_then_raise_validation_error(
+    mocked_env,
+):
 
     with pytest.raises(ValidationError):
         await ExchangeRouter.get_broker_note(
@@ -167,7 +169,9 @@ async def test_when_sending_wrong_params_of_list_broker_note_model_to_get_broker
 
 @pytest.mark.asyncio
 @patch.object(Config, "get", return_value="info")
-async def test_when_sending_wrong_params_of_get_statement_model_then_raise_validation_error(mocked_env,):
+async def test_when_sending_wrong_params_of_get_statement_model_then_raise_validation_error(
+    mocked_env,
+):
 
     with pytest.raises(ValidationError):
         await ExchangeRouter.get_bank_statement(
@@ -212,8 +216,7 @@ async def test_when_sending_wrong_params_of_get_statement_model_then_raise_valid
 @patch.object(Orders, "get_client_orders", return_value=client_order_response_dummy)
 @patch.object(Config, "get", return_value="info")
 async def test_when_sending_the_right_params_to_client_order_router_then_return_the_expected(
-    mocked_env,
-    mock_validate_and_decode_thebes_answer, mock_get_service_response
+    mocked_env, mock_validate_and_decode_thebes_answer, mock_get_service_response
 ):
 
     response = await ExchangeRouter.get_client_orders(

@@ -11,7 +11,6 @@ from src.repositories.base_repositories.oracle.repository import OracleBaseRepos
 
 
 class StatementsRepository(OracleBaseRepository):
-
     @classmethod
     def _get_connection(cls):
         return cls.infra.get_base_connection_br()

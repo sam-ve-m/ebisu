@@ -54,11 +54,11 @@ class FundingAndWithdrawalService:
 
     @staticmethod
     async def _log_in_persephone_to_audit(
-            money_flow: UserMoneyFlowToExternalBank,
-            jwt: ThebesAnswer,
-            origin_account: BrokerAccount,
-            account_destination: BankAccount,
-            device_info: DeviceInfo,
+        money_flow: UserMoneyFlowToExternalBank,
+        jwt: ThebesAnswer,
+        origin_account: BrokerAccount,
+        account_destination: BankAccount,
+        device_info: DeviceInfo,
     ):
         (
             sent_to_persephone,

@@ -5,7 +5,6 @@ from src.infrastructures.env_config import config
 
 
 class DeviceSecurity:
-
     @staticmethod
     async def _execute_post(url: str, body: dict):
         try:
@@ -29,13 +28,11 @@ class DeviceSecurity:
             Gladsheim.error(
                 message="Error while decrypting device info",
                 status=request_result.status,
-                content=request_result.content
+                content=request_result.content,
             )
             raise
         json_response = await request_result.json()
-        device_info_decrypted = (
-            json_response.get("deviceInfo")
-        )
+        device_info_decrypted = json_response.get("deviceInfo")
         return device_info_decrypted
 
     @staticmethod
@@ -48,11 +45,9 @@ class DeviceSecurity:
             Gladsheim.error(
                 message="Error while generating device_id",
                 status=request_result.status,
-                content=request_result.content
+                content=request_result.content,
             )
             raise
         json_response = await request_result.json()
-        device_id = (
-            json_response.get("deviceID")
-        )
+        device_id = json_response.get("deviceID")
         return device_id
