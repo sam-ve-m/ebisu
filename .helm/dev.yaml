@@ -106,7 +106,7 @@ deployment:
         TRANSFER_WINDOW_START: "11:00:00"
         TRANSFER_WINDOW_END: "19:30:00"
         BIFROST_KAFKA_BROKERS: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
-        HALBERD_LOCK_MANAGER_REDIS_URLS: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
+        HALBERD_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
         HALBERD_BALANCE_RETRY_COUNT: "100"
         HALBERD_BALANCE_RETRY_DELAY_MIN: "0.2"
         HALBERD_BALANCE_RETRY_DELAY_MAX: "1"
