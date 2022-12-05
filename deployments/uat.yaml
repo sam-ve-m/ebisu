@@ -278,6 +278,8 @@ containers:
       value: "15"
     - name: MONGODB_PROPOSALS_EXECUTED
       value: "exchange_proposals_executed"
+    - name: MONGODB_PROPOSALS_SIMULATED
+      value: "exchange_proposals_simulated"
     - name: NYSE_OPENING_TIME
       value: "859"
     - name: NYSE_CLOSING_TIME
