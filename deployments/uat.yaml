@@ -6,7 +6,7 @@ image:
   repository: nexus.sigame.com.br
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.3.4
+  tag: 1.4.0-2
 
 ports:
   protocol: TCP
@@ -15,11 +15,11 @@ ports:
 containers:
   env:
     - name: ORACLE_BASE_CONNECTION_STRING_BR
-      value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
+      value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.18.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM)))"
     - name: ORACLE_BASE_CONNECTION_STRING_US
-      value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
+      value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.18.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM)))"
     - name: ORACLE_POSITION_CONNECTION_STRING
-      value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
+      value: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.18.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM)))"
     - name: MONGO_CONNECTION_URL
       value: "mongodb://ebisu:FAoqdk31Ljdn@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=ebisu"
     - name: MONGODB_DATABASE_NAME
@@ -51,7 +51,7 @@ containers:
     - name: DW_STATEMENT_URL
       value: "https://bo-api.drivewealth.io/back-office/statements/{}/{}"
     - name: FUNDING_AND_WITHDRAWAL_REDIS_HOST_URL
-      value: 'redis://ebisu:Vddnjer321F@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379'
+      value: 'redis://ebisu:Vddnjer321F@172.30.19.183:6379'
     - name: FUNDING_AND_WITHDRAWAL_REDIS_CACHE_DB
       value: "1"
     - name: AWS_ACCESS_KEY_ID
@@ -67,13 +67,13 @@ containers:
     - name: BUCKET_NAME_KEY
       value: "auth-gateway-keys-uat"
     - name: REDIS_HOST_URL
-      value: 'redis://ebisu:Vddnjer321F@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379'
+      value: 'redis://ebisu:Vddnjer321F@172.30.19.183:6379'
     - name: REDIS_CACHE_DB
       value: "1"
     - name: BANK_CODE
       value: "469"
     - name: MIST_REDIS_URL
-      value: "redis://mist:panOeimdiaODkjn34@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
+      value: "redis://mist:panOeimdiaODkjn34@172.30.19.183:6379?db=1"
     - name: MIST_AWS_ACCESS_KEY_ID
       value: "AKIATZVFXI25USQWCS5O"
     - name: MIST_AWS_SECRET_ACCESS_KEY
@@ -117,7 +117,7 @@ containers:
     - name: HEIMDALL_JWT_REQUIRED_FIELDS
       value: "[]"
     - name: HEIMDALL_REDIS_URL
-      value: "redis://heimdal:FBJAnjkqw21yjewkDSA@lnxbrspkeydb-01.subpriv.vcnuat.oraclevcn.com:6379?db=1"
+      value: "redis://heimdal:FBJAnjkqw21yjewkDSA@172.30.19.183:6379?db=1"
     - name: MEPHO_DW_APP_KEY
       value: "93d6184b-4692-4058-b32d-82624be89cb1"
     - name: MEPHO_DW_USER
@@ -127,11 +127,11 @@ containers:
     - name: MEPHO_DW_AUTHENTICATION_URL
       value: "https://bo-api.drivewealth.io/back-office/auth"
     - name: MEPHO_REDIS_HOST
-      value: "redis://mepho:MueOSapfdfdPIHbwwqQa@172.30.11.235:6379"
+      value: "redis://mepho:MueOSapfdfdPIHbwwqQa@172.30.19.183:6379"
     - name: MEPHO_REDIS_DB
       value: "1"
     - name: MEPHO_CLIENT_LOCK_MANAGER_REDIS_URLS
-      value: '["redis://:foobared@127.0.0.1:6379?db=1", "redis://:foobared@127.0.0.1:6378?db=1", "redis://:foobared@127.0.0.1:6377?db=1", "redis://:foobared@127.0.0.1:6376?db=1", "redis://:foobared@127.0.0.1:6375?db=1"]'
+      value: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
     - name: MEPHO_CLIENT_AUTHENTICATION_RETRY_COUNT
       value: "3"
     - name: MEPHO_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN
@@ -169,7 +169,7 @@ containers:
     - name: FLOKI_REDIS_TOKEN_KEY
       value: "access_token_of_floki_to_sinacor"
     - name: FLOKI_CLIENT_LOCK_MANAGER_REDIS_URLS
-      value: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
+      value: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
     - name: FLOKI_CLIENT_AUTHENTICATION_RETRY_COUNT
       value: "100"
     - name: FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN
@@ -189,7 +189,7 @@ containers:
     - name: TRANSFER_WINDOW_END
       value: "19:30:00"
     - name: CARONTE_CLIENT_LOCK_MANAGER_REDIS_URLS
-      value: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
+      value: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
     - name: CARONTE_CLIENT_AUTHENTICATION_RETRY_COUNT
       value: "100"
     - name: CARONTE_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN
@@ -235,7 +235,7 @@ containers:
     - name: OUROINVEST_USER_TOKEN_URL
       value: "https://sbxapi.ourinvest.com.br:43400/api/v1/cross/servicos/autorizacao/representante"
     - name: HALBERD_LOCK_MANAGER_REDIS_URLS
-      value: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
+      value: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
     - name: HALBERD_BALANCE_RETRY_COUNT
       value: "100"
     - name: HALBERD_BALANCE_RETRY_DELAY_MIN

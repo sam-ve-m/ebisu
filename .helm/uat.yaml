@@ -44,9 +44,9 @@ deployment:
         enabled: false
 
       env:
-        ORACLE_BASE_CONNECTION_STRING_BR: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
-        ORACLE_BASE_CONNECTION_STRING_US: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
-        ORACLE_POSITION_CONNECTION_STRING: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
+        ORACLE_BASE_CONNECTION_STRING_BR: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.18.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM)))"
+        ORACLE_BASE_CONNECTION_STRING_US: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.18.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM)))"
+        ORACLE_POSITION_CONNECTION_STRING: "UEBISDB001/Eb3gq7$8k7z!Sc@@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.18.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBUAT.SUBPRIV.VCNUAT.ORACLEVCN.COM)))"
         MONGO_CONNECTION_URL: "mongodb://ebisu:FAoqdk31Ljdn@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=ebisu"
         MONGODB_DATABASE_NAME: "lionx"
         MONGODB_USER_COLLECTION: "users"
@@ -100,7 +100,7 @@ deployment:
         MEPHO_DW_AUTHENTICATION_URL: "https://bo-api.drivewealth.io/back-office/auth"
         MEPHO_REDIS_HOST: "redis://mepho:MueOSapfdfdPIHbwwqQa@172.30.11.235:6379"
         MEPHO_REDIS_DB: "1"
-        MEPHO_CLIENT_LOCK_MANAGER_REDIS_URLS: '["redis://:foobared@127.0.0.1:6379?db=1", "redis://:foobared@127.0.0.1:6378?db=1", "redis://:foobared@127.0.0.1:6377?db=1", "redis://:foobared@127.0.0.1:6376?db=1", "redis://:foobared@127.0.0.1:6375?db=1"]'
+        MEPHO_CLIENT_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
         MEPHO_CLIENT_AUTHENTICATION_RETRY_COUNT: "3"
         MEPHO_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN: "10"
         MEPHO_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX: "15"
@@ -119,7 +119,7 @@ deployment:
         FLOKI_SINACOR_COMPANY_ID: "7029"
         FLOKI_REDIS_HOST_URL: "redis://bifrost:Lysjn32J65NmMhsOOm@172.30.19.183:6379?db=1"
         FLOKI_REDIS_TOKEN_KEY: "access_token_of_floki_to_sinacor"
-        FLOKI_CLIENT_LOCK_MANAGER_REDIS_URLS: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
+        FLOKI_CLIENT_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
         FLOKI_CLIENT_AUTHENTICATION_RETRY_COUNT: "100"
         FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN: "0.5"
         FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX: "0.7"
@@ -152,7 +152,7 @@ deployment:
         OUROINVEST_SYSTEM_PWD: "15R53boMi3b$6YB"
         OUROINVEST_DEFAULT_TOKEN_URL: "https://sbxapi.ourinvest.com.br:43400/api/v1/cross/usuario/login/parceiro"
         OUROINVEST_USER_TOKEN_URL: "https://sbxapi.ourinvest.com.br:43400/api/v1/cross/servicos/autorizacao/representante"
-        HALBERD_LOCK_MANAGER_REDIS_URLS: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
+        HALBERD_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
         HALBERD_BALANCE_RETRY_COUNT: "100"
         HALBERD_BALANCE_RETRY_DELAY_MIN: "0.2"
         HALBERD_BALANCE_RETRY_DELAY_MAX: "1"

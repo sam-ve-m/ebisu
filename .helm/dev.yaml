@@ -102,7 +102,7 @@ deployment:
         TRANSFER_WINDOW_START: "11:00:00"
         TRANSFER_WINDOW_END: "19:30:00"
         BIFROST_KAFKA_BROKERS: "cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
-        HALBERD_LOCK_MANAGER_REDIS_URLS: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
+        HALBERD_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
         HALBERD_BALANCE_RETRY_COUNT: "100"
         HALBERD_BALANCE_RETRY_DELAY_MIN: "0.2"
         HALBERD_BALANCE_RETRY_DELAY_MAX: "1"
@@ -137,7 +137,7 @@ deployment:
         MEPHO_DW_AUTHENTICATION_URL: "https://bo-api.drivewealth.io/back-office/auth"
         MEPHO_REDIS_HOST: "redis://mepho:LndhhhII565dsaadspoi@172.30.19.183:6379"
         MEPHO_REDIS_DB: "1"
-        MEPHO_CLIENT_LOCK_MANAGER_REDIS_URLS: '["redis://:foobared@127.0.0.1:6379?db=1", "redis://:foobared@127.0.0.1:6378?db=1", "redis://:foobared@127.0.0.1:6377?db=1", "redis://:foobared@127.0.0.1:6376?db=1", "redis://:foobared@127.0.0.1:6375?db=1"]'
+        MEPHO_CLIENT_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
         MEPHO_CLIENT_AUTHENTICATION_RETRY_COUNT: "3"
         MEPHO_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN: "10"
         MEPHO_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX: "15"
