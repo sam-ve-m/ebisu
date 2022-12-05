@@ -7,17 +7,13 @@ from src.domain.date_formatters.region.date_time.model import RegionStringDateTi
 from src.domain.date_formatters.region.enum.utc_offset.enum import ExchangeUtcOffset
 from src.domain.statement.base.model.transaction.model import Transaction
 from src.domain.statement.br.model import BrTransaction
-from src.infrastructures.env_config import config
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 
 
 class StatementsRepository(OracleBaseRepository):
-
-    service = config("ORACLE_BASE_SERVICE_BR")
-    user = config("ORACLE_BASE_USER")
-    password = config("ORACLE_BASE_PASSWORD")
-    base_dns = config("ORACLE_BASE_DSN")
-    port = config("ORACLE_BASE_PORT")
+    @classmethod
+    def _get_connection(cls):
+        return cls.infra.get_base_connection_br()
 
     current_base_query = "SELECT DT_LIQUIDACAO, DS_LANCAMENTO, VL_LANCAMENTO, NR_LANCAMENTO FROM CORRWIN.TCCMOVTO {0}"
     historical_base_query = "SELECT DT_LIQUIDACAO, DS_LANCAMENTO, VL_LANCAMENTO, NR_LANCAMENTO FROM CORRWIN.TCCHISMOV {0}"

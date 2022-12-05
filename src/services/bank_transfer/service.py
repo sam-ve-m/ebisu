@@ -16,8 +16,7 @@ class BankTransferService(IBankTransfer):
         user_response = {
             "agency": "0001",
             "bank": config("BANK_CODE"),
-            "account": user_jwt
-            .get("user", {})
+            "account": user_jwt.get("user", {})
             .get("portfolios", {})
             .get("br", {})
             .get("bovespa_account"),

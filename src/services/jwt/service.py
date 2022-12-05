@@ -32,7 +32,11 @@ class JwtService:
         mist_token = JwtService.__get_mist_from_request(request=request)
         is_valid = await JwtService.mist.validate_jwt(jwt=mist_token)
         mist_content, status = await JwtService.mist.decode_payload(jwt=mist_token)
-        if is_valid and status == MistStatusResponses.SUCCESS and user_data["unique_id"] == mist_content["decoded_jwt"]["unique_id"]:
+        if (
+            is_valid
+            and status == MistStatusResponses.SUCCESS
+            and user_data["unique_id"] == mist_content["decoded_jwt"]["unique_id"]
+        ):
             return True
         raise InvalidElectronicSignature()
 

@@ -1,5 +1,4 @@
 # Ebisu
-
 from src.core.interfaces.domain.models.forex.markets.interface import ForexMarket
 from src.domain.enums.forex.liquidation_date import LiquidationDayOptions
 

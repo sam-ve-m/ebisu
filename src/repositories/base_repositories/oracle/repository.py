@@ -1,29 +1,16 @@
+from abc import ABC, abstractmethod
 from etria_logger import Gladsheim
 
 from src.infrastructures.connections.oracle.infrastructure import OracleInfrastructure
 
 
-class OracleBaseRepository:
+class OracleBaseRepository(ABC):
 
     infra = OracleInfrastructure
-    oracle_connection = None
-    service = None
-    user = None
-    password = None
-    base_dns = None
-    port = None
 
-    @classmethod
-    def _get_connection(cls):
-        if cls.oracle_connection is None:
-            cls.oracle_connection = cls.infra.get_connection(
-                service=cls.service,
-                user=cls.user,
-                password=cls.password,
-                base_dns=cls.base_dns,
-                port=cls.port,
-            )
-        return cls.oracle_connection
+    @abstractmethod
+    def _get_connection():
+        ...
 
     @classmethod
     def execute(cls, sql):

@@ -1,7 +1,7 @@
 # STANDARD LIBS
 from enum import Enum
-from fastapi import Query
-from pydantic import BaseModel, Extra
+
+from pydantic import BaseModel, Extra, validator
 
 
 class BrokerNoteMarket(Enum):
@@ -14,14 +14,51 @@ class BrokerNoteMarket(Enum):
 class BrokerNoteRegion(Enum):
     BR = "BR"
     US = "US"
-    ALL = "ALL"
 
 
-class ListBrokerNoteModel(BaseModel):
-    region: BrokerNoteRegion
+class ListBrokerNoteBrModel(BaseModel):
     market: BrokerNoteMarket
-    year: int = Query(None)
-    month: int = Query(None)
+    year: int
+    month: int
+
+    @validator("year")
+    def validate_year(cls, value):
+        if len(str(value)) < 4:
+            raise ValueError("Year must be in format YYYY")
+        return value
+
+    @validator("month")
+    def validate_month(cls, value):
+        if (value < 1) or (value > 12):
+            raise ValueError("Month must be an integer between 1 and 12")
+        return value
+
+    class Config:
+        extra = Extra.forbid
+
+
+class ListBrokerNoteUsModel(BaseModel):
+    year: int
+    month: int
+
+    @validator("year")
+    def validate_year(cls, value):
+        if len(str(value)) < 4:
+            raise ValueError("Year must be in format YYYY")
+        return value
+
+    @validator("month")
+    def validate_month(cls, value):
+        if (value < 1) or (value > 12):
+            raise ValueError("Month must be an integer between 1 and 12")
+        return value
+
+    class Config:
+        extra = Extra.forbid
+
+
+class GetBrokerNoteUsModel(BaseModel):
+    file_key: str
 
     class Config:
         extra = Extra.forbid

@@ -88,7 +88,9 @@ class SinacorEarningsTransport:
                 url,
                 query_params=query_params,
             )
-            process_response = await cls._build_payable_and_record_date_earnings_models(response=response)
+            process_response = await cls._build_payable_and_record_date_earnings_models(
+                response=response
+            )
             payable_earnings = list()
             record_date_earnings = list()
             for earning in process_response:
@@ -134,7 +136,9 @@ class SinacorEarningsTransport:
         return earnings
 
     @staticmethod
-    async def _build_payable_and_record_date_earnings_models(response: ClientResponse) -> List[EarningBr]:
+    async def _build_payable_and_record_date_earnings_models(
+        response: ClientResponse,
+    ) -> List[EarningBr]:
         earnings = list()
         if response.status in [HTTPStatus.OK, HTTPStatus.CREATED]:
             body = await response.json()

@@ -8,7 +8,7 @@ from src.domain.request.exchange_info.get_closure_steps_validator import (
     AccountCloseStepsRequest,
 )
 from src.repositories.user_portfolios.repository import UserPortfoliosRepository
-from src.services.closure_steps.service import AccountCloseStepsService
+from src.services.account_close_steps.service import AccountCloseStepsService
 from src.services.earnings_from_client.get_earnings_from_client import (
     EarningsFromClient,
 )

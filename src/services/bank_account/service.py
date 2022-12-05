@@ -1,15 +1,19 @@
-# STANDARD LIBS
 import datetime
 from uuid import uuid4
 
 from fastapi.openapi.models import Response
 
-# INTERNAL LIBRARIES
 from nidavellir import Sindri
 from src.domain.enums.persephone import PersephoneSchema, PersephoneQueue
-from src.domain.exceptions.service.bank_account.model import BankAccountAlreadyExists, BankAccountNotExists
+from src.domain.exceptions.service.bank_account.model import (
+    BankAccountAlreadyExists,
+    BankAccountNotExists,
+)
 from src.domain.exceptions.service.auditing_trail.model import FailToSaveAuditingTrail
-from src.domain.exceptions.service.unexpected.internal_server_error.model import InternalServerError
+from src.domain.exceptions.service.unexpected.internal_server_error.model import (
+    InternalServerError,
+)
+from src.domain.models.device_info.dto import DeviceInfo
 from src.domain.user_bank_account.status.enum import UserBankAccountStatus
 from src.repositories.bank_account.repository import UserBankAccountRepository
 from src.services.get_bank_code.service import GetBankCode
@@ -26,12 +30,14 @@ from http import HTTPStatus
 class UserBankAccountService:
     @classmethod
     async def create_user_bank_accounts(
-        cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
+        cls,
+        jwt_data: dict,
+        device_info: DeviceInfo,
+        bank_account_repository=UserBankAccountRepository,
     ) -> Response:
         thebes_answer = jwt_data["x-thebes-answer"]
         unique_id = thebes_answer["user"]["unique_id"]
         bank_account = jwt_data["bank_account"]
-        device_info = bank_account.pop("device_info")
 
         bank_account_exists_and_is_activated = (
             await bank_account_repository.existing_user_bank_account_and_is_activated(
@@ -53,7 +59,8 @@ class UserBankAccountService:
             partition=PersephoneQueue.REGISTER_BANK_ACCOUNT.value,
             message={
                 "unique_id": unique_id,
-                "device_info": device_info,
+                "device_id": device_info.device_id,
+                "device_info": device_info.decrypted_device_info,
                 "bank_account": bank_account,
                 "_created_at": datetime.datetime.utcnow(),
             },
@@ -99,13 +106,15 @@ class UserBankAccountService:
 
     @classmethod
     async def update_user_bank_account(
-        cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
+        cls,
+        jwt_data: dict,
+        device_info: DeviceInfo,
+        bank_account_repository=UserBankAccountRepository,
     ) -> Response:
         thebes_answer = jwt_data["x-thebes-answer"]
         unique_id = thebes_answer["user"]["unique_id"]
         bank_account = jwt_data["bank_account"]
         bank_account_id = bank_account["id"]
-        device_info = bank_account.get("device_info")
 
         user_bank_account_id_exists = (
             await bank_account_repository.user_bank_account_id_exists(
@@ -123,7 +132,8 @@ class UserBankAccountService:
             partition=PersephoneQueue.UPDATE_BANK_ACCOUNT.value,
             message={
                 "unique_id": unique_id,
-                "device_info": device_info,
+                "device_id": device_info.device_id,
+                "device_info": device_info.decrypted_device_info,
                 "bank_account": bank_account,
                 "_created_at": datetime.datetime.utcnow(),
             },
@@ -150,12 +160,14 @@ class UserBankAccountService:
 
     @classmethod
     async def delete_user_bank_account(
-        cls, jwt_data: dict, bank_account_repository=UserBankAccountRepository
+        cls,
+        jwt_data: dict,
+        device_info: DeviceInfo,
+        bank_account_repository=UserBankAccountRepository,
     ) -> Response:
         thebes_answer = jwt_data["x-thebes-answer"]
         unique_id = thebes_answer["user"]["unique_id"]
         bank_account = jwt_data["bank_account"]
-        device_info = bank_account.pop("device_info")
 
         user_bank_account_id_exists = (
             await bank_account_repository.user_bank_account_id_exists(
@@ -173,7 +185,8 @@ class UserBankAccountService:
             partition=PersephoneQueue.DELETE_BANK_ACCOUNT.value,
             message={
                 "unique_id": unique_id,
-                "device_info": device_info,
+                "device_id": device_info.device_id,
+                "device_info": device_info.decrypted_device_info,
                 "bank_account": bank_account,
                 "_created_at": datetime.datetime.utcnow(),
             },
@@ -201,5 +214,4 @@ class UserBankAccountService:
     @classmethod
     def bank_code_from_client_exists(cls, bank: str) -> bool:
         bank_code_result = GetBankCode.get_bank_code_from_database(bank=bank)
-
         return bool(bank_code_result)

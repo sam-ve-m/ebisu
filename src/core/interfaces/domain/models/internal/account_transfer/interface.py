@@ -11,7 +11,7 @@ class IAccountTransfer(ABC):
 
     @abstractmethod
     async def resume(self):
-        """This method must return the resume of operation request"""
+        """This method must return the resume of operation broker_note"""
 
     @abstractmethod
     def get_currency(self) -> Currency:

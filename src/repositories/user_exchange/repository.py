@@ -9,16 +9,14 @@ class UserExchangeRepository(MongoBaseRepository):
     collection = config("MONGODB_EXCHANGE_COLLECTION")
 
     @classmethod
-    async def get_spread_data(
-        cls, forex_account_number: int, base: str, quote: str
-    ) -> dict:
+    async def get_spread_data(cls, account_number: int, base: str, quote: str) -> dict:
         spread_data = await cls.find_one(
-            query={"account_number": forex_account_number, "base": base, "quote": quote}
+            query={"account_number": account_number, "base": base, "quote": quote}
         )
 
         if not spread_data:
             spread_data = {
-                "account_number": forex_account_number,
+                "account_number": account_number,
                 "base": base,
                 "quote": quote,
                 "spread": config("SPREAD_DEFAULT"),

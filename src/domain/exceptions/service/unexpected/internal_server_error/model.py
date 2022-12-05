@@ -5,7 +5,6 @@ from src.domain.exceptions.base_exceptions.model import ServiceException
 
 
 class InternalServerError(ServiceException):
-
     def __init__(self, *args, **kwargs):
         self.msg = "Unexpected error occured"
         self.status_code = HTTPStatus.INTERNAL_SERVER_ERROR

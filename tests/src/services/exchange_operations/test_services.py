@@ -19,6 +19,7 @@ cpf_and_name = {"cpf": "40340423410", "name": "Teste Teste"}
 )
 @patch.object(UserExchangeOperationsRepository, "insert", return_value=True)
 @pytest.mark.asyncio
+@pytest.mark.exchange
 async def test_get_service_response_to_save_exchange_operations_when_sending_right_params_then_return_the_expected(
     mock_find_one, mock_insert
 ):
@@ -33,6 +34,7 @@ async def test_get_service_response_to_save_exchange_operations_when_sending_rig
 )
 @patch.object(UserExchangeOperationsRepository, "insert", return_value=False)
 @pytest.mark.asyncio
+@pytest.mark.exchange
 async def test_get_service_response_to_save_exchange_operations_when_sending_right_params_then_return_type_error(
     mock_find_one, mock_insert
 ):

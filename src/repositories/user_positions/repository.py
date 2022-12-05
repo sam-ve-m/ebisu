@@ -3,16 +3,13 @@ from typing import List
 from etria_logger import Gladsheim
 
 from src.domain.positions.model import Position
-from src.infrastructures.env_config import config
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 
 
 class UserPositionsRepository(OracleBaseRepository):
-    service = config("ORACLE_POSITION_SERVICE")
-    user = config("ORACLE_POSITION_USER")
-    password = config("ORACLE_POSITION_PASSWORD")
-    base_dns = config("ORACLE_POSITION_DSN")
-    port = config("ORACLE_POSITION_PORT")
+    @classmethod
+    def _get_connection(cls):
+        return cls.infra.get_position_connection()
 
     @staticmethod
     def __build_query_br(account: str) -> str:

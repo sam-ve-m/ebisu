@@ -11,32 +11,37 @@ from src.domain.exceptions.domain.model.forex.model import (
 )
 from src.infrastructures.env_config import config
 
+# Standards
+from typing import Union
+
 
 class SimulationModel:
     def __init__(
         self,
         customer_exchange_data: dict,
         payload: CurrencyExchange,
-        forex_client_id: int,
+        client_id: int,
     ):
         self.base = payload.base
-        self.forex_client_id = forex_client_id
+        self.client_id = client_id
         self.quote = payload.quote
         self.quantity = payload.quantity
         self.operation_key = self.__get_operation_value()
         self.spread = customer_exchange_data.get("spread")
 
-    async def build_url_path_to_request_current_currency_quote(self) -> str:
+    async def build_url_path_to_request_current_currency_quote(
+        self,
+    ) -> Union[str, OperationNotImplemented]:
         map_url_path = {
-            NatureOperation.BRL_TO_USD: f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.BRL, CurrencyOptions.USD, self.forex_client_id, self.spread)}',
-            NatureOperation.USD_TO_BRL: f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.USD, CurrencyOptions.BRL, self.forex_client_id, self.spread)}',
+            NatureOperation.BRL_TO_USD: f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.BRL, CurrencyOptions.USD, self.client_id, self.spread)}',
+            NatureOperation.USD_TO_BRL: f'{config("BASE_URL_FROM_EXCHANGE_API")}/{config("CURRENT_CURRENCY_QUOTE_URL").format(self.operation_key.value, CurrencyOptions.USD, CurrencyOptions.BRL, self.client_id, self.spread)}',
         }
         url_path = map_url_path.get(self.operation_key)
         if not url_path:
             raise OperationNotImplemented()
         return url_path
 
-    def __get_operation_value(self) -> NatureOperation:
+    def __get_operation_value(self) -> Union[NatureOperation, InvalidOperation]:
         operation_key = f"{self.base}_TO_{self.quote}"
         map_of_operation_compositions = {
             "BRL_TO_USD": NatureOperation.BRL_TO_USD,
@@ -54,7 +59,9 @@ class SimulationModel:
         return body
 
     @staticmethod
-    def __get_spread_tax(customer_exchange_data: dict) -> float:
+    def __get_spread_tax(
+        customer_exchange_data: dict,
+    ) -> Union[float, SpreadTaxNotFound]:
         spread = customer_exchange_data.get("spread")
         if not spread:
             raise SpreadTaxNotFound()

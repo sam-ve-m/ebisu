@@ -1,14 +1,10 @@
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
-from src.infrastructures.env_config import config
 
 
 class BankCodeRepository(OracleBaseRepository):
-
-    service = config("ORACLE_BASE_SERVICE_BR")
-    user = config("ORACLE_BASE_USER")
-    password = config("ORACLE_BASE_PASSWORD")
-    base_dns = config("ORACLE_BASE_DSN")
-    port = config("ORACLE_BASE_PORT")
+    @classmethod
+    def _get_connection(cls):
+        return cls.infra.get_base_connection_br()
 
     @classmethod
     def get_bank_code_from_database(cls, bank: str) -> str:
