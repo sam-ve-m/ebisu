@@ -121,7 +121,7 @@ deployment:
         FLOKI_SINACOR_COMPANY_ID: "7029"
         FLOKI_REDIS_HOST_URL: "redis://bifrost:Lysjn32J65NmMhsOOm@172.30.19.183:6379?db=1"
         FLOKI_REDIS_TOKEN_KEY: "access_token_of_floki_to_sinacor"
-        FLOKI_CLIENT_LOCK_MANAGER_REDIS_URLS: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
+        FLOKI_CLIENT_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
         FLOKI_CLIENT_AUTHENTICATION_RETRY_COUNT: "100"
         FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MIN: "0.5"
         FLOKI_CLIENT_AUTHENTICATION_RETRY_DELAY_MAX: "0.7"
@@ -154,7 +154,7 @@ deployment:
         OUROINVEST_SYSTEM_PWD: "15R53boMi3b$6YB"
         OUROINVEST_DEFAULT_TOKEN_URL: "https://sbxapi.ourinvest.com.br:43400/api/v1/cross/usuario/login/parceiro"
         OUROINVEST_USER_TOKEN_URL: "https://sbxapi.ourinvest.com.br:43400/api/v1/cross/servicos/autorizacao/representante"
-        HALBERD_LOCK_MANAGER_REDIS_URLS: '[ "redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0" ]'
+        HALBERD_LOCK_MANAGER_REDIS_URLS: '["redis://:wkhJ8C2WQhG502Nn@keydb-redlock-1:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-2:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-3:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-4:6379?db=0","redis://:wkhJ8C2WQhG502Nn@keydb-redlock-5:6379?db=0"]'
         HALBERD_BALANCE_RETRY_COUNT: "100"
         HALBERD_BALANCE_RETRY_DELAY_MIN: "0.2"
         HALBERD_BALANCE_RETRY_DELAY_MAX: "1"
@@ -176,6 +176,7 @@ deployment:
         LIGA_AGENCY_NUMBER: "0001"
         MARKET_DAYS_RANGE: "15"
         MONGODB_PROPOSALS_EXECUTED: "exchange_proposals_executed"
+        MONGODB_PROPOSALS_SIMULATED: "exchange_proposals_simulated"
         NYSE_OPENING_TIME: "859"
         NYSE_CLOSING_TIME: "1631"
         REDIS_BALANCE_DB: "0"
