@@ -6,7 +6,7 @@ image:
   repository: nexus.sigame.com.br
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.4.0-2
+  tag: 1.4.0
 
 ports:
   protocol: TCP
@@ -19,11 +19,11 @@ containers:
     - name: ORACLE_BASE_CONNECTION_PASS
       value: "Eb3gq7$8k7z!Sc@"
     - name: ORACLE_BASE_CONNECTION_STRING_BR
-      value: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
+      value: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
     - name: ORACLE_BASE_CONNECTION_STRING_US
-      value: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
+      value: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
     - name: ORACLE_POSITION_CONNECTION_STRING
-      value: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
+      value: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
     - name: MONGO_CONNECTION_URL
       value: "mongodb://ebisu:FAoqdk31Ljdn@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=ebisu"
     - name: MONGODB_DATABASE_NAME
