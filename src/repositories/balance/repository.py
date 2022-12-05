@@ -1,17 +1,14 @@
 from etria_logger import Gladsheim
 
 from src.domain.balance.br.model import Balance
-from src.infrastructures.env_config import config
 from src.repositories.base_repositories.oracle.repository import OracleBaseRepository
 
 
 class BalanceRepository(OracleBaseRepository):
 
-    service = config("ORACLE_BASE_SERVICE_BR")
-    user = config("ORACLE_BASE_USER")
-    password = config("ORACLE_BASE_PASSWORD")
-    base_dns = config("ORACLE_BASE_DSN")
-    port = config("ORACLE_BASE_PORT")
+    @classmethod
+    def _get_connection(cls):
+        return cls.infra.get_base_connection_br()
 
     @staticmethod
     async def get_balance(account: str) -> Balance:
