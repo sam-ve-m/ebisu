@@ -49,6 +49,8 @@ deployment:
         ORACLE_BASE_CONNECTION_STRING_BR: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.18.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
         ORACLE_BASE_CONNECTION_STRING_US: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.18.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
         ORACLE_POSITION_CONNECTION_STRING: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.18.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
+        DEVICE_SECURITY_DECRYPT_DEVICE_INFO_URL: "http://fission.hom-lionx.com.br/security/deviceid/deviceinfo/decrypt"
+        DEVICE_SECURITY_DEVICE_ID_URL: "http://fission.hom-lionx.com.br/security/deviceid"
         MONGO_CONNECTION_URL: "mongodb://ebisu:FAoqdk31Ljdn@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=ebisu"
         MONGODB_DATABASE_NAME: "lionx"
         MONGODB_USER_COLLECTION: "users"

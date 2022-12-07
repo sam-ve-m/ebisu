@@ -24,6 +24,10 @@ containers:
       value: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
     - name: ORACLE_POSITION_CONNECTION_STRING
       value: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.44)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=opdbuat.subpriv.vcnuat.oraclevcn.com)))"
+    - name: DEVICE_SECURITY_DECRYPT_DEVICE_INFO_URL
+      value: "http://fission.hom-lionx.com.br/security/deviceid/deviceinfo/decrypt"
+    - name: DEVICE_SECURITY_DEVICE_ID_URL
+      value: "http://fission.hom-lionx.com.br/security/deviceid"
     - name: MONGO_CONNECTION_URL
       value: "mongodb://ebisu:FAoqdk31Ljdn@172.30.18.223:41000,172.30.19.240:41000,172.30.19.71:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=ebisu"
     - name: MONGODB_DATABASE_NAME
