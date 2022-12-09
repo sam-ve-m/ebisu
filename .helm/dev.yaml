@@ -42,16 +42,14 @@ deployment:
 
       probes:
         enabled: false
-      
+
       env:
         # ebisu
-        ORACLE_BASE_CONNECTION_USER: "UEBISDB001"
+        ORACLE_BASE_CONNECTION_USER: "UBISUDB001"
         ORACLE_BASE_CONNECTION_PASS: "Eb3gq7$8k7z!Sc@"
-
         ORACLE_BASE_CONNECTION_DSN_BR: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
         ORACLE_BASE_CONNECTION_STRING_US: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
         ORACLE_POSITION_CONNECTION_STRING: "(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.10.227)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=OPDBDEV.SUBPRIV.VCNDEV.ORACLEVCN.COM)))"
-
         MONGO_CONNECTION_URL: "mongodb://ebisu:DAlnafcnmmcsa1@172.30.10.75:41000/?authSource=admin&replicaSet=rslionx&readPreference=secondary&appname=ebisu"
         MONGODB_DATABASE_NAME: "lionx"
         MONGODB_USER_COLLECTION: "users"
@@ -192,11 +190,11 @@ deployment:
 
       resources:
         requests:
-          cpu: 500m
-          memory: 128Mi
+          cpu: 512m
+          memory: 512Mi
         limits:
-          cpu: 500m
-          memory: 128Mi
+          cpu: 512m
+          memory: 512Mi
 
       hpa:
         enabled: true

@@ -6,7 +6,7 @@ image:
   repository: nexus.sigame.com.br
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 1.4.0-2
+  tag: 1.4.0
 
 ports:
   protocol: TCP
@@ -15,7 +15,7 @@ ports:
 containers:
   env:
     - name: ORACLE_BASE_CONNECTION_USER
-      value: "UEBISDB001"
+      value: "UBISUDB001"
     - name: ORACLE_BASE_CONNECTION_PASS
       value: "Eb3gq7$8k7z!Sc@"
     - name: ORACLE_BASE_CONNECTION_STRING_BR
