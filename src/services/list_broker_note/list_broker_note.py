@@ -62,7 +62,7 @@ class ListBrokerNote:
     def get_bovespa_files_data_of_br_region(
         thebes_answer: ThebesAnswer, broker_note: ListBrokerNoteBrModel
     ):
-        account = thebes_answer.bmf_account_digit
+        account = thebes_answer.bovespa_account
 
         bovespa_response = ListBrokerNote.get_broker_file_notes(
             account=account,
@@ -96,7 +96,7 @@ class ListBrokerNote:
                     broker_note,
                 ),
                 (
-                    thebes_answer.bmf_account_digit,
+                    thebes_answer.bovespa_account,
                     broker_note,
                 ),
             ),
