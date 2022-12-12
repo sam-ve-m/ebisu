@@ -23,6 +23,11 @@ class ThebesAnswer:
         return bmf_account_digit
 
     @property
+    def bovespa_account(self):
+        bmf_account = self.portfolios.get("br", {}).get("bovespa_account")
+        return bmf_account
+
+    @property
     def dw_account(self):
         dw_account = self.portfolios.get("us", {}).get("dw_account")
         if not dw_account:
