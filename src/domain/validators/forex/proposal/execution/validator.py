@@ -22,10 +22,10 @@ class NatureOperation(BaseModel):
 
 class OverseasBanker(BaseModel):
     codigoABA: Optional[str]
-    codigoSWIFT: str
+    codigoSWIFT: Optional[str]
     numeroConta: Optional[str]
     nomeBeneficiario: Optional[str]
-    nomeBanco: str
+    nomeBanco: Optional[str]
 
 
 class PaymentCurrency(BaseModel):
@@ -46,11 +46,11 @@ class Control(BaseModel):
 
 
 class LiquidationData(BaseModel):
-    numeroAgencia: int
-    numeroConta: int
-    digitoConta: int
-    numeroBanco: str
-    nomeBanco: str
+    numeroAgencia: Optional[int]
+    numeroConta: Optional[int]
+    digitoConta: Optional[int]
+    numeroBanco: Optional[str]
+    nomeBanco: Optional[str]
     rotulo: Optional[Any]
 
 
@@ -77,4 +77,4 @@ class ClientID(BaseModel):
 class ContentRoute23(BaseModel):
     cliente: ClientID
     operacaoCambio: ExchangeOperation
-    controle: Control
+    controle: Optional[Control]
