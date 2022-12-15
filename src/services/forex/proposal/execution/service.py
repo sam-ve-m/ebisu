@@ -185,6 +185,7 @@ class ForexExecution:
         customer_name = await cls.__get_customer_name(execution_model=execution_model)
         body = execution_model.get_execute_proposal_body(customer_data=customer_name)
         url = execution_model.get_execution_url()
+        Gladsheim.debug(message="Calling route 23", body=body)
         caronte_response = await ExchangeCompanyApi.request_as_client(
             exchange_account_id=execution_model.token_decoded.forex_account,
             method=AllowedHTTPMethods.POST,
